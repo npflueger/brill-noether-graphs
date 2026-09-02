@@ -1,0 +1,64 @@
+name = "brill-noether-graphs"
+version = "0.1.0"
+keywords = ["mathematics", "graph-theory", "brill-noether", "chip-firing"]
+defaultTargets = ["Utilities", "Bananas", "LowGenus", "TreewidthGonality", "Tricycle", "TwiceMarkedBananas", "Highlights"]
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.33.0"
+
+# Reusable chip-firing and transmission infrastructure.  It imports no
+# downstream library.
+[[lean_lib]]
+name = "Utilities"
+
+# The twice-marked bananas paper formalization, plus the downstream
+# applications of its chain theorems to named literature results
+# (`Bananas/ChainOfLoops/`, Cools--Draisma--Payne--Robeva nonexistence).
+[[lean_lib]]
+name = "Bananas"
+
+# The Atanasov--Ranganathan low-genus existence formalization.  It imports the
+# shared infrastructure library and external dependencies only.
+[[lean_lib]]
+name = "LowGenus"
+
+# `treewidth <= gonality` (van Dobben de Bruyn--Gijswijt) and the Seymour--
+# Thomas bramble/treewidth duality underneath it.  A pure application of the
+# shared divisor theory, importing only `Utilities` and external dependencies.
+[[lean_lib]]
+name = "TreewidthGonality"
+
+# The minimal tricycle: discrete and metric divisorial gonality differ (van
+# Dobben de Bruyn--Smit--van der Wegen), refuting Baker's Conjecture 3.14(a).
+# It imports only `Utilities` and external dependencies.
+[[lean_lib]]
+name = "Tricycle"
+
+# Reader-facing statements written over a self-contained local vocabulary,
+# with proof bodies that bridge explicitly to the repository's proved API.
+[[lean_lib]]
+name = "Highlights"
+
+[[lean_lib]]
+name = "HighlightsStatements"
+
+# Paper-order index of formal counterparts for the twice-marked banana paper.
+# Imports only the `Bananas` library; build with `lake build TwiceMarkedBananas`.
+[[lean_lib]]
+name = "TwiceMarkedBananas"
+
+# Mathlib-only statement copy intended for standalone auditing.
+[[lean_lib]]
+name = "TwiceMarkedBananasStatements"
+
+[[require]]
+name = "chip-firing-with-lean"
+git = "https://github.com/DhyeyMavani2003/chip-firing-with-lean.git"
+rev = "98ec6a67dcb89d8ec96576f45aa3ab61cf3093ea"
+
+[[require]]
+name = "demazure"
+git = "https://github.com/npflueger/demazure.git"
+rev = "1f4927928af4e22561e4bbdf3943aad1ca308c9d"

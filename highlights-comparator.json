@@ -1,0 +1,21 @@
+{
+  "challenge_module": "HighlightsStatements",
+  "solution_module": "Highlights",
+  "theorem_names": [
+    "Highlights.brill_noether_existence_through_five",
+    "Highlights.cdpr_marked_no_high_multiplicity",
+    "Highlights.cdpr_chain_brill_noether_general",
+    "Highlights.cycle_chain_brill_noether_general_of_torsion",
+    "Highlights.cycle_theta_chain_brill_noether_general",
+    "Highlights.cycle_theta_chain_gonality_eq_common_torsion",
+    "Highlights.exists_graph_of_genus_and_gonality",
+    "Highlights.gonality_drops_under_regular_subdivision",
+    "Highlights.treewidth_le_gonality"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "enable_nanoda": true
+}
