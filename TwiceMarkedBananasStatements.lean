@@ -17,22 +17,36 @@ formalization in this library.
   formalizes it. No new declaration is introduced for these — the existing
   name is the citable one.
 * Proved lemmas/propositions/theorems/corollaries normally get a statement
-  theorem here (prefixed `s<section>_...`) with proof `sorry`. Its docstring
-  records the paper's statement, TeX label, and number. Five entries
-  whose types intrinsically require external or proof-carrying implementation
-  objects remain prose-only and are marked `Standalone omission`. Where a checked statement uses a different or more explicit formulation, that is recorded explicitly.
+  theorem here (named `Bananas.TwiceMarkedBananas.s<section>_...`) with proof
+  `sorry`. Its docstring records the paper's statement, TeX label, and
+  number. Five entries whose types intrinsically require external or
+  proof-carrying implementation objects remain prose-only and are marked
+  `Standalone omission`. Where a checked statement uses a different or more
+  explicit formulation, that is recorded explicitly.
 * When a result has genuinely no single assembled Lean statement (either
   because the mechanization deliberately avoids the paper's exact
   formulation, or because coverage is split across several files), the
   entry says so and points at the closest available pieces.
 
 Source-text licensing is recorded in `THIRD_PARTY_NOTICES.md`. This file is a
-standalone statement index, not new mathematics. The
-reader-facing vocabulary below is defined directly over Mathlib and does not
-alias the implementation library. Consequently, a future Palomar solution
-for a selected subset should prove these declarations in this vocabulary (or
-provide explicit bridges); the implementation wrappers are the source against
-which the statements were audited, not definitionally identical replacements.
+standalone statement index, not new mathematics.
+
+**Vocabulary.** The reader-facing vocabulary below is defined directly over
+Mathlib, inside the namespace `TMB`, and does not alias the implementation
+library. The theorem statements are written inside that namespace (with their
+public names in `Bananas.TwiceMarkedBananas`), so that every graph-theoretic
+word in a statement refers to the standalone definition of this file.  The
+companion solution file `TwiceMarkedBananas.lean` repeats this vocabulary
+block verbatim and proves each statement by bridging explicitly to the
+implementation library. Consequently the implementation wrappers are the
+source against which the statements were audited, not definitionally
+identical replacements.
+
+The standalone definitions follow the implementation library's formulations
+closely so that such bridges are possible; in particular a `TMB.Banana` records
+a storage orientation for each strand (as the library's subdivision
+specifications do), which is a bookkeeping device only, and the Weierstrass
+and once-marked census notions are the paper's rank-test formulations.
 -/
 
 /-!
@@ -41,14 +55,25 @@ which the statements were audited, not definitionally identical replacements.
 The declarations in this section deliberately use only Mathlib. They give
 the reader-facing meanings of the graph, divisor, banana, marking, and
 transmission notation appearing below; none aliases the implementation
-library. Small proof fields needed to construct structures (for example, the
-additivity fields of `deg`) are ordinary definitional well-formedness proofs,
-not solutions to any of the paper's theorem statements.
+library. Everything lives in the namespace `TMB`, which no library
+declaration inhabits, so that a solution file importing the implementation
+library can repeat this block verbatim without any name collision.
+
+The definitions are written to follow the implementation library's own
+definitions as closely as possible (so that a solution can bridge them by
+unfolding), but they are independent declarations. Small proof fields needed
+to construct structures (for example, the additivity fields of `deg`) are
+ordinary definitional well-formedness proofs written with deterministic
+tactics, not solutions to any of the paper's theorem statements.
 -/
+
+namespace TMB
 
 universe u v
 
 open Multiset Finset
+
+/-! ### Graphs and divisors -/
 
 /-- A finite, nonempty, loopless undirected multigraph. Each edge occurrence
 is stored once, using either ordering of its endpoints. -/
@@ -65,15 +90,16 @@ attribute [instance] CFGraph.instDecidableEq CFGraph.instFintype
 
 /-- Number of edge occurrences joining two vertices. -/
 def num_edges (G : CFGraph) (x y : G.V) : ℕ :=
-  (G.edges.filter fun e => e = (x, y) ∨ e = (y, x)).card
+  Multiset.card (G.edges.filter fun e => e = (x, y) ∨ e = (y, x))
 
 /-- Connectivity in cut form. -/
 def graph_connected (G : CFGraph) : Prop :=
   ∀ S : Finset G.V, (∃ x y : G.V, x ∈ S ∧ y ∉ S) →
-    ∃ x ∈ S, ∃ y ∉ S, 0 < num_edges G x y
+    ∃ x ∈ S, ∃ y ∉ S, num_edges G x y > 0
 
 /-- Cyclomatic genus `|E| - |V| + 1`. -/
-def genus (G : CFGraph) : ℤ := G.edges.card - Fintype.card G.V + 1
+def genus (G : CFGraph) : ℤ :=
+  Multiset.card G.edges - Fintype.card G.V + 1
 
 /-- Valence of a vertex. -/
 def vertex_degree (G : CFGraph) (x : G.V) : ℤ :=
@@ -85,6 +111,10 @@ abbrev CFDiv (G : CFGraph) := G.V → ℤ
 /-- One chip at `x`. -/
 def one_chip {G : CFGraph} (x : G.V) : CFDiv G :=
   fun y => if y = x then 1 else 0
+
+/-- Edges leaving `x` towards the complement of `S`, with multiplicity. -/
+def outdeg_S (G : CFGraph) (S : Finset G.V) (x : G.V) : ℤ :=
+  ∑ y ∈ (univ \ S), (num_edges G x y : ℤ)
 
 /-- The principal divisor obtained by firing `x` once. -/
 def firing_vector (G : CFGraph) (x : G.V) : CFDiv G :=
@@ -99,12 +129,15 @@ def linear_equiv (G : CFGraph) (D E : CFDiv G) : Prop :=
   E - D ∈ principal_divisors G
 
 /-- An effective divisor has nonnegative coefficients. -/
-def effective {G : CFGraph} (D : CFDiv G) : Prop := ∀ x, 0 ≤ D x
+def effective {G : CFGraph} (D : CFDiv G) : Prop :=
+  ∀ x : G.V, D x ≥ 0
 
 /-- Effective divisors as an additive submonoid. -/
 def Eff (G : CFGraph) : AddSubmonoid (CFDiv G) where
-  carrier := {D | effective D}
-  zero_mem' := by simp [effective]
+  carrier := {D : CFDiv G | effective D}
+  zero_mem' := by
+    intro x
+    exact le_refl (0 : ℤ)
   add_mem' := by
     intro D E hD hE x
     exact add_nonneg (hD x) (hE x)
@@ -116,8 +149,11 @@ def winnable (G : CFGraph) (D : CFDiv G) : Prop :=
 /-- Divisor degree. The short proofs certify that summation is additive. -/
 def deg {G : CFGraph} : CFDiv G →+ ℤ where
   toFun D := ∑ x, D x
-  map_zero' := by simp
-  map_add' D E := by simp [Finset.sum_add_distrib]
+  map_zero' := by
+    simp only [Pi.zero_apply, Finset.sum_const_zero]
+  map_add' := by
+    intro D E
+    simp only [Pi.add_apply, Finset.sum_add_distrib]
 
 /-- Effective divisors of a prescribed degree. -/
 def eff_of_degree (G : CFGraph) (d : ℤ) : Set (CFDiv G) :=
@@ -131,84 +167,101 @@ def rank_geq (G : CFGraph) (D : CFDiv G) (r : ℤ) : Prop :=
 def rank_eq (G : CFGraph) (D : CFDiv G) (r : ℤ) : Prop :=
   rank_geq G D r ∧ ¬ rank_geq G D (r + 1)
 
+open Classical in
 /-- The unique exact rank when it exists, and `-1` as a fallback. -/
-noncomputable def rank (G : CFGraph) (D : CFDiv G) : ℤ := by
-  classical
-  exact if h : ∃ r, rank_eq G D r then Classical.choose h else -1
+noncomputable def rank (G : CFGraph) (D : CFDiv G) : ℤ :=
+  if h : ∃ r, rank_eq G D r then Classical.choose h else -1
 
 /-- The canonical divisor `K(x) = val(x) - 2`. -/
 def canonical_divisor (G : CFGraph) : CFDiv G :=
   fun x => vertex_degree G x - 2
 
-/-- A direct cut formulation of a `q`-reduced divisor. -/
-def q_reduced (G : CFGraph) (q : G.V) (D : CFDiv G) : Prop :=
-  (∀ x, x ≠ q → 0 ≤ D x) ∧
-  ∀ S : Finset G.V, q ∉ S → S.Nonempty →
-    ∃ x ∈ S, D x < ∑ y ∈ Sᶜ, (num_edges G x y : ℤ)
+/-- Effective away from `q`. -/
+def q_effective {G : CFGraph} (q : G.V) (D : CFDiv G) : Prop :=
+  ∀ x : G.V, x ≠ q → D x ≥ 0
 
-namespace Utilities
+/-- Firing `S` keeps every vertex of `S` out of debt. -/
+def legal_set (G : CFGraph) (D : CFDiv G) (S : Finset G.V) : Prop :=
+  ∀ x ∈ S, outdeg_S G S x ≤ D x
+
+/-- A `q`-reduced divisor: effective away from `q`, and no nonempty set
+avoiding `q` can be fired legally. -/
+def q_reduced (G : CFGraph) (q : G.V) (D : CFDiv G) : Prop :=
+  q_effective q D ∧
+  ∀ S : Finset G.V, q ∉ S → S.Nonempty → ¬ legal_set G D S
+
+/-! ### Brill--Noether parameters -/
+
+/-- The width `g - d + r` of the Brill--Noether rectangle. -/
+def rectangleWidth (G : CFGraph) (r d : ℤ) : ℤ :=
+  genus G - d + r
 
 /-- The Brill--Noether number. -/
 def bnNumber (G : CFGraph) (r d : ℤ) : ℤ :=
-  genus G - (r + 1) * (genus G - d + r)
+  genus G - (r + 1) * rectangleWidth G r d
 
 /-- Existence of a degree-`d` divisor of rank at least `r`. -/
 def BNExists (G : CFGraph) (r d : ℤ) : Prop :=
-  ∃ D : CFDiv G, deg D = d ∧ rank_geq G D r
+  ∃ D : CFDiv G, deg D = d ∧ rank G D ≥ r
+
+/-! ### Graph isomorphisms and vertex gluing -/
 
 /-- A graph isomorphism is a vertex equivalence preserving multiplicities. -/
 structure CFGraphIso (G : CFGraph.{u}) (H : CFGraph.{v}) where
   vertexEquiv : G.V ≃ H.V
-  map_num_edges : ∀ x y,
+  map_num_edges : ∀ x y : G.V,
     num_edges H (vertexEquiv x) (vertexEquiv y) = num_edges G x y
 
-namespace CFGraphIso
-
 /-- Push a divisor forward along a graph isomorphism. -/
-def mapDiv {G : CFGraph.{u}} {H : CFGraph.{v}} (φ : CFGraphIso G H)
-    (D : CFDiv G) : CFDiv H := fun y => D (φ.vertexEquiv.symm y)
-
-end CFGraphIso
+def CFGraphIso.mapDiv {G : CFGraph.{u}} {H : CFGraph.{v}} (φ : CFGraphIso G H)
+    (D : CFDiv G) : CFDiv H :=
+  fun y => D (φ.vertexEquiv.symm y)
 
 /-- Embed a right-factor vertex into a vertex wedge. -/
 def wedgeRightVertex (G : CFGraph.{u}) (H : CFGraph.{v})
-    (x : G.V) (y : H.V) : H.V → Sum G.V {z : H.V // z ≠ y} :=
-  fun z => if h : z = y then Sum.inl x else Sum.inr ⟨z, h⟩
+    (x : G.V) (y : H.V) : H.V → Sum G.V {b : H.V // b ≠ y} :=
+  fun b => if h : b = y then Sum.inl x else Sum.inr ⟨b, h⟩
 
 /-- Identify `x` and `y` in the disjoint union of two graphs. -/
 def vertexWedge (G : CFGraph.{u}) (H : CFGraph.{v})
     (x : G.V) (y : H.V) : CFGraph.{max u v} where
-  V := Sum G.V {z : H.V // z ≠ y}
+  V := Sum G.V {b : H.V // b ≠ y}
   edges :=
     G.edges.map (fun e => (Sum.inl e.1, Sum.inl e.2)) +
       H.edges.map (fun e =>
         (wedgeRightVertex G H x y e.1, wedgeRightVertex G H x y e.2))
   loopless := by
     intro z hz
-    simp only [Multiset.mem_add] at hz
+    rw [Multiset.mem_add] at hz
     rcases hz with hG | hH
     · rw [Multiset.mem_map] at hG
       obtain ⟨⟨a, b⟩, hab, hEq⟩ := hG
       cases z with
       | inl z =>
-          simp only [Prod.mk.injEq, Sum.inl.injEq] at hEq
-          rcases hEq with ⟨rfl, rfl⟩
+          have ha : a = z := Sum.inl.inj (congrArg Prod.fst hEq)
+          have hb : b = z := Sum.inl.inj (congrArg Prod.snd hEq)
+          subst ha
+          subst hb
           exact G.loopless _ hab
-      | inr z => simp at hEq
+      | inr z => exact Sum.inl_ne_inr (congrArg Prod.fst hEq)
     · rw [Multiset.mem_map] at hH
       obtain ⟨⟨a, b⟩, hab, hEq⟩ := hH
       have hmap : wedgeRightVertex G H x y a = wedgeRightVertex G H x y b :=
         (congrArg Prod.fst hEq).trans (congrArg Prod.snd hEq).symm
       have hab' : a = b := by
+        simp only [wedgeRightVertex] at hmap
         by_cases ha : a = y
-        · subst a
-          simp [wedgeRightVertex] at hmap
-          exact hmap.symm
         · by_cases hb : b = y
-          · subst b
-            simp [wedgeRightVertex, ha] at hmap
-          · simpa [wedgeRightVertex, ha, hb] using hmap
-      exact H.loopless _ (hab' ▸ hab)
+          · exact ha.trans hb.symm
+          · rw [dif_pos ha, dif_neg hb] at hmap
+            exact absurd hmap Sum.inl_ne_inr
+        · by_cases hb : b = y
+          · rw [dif_neg ha, dif_pos hb] at hmap
+            exact absurd hmap Sum.inr_ne_inl
+          · rw [dif_neg ha, dif_neg hb] at hmap
+            exact congrArg Subtype.val (Sum.inr.inj hmap)
+      subst hab'
+      exact H.loopless _ hab
 
 /-- Add factor divisors on their vertex wedge. -/
 def wedgeAddDivisor (G : CFGraph.{u}) (H : CFGraph.{v})
@@ -237,10 +290,14 @@ def chain (M : MarkedGraph) : List MarkedGraph → MarkedGraph
 
 end MarkedGraph
 
+/-- Total multiplicity of the edges leaving `S`. -/
+def cutMultiplicity (G : CFGraph) (S : Finset G.V) : ℤ :=
+  ∑ x ∈ S, outdeg_S G S x
+
 /-- Every nonempty proper cut has at least two crossing edges. -/
 def TwoEdgeCutCondition (G : CFGraph) : Prop :=
   ∀ S : Finset G.V, S.Nonempty → S ≠ Finset.univ →
-    2 ≤ ∑ x ∈ S, ∑ y ∈ Sᶜ, (num_edges G x y : ℤ)
+    2 ≤ cutMultiplicity G S
 
 /-- A pointed genus-one graph whose marked point is the unique vertex in its
 degree-zero linear-equivalence class. -/
@@ -251,86 +308,146 @@ structure PointedGenusOneRigid (H : CFGraph) (y : H.V) : Prop where
   nontrivial : ∀ p : H.V, p ≠ y →
     ¬ linear_equiv H (one_chip y - one_chip p) 0
 
-end Utilities
+/-! ### Banana graphs -/
 
-namespace Bananas
-
-open Utilities
-
-/-- A positive integral banana graph with `g+1` labelled strands. -/
+/-- A positive integral banana graph with `g + 1` labelled strands between
+two multivalent vertices `0` and `1`.  Each strand records which multivalent
+vertex is its tail and which is its head (a storage orientation only; the
+graph below is undirected), together with its positive length. -/
 structure Banana (g : ℕ) where
+  tail : Fin (g + 1) → Fin 2
+  head : Fin (g + 1) → Fin 2
   length : Fin (g + 1) → ℕ
+  core_loopless : ∀ α, tail α ≠ head α
   length_pos : ∀ α, 0 < length α
 
 namespace Banana
 
-/-- Interior vertices remember their strand and offset. -/
-abbrev Interior {g : ℕ} (B : Banana g) :=
-  Σ α : Fin (g + 1), Fin (B.length α - 1)
+variable {g : ℕ} (B : Banana g)
 
-/-- Vertices are the two endpoints and all strand interiors. -/
-abbrev Vertex {g : ℕ} (B : Banana g) := Fin 2 ⊕ B.Interior
+/-- Interior vertices remember their strand and offset; offset `j` denotes
+path position `j + 1` from the tail. -/
+abbrev Interior := Σ α : Fin (g + 1), Fin (B.length α - 1)
+
+/-- Vertices are the two multivalent vertices and all strand interiors. -/
+abbrev Vertex := Fin 2 ⊕ B.Interior
 
 /-- Unit steps along all strands. -/
-abbrev Step {g : ℕ} (B : Banana g) :=
-  Σ α : Fin (g + 1), Fin (B.length α)
+abbrev Step := Σ α : Fin (g + 1), Fin (B.length α)
 
-/-- Positions `0, ..., length` along a strand. -/
-abbrev PathPosition {g : ℕ} (B : Banana g) (α : Fin (g + 1)) :=
-  Fin (B.length α + 1)
+/-- Positions `0, ..., length` along a strand, measured from its tail. -/
+abbrev PathPosition (α : Fin (g + 1)) := Fin (B.length α + 1)
 
-private def stepLeft {g : ℕ} (B : Banana g) (s : B.Step) : B.Vertex :=
-  if h : s.2.val = 0 then Sum.inl 0
-  else Sum.inr ⟨s.1, ⟨s.2.val - 1, by have := s.2.isLt; omega⟩⟩
+/-- A multivalent vertex. -/
+def coreVertex (i : Fin 2) : B.Vertex := Sum.inl i
 
-private def stepRight {g : ℕ} (B : Banana g) (s : B.Step) : B.Vertex :=
-  if h : s.2.val + 1 = B.length s.1 then Sum.inl 1
-  else Sum.inr ⟨s.1, ⟨s.2.val, by have := s.2.isLt; omega⟩⟩
+/-- An interior vertex. -/
+def interiorVertex (α : Fin (g + 1)) (offset : Fin (B.length α - 1)) :
+    B.Vertex :=
+  Sum.inr ⟨α, offset⟩
+
+/-- The left endpoint of a unit step. -/
+def stepLeft (α : Fin (g + 1)) (offset : Fin (B.length α)) : B.Vertex :=
+  if hzero : offset.val = 0 then B.coreVertex (B.tail α)
+  else B.interiorVertex α ⟨offset.val - 1, by have := offset.isLt; omega⟩
+
+/-- The right endpoint of a unit step. -/
+def stepRight (α : Fin (g + 1)) (offset : Fin (B.length α)) : B.Vertex :=
+  if hlast : offset.val + 1 = B.length α then B.coreVertex (B.head α)
+  else B.interiorVertex α ⟨offset.val, by have := offset.isLt; omega⟩
+
+/-- The ordered pair emitted by one unit step. -/
+def unitEdge (step : B.Step) : B.Vertex × B.Vertex :=
+  (B.stepLeft step.1 step.2, B.stepRight step.1 step.2)
+
+theorem stepLeft_ne_stepRight (α : Fin (g + 1)) (offset : Fin (B.length α)) :
+    B.stepLeft α offset ≠ B.stepRight α offset := by
+  unfold stepLeft stepRight
+  by_cases hzero : offset.val = 0
+  · rw [dif_pos hzero]
+    by_cases hlast : offset.val + 1 = B.length α
+    · rw [dif_pos hlast]
+      intro heq
+      exact B.core_loopless α (Sum.inl.inj heq)
+    · rw [dif_neg hlast]
+      exact Sum.inl_ne_inr
+  · rw [dif_neg hzero]
+    by_cases hlast : offset.val + 1 = B.length α
+    · rw [dif_pos hlast]
+      exact Sum.inr_ne_inl
+    · rw [dif_neg hlast]
+      intro heq
+      have h : offset.val - 1 = offset.val :=
+        congrArg (fun z : B.Interior => z.2.val) (Sum.inr.inj heq)
+      omega
 
 /-- Replace every labelled strand by a path of its specified length. -/
-def graph {g : ℕ} (B : Banana g) : CFGraph where
+def graph : CFGraph where
   V := B.Vertex
-  instNonempty := ⟨Sum.inl 0⟩
-  edges := (Finset.univ : Finset B.Step).val.map fun s =>
-    (B.stepLeft s, B.stepRight s)
+  instNonempty := ⟨B.coreVertex 0⟩
+  edges := (Finset.univ : Finset B.Step).val.map B.unitEdge
   loopless := by
     intro z hz
-    simp only [Multiset.mem_map, Finset.mem_val, Finset.mem_univ, true_and]
-      at hz
-    obtain ⟨s, hEq⟩ := hz
-    have hne : B.stepLeft s ≠ B.stepRight s := by
-      unfold stepLeft stepRight
-      split_ifs
-      · simp
-      · simp
-      · simp
-      · intro h
-        have : s.2.val - 1 = s.2.val :=
-          congrArg (fun x => x.2.val) (Sum.inr.inj h)
-        omega
-    exact hne ((Prod.mk.inj hEq).1.trans (Prod.mk.inj hEq).2.symm)
+    rw [Multiset.mem_map] at hz
+    obtain ⟨step, _, hstep⟩ := hz
+    exact B.stepLeft_ne_stepRight step.1 step.2
+      ((congrArg Prod.fst hstep).trans (congrArg Prod.snd hstep).symm)
+
+/-- The vertex at a path position along a strand, measured from the
+strand's tail. -/
+def pathVertex (α : Fin (g + 1)) (i : B.PathPosition α) : B.Vertex :=
+  if hzero : i.val = 0 then B.coreVertex (B.tail α)
+  else if hlast : i.val = B.length α then B.coreVertex (B.head α)
+  else B.interiorVertex α ⟨i.val - 1, by have := i.isLt; omega⟩
+
+/-- Interior positions exclude the two shared endpoints. -/
+def IsInteriorPosition (α : Fin (g + 1)) (i : B.PathPosition α) : Prop :=
+  0 < i.val ∧ i.val < B.length α
 
 end Banana
 
-/-- Construct a banana from positive strand lengths. -/
+/-- Construct a banana from positive strand lengths, every strand oriented
+from `0` to `1`. -/
 def bananaOfLengths (g : ℕ) (length : Fin (g + 1) → ℕ)
-    (hpos : ∀ α, 0 < length α) : Banana g := ⟨length, hpos⟩
+    (hpos : ∀ α, 0 < length α) : Banana g where
+  tail := fun _ => 0
+  head := fun _ => 1
+  length := length
+  core_loopless := fun _ => by decide
+  length_pos := hpos
 
-/-- Vertex at a normalized position along a strand. -/
+/-- The vertex `v_{α,i}` at normalized position `i` along strand `α`,
+measured from multivalent vertex `0`; the stored orientation of the strand is
+reversed when necessary. -/
 def strandVertex {g : ℕ} (B : Banana g) (α : Fin (g + 1))
     (i : B.PathPosition α) : B.graph.V :=
-  if hzero : i.val = 0 then Sum.inl 0
-  else if hlast : i.val = B.length α then Sum.inl 1
-  else Sum.inr ⟨α, ⟨i.val - 1, by have := i.isLt; omega⟩⟩
+  B.pathVertex α
+    (if B.tail α = 0 then i else
+      ⟨B.length α - i.val, by have := i.isLt; omega⟩)
 
 /-- Reflection of a strand coordinate. -/
 def strandMirror {g : ℕ} (B : Banana g) (α : Fin (g + 1))
     (i : B.PathPosition α) : B.PathPosition α :=
   ⟨B.length α - i.val, by have := i.isLt; omega⟩
 
-/-- The two multivalent endpoints. -/
-def leftEndpoint {g : ℕ} (B : Banana g) : B.graph.V := Sum.inl 0
-def rightEndpoint {g : ℕ} (B : Banana g) : B.graph.V := Sum.inl 1
+/-- The two multivalent vertices. -/
+def leftEndpoint {g : ℕ} (B : Banana g) : B.graph.V := B.coreVertex 0
+def rightEndpoint {g : ℕ} (B : Banana g) : B.graph.V := B.coreVertex 1
+
+namespace TwoPathCycle
+
+/-- A two-path cycle is the genus-one banana with the prescribed lengths. -/
+def spec (length : Fin 2 → ℕ) (hLength : ∀ edge, 0 < length edge) :
+    Banana 1 where
+  tail := fun _ => 0
+  head := fun _ => 1
+  length := length
+  core_loopless := fun _ => by decide
+  length_pos := hLength
+
+end TwoPathCycle
+
+/-! ### Twice-marked graphs and transmission -/
 
 /-- A graph with two ordered marked vertices. -/
 structure TwiceMarked where
@@ -366,7 +483,7 @@ def TorsionWitness (M : TwiceMarked) (k : ℕ) : Prop :=
 
 /-- The least positive torsion witness. -/
 def IsTorsionOrder (M : TwiceMarked) (k : ℕ) : Prop :=
-  TorsionWitness M k ∧ ∀ m, TorsionWitness M m → k ≤ m
+  TorsionWitness M k ∧ ∀ m : ℕ, TorsionWitness M m → k ≤ m
 
 /-- Rank-difference characterization of a transmission permutation. -/
 def IsTransmissionPermutation (M : TwiceMarked) (D : CFDiv M.graph)
@@ -381,7 +498,7 @@ def IsKAffine (k : ℕ) (τ : ℤ → ℤ) : Prop :=
 
 /-- Fundamental-domain representatives of affine inversions. -/
 def kInversions (k : ℕ) (τ : ℤ → ℤ) : Set (ℤ × ℤ) :=
-  {p | p.1 < p.2 ∧ τ p.1 > τ p.2 ∧ 0 ≤ p.1 ∧ p.1 < k}
+  { p | p.1 < p.2 ∧ τ p.1 > τ p.2 ∧ 0 ≤ p.1 ∧ p.1 < k }
 
 /-- Number of affine inversions. -/
 noncomputable def kInversionCount (k : ℕ) (τ : ℤ → ℤ) : ℕ :=
@@ -393,30 +510,27 @@ def KGeneralTransmission (M : TwiceMarked) (k : ℕ) : Prop :=
     ∀ D : CFDiv M.graph, ∃ τ : ℤ → ℤ,
       IsTransmissionPermutation M D τ ∧ IsKAffine k τ ∧
         (kInversions k τ).Finite ∧
-          kInversionCount k τ ≤ (genus M.graph).toNat
+          kInversionCount k τ ≤ Int.toNat (genus M.graph)
 
 /-- Brill--Noether generality in the nonexistence direction. -/
 def BrillNoetherGeneral (G : CFGraph) : Prop :=
   ∀ r d : ℤ, 0 ≤ r → BNExists G r d → 0 ≤ bnNumber G r d
 
-/-- Interior positions exclude the two shared endpoints. -/
-def Banana.IsInteriorPosition {g : ℕ} (B : Banana g)
-    (α : Fin (g + 1)) (i : B.PathPosition α) : Prop :=
-  0 < i.val ∧ i.val < B.length α
+/-- The exceptional same-strand position set from Theorem 3.4. -/
+def thetaExceptionalPositions {g : ℕ} (B : Banana g) (α : Fin (g + 1))
+    (i j : B.PathPosition α) : Set (B.PathPosition α) :=
+  { q | (q.val : ℤ) ≠ (B.length α : ℤ) - (i.val : ℤ) ∧
+      (q.val : ℤ) ≠ (j.val : ℤ) ∧
+      (j.val : ℤ) - (i.val : ℤ) ≤ (q.val : ℤ) ∧
+      (q.val : ℤ) ≤ (j.val : ℤ) - (i.val : ℤ) + (B.length α : ℤ) }
 
-/-- Even marking on two distinct theta strands. -/
+/-- Even marking on two distinct theta strands, by cross multiplication. -/
 def EvenlyMarkedTheta (B : Banana 2) (α β : Fin 3)
     (i : B.PathPosition α) (j : B.PathPosition β) : Prop :=
-  α ≠ β ∧ B.IsInteriorPosition α i ∧ B.IsInteriorPosition β j ∧
+  α ≠ β ∧ 0 < i.val ∧ i.val < B.length α ∧ 0 < j.val ∧ j.val < B.length β ∧
     i.val * B.length β = j.val * B.length α
 
-/-- The exceptional same-strand position set from Theorem 3.4. -/
-def thetaExceptionalPositions {g : ℕ} (B : Banana g)
-    (α : Fin (g + 1)) (i j : B.PathPosition α) : Set (B.PathPosition α) :=
-  {q | (q.val : ℤ) ≠ (B.length α : ℤ) - i.val ∧
-    (q.val : ℤ) ≠ j.val ∧
-    (j.val : ℤ) - i.val ≤ q.val ∧
-    (q.val : ℤ) ≤ (j.val : ℤ) - i.val + B.length α}
+/-! ### Chains of factors -/
 
 /-- One factor in a mixed-torsion chain. -/
 structure KGeneralChainFactor where
@@ -439,29 +553,61 @@ def chainFactorGenus (L : List KGeneralChainFactor) : ℤ :=
 
 /-- Sharp two-sided torsion budget for a chain. -/
 def ChainMinBudget (L : List KGeneralChainFactor) : Prop :=
-  ∀ i : ℕ, ∀ hi : i < L.length,
-    min (chainFactorGenus (L.take (i + 1))) (chainFactorGenus (L.drop i)) <
+  ∀ (i : ℕ) (hi : i < L.length),
+    min (chainFactorGenus (L.take (i + 1)))
+        (chainFactorGenus (L.drop i)) <
       ((L.get ⟨i, hi⟩).period : ℤ)
 
-/-- Pole order at a marked point. -/
-noncomputable def poleOrder (G : CFGraph) (D : CFDiv G) (x : G.V)
+/-! ### Weierstrass partitions and the once-marked census -/
+
+/-- Twists at the marked point having rank at least `i`. -/
+def poleOrderSet (G : CFGraph) (v : G.V) (D : CFDiv G) (i : ℕ) : Set ℤ :=
+  {ell | (i : ℤ) ≤ rank G (D + ell • one_chip v)}
+
+/-- Pole order `s_i(D, v)`: the least twist of rank at least `i`. -/
+noncomputable def poleOrder (G : CFGraph) (v : G.V) (D : CFDiv G)
     (i : ℕ) : ℤ :=
-  sInf {a : ℤ | (i : ℤ) ≤ rank G (D + a • one_chip x)}
+  sInf (poleOrderSet G v D i)
 
-/-- A Weierstrass partition row. -/
-noncomputable def weierstrassPart (G : CFGraph) (D : CFDiv G) (x : G.V)
+/-- The `i`th Weierstrass part `i + g - deg D - s_i(D, v)`, over `ℤ`. -/
+noncomputable def weierstrassPartInt (G : CFGraph) (v : G.V) (D : CFDiv G)
+    (i : ℕ) : ℤ :=
+  (i : ℤ) + genus G - deg D - poleOrder G v D i
+
+/-- The `i`th Weierstrass part as a natural number. -/
+noncomputable def weierstrassPart (G : CFGraph) (v : G.V) (D : CFDiv G)
     (i : ℕ) : ℕ :=
-  (i + (genus G).toNat - (deg D).toNat - (poleOrder G D x i).toNat)
+  (weierstrassPartInt G v D i).toNat
 
-/-- Size of the Weierstrass partition. -/
+/-- Size `|λ(D, v)|` of the Weierstrass partition: the sum of its parts.  On
+a connected graph only the first `g` parts can be nonzero, so the sum is
+taken over those. -/
 noncomputable def weierstrassSize {G : CFGraph}
-    (_hconn : graph_connected G) (x : G.V) (D : CFDiv G) : ℕ :=
-  ∑' i : ℕ, weierstrassPart G D x i
+    (_hconn : graph_connected G) (v : G.V) (D : CFDiv G) : ℕ :=
+  ∑ i ∈ Finset.range (genus G).toNat, weierstrassPart G v D i
 
-/-- Once-marked Brill--Noether generality. -/
-def OnceMarkedBrillNoetherGeneral (G : CFGraph) (x : G.V) : Prop :=
-  ∀ D : CFDiv G, ∀ hconn : graph_connected G,
-    (weierstrassSize hconn x D : ℤ) ≤ genus G
+/-- The `i`th part of a Young diagram, extended by zero. -/
+def onceMarkedPart (lambda : YoungDiagram) (i : ℕ) : ℕ :=
+  lambda.rowLens.getD i 0
+
+/-- Membership of a partition in the divisor census of a once-marked graph:
+some divisor has `λ_i(D, v) ≥ λ_i` for every `i`, written as the rank test
+`r(D + (i + g - deg D - λ_i) v) ≥ i`. -/
+def OnceMarkedCensusContains (G : CFGraph) (v : G.V)
+    (lambda : YoungDiagram) : Prop :=
+  ∃ D : CFDiv G,
+    ∀ i : ℕ,
+      rank G
+        (D + ((i : ℤ) + genus G - deg D - (onceMarkedPart lambda i : ℤ)) •
+          one_chip v) ≥ (i : ℤ)
+
+/-- Once-marked Brill--Noether generality: every partition in the divisor
+census has size at most the genus. -/
+def OnceMarkedBrillNoetherGeneral (G : CFGraph) (v : G.V) : Prop :=
+  ∀ lambda : YoungDiagram,
+    OnceMarkedCensusContains G v lambda → (lambda.card : ℤ) ≤ genus G
+
+/-! ### Support complexes and rank determining sets -/
 
 /-- Support on which deleting one chip leaves nonnegative rank. -/
 def rankSupport (G : CFGraph) (D : CFDiv G) : Set G.V :=
@@ -479,17 +625,19 @@ def restrictedRankGeq (G : CFGraph) (A : Set G.V)
 
 /-- A set tests every divisor-rank lower bound. -/
 def RankDetermining (G : CFGraph) (A : Set G.V) : Prop :=
-  ∀ D r, restrictedRankGeq G A D r ↔ rank_geq G D r
+  ∀ (D : CFDiv G) (r : ℤ), restrictedRankGeq G A D r ↔ rank_geq G D r
+
+/-! ### Banana normal forms and exceptional families -/
 
 /-- A semibreak divisor has at most one chosen interior chip per strand. -/
 def semibreakDivisor {g : ℕ} (B : Banana g)
-    (chips : ∀ α, Option (Fin (B.length α - 1))) : CFDiv B.graph
+    (chips : ∀ α : Fin (g + 1), Option (Fin (B.length α - 1))) : CFDiv B.graph
   | Sum.inl _ => 0
   | Sum.inr ⟨α, offset⟩ => if chips α = some offset then 1 else 0
 
 /-- Membership in the semibreak family. -/
 def IsSemibreak {g : ℕ} (B : Banana g) (E : CFDiv B.graph) : Prop :=
-  ∃ chips : ∀ α, Option (Fin (B.length α - 1)),
+  ∃ chips : ∀ α : Fin (g + 1), Option (Fin (B.length α - 1)),
     E = semibreakDivisor B chips
 
 /-- Endpoint/semibreak normal form. -/
@@ -510,7 +658,7 @@ def FarFromBananaEndpoints {g : ℕ} (B : Banana g)
 def CorrectedBananaSimpleException {g : ℕ} (B : Banana g)
     (α β : Fin (g + 1)) (i : B.PathPosition α) (j : B.PathPosition β) : Prop :=
   (α ≠ β ∧ B.length β = 2 ∧ j.val = 1) ∨
-    (α ≠ β ∧ B.length α = 2 ∧ i.val = 1)
+  (α ≠ β ∧ B.length α = 2 ∧ i.val = 1)
 
 /-- Corrected midpoint exception in high genus. -/
 def CorrectedMidpointException {g : ℕ} (B : Banana g)
@@ -526,28 +674,49 @@ def VertexOnBananaStrand {g : ℕ} (B : Banana g) (α : Fin (g + 1))
 /-- Three vertices lie on one common strand. -/
 def VerticesOnCommonBananaStrand {g : ℕ} (B : Banana g)
     (x y z : B.graph.V) : Prop :=
-  ∃ α, VertexOnBananaStrand B α x ∧ VertexOnBananaStrand B α y ∧
-    VertexOnBananaStrand B α z
+  ∃ α : Fin (g + 1),
+    VertexOnBananaStrand B α x ∧
+      VertexOnBananaStrand B α y ∧
+      VertexOnBananaStrand B α z
+
+/-- The corrected cross-strand exceptional coordinates of Theorem 3.9 for
+two strictly interior marks. -/
+def NSMForBananaInteriorException {g : ℕ} (B : Banana g)
+    (α β : Fin (g + 1)) (i : B.PathPosition α) (j : B.PathPosition β) : Prop :=
+  α ≠ β ∧
+    ((i.val = 1 ∧ j.val + 1 = B.length β) ∨
+      (i.val + 1 = B.length α ∧ j.val = 1) ∨
+      (B.length α = 2 ∧ i.val = 1) ∨
+      (B.length β = 2 ∧ j.val = 1))
 
 /-- Endpoint-safe exceptional alternatives in corrected Theorem 3.9. -/
 def NSMForBananaException {g : ℕ} (B : Banana g) (u v : B.graph.V) : Prop :=
-  u = leftEndpoint B ∨ u = rightEndpoint B ∨
-    v = leftEndpoint B ∨ v = rightEndpoint B ∨
-      ∃ α β i j, α ≠ β ∧ B.IsInteriorPosition α i ∧
-        B.IsInteriorPosition β j ∧ u = strandVertex B α i ∧
-          v = strandVertex B β j
+    (u = leftEndpoint B ∧ v = rightEndpoint B) ∨
+    (u = rightEndpoint B ∧ v = leftEndpoint B) ∨
+    (∃ (α : Fin (g + 1)) (p : B.PathPosition α), B.IsInteriorPosition α p ∧
+      ((u = leftEndpoint B ∧ v = strandVertex B α p ∧ p.val + 1 = B.length α) ∨
+       (u = rightEndpoint B ∧ v = strandVertex B α p ∧ p.val = 1) ∨
+       (v = leftEndpoint B ∧ u = strandVertex B α p ∧ p.val + 1 = B.length α) ∨
+       (v = rightEndpoint B ∧ u = strandVertex B α p ∧ p.val = 1))) ∨
+    (∃ (α β : Fin (g + 1)) (i : B.PathPosition α) (j : B.PathPosition β),
+      B.IsInteriorPosition α i ∧ B.IsInteriorPosition β j ∧
+      u = strandVertex B α i ∧ v = strandVertex B β j ∧
+      NSMForBananaInteriorException B α β i j)
 
 /-- Coordinate alternatives for all-submodular theta markings. -/
-def ThetaAllSubmodularCoordinates (B : Banana 2) (α β : Fin 3)
+def ThetaAllSubmodularCoordinates
+    (B : Banana 2) (α β : Fin 3)
     (i : B.PathPosition α) (j : B.PathPosition β) : Prop :=
-  (α ≠ β ∧ B.IsInteriorPosition α i ∧ B.IsInteriorPosition β j) ∨
-    ∃ γ : Fin 3, ∃ p q : B.PathPosition γ,
+  (α ≠ β ∧ B.IsInteriorPosition α i ∧
+      B.IsInteriorPosition β j) ∨
+    ∃ (γ : Fin 3) (p q : B.PathPosition γ),
       p.val < q.val ∧
-      ((p.val = 0 ∧ (q.val + 1 = B.length γ ∨ q.val = B.length γ)) ∨
+      ((p.val = 0 ∧
+          (q.val + 1 = B.length γ ∨ q.val = B.length γ)) ∨
         (p.val = 1 ∧ q.val = B.length γ)) ∧
       ((strandVertex B α i = strandVertex B γ p ∧
           strandVertex B β j = strandVertex B γ q) ∨
-       (strandVertex B α i = strandVertex B γ q ∧
+        (strandVertex B α i = strandVertex B γ q ∧
           strandVertex B β j = strandVertex B γ p))
 
 /-- The four exceptional transmission rows in genus two. -/
@@ -557,27 +726,33 @@ def ThetaTransmissionSubTwoCase
 
 def ThetaTransmissionSubOneCase
     (B : Banana 2) (u v : B.graph.V) (X : CFDiv B.graph) : Prop :=
-  ∃ w, linear_equiv B.graph X (one_chip u + one_chip w) ∧
+  ∃ w : B.graph.V,
+    linear_equiv B.graph X (one_chip u + one_chip w) ∧
     ¬ linear_equiv B.graph (one_chip w - one_chip u) 0 ∧
     ¬ linear_equiv B.graph (one_chip w - one_chip v) 0
 
 def ThetaTransmissionAddOneCase
     (B : Banana 2) (u v : B.graph.V) (X : CFDiv B.graph) : Prop :=
-  ∃ w, linear_equiv B.graph X (one_chip v + one_chip w) ∧
-    ¬ linear_equiv B.graph (one_chip u + one_chip w) (canonical_divisor B.graph) ∧
-    ¬ linear_equiv B.graph (one_chip v + one_chip w) (canonical_divisor B.graph)
+  ∃ w : B.graph.V,
+    linear_equiv B.graph X (one_chip v + one_chip w) ∧
+    ¬ linear_equiv B.graph
+      (one_chip u + one_chip w) (canonical_divisor B.graph) ∧
+    ¬ linear_equiv B.graph
+      (one_chip v + one_chip w) (canonical_divisor B.graph)
 
 def ThetaTransmissionAddTwoCase
     (B : Banana 2) (u v : B.graph.V) (X : CFDiv B.graph) : Prop :=
-  linear_equiv B.graph X (canonical_divisor B.graph - one_chip u + one_chip v)
+  linear_equiv B.graph X
+    (canonical_divisor B.graph - one_chip u + one_chip v)
 
 /-- Concrete finite-residue nonrecurrence. -/
 def NonRecurrent (M : TwiceMarked) (k : ℕ) : Prop :=
-  ∀ w : M.graph.V, ∀ n m : Fin k, n.val ≠ 0 → m.val ≠ 0 →
-    0 ≤ rank M.graph (one_chip w + (n.val : ℤ) •
-      (one_chip M.u - one_chip M.v)) →
-    0 ≤ rank M.graph (one_chip w + (m.val : ℤ) •
-      (one_chip M.u - one_chip M.v)) → n = m
+  ∀ (w : M.graph.V) (n m : Fin k), n.val ≠ 0 → m.val ≠ 0 →
+    0 ≤ rank M.graph
+      (one_chip w + (n.val : ℤ) • (one_chip M.u - one_chip M.v)) →
+    0 ≤ rank M.graph
+      (one_chip w + (m.val : ℤ) • (one_chip M.u - one_chip M.v)) →
+    n = m
 
 /-- The three coordinate families in the theta branch of Theorem 4.13. -/
 def ThetaKGeneralCoordinates
@@ -645,14 +820,15 @@ def BridgelessGenusTwoKGeneralCharacterization
       WedgeKGeneralPlacement base factor attachment root
         (φ.vertexEquiv u) (φ.vertexEquiv v) k)
 
-/-- Pairwise disjointness of the canonical marked supports. -/
+/-- Pairwise disjointness of the canonical marked supports at the nonzero
+torsion residues. -/
 def CanonicalMarkedSupportsPairwiseDisjoint (M : TwiceMarked) (k : ℕ) : Prop :=
-  ∀ n m : Fin k, n ≠ m →
+  ∀ n m : Fin k, n.val ≠ 0 → m.val ≠ 0 → n ≠ m →
     Disjoint
-      (rankSupport M.graph (canonical_divisor M.graph +
-        (n.val : ℤ) • (one_chip M.u - one_chip M.v)))
-      (rankSupport M.graph (canonical_divisor M.graph +
-        (m.val : ℤ) • (one_chip M.u - one_chip M.v)))
+      (rankSupport M.graph
+        (canonical_divisor M.graph - (n.val : ℤ) • (one_chip M.u - one_chip M.v)))
+      (rankSupport M.graph
+        (canonical_divisor M.graph - (m.val : ℤ) • (one_chip M.u - one_chip M.v)))
 
 /-- Degree-`d` representative at a marked-difference index. -/
 noncomputable def degreeTwistInt
@@ -664,26 +840,30 @@ def effectiveDegreeOneTwistResidues
     (M : TwiceMarked) (D : CFDiv M.graph) (k : ℕ) : Set (Fin k) :=
   {b | 0 ≤ rank M.graph (degreeTwistInt M D 1 b.val)}
 
+open Classical in
 /-- Correction term in Lemma 4.10. -/
 noncomputable def invTauCorrection (M : TwiceMarked) (D : CFDiv M.graph) : ℤ :=
-  by
-    classical
-    exact if (∃ b, linear_equiv M.graph (degreeTwistInt M D 0 b) 0) ∧
-        linear_equiv M.graph (one_chip M.u + one_chip M.v)
-          (canonical_divisor M.graph) then 1 else 0
+  if (∃ b : ℤ, linear_equiv M.graph (degreeTwistInt M D 0 b) 0) ∧
+      linear_equiv M.graph (one_chip M.u + one_chip M.v)
+        (canonical_divisor M.graph)
+    then 1 else 0
 
 /-- Southeast and northwest quadrant index sets. -/
-def southeast_set (τ : ℤ → ℤ) (m n : ℤ) : Set ℤ :=
-  {k | n ≤ k ∧ τ k < m}
+def southeast_set (τ : ℤ → ℤ) (m n : ℤ) : Set ℤ := { k : ℤ | n ≤ k ∧ τ k < m }
 
-def northwest_set (τ : ℤ → ℤ) (m n : ℤ) : Set ℤ :=
-  {k | k < n ∧ m ≤ τ k}
+def northwest_set (τ : ℤ → ℤ) (m n : ℤ) : Set ℤ := { k : ℤ | k < n ∧ m ≤ τ k }
+
+/-- Set-theoretic inverse of an integer function. -/
+noncomputable def rawInverse (τ : ℤ → ℤ) : ℤ → ℤ :=
+  Function.invFun τ
+
+/-- Conjugation by negation. -/
+def rawAffineReflection (τ : ℤ → ℤ) : ℤ → ℤ :=
+  fun n => -τ (-n)
 
 /-- Reflected inverse used when swapping marks. -/
-noncomputable def rawInverse (τ : ℤ → ℤ) : ℤ → ℤ := Function.invFun τ
-
 noncomputable def swapTransmissionPermutation (τ : ℤ → ℤ) : ℤ → ℤ :=
-  fun n => -rawInverse τ (-n)
+  rawAffineReflection (rawInverse τ)
 
 /-- Riemann--Roch dual divisor with both marks restored. -/
 def transmissionDualDivisor {G : CFGraph} (u v : G.V) (D : CFDiv G) : CFDiv G :=
@@ -691,7 +871,7 @@ def transmissionDualDivisor {G : CFGraph} (u v : G.V) (D : CFDiv G) : CFDiv G :=
 
 /-- Sign-changing inversions and their number. -/
 def sciSet (τ : ℤ → ℤ) : Set (ℤ × ℤ) :=
-  {p | p.1 < p.2 ∧ 0 < τ p.1 ∧ τ p.2 ≤ 0}
+  { p | p.1 < p.2 ∧ 0 < τ p.1 ∧ τ p.2 ≤ 0 }
 
 noncomputable def sci (τ : ℤ → ℤ) : ℕ := (sciSet τ).ncard
 
@@ -710,10 +890,12 @@ structure MarkedPointSwap (M : TwiceMarked) extends MarkedPointAutomorphism M wh
 noncomputable def sectionFiveRankDropSum
     (M : TwiceMarked) (D : CFDiv M.graph) (k : ℕ) : ℤ :=
   ∑ m : Fin k,
-    (rank M.graph (D + ((((m : ℕ) : ℤ) - 1) • one_chip M.u) -
-      ((m : ℕ) : ℤ) • one_chip M.v) -
-    rank M.graph (D + ((((m : ℕ) : ℤ) - 2) • one_chip M.u) -
-      ((m : ℕ) : ℤ) • one_chip M.v))
+    (rank M.graph
+        (D + ((((m : ℕ) : ℤ) - 1) • one_chip M.u) -
+          ((m : ℕ) : ℤ) • one_chip M.v) -
+      rank M.graph
+        (D + ((((m : ℕ) : ℤ) - 2) • one_chip M.u) -
+          ((m : ℕ) : ℤ) • one_chip M.v))
 
 /-- A transmission permutation with a specified inversion lower bound. -/
 def HasInversionLowerBound (M : TwiceMarked) (k q : ℕ) : Prop :=
@@ -738,23 +920,13 @@ def crossOneOffRow (g n b : ℕ) : ℕ :=
   else g + 2 * (b / n) + 2 - b
 
 def correctedCrossOneOffForcedCount (g n : ℕ) : ℕ :=
-  if n = 2 then Nat.choose g 2 else Nat.choose (g - 1) 2 + g / (n - 1)
+  if n = 2 then Nat.choose g 2
+  else Nat.choose (g - 1) 2 + g / (n - 1)
 
-end Bananas
+end TMB
 
-namespace Utilities.TwoPathCycle
+namespace TMB
 
-/-- A two-path cycle is the genus-one banana with the prescribed lengths. -/
-def spec (length : Fin 2 → ℕ) (hLength : ∀ edge, 0 < length edge) :
-    Bananas.Banana 1 where
-  length := length
-  length_pos := hLength
-
-end Utilities.TwoPathCycle
-
-namespace Bananas.TwiceMarkedBananas
-
-open Utilities
 
 /-!
 ## Section 1 — Introduction
@@ -869,7 +1041,7 @@ the diagonal and strand-length relations identify `k(u - v)` with a multiple
 of the shared coordinate step that is annihilated exactly at
 `k = (a+b)/gcd(a,b)`, and a homomorphism to `ZMod (a+b)` that kills exactly
 the displayed relation lattice rules out any smaller witness. -/
-theorem s1_eg1_11 (B : Banana 1) :
+theorem _root_.Bananas.TwiceMarkedBananas.s1_eg1_11 (B : Banana 1) :
     IsTorsionOrder (mark B.graph (leftEndpoint B) (rightEndpoint B))
       ((B.length 0 + B.length 1) / Nat.gcd (B.length 0) (B.length 1)) ∧
     KGeneralTransmission (mark B.graph (leftEndpoint B) (rightEndpoint B))
@@ -883,7 +1055,7 @@ theorem s1_eg1_11 (B : Banana 1) :
 
 Exact. Also cross-labeled `cor-allSubmodSameStrand` (Corollary 3.6, case 1,
 `⇐` direction). -/
-theorem s1_thm1_12a
+theorem _root_.Bananas.TwiceMarkedBananas.s1_thm1_12a
     (B : Banana 2) (α β : Fin 3) (i : B.PathPosition α)
     (j : B.PathPosition β) (hαβ : α ≠ β)
     (hi : 0 < i.val ∧ i.val < B.length α)
@@ -897,7 +1069,7 @@ theorem s1_thm1_12a
 > k-general transmission, where k is the torsion order of (G,u,v)."
 
 Exact and unconditional. Also Corollary 4.17 (`cor:evenlyMarkedKGT`). The theorem discharges the auxiliary inversion-data hypothesis. -/
-theorem s1_thm1_12b
+theorem _root_.Bananas.TwiceMarkedBananas.s1_thm1_12b
     (B : Banana 2) (α β : Fin 3) (i : B.PathPosition α)
     (j : B.PathPosition β)
     (hEven : EvenlyMarkedTheta B α β i j) :
@@ -917,7 +1089,7 @@ Corollary 6.16, part 1).
 Exact, with the intended left-associated `MarkedGraph.chain` recursion
 replacing the paper's self-referential display (`Bananas/FORMALIZATION_NOTES.md`, "Chain
 theorem notation"). -/
-theorem s1_thm1_13a
+theorem _root_.Bananas.TwiceMarkedBananas.s1_thm1_13a
     (head : KGeneralChainFactor) (tail : List KGeneralChainFactor)
     (hHeadBudget : genus head.marked.graph < (head.period : ℤ))
     (hTailBudget : ChainPrefixBudget (genus head.marked.graph) tail) :
@@ -934,7 +1106,7 @@ Corollary 6.16, part 2).
 Exact, in the paper's full graph convention (connected genus-zero factors
 allowed in arbitrary positions), via a recursive prefix/minimum-budget
 encoding rather than the paper's indexed sums. -/
-theorem s1_thm1_13b
+theorem _root_.Bananas.TwiceMarkedBananas.s1_thm1_13b
     (F : KGeneralChainFactor) (tail : List KGeneralChainFactor)
     (hMin : ChainMinBudget (F :: tail)) :
     BrillNoetherGeneral
@@ -972,7 +1144,7 @@ does not manufacture proof-carrying constants merely to state its wrapper. -/
 > vertices. Then there exist non-submodular divisors on (G,u,v)."
 
 **Formalization note.** The checked statement includes the additional case in which the other mark is the midpoint of a distinct length-two strand. This is represented by `CorrectedBananaSimpleException`; see `Bananas/FORMALIZATION_NOTES.md`. -/
-theorem s1_thm1_16
+theorem _root_.Bananas.TwiceMarkedBananas.s1_thm1_16
     {g : ℕ} (hg : 3 ≤ g) (B : Banana g) (alpha beta : Fin (g + 1))
     (i : B.PathPosition alpha) (j : B.PathPosition beta)
     (hFar : FarFromBananaEndpoints B alpha i ∨
@@ -991,7 +1163,7 @@ theorem s1_thm1_16
 it rests on was enlarged to `CorrectedMidpointException`
 (`Bananas/FORMALIZATION_NOTES.md`); with that correction the theorem itself is exact and
 unconditional. -/
-theorem s1_thm1_17
+theorem _root_.Bananas.TwiceMarkedBananas.s1_thm1_17
     {g k : ℕ} (hg : 3 ≤ g) (hk : 3 ≤ k) (B : Banana g)
     (α β : Fin (g + 1)) (i : B.PathPosition α) (j : B.PathPosition β) :
     ¬ KGeneralTransmission
@@ -1004,7 +1176,7 @@ theorem s1_thm1_17
 > consisting of the two non-bivalent vertices."
 
 Exact. Same underlying fact as Lemma 2.20 (`lem:g12`). -/
-theorem s1_rem1_18a {g : ℕ} (B : Banana g) : BNExists B.graph 1 2 := by
+theorem _root_.Bananas.TwiceMarkedBananas.s1_rem1_18a {g : ℕ} (B : Banana g) : BNExists B.graph 1 2 := by
   sorry
 /-- **Remark 1.18** (unlabeled), claim 2 — hence not Brill–Noether general.
 Section 1.
@@ -1014,7 +1186,7 @@ Section 1.
 
 Exact. (The moduli-theoretic dimension/codimension sentence preceding this
 in the remark is not a graph-theoretic claim and is not formalized.) -/
-theorem s1_rem1_18b {g : ℕ} (hg : 3 ≤ g) (B : Banana g) :
+theorem _root_.Bananas.TwiceMarkedBananas.s1_rem1_18b {g : ℕ} (hg : 3 ≤ g) (B : Banana g) :
     ¬ BrillNoetherGeneral B.graph := by
   sorry
 /-!
@@ -1054,8 +1226,8 @@ left-associated. -/
 
 Corrected: formalized with `TwoEdgeCutCondition` as the precise no-bridge
 hypothesis. -/
-theorem s2_lem2_3a
-    (G : CFGraph) (hConnected : _root_.graph_connected G)
+theorem _root_.Bananas.TwiceMarkedBananas.s2_lem2_3a
+    (G : CFGraph) (hConnected : graph_connected G)
     (hCut : TwoEdgeCutCondition G) (u v : G.V) :
     u = v ↔ linear_equiv G (one_chip u) (one_chip v) := by
   sorry
@@ -1169,7 +1341,7 @@ Partial: only the "all divisors submodular + torsion witness ⇒ affine
 transmission permutation exists" direction, and only for banana graphs; the
 converse and uniqueness are not separately exposed. One of two paper results
 (with Example 1.11) the paper itself defers to [Pfl22]. -/
-theorem s2_lem2_12a
+theorem _root_.Bananas.TwiceMarkedBananas.s2_lem2_12a
     {g k : ℕ} (B : Banana g) (u v : B.graph.V)
     (hk : TorsionWitness (mark B.graph u v) k)
     (hsub : AllSubmodular (mark B.graph u v))
@@ -1181,7 +1353,7 @@ theorem s2_lem2_12a
 
 > "The transmission permutation is also characterized by ...
 > r(D+au-bv)+1 = #{ℓ ≥ b : τ_D(ℓ) ≤ a}." -/
-theorem s2_lem2_12b
+theorem _root_.Bananas.TwiceMarkedBananas.s2_lem2_12b
     {g : ℕ} (B : Banana g) (u v : B.graph.V) (D : CFDiv B.graph)
     (τ : ℤ → ℤ) (hτ : IsTransmissionPermutation (mark B.graph u v) D τ)
     (a b : ℤ) :
@@ -1191,7 +1363,7 @@ theorem s2_lem2_12b
 /-- **Lemma 2.12** (`lem:tauChars`), northwest rank formula. Section 2.
 
 > "... r(K_G-D-au+bv)+1 = #{ℓ < b : τ_D(ℓ) > a}." -/
-theorem s2_lem2_12c
+theorem _root_.Bananas.TwiceMarkedBananas.s2_lem2_12c
     {g : ℕ} (B : Banana g) (u v : B.graph.V) (D : CFDiv B.graph)
     (τ : ℤ → ℤ) (hτ : IsTransmissionPermutation (mark B.graph u v) D τ)
     (a b : ℤ) :
@@ -1261,7 +1433,7 @@ choice of integer rank. -/
 > has rank 1."
 
 Exact. Same underlying fact as Remark 1.18, claim 1. -/
-theorem s2_lem2_20 {g : ℕ} (B : Banana g) : BNExists B.graph 1 2 := by
+theorem _root_.Bananas.TwiceMarkedBananas.s2_lem2_20 {g : ℕ} (B : Banana g) : BNExists B.graph 1 2 := by
   sorry
 /-- **Lemma 2.21** (`lem-BananaRDS`). Section 2.
 
@@ -1269,7 +1441,7 @@ theorem s2_lem2_20 {g : ℕ} (B : Banana g) : BNExists B.graph 1 2 := by
 > rank determining set."
 
 Exact/complete. -/
-theorem s2_lem2_21 {g : ℕ} (B : Banana g) :
+theorem _root_.Bananas.TwiceMarkedBananas.s2_lem2_21 {g : ℕ} (B : Banana g) :
     RankDetermining B.graph {leftEndpoint B, rightEndpoint B} := by
   sorry
 /-- **Lemma 2.23** (unlabeled), existence half. Section 2.
@@ -1277,7 +1449,7 @@ theorem s2_lem2_21 {g : ℕ} (B : Banana g) :
 > "If D ∈ Pic(B_{n_0,…,n_g}) is v_{0,0}-reduced then D = av_{0,0}+bv_{0,n_0}+E
 > where E is an effective divisor with at most one chip on each strand and
 > no chips at either multivalent vertex, and 0 ≤ b ≤ g - deg E." -/
-theorem s2_lem2_23a {g : ℕ} (B : Banana g) (D : CFDiv B.graph) :
+theorem _root_.Bananas.TwiceMarkedBananas.s2_lem2_23a {g : ℕ} (B : Banana g) (D : CFDiv B.graph) :
     ∃ (a b : ℤ) (E : CFDiv B.graph),
       IsSemibreak B E ∧ 0 ≤ b ∧ b + deg E ≤ (g : ℤ) ∧
       linear_equiv B.graph D (bananaNormalForm B a b E) := by
@@ -1285,7 +1457,7 @@ theorem s2_lem2_23a {g : ℕ} (B : Banana g) (D : CFDiv B.graph) :
 /-- **Lemma 2.23** (unlabeled), converse half. Section 2.
 
 > "Conversely, every divisor of this form is v_{0,0}-reduced." -/
-theorem s2_lem2_23b {g : ℕ} (B : Banana g)
+theorem _root_.Bananas.TwiceMarkedBananas.s2_lem2_23b {g : ℕ} (B : Banana g)
     (a b : ℤ) (E : CFDiv B.graph) (hE : IsSemibreak B E)
     (hb : 0 ≤ b) (hdeg : b + deg E ≤ (g : ℤ)) :
     q_reduced B.graph (leftEndpoint B) (bananaNormalForm B a b E) := by
@@ -1297,7 +1469,7 @@ theorem s2_lem2_23b {g : ℕ} (B : Banana g)
 The Lean version proves strictly more than the paper: `Bananas/SameStrand/Semibreak.lean`'s
 `bananaNormalForm_parameters_unique` also gives uniqueness of `(a,b,E)`,
 which the paper only implies. -/
-theorem s2_lem2_23c {g : ℕ} (B : Banana g)
+theorem _root_.Bananas.TwiceMarkedBananas.s2_lem2_23c {g : ℕ} (B : Banana g)
     (a b : ℤ) (E : CFDiv B.graph) (hE : IsSemibreak B E)
     (hb : 0 ≤ b) (hdeg : b + deg E ≤ (g : ℤ)) :
     0 ≤ rank B.graph (bananaNormalForm B a b E) ↔ 0 ≤ a := by
@@ -1309,7 +1481,7 @@ theorem s2_lem2_23c {g : ℕ} (B : Banana g)
 > r(D) = min{a,b}+max{0,max{a,b}-(g-deg E)} = max{min{a,b}, deg D - g}."
 
 Exact, in the second displayed form. -/
-theorem s2_cor2_24 {g : ℕ} (B : Banana g)
+theorem _root_.Bananas.TwiceMarkedBananas.s2_cor2_24 {g : ℕ} (B : Banana g)
     (a b : ℤ) (E : CFDiv B.graph) (hE : IsSemibreak B E)
     (ha : -1 ≤ a) (hb : 0 ≤ b) (hdeg : b + deg E ≤ (g : ℤ)) :
     rank B.graph (bananaNormalForm B a b E) =
@@ -1320,7 +1492,7 @@ theorem s2_cor2_24 {g : ℕ} (B : Banana g)
 > "Given a twice-marked banana graph (B_{n_0,…,n_g},u,v): 1) If
 > (u,v)=(v_{0,0},v_{0,n_0}) and a ≥ 0 then Δ(a(v_{0,0}+v_{0,n_0})) =
 > δ(a ≤ g)." -/
-theorem s2_cor2_25a {g : ℕ} (B : Banana g) (a : ℕ) :
+theorem _root_.Bananas.TwiceMarkedBananas.s2_cor2_25a {g : ℕ} (B : Banana g) (a : ℕ) :
     rankDelta (mark B.graph (leftEndpoint B) (rightEndpoint B))
         (a • endpointPencilDivisor B) =
       if a ≤ g then 1 else 0 := by
@@ -1331,7 +1503,7 @@ Section 2. One representative of the "one-off" family (there are four,
 
 > "2) If (u,v)=(v_{0,0},v_{0,n_0-1}) with 0 ≤ b < a ≤ g … then
 > Δ(av_{0,0}+bv_{0,n_0}+v) = δ(a=g)." -/
-theorem s2_cor2_25b
+theorem _root_.Bananas.TwiceMarkedBananas.s2_cor2_25b
     {g : ℕ} (B : Banana g) (alpha : Fin (g + 1))
     (a b : ℕ) (hba : b < a) (hag : a ≤ g)
     (hLength : 1 < B.length alpha) :
@@ -1350,7 +1522,7 @@ family (`Bananas/CrossOneOff/BananaCrossOneOffDeltaFamilies.lean` has the rest).
 
 > "3) If (u,v)=(v_{0,1},v_{1,n_1-1}) … then
 > Δ(a(v_{0,0}+v_{0,n_0})+v_{0,m}+v_{1,n}) = 1." -/
-theorem s2_cor2_25c
+theorem _root_.Bananas.TwiceMarkedBananas.s2_cor2_25c
     {g : ℕ} (B : Banana g) (α β : Fin (g + 1))
     (p : B.PathPosition α) (q : B.PathPosition β) (c : ℕ)
     (hg : 2 ≤ g) (hαβ : α ≠ β)
@@ -1381,7 +1553,7 @@ Exact: `Bananas.rankSupport` (`Bananas/Transmission/RankZeroSupport.lean`). -/
 
 > "1) If (G,u,v) is a twice-marked graph of genus 2 and u ≁ v, then any
 > divisor D with Δ(D) < 0 has degree 2 and rank 0." -/
-theorem s3_lem3_2a
+theorem _root_.Bananas.TwiceMarkedBananas.s3_lem3_2a
     {g : ℕ} (B : Banana g) (u v : B.graph.V)
     (hGenus : genus B.graph = 2)
     (hDistinct : ¬ linear_equiv B.graph (one_chip u - one_chip v) 0)
@@ -1394,7 +1566,7 @@ theorem s3_lem3_2a
 > "2) If (G,u,v) is a twice-marked graph of any genus, and D is a divisor
 > of rank 0, then Δ(D) < 0 if and only if v ∈ Supp(D)\Supp(D-u) and
 > u ∈ Supp(D)\Supp(D-v)." -/
-theorem s3_lem3_2b
+theorem _root_.Bananas.TwiceMarkedBananas.s3_lem3_2b
     {g : ℕ} (B : Banana g) (u v : B.graph.V) (D : CFDiv B.graph)
     (hD : rank B.graph D = 0) :
     rankDelta (mark B.graph u v) D < 0 ↔
@@ -1420,7 +1592,7 @@ the paper's `u ≁ v` hypothesis is derived rather than assumed. The class
 bijection of 2) is proved separately in three branches (interior,
 initial-endpoint, terminal-endpoint — `Bananas/Theta/ThetaNegativeDivisorClasses*.lean`),
 not as one re-exported statement. -/
-theorem s3_thm3_4
+theorem _root_.Bananas.TwiceMarkedBananas.s3_thm3_4
     (B : Banana 2) (alpha : Fin 3)
     (i j : B.PathPosition alpha) (hij : i.val < j.val) :
     (∃ D : CFDiv B.graph,
@@ -1439,7 +1611,7 @@ theorem s3_thm3_4
 distinct strand labels name the same physical vertex
 (`Bananas/FORMALIZATION_NOTES.md`). The Lean statement below uses physical vertex
 equality and `VerticesOnCommonBananaStrand` instead. -/
-theorem s3_lem3_5
+theorem _root_.Bananas.TwiceMarkedBananas.s3_lem3_5
     {g : ℕ} (hg : 2 ≤ g) (B : Banana g)
     (alpha beta gamma : Fin (g + 1))
     (i : B.PathPosition alpha) (j : B.PathPosition beta)
@@ -1467,7 +1639,7 @@ Corrected then exact: clause 1) "α ≠ β" is not itself an invariant condition
 (a multivalent vertex lies on every strand), so it is replaced by the
 endpoint-safe `ThetaAllSubmodularCoordinates`
 (`Bananas/Theta/ThetaBoundarySubmodularity.lean`). -/
-theorem s3_cor3_6
+theorem _root_.Bananas.TwiceMarkedBananas.s3_cor3_6
     (B : Banana 2) (alpha beta : Fin 3)
     (i : B.PathPosition alpha) (j : B.PathPosition beta) :
     AllSubmodular
@@ -1485,7 +1657,7 @@ This is the distinct-loop direction; the two same-loop iff's
 (`chainTwoLoops_allSubmodular_same_left_arbitrary_iff` /
 `..._same_right_arbitrary_iff`) are in `Bananas/Transmission/ChainTwoLoopsSameLeft.lean` /
 `Bananas/Transmission/ChainTwoLoopsSameRight.lean`, not re-wrapped here. -/
-theorem s3_prop3_7
+theorem _root_.Bananas.TwiceMarkedBananas.s3_prop3_7
     (leftLength rightLength : Fin 2 → ℕ)
     (hLeftLength : ∀ edge, 0 < leftLength edge)
     (hRightLength : ∀ edge, 0 < rightLength edge)
@@ -1508,7 +1680,7 @@ theorem s3_prop3_7
 
 > "If u,v are vertices on B_{n_0,…,n_g} that do not lie on the same strand,
 > then Supp(u+v) = {u,v}." -/
-theorem s3_cor3_8
+theorem _root_.Bananas.TwiceMarkedBananas.s3_cor3_8
     {g : ℕ} (hg : 2 ≤ g) (B : Banana g) (α β : Fin (g + 1))
     (i : B.PathPosition α) (j : B.PathPosition β)
     (hi : B.IsInteriorPosition α i) (hj : B.IsInteriorPosition β j)
@@ -1525,7 +1697,7 @@ theorem s3_cor3_8
 > strand, (i,j)=(1,n_β-1); or 2) there exist divisors D with Δ(D) < 0."
 
 **Formalization note.** The checked statement includes the additional length-two midpoint family as `NSMForBananaLengthTwoCrossException` and uses equality of represented vertices at shared endpoints rather than equality of strand labels; see `Bananas/FORMALIZATION_NOTES.md`. -/
-theorem s3_thm3_9
+theorem _root_.Bananas.TwiceMarkedBananas.s3_thm3_9
     {g : ℕ} (hg : 3 ≤ g) (B : Banana g) (α β : Fin (g + 1))
     (i : B.PathPosition α) (j : B.PathPosition β) :
     NSMForBananaException B (strandVertex B α i) (strandVertex B β j) ∨
@@ -1547,7 +1719,7 @@ points. Section 4.
 > of marked vertices. ... Thus permuting the marked vertices merely permutes
 > the set of transmission permutations, so k-general transmission is
 > invariant under such a swap." -/
-theorem s4_rem4_1
+theorem _root_.Bananas.TwiceMarkedBananas.s4_rem4_1
     {G : CFGraph} (u v : G.V) {k : ℕ}
     (hK : KGeneralTransmission (mark G u v) k) :
     KGeneralTransmission (mark G v u) k := by
@@ -1561,7 +1733,7 @@ Exact, with three explicit hypotheses beyond the paper's statement that are
 genuine gaps in a literal reading (connectivity, positive genus, and mark
 distinctness — see the docstring of `KGeneralTransmission.isTorsionOrder`,
 `Bananas/Transmission/TorsionOrderExact.lean`). -/
-theorem s4_lem4_2
+theorem _root_.Bananas.TwiceMarkedBananas.s4_lem4_2
     {g k : ℕ} (B : Banana g) (u v : B.graph.V) (huv : u ≠ v)
     (hg : 0 < genus B.graph)
     (hK : KGeneralTransmission (mark B.graph u v) k) :
@@ -1573,7 +1745,7 @@ theorem s4_lem4_2
 > has 2-general transmission."
 
 Exact; connectivity is the only requirement beyond the paper statement. -/
-theorem s4_lem4_3
+theorem _root_.Bananas.TwiceMarkedBananas.s4_lem4_3
     {g : ℕ} (B : Banana g) (u v : B.graph.V)
     (hTO : IsTorsionOrder (mark B.graph u v) 2)
     (hSub : AllSubmodular (mark B.graph u v)) :
@@ -1599,7 +1771,7 @@ table. Section 4.
 
 Exact, stated rowwise as implications; mutual exclusivity of the five cases
 is not needed and so is not separately proved. -/
-theorem s4_prop4_5
+theorem _root_.Bananas.TwiceMarkedBananas.s4_prop4_5
     (B : Banana 2) (u v : B.graph.V) (D : CFDiv B.graph)
     (tau : ℤ → ℤ) (t : ℤ)
     (hTau : IsTransmissionPermutation (mark B.graph u v) D tau)
@@ -1637,8 +1809,8 @@ Picard-quotient classes, specialized to `[D]=[u-v]` of a `TwiceMarked`:
 
 > "If G has genus 2 and [D] ∈ Pic^0(G), then [D] is non-recurrent if and
 > only if the sets {Supp(K_G-nD) : n ∈ ℤ, nD ≁ 0} are pairwise disjoint." -/
-theorem s4_lem4_7
-    {M : TwiceMarked} {k : ℕ} (hconn : _root_.graph_connected M.graph)
+theorem _root_.Bananas.TwiceMarkedBananas.s4_lem4_7
+    {M : TwiceMarked} {k : ℕ} (hconn : graph_connected M.graph)
     (hgenus : genus M.graph = 2) :
     NonRecurrent M k ↔ CanonicalMarkedSupportsPairwiseDisjoint M k := by
   sorry
@@ -1652,7 +1824,7 @@ Exact. Also proved for every nontrivial bridgeless genus-two graph as
 `bridgeless_genusTwo_rigid_kGeneral_iff_nonRecurrent`
 (`Bananas/Classification/BridgelessGenusTwoCornerAlgebra.lean`). "Rigidly marked" is
 unbundled, as in Definition 4.4. -/
-theorem s4_thm4_8
+theorem _root_.Bananas.TwiceMarkedBananas.s4_thm4_8
     {k : ℕ} (B : Banana 2) (u v : B.graph.V)
     (hSub : AllSubmodular (mark B.graph u v))
     (hTO : IsTorsionOrder (mark B.graph u v) k)
@@ -1683,7 +1855,7 @@ bridgeless genus-two graph as `bridgeless_genusTwo_invTau_formula`
 (`Bananas/Classification/BridgelessGenusTwoCornerAlgebra.lean`). The route differs from the
 paper's infinite inclusion–exclusion: three genus-two corner-sum slices,
 telescoped. -/
-theorem s4_lem4_10
+theorem _root_.Bananas.TwiceMarkedBananas.s4_lem4_10
     (B : Banana 2) (u v : B.graph.V) (D : CFDiv B.graph)
     (k : ℕ) (τ : ℤ → ℤ)
     (hTO : IsTorsionOrder (mark B.graph u v) k)
@@ -1714,9 +1886,9 @@ finite sum of complementary ranks over one fundamental period rather than
 the four-term `S_D` alternating sum (which recovers exactly by expanding
 `rankDelta_eq_rankPlusOne_inclusionExclusion`). The extraneous variable `E`
 in the paper's own statement is unused there too. -/
-theorem s4_lem4_12
+theorem _root_.Bananas.TwiceMarkedBananas.s4_lem4_12
     {M : TwiceMarked} (D : CFDiv M.graph)
-    (hconn : _root_.graph_connected M.graph)
+    (hconn : graph_connected M.graph)
     (k : ℕ) (τ : ℤ → ℤ) (hk : 0 < k)
     (hτ : IsTransmissionPermutation M D τ)
     (hAffine : IsKAffine k τ) :
@@ -1755,16 +1927,16 @@ at explicit strand coordinates) and the wedge branch (cases 1 and 2, via a
 certified isomorphism to a vertex wedge of two `PointedGenusOneRigid`
 factors) as a disjunction; see `BridgelessGenusTwoKGeneralCharacterization`
 in `Bananas/Classification/BridgelessGenusTwoClassification.lean`. -/
-theorem s4_thm4_13
+theorem _root_.Bananas.TwiceMarkedBananas.s4_thm4_13
     (G : CFGraph) (u v : G.V) (k : ℕ)
-    (hConnected : _root_.graph_connected G) (hCut : TwoEdgeCutCondition G)
+    (hConnected : graph_connected G) (hCut : TwoEdgeCutCondition G)
     (huv : u ≠ v) (hGenus : genus G = 2)
     (hTO : IsTorsionOrder (mark G u v) k) :
     KGeneralTransmission (mark G u v) k ↔
       BridgelessGenusTwoKGeneralCharacterization G u v k := by
   sorry
 /-- **Theorem 4.13** (`thm:g2general`), theta branch (case 3). Section 4. -/
-theorem s4_thm4_13_theta
+theorem _root_.Bananas.TwiceMarkedBananas.s4_thm4_13_theta
     {k : ℕ} (B : Banana 2) (alpha beta : Fin 3)
     (i : B.PathPosition alpha) (j : B.PathPosition beta)
     (hTO : IsTorsionOrder
@@ -1776,7 +1948,7 @@ theorem s4_thm4_13_theta
 /-- **Theorem 4.13** (`thm:g2general`), wedge branch (cases 1 and 2),
 stated intrinsically on the vertex wedge of two `PointedGenusOneRigid`
 factors rather than the paper's literal `TwoPathCycle` wording. Section 4. -/
-theorem s4_thm4_13_wedge
+theorem _root_.Bananas.TwiceMarkedBananas.s4_thm4_13_wedge
     (G H : CFGraph) (x : G.V) (y : H.V)
     (u v : (vertexWedge G H x y).V) (k : ℕ)
     (hG : PointedGenusOneRigid G x) (hH : PointedGenusOneRigid H y)
@@ -1799,7 +1971,7 @@ Exact, with the ratio equality stated by cross-multiplication:
 > "If (θ_{n_0,n_1,n_2},v_{α,i},v_{β,j}) is evenly marked, then the class
 > [v_{α,i}-v_{β,j}] is non-recurrent, with order n_α/gcd(n_α,i) =
 > n_β/gcd(n_β,j) in Jac(θ_{n_0,n_1,n_2})." -/
-theorem s4_lem4_15a
+theorem _root_.Bananas.TwiceMarkedBananas.s4_lem4_15a
     (B : Banana 2) (alpha beta : Fin 3)
     (i : B.PathPosition alpha) (j : B.PathPosition beta)
     (hEven : EvenlyMarkedTheta B alpha beta i j) :
@@ -1808,7 +1980,7 @@ theorem s4_lem4_15a
       (B.length alpha / Nat.gcd (B.length alpha) i.val) := by
   sorry
 /-- **Lemma 4.15** (unlabeled), exact-order half. Section 4. -/
-theorem s4_lem4_15b
+theorem _root_.Bananas.TwiceMarkedBananas.s4_lem4_15b
     (B : Banana 2) (alpha beta : Fin 3)
     (i : B.PathPosition alpha) (j : B.PathPosition beta)
     (hEven : EvenlyMarkedTheta B alpha beta i j) :
@@ -1818,7 +1990,7 @@ theorem s4_lem4_15b
   sorry
 /-- **Lemma 4.15** (unlabeled), period-equality half `n_α/gcd(n_α,i) =
 n_β/gcd(n_β,j)`. Section 4. -/
-theorem s4_lem4_15c
+theorem _root_.Bananas.TwiceMarkedBananas.s4_lem4_15c
     (B : Banana 2) (alpha beta : Fin 3)
     (i : B.PathPosition alpha) (j : B.PathPosition beta)
     (hEven : EvenlyMarkedTheta B alpha beta i j) :
@@ -1826,7 +1998,7 @@ theorem s4_lem4_15c
       B.length beta / Nat.gcd (B.length beta) j.val := by
   sorry
 /-- **Lemma 4.15** (unlabeled), non-recurrence half. Section 4. -/
-theorem s4_lem4_15d
+theorem _root_.Bananas.TwiceMarkedBananas.s4_lem4_15d
     (B : Banana 2) (α β : Fin 3) (i : B.PathPosition α)
     (j : B.PathPosition β) (hEven : EvenlyMarkedTheta B α β i j) :
     NonRecurrent (mark B.graph (strandVertex B α i) (strandVertex B β j))
@@ -1842,7 +2014,7 @@ Theorem 1.12, part 2).
 > k-general transmission, where k = n_α/gcd(n_α,i) = n_β/gcd(n_β,j)."
 
 Exact, unconditional. -/
-theorem s4_cor4_17
+theorem _root_.Bananas.TwiceMarkedBananas.s4_cor4_17
     (B : Banana 2) (α β : Fin 3) (i : B.PathPosition α)
     (j : B.PathPosition β)
     (hEven : EvenlyMarkedTheta B α β i j) :
@@ -1864,7 +2036,7 @@ three *explicit* lower-bound regimes below, with no single aggregate
 statement. -/
 
 /-- **Theorem 4.18**, endpoint regime. Section 4. -/
-theorem s4_thm4_18_endpoint
+theorem _root_.Bananas.TwiceMarkedBananas.s4_thm4_18_endpoint
     {g k : ℕ} (B : Banana g)
     (hSub : AllSubmodular
       (mark B.graph (leftEndpoint B) (rightEndpoint B)))
@@ -1875,7 +2047,7 @@ theorem s4_thm4_18_endpoint
       (Nat.choose (g + 1) 2) := by
   sorry
 /-- **Theorem 4.18**, same-strand one-off regime. Section 4. -/
-theorem s4_thm4_18_oneOff
+theorem _root_.Bananas.TwiceMarkedBananas.s4_thm4_18_oneOff
     {g k : ℕ} (B : Banana g) (alpha : Fin (g + 1))
     (hg : 2 ≤ g) (hLength : 1 < B.length alpha)
     (hSub : AllSubmodular (mark B.graph (leftEndpoint B)
@@ -1898,7 +2070,7 @@ bound for *every* pair of marked strand lengths outside `n_alpha = n_beta =
 2`, which this length threshold already excludes. Only the harmless
 `hBeta : 1 < B.length beta` hypothesis (implied for free by the old
 `hBetaLong`) is now stated explicitly. -/
-theorem s4_thm4_18_crossOneOff
+theorem _root_.Bananas.TwiceMarkedBananas.s4_thm4_18_crossOneOff
     {g k : ℕ} (B : Banana g) (alpha beta : Fin (g + 1))
     (hg : 3 ≤ g) (hab : alpha ≠ beta)
     (hAlpha : 1 < B.length alpha) (hBeta : 1 < B.length beta)
@@ -1924,7 +2096,7 @@ Section 4.
 > torsion order is at least the genus, k ≥ g."
 
 **Formalization note.** The checked exception family includes distinct-strand midpoints when at least one supporting strand has length two. This is expressed by `CorrectedMidpointException`; see `Bananas/FORMALIZATION_NOTES.md`. -/
-theorem s4_prop4_19
+theorem _root_.Bananas.TwiceMarkedBananas.s4_prop4_19
     {g k : ℕ} (hg : 3 ≤ g) (B : Banana g) (α β : Fin (g + 1))
     (i : B.PathPosition α) (j : B.PathPosition β)
     (hTO : IsTorsionOrder
@@ -1942,7 +2114,7 @@ theorem s4_prop4_19
 Exact, and **strictly stronger than printed**: Lean proves `g < k`. (The
 transmission-block statement itself is
 `exists_endpoint_transmission_block`, `Bananas/SameStrand/EndpointBlock.lean`.) -/
-theorem s4_lem4_20
+theorem _root_.Bananas.TwiceMarkedBananas.s4_lem4_20
     {g k : ℕ} (B : Banana g)
     (hsub : AllSubmodular (mark B.graph (leftEndpoint B) (rightEndpoint B)))
     (hk : IsTorsionOrder
@@ -1952,7 +2124,7 @@ theorem s4_lem4_20
 /-- **Proposition 4.21** (`prop-TriangleInversionNumber`). Section 4.
 
 > "With (G,u,v) as above, we have M ≥ C(g+1,2)." -/
-theorem s4_prop4_21
+theorem _root_.Bananas.TwiceMarkedBananas.s4_prop4_21
     {g k : ℕ} (B : Banana g)
     (hsub : AllSubmodular (mark B.graph (leftEndpoint B) (rightEndpoint B)))
     (hk : IsTorsionOrder (mark B.graph (leftEndpoint B) (rightEndpoint B)) k) :
@@ -1969,7 +2141,7 @@ theorem s4_prop4_21
 Exact, and **stronger**: proved for every `g ≥ 2` and every `k`,
 unconditionally. This is exactly what discharges the case deferred from
 Theorem 4.13's theta branch. -/
-theorem s4_rem4_22
+theorem _root_.Bananas.TwiceMarkedBananas.s4_rem4_22
     {g k : ℕ} (hg : 2 ≤ g) (B : Banana g) :
     ¬ KGeneralTransmission
       (mark B.graph (leftEndpoint B) (rightEndpoint B)) k := by
@@ -1985,7 +2157,7 @@ Exact, in exact integral form (`crossOneOffCutoff`) rather than the
 paper's rational cutoff; `b=0` is handled separately
 (`transmission_oneOff_zero`). The period consequence is
 `oneOff_affine_period_gt_cutoff`, `Bananas/CrossOneOff/OneOffPeriodBound.lean`. -/
-theorem s4_lem4_23
+theorem _root_.Bananas.TwiceMarkedBananas.s4_lem4_23
     {g : ℕ} (B : Banana g) (alpha : Fin (g + 1))
     (b : ℕ) (tau : ℤ → ℤ) (hg : 2 ≤ g)
     (hLength : 1 < B.length alpha)
@@ -2014,7 +2186,7 @@ Exact, in an equivalent simplified form: writing f = ⌊g/(n_α-1)⌋, the
 paper's four-family count is exactly `choose(g,2) + f`. Its KGT corollary
 (`oneOff_not_kGeneral_of_four_le_genus`) rules out the marking for every
 `g ≥ 4`. -/
-theorem s4_prop4_25
+theorem _root_.Bananas.TwiceMarkedBananas.s4_prop4_25
     {g k : ℕ} (B : Banana g) (alpha : Fin (g + 1))
     (hg : 2 ≤ g) (hLength : 1 < B.length alpha)
     (hSub : AllSubmodular
@@ -2046,7 +2218,7 @@ Section 4.
 is `CorrectedMidpointException ∧ k = 2` rather than the paper's literal
 `n_0=n_1=2` — for this specific marking the two agree, since zero rise does
 force both strands to length two (`zero_rise_cross_oneOff_forces_both_length_two`). -/
-theorem s4_lem4_27
+theorem _root_.Bananas.TwiceMarkedBananas.s4_lem4_27
     {g k : ℕ} (hg : 1 ≤ g) (B : Banana g)
     (α β : Fin (g + 1)) (i : B.PathPosition α) (j : B.PathPosition β)
     (hαβ : α ≠ β) (hiInt : B.IsInteriorPosition α i)
@@ -2066,7 +2238,7 @@ Partial/restricted: proved for the long-strand specialization
 `2 ≤ b ≤ g-1` under `CrossOneOffLongEnough` rather than the paper's general
 two-sided range, which is subsumed by the corrected Lemma 4.30 block
 below. -/
-theorem s4_lem4_28
+theorem _root_.Bananas.TwiceMarkedBananas.s4_lem4_28
     {g : ℕ} (B : Banana g) (alpha beta : Fin (g + 1))
     (tau : ℤ → ℤ)
     (hg : 3 ≤ g) (hab : alpha ≠ beta)
@@ -2088,7 +2260,7 @@ Exact count, with two hypotheses the paper does not state explicitly:
 `hSeparate : g ≤ k` (the period-separation supplied in applications by
 `crossOneOff_kGeneral_period_ge_genus`) and `CrossOneOffLongEnough`
 replacing "min(n_0,n_1) ≥ g+1". -/
-theorem s4_cor4_29
+theorem _root_.Bananas.TwiceMarkedBananas.s4_cor4_29
     {g k : ℕ} (B : Banana g) (alpha beta : Fin (g + 1))
     (tau : ℤ → ℤ)
     (hg : 3 ≤ g) (hab : alpha ≠ beta)
@@ -2111,7 +2283,7 @@ Section 4.
 > b/n_1+1, g+(b+1)/n_1, or g+2⌊b/n_1⌋-b+2 according to b mod n_1."
 
 **Formalization note.** The checked block starts at `b = 2`, uses a single positive-remainder convention, and includes the `+2` term in the positive-residue row; see `Bananas/FORMALIZATION_NOTES.md`. -/
-theorem s4_lem4_30
+theorem _root_.Bananas.TwiceMarkedBananas.s4_lem4_30
     {g : ℕ} (B : Banana g) (alpha beta : Fin (g + 1))
     (b : ℕ) (tau : ℤ → ℤ)
     (hg : 2 ≤ g) (hab : alpha ≠ beta)
@@ -2143,7 +2315,7 @@ The required period-separation inequality is derived from the torsion order, out
 `crossOneOff_cutoff_le_torsionOrder_of_not_both_two`,
 `Bananas/CrossOneOff/CrossOneOffShortStrandPeriod.lean`), so it is supplied internally
 from the torsion order `k` instead of being assumed. -/
-theorem s4_cor4_31
+theorem _root_.Bananas.TwiceMarkedBananas.s4_cor4_31
     {g k : ℕ} (B : Banana g) (alpha beta : Fin (g + 1))
     (tau : ℤ → ℤ)
     (hg : 3 ≤ g) (hab : alpha ≠ beta)
@@ -2176,16 +2348,16 @@ development would use.) -/
 /-- Displayed equation `eq-RRTauBounds`, lower bound. Section 5 preamble.
 
 > "b - deg D ≤ τ_D(b) ≤ 2g + b - deg D." -/
-theorem s5_eqRRTauBounds_lower
+theorem _root_.Bananas.TwiceMarkedBananas.s5_eqRRTauBounds_lower
     {M : TwiceMarked} {D : CFDiv M.graph} {τ : ℤ → ℤ}
     (hτ : IsTransmissionPermutation M D τ) (b : ℤ) :
     b - deg D ≤ τ b := by
   sorry
 /-- Displayed equation `eq-RRTauBounds`, upper bound. Section 5 preamble.
 Needs connectivity (Riemann's inequality); the lower bound does not. -/
-theorem s5_eqRRTauBounds_upper
+theorem _root_.Bananas.TwiceMarkedBananas.s5_eqRRTauBounds_upper
     {M : TwiceMarked} {D : CFDiv M.graph} {τ : ℤ → ℤ}
-    (hconn : _root_.graph_connected M.graph)
+    (hconn : graph_connected M.graph)
     (hτ : IsTransmissionPermutation M D τ) (b : ℤ) :
     τ b ≤ 2 * genus M.graph + b - deg D := by
   sorry
@@ -2213,7 +2385,7 @@ substantive transport half is `IsTransmissionPermutation.swap_marks`
 
 > "If φ is a marked point automorphism of (G,u,v) then: ... 2)
 > τ_D^{v,u}(-a) = -b [is equivalent to 1) τ_D(b)=a]." -/
-theorem s5_lem5_2_2
+theorem _root_.Bananas.TwiceMarkedBananas.s5_lem5_2_2
     {M : TwiceMarked} {D : CFDiv M.graph} {tau : ℤ → ℤ}
     (hTau : IsTransmissionPermutation M D tau) (a b : ℤ) :
     tau b = a ↔ swapTransmissionPermutation tau (-a) = -b := by
@@ -2224,8 +2396,8 @@ theorem s5_lem5_2_2
 
 Stronger than the paper's value form: identifies the *whole* transmission
 permutation of `ι(D)` at the exchanged marks as `rawInverse tau`. -/
-theorem s5_lem5_2_3
-    {G : CFGraph} (hconn : _root_.graph_connected G) (u v : G.V)
+theorem _root_.Bananas.TwiceMarkedBananas.s5_lem5_2_3
+    {G : CFGraph} (hconn : graph_connected G) (u v : G.V)
     {D : CFDiv G} {tau : ℤ → ℤ}
     (hTau : IsTransmissionPermutation (mark G u v) D tau) :
     IsTransmissionPermutation (mark G v u)
@@ -2239,7 +2411,7 @@ Stronger than the paper's value form (the transported data has literally
 the same raw permutation `tau`), and generalized to an arbitrary
 `CFGraphIso G H` rather than an automorphism, without requiring `phi` to
 preserve the marked set. -/
-theorem s5_lem5_2_4
+theorem _root_.Bananas.TwiceMarkedBananas.s5_lem5_2_4
     {G H : CFGraph} (phi : CFGraphIso G H) (u v : G.V)
     {D : CFDiv G} {tau : ℤ → ℤ}
     (hTau : IsTransmissionPermutation (mark G u v) D tau) :
@@ -2256,8 +2428,8 @@ theorem s5_lem5_2_4
 Faithful: the hypothesis is the equivalent solved form `φ(D) ∼
 K_G-D+u+v`, and the conclusion is the iff form, equivalent to `τ²=id` given
 bijectivity. -/
-theorem s5_lem5_3_1
-    {M : TwiceMarked} (hconn : _root_.graph_connected M.graph)
+theorem _root_.Bananas.TwiceMarkedBananas.s5_lem5_3_1
+    {M : TwiceMarked} (hconn : graph_connected M.graph)
     (phi : MarkedPointSwap M)
     {D : CFDiv M.graph} {tau : ℤ → ℤ}
     (hTau : IsTransmissionPermutation M D tau)
@@ -2270,7 +2442,7 @@ theorem s5_lem5_3_1
 connectivity — its proof routes only through Lemma 5.2, parts 1,2,4.
 
 > "2) If φ(D)-D ∼ n(u-v) for some n∈ℤ then δ(τ_D(b)=a)=δ(τ_D(n-a)=n-b)." -/
-theorem s5_lem5_3_2
+theorem _root_.Bananas.TwiceMarkedBananas.s5_lem5_3_2
     {M : TwiceMarked} (phi : MarkedPointSwap M)
     {D : CFDiv M.graph} {tau : ℤ → ℤ} (n : ℤ)
     (hTau : IsTransmissionPermutation M D tau)
@@ -2296,9 +2468,9 @@ hypothesis `hInvolutive` rather than the paper's `φ(D)+D∼K_G+u+v` — Lemma
 statement is the (unbundled) composite of that lemma with this one. Two
 further hypotheses are made explicit: `0 < k` and `IsKAffine k tau`
 (the paper's `τ_D ∈ Ẽa_k`). -/
-theorem s5_prop5_5
+theorem _root_.Bananas.TwiceMarkedBananas.s5_prop5_5
     {M : TwiceMarked} {D : CFDiv M.graph} {tau : ℤ → ℤ} {k : ℕ}
-    (hk : 0 < k) (hconn : _root_.graph_connected M.graph)
+    (hk : 0 < k) (hconn : graph_connected M.graph)
     (hTau : IsTransmissionPermutation M D tau)
     (hAffine : IsKAffine k tau)
     (hInvolutive : ∀ a b : ℤ, tau b = a ↔ tau a = b) :
@@ -2325,9 +2497,9 @@ divisor of the torsion order). -/
 `k ≥ g/2+1` is formalized as `g+2 ≤ 2k`; the naive `g/2+1 ≤ k` is too weak
 for odd `g` (`Bananas/FORMALIZATION_NOTES.md`). Rests on a
 crossing-inversion pigeonhole argument, `Bananas/CrossOneOff/CrossingInversionCount.lean`. -/
-theorem s6_prop6_1
+theorem _root_.Bananas.TwiceMarkedBananas.s6_prop6_1
     {M : TwiceMarked} {g k : ℕ}
-    (hconn : _root_.graph_connected M.graph)
+    (hconn : graph_connected M.graph)
     (hgenus : genus M.graph = g)
     (hK : KGeneralTransmission M k)
     (hthreshold : g + 2 ≤ 2 * k) :
@@ -2344,11 +2516,11 @@ Corrected threshold, as in Proposition 6.1. The paper cites [Pfl22, Thm A]
 for preservation of `k`-general transmission under chaining; Lean re-proves
 it via the affine reduction developed for Proposition 6.13 instead of
 importing it. -/
-theorem s6_cor6_3
+theorem _root_.Bananas.TwiceMarkedBananas.s6_cor6_3
     (M : MarkedGraph) (L : List MarkedGraph) (k : ℕ)
-    (hMconn : _root_.graph_connected M.graph)
+    (hMconn : graph_connected M.graph)
     (hMK : KGeneralTransmission (mark M.graph M.left M.right) k)
-    (hLconn : ∀ N ∈ L, _root_.graph_connected N.graph)
+    (hLconn : ∀ N ∈ L, graph_connected N.graph)
     (hLK : ∀ N ∈ L, KGeneralTransmission (mark N.graph N.left N.right) k)
     (hthreshold : (genus (M.chain L).graph).toNat + 2 ≤ 2 * k) :
     BrillNoetherGeneral (M.chain L).graph := by
@@ -2362,7 +2534,7 @@ theorem s6_cor6_3
 **Corrected**, same correction as Proposition 4.19: the exceptional family
 only demands the two marks be distinct-strand *midpoints* with at least one
 strand of length two, not literally `n_α=n_β=2`. -/
-theorem s6_cor6_4
+theorem _root_.Bananas.TwiceMarkedBananas.s6_cor6_4
     {g k : ℕ} (hg : 3 ≤ g) (B : Banana g) (α β : Fin (g + 1))
     (i : B.PathPosition α) (j : B.PathPosition β) :
     KGeneralTransmission
@@ -2380,10 +2552,10 @@ theorem s6_cor6_4
 Exact modulo the added connectedness hypotheses. The paper's Remark 6.7
 (that `u_1` and the submodularity of `(G_1,u_1,v_1)` are probably removable)
 is **not** discharged: `hGsub` and `u` are still present. -/
-theorem s6_thm6_6
+theorem _root_.Bananas.TwiceMarkedBananas.s6_thm6_6
     (G H : CFGraph) (u x : G.V) (y v : H.V)
-    (hGconn : _root_.graph_connected G)
-    (hHconn : _root_.graph_connected H)
+    (hGconn : graph_connected G)
+    (hHconn : graph_connected H)
     (hGsub : AllSubmodular (mark G u x))
     (hGgeneral : OnceMarkedBrillNoetherGeneral G x)
     {k : ℕ} (hK : KGeneralTransmission (mark H y v) k)
@@ -2401,9 +2573,9 @@ source). Section 6.
 Exact statement; the *proof* route differs from a literal specialization of
 Theorem 6.6 (an identity Demazure factor rather than a genus-0 one-vertex
 graph model). -/
-theorem s6_cor6_8
+theorem _root_.Bananas.TwiceMarkedBananas.s6_cor6_8
     {G : CFGraph} (u v : G.V)
-    (hGconn : _root_.graph_connected G)
+    (hGconn : graph_connected G)
     {k : ℕ} (hK : KGeneralTransmission (mark G u v) k)
     (hbudget : genus G < (k : ℤ)) :
     OnceMarkedBrillNoetherGeneral G v := by
@@ -2422,8 +2594,8 @@ convention applies, as with `kInversionCount`. -/
 
 > "If D is a submodular divisor on a twice-marked graph (G,u,v), then
 > sci(τ_D) = |λ(D,v)|." -/
-theorem s6_prop6_10
-    {G : CFGraph} (u v : G.V) (hG : _root_.graph_connected G)
+theorem _root_.Bananas.TwiceMarkedBananas.s6_prop6_10
+    {G : CFGraph} (u v : G.V) (hG : graph_connected G)
     (D : CFDiv G) (tau : ℤ → ℤ)
     (hTau : IsTransmissionPermutation (mark G u v) D tau) :
     sci tau = weierstrassSize hG v D := by
@@ -2476,9 +2648,9 @@ wedge rank formula
 (`VertexWedgeRankFormula.vertexWedge_rank_ge_iff_profile_inequalities`).
 Remark 6.15 (the max-formula for `r(D)`) is a remark with no separate
 formal counterpart. -/
-theorem s6_prop6_14
+theorem _root_.Bananas.TwiceMarkedBananas.s6_prop6_14
     (G : CFGraph.{u}) (H : CFGraph.{v})
-    (hG : _root_.graph_connected G) (hH : _root_.graph_connected H)
+    (hG : graph_connected G) (hH : graph_connected H)
     (x : G.V) (y : H.V)
     (hGeneralG : OnceMarkedBrillNoetherGeneral G x)
     (hGeneralH : OnceMarkedBrillNoetherGeneral H y) :
@@ -2492,7 +2664,7 @@ displayed definition of the iterated gluing "(G,u,v)=(G,u_1,v_ℓ)" is
 self-referential (`Bananas/FORMALIZATION_NOTES.md`, "Chain theorem notation"; the same
 pattern recurs in Corollary 6.3 and Theorem 6.6); Lean uses the intended
 left-associated `MarkedGraph.chain`. -/
-theorem s6_cor6_16a
+theorem _root_.Bananas.TwiceMarkedBananas.s6_cor6_16a
     (head : KGeneralChainFactor) (tail : List KGeneralChainFactor)
     (hHeadBudget : genus head.marked.graph < (head.period : ℤ))
     (hTailBudget : ChainPrefixBudget (genus head.marked.graph) tail) :
@@ -2503,10 +2675,10 @@ theorem s6_cor6_16a
 /-- **Corollary 6.16** (`\Cref{thm:bngChain}`), part 2). Section 6. Same
 statement and same Lean wrapper as `s1_thm1_13b`, above, in the paper's full
 graph convention (connected genus-zero factors allowed anywhere). -/
-theorem s6_cor6_16b
+theorem _root_.Bananas.TwiceMarkedBananas.s6_cor6_16b
     (F : KGeneralChainFactor) (tail : List KGeneralChainFactor)
     (hMin : ChainMinBudget (F :: tail)) :
     BrillNoetherGeneral
       (F.marked.chain (tail.map KGeneralChainFactor.marked)).graph := by
   sorry
-end Bananas.TwiceMarkedBananas
+end TMB
