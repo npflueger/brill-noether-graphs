@@ -1029,7 +1029,6 @@ theorem allSubmodular_toLib (M : TwiceMarked) :
     AllSubmodular M ↔ Bananas.AllSubmodular (toLibTM M) := by
   unfold AllSubmodular Bananas.AllSubmodular
   simp only [submodular_toLib]
-  all_goals exact Iff.rfl
 
 theorem isTransmissionPermutation_toLib (M : TwiceMarked) (D : CFDiv M.graph)
     (τ : ℤ → ℤ) :
