@@ -456,7 +456,7 @@ structure TwiceMarked where
   v : graph.V
 
 /-- Mark two vertices. -/
-def mark (G : CFGraph) (u v : G.V) : TwiceMarked := ⟨G, u, v⟩
+abbrev mark (G : CFGraph) (u v : G.V) : TwiceMarked := ⟨G, u, v⟩
 
 /-- The marked second difference of divisor rank. -/
 noncomputable def rankDelta (M : TwiceMarked) (D : CFDiv M.graph) : ℤ :=

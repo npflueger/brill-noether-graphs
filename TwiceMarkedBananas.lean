@@ -451,7 +451,7 @@ structure TwiceMarked where
   v : graph.V
 
 /-- Mark two vertices. -/
-def mark (G : CFGraph) (u v : G.V) : TwiceMarked := ⟨G, u, v⟩
+abbrev mark (G : CFGraph) (u v : G.V) : TwiceMarked := ⟨G, u, v⟩
 
 /-- The marked second difference of divisor rank. -/
 noncomputable def rankDelta (M : TwiceMarked) (D : CFDiv M.graph) : ℤ :=
@@ -943,7 +943,7 @@ universe u v
 
 /-- Cross a standalone graph into the library's graph type without changing
 any data. -/
-def toLib (G : CFGraph.{u}) : _root_.CFGraph.{u} where
+abbrev toLib (G : CFGraph.{u}) : _root_.CFGraph.{u} where
   V := G.V
   instDecidableEq := G.instDecidableEq
   instFintype := G.instFintype
@@ -952,7 +952,7 @@ def toLib (G : CFGraph.{u}) : _root_.CFGraph.{u} where
   loopless := G.loopless
 
 /-- Read a library graph as a standalone graph. -/
-def ofLib (G : _root_.CFGraph.{u}) : CFGraph.{u} where
+abbrev ofLib (G : _root_.CFGraph.{u}) : CFGraph.{u} where
   V := G.V
   instDecidableEq := G.instDecidableEq
   instFintype := G.instFintype
@@ -1008,7 +1008,7 @@ theorem rankSupport_toLib (G : CFGraph) (D : CFDiv G) :
 /-! ### Twice-marked graphs -/
 
 /-- Cross a standalone twice-marked graph into the library's bundle. -/
-def toLibTM (M : TwiceMarked) : Bananas.TwiceMarked where
+abbrev toLibTM (M : TwiceMarked) : Bananas.TwiceMarked where
   graph := toLib M.graph
   u := M.u
   v := M.v
@@ -1085,13 +1085,13 @@ theorem hasInversionLowerBound_toLib (M : TwiceMarked) (k q : ℕ) :
 /-! ### Graph isomorphisms -/
 
 /-- Cross a standalone graph isomorphism into the library's. -/
-def toLibIso {G : CFGraph.{u}} {H : CFGraph.{v}} (φ : CFGraphIso G H) :
+abbrev toLibIso {G : CFGraph.{u}} {H : CFGraph.{v}} (φ : CFGraphIso G H) :
     Utilities.CFGraphIso (toLib G) (toLib H) where
   vertexEquiv := φ.vertexEquiv
   map_num_edges := φ.map_num_edges
 
 /-- Read a library graph isomorphism as a standalone one. -/
-def ofLibIso {G : _root_.CFGraph.{u}} {H : _root_.CFGraph.{v}}
+abbrev ofLibIso {G : _root_.CFGraph.{u}} {H : _root_.CFGraph.{v}}
     (φ : Utilities.CFGraphIso G H) : CFGraphIso (ofLib G) (ofLib H) where
   vertexEquiv := φ.vertexEquiv
   map_num_edges := φ.map_num_edges
@@ -1104,7 +1104,7 @@ theorem pointedGenusOneRigid_toLib (H : CFGraph) (y : H.V) :
   ⟨fun h => ⟨h.1, h.2, h.3, h.4⟩, fun h => ⟨h.1, h.2, h.3, h.4⟩⟩
 
 /-- Cross a mark-swapping automorphism into the library's bundle. -/
-def toLibSwap {M : TwiceMarked} (φ : MarkedPointSwap M) :
+abbrev toLibSwap {M : TwiceMarked} (φ : MarkedPointSwap M) :
     Bananas.MarkedPointSwap (toLibTM M) where
   iso := toLibIso φ.iso
   preserves_marked_set := φ.preserves_marked_set
@@ -1114,7 +1114,7 @@ def toLibSwap {M : TwiceMarked} (φ : MarkedPointSwap M) :
 /-! ### Marked graphs and chains -/
 
 /-- Cross a standalone marked graph into the library's bundle. -/
-def toLibMG (M : MarkedGraph) : Utilities.MarkedGraph.{0} where
+abbrev toLibMG (M : MarkedGraph) : Utilities.MarkedGraph.{0} where
   graph := toLib M.graph
   left := M.left
   right := M.right
@@ -1135,7 +1135,7 @@ theorem toLib_chain_graph (M : MarkedGraph) (L : List MarkedGraph) :
 /-! ### Chain factors -/
 
 /-- Cross a chain factor, bridging its `k`-general transmission proof. -/
-def toLibFactor (F : KGeneralChainFactor) : Bananas.KGeneralChainFactor where
+abbrev toLibFactor (F : KGeneralChainFactor) : Bananas.KGeneralChainFactor where
   marked := toLibMG F.marked
   period := F.period
   connected := F.connected
@@ -1189,10 +1189,15 @@ theorem weierstrassPart_toLib (G : CFGraph) (v : G.V) (D : CFDiv G) (i : ℕ) :
   simp only [poleOrder_toLib]
   all_goals rfl
 
+theorem graph_connected_toLib (G : CFGraph) :
+    graph_connected G ↔ _root_.graph_connected (toLib G) := Iff.rfl
+
 theorem weierstrassSize_toLib {G : CFGraph} (hconn : graph_connected G) (v : G.V)
     (D : CFDiv G) :
-    weierstrassSize hconn v D = Bananas.weierstrassSize (G := toLib G) hconn v D := by
-  rw [Bananas.weierstrassSize_eq_sum]
+    weierstrassSize hconn v D =
+      Bananas.weierstrassSize (G := toLib G) ((graph_connected_toLib G).mp hconn) v D := by
+  refine Eq.trans ?_ (Bananas.weierstrassSize_eq_sum (G := toLib G)
+    ((graph_connected_toLib G).mp hconn) v D).symm
   unfold weierstrassSize
   simp only [weierstrassPart_toLib]
   all_goals rfl
@@ -1223,7 +1228,7 @@ theorem onceMarkedBrillNoetherGeneral_chain_toLib (M : MarkedGraph) (L : List Ma
 /-! ### Bananas -/
 
 /-- Cross a standalone banana into the library's subdivision specification. -/
-def toLibBanana {g : ℕ} (B : Banana g) : Bananas.Banana g where
+abbrev toLibBanana {g : ℕ} (B : Banana g) : Bananas.Banana g where
   core := { tail := B.tail, head := B.head }
   length := B.length
   core_nonempty := by decide
@@ -1231,7 +1236,7 @@ def toLibBanana {g : ℕ} (B : Banana g) : Bananas.Banana g where
   length_pos := B.length_pos
 
 /-- Read a library banana as a standalone one. -/
-def ofLibBanana {g : ℕ} (B : Bananas.Banana g) : Banana g where
+abbrev ofLibBanana {g : ℕ} (B : Bananas.Banana g) : Banana g where
   tail := B.core.tail
   head := B.core.head
   length := B.length
@@ -1512,7 +1517,8 @@ theorem _root_.Bananas.TwiceMarkedBananas.s1_thm1_16
           (mark B.graph (strandVertex B alpha i) (strandVertex B beta j)) D < 0 := by
   rcases Bananas.corrected_bananaSimple hg (toLibBanana B) alpha beta i j hFar with h | ⟨D, hD⟩
   · exact Or.inl h
-  · exact Or.inr ⟨D, by rw [rankDelta_toLib]; exact hD⟩
+  · exact Or.inr ⟨D, (rankDelta_toLib
+      (mark B.graph (strandVertex B alpha i) (strandVertex B beta j)) D).trans_lt hD⟩
 
 /-- **Theorem 1.17** (`thm:bananas`). Section 1.
 
@@ -2107,7 +2113,8 @@ theorem _root_.Bananas.TwiceMarkedBananas.s3_thm3_9
         rankDelta (mark B.graph (strandVertex B α i) (strandVertex B β j)) D < 0 := by
   rcases Bananas.nsmForBanana_classification hg (toLibBanana B) α β i j with h | ⟨D, hD⟩
   · exact Or.inl h
-  · exact Or.inr ⟨D, by rw [rankDelta_toLib]; exact hD⟩
+  · exact Or.inr ⟨D, (rankDelta_toLib
+      (mark B.graph (strandVertex B α i) (strandVertex B β j)) D).trans_lt hD⟩
 
 /- **Remark 3.10** (unlabeled) — no formal claim. Qualitative discussion of
 a possible "forbidden-minor" characterization of non-submodularity, which
@@ -3107,7 +3114,8 @@ theorem _root_.Bananas.TwiceMarkedBananas.s6_prop6_10
     (hTau : IsTransmissionPermutation (mark G u v) D tau) :
     sci tau = weierstrassSize hG v D := by
   rw [weierstrassSize_toLib]
-  exact Bananas.sci_eq_weierstrassSize (G := toLib G) u v hG D tau ((isTransmissionPermutation_toLib _ _ _).mp hTau)
+  exact Bananas.sci_eq_weierstrassSize (G := toLib G) u v ((graph_connected_toLib G).mp hG) D tau
+    ((isTransmissionPermutation_toLib _ _ _).mp hTau)
 
 
 
