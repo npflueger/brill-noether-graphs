@@ -1,4 +1,12 @@
-import Mathlib
+import Mathlib.Algebra.Group.Subgroup.Finite
+import Mathlib.Data.Int.ConditionallyCompleteOrder
+import Mathlib.Combinatorics.Young.YoungDiagram
+import Mathlib.Data.Set.Card
+import Mathlib.Data.Fintype.Sigma
+import Mathlib.Data.Nat.Choose.Basic
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib.Data.Fintype.BigOperators
+import Mathlib.Order.Disjoint
 
 /-!
 # Easy-access reference (statement-only audit copy): *Twice-Marked Banana Graphs*
@@ -33,9 +41,13 @@ standalone statement index, not new mathematics.
 
 **Vocabulary.** The reader-facing vocabulary below is defined directly over
 Mathlib, inside the namespace `TMB`, and does not alias the implementation
-library. The theorem statements are written inside that namespace (with their
-public names in `Bananas.TwiceMarkedBananas`), so that every graph-theoretic
-word in a statement refers to the standalone definition of this file.  The
+library. The file imports exactly the Mathlib modules this vocabulary uses
+(rather than all of Mathlib), so that every typeclass instance appearing in a
+statement is resolved in an environment contained in the solution's; the
+Comparator requires the elaborated statements to agree constant by constant.
+The theorem statements are written inside that namespace (with their public
+names in `Bananas.TwiceMarkedBananas`), so that every graph-theoretic word in
+a statement refers to the standalone definition of this file.  The
 companion solution file `TwiceMarkedBananas.lean` repeats this vocabulary
 block verbatim and proves each statement by bridging explicitly to the
 implementation library. Consequently the implementation wrappers are the
