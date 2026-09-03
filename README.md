@@ -1,11 +1,11 @@
 # Brill–Noether theory of graphs
 
-This repository formalizes results about chip-firing divisors, Brill–Noether
-theory, and divisorial gonality on finite multigraphs in Lean 4. The code herein
-has been created primarily with generative AI, and is meant primarily for
-experimental purposes, as well as preparation to be added to the [Palomar
-registry](https://palomar-registry.org/). This work is ongoing, and new contributions are
-welcome!
+This repository formalizes results about combinatorial Brill–Noether theory and
+gonality of finite multigraphs in Lean 4. The code herein has been created
+primarily with generative AI. It is meant for experimental purposes, as well as
+preparation to be added to the [Palomar
+registry](https://palomar-registry.org/). This work is ongoing, and new
+contributions are welcome!
 
 ## Source papers
 
