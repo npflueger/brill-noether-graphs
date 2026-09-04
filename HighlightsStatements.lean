@@ -6,7 +6,7 @@ import Mathlib
 This is a statement-only audit copy of the repository's auditable,
 reader-facing statement layer. The definitions used in theorem statements are
 repeated here in full: they do not alias or invoke the implementation library.
-Only the nine advertised headline theorems are left unproved. Short proofs
+Only the ten advertised headline theorems are left unproved. Short proofs
 which certify concrete definitions--for example, the additive laws of the
 divisor degree homomorphism--remain part of the statement vocabulary.
 
@@ -157,8 +157,8 @@ structure TwiceMarkedGraph where
   /-- The right marked vertex. -/
   v : graph.V
 
-/-- A harmless one-vertex value, used for an empty chain and for malformed
-path-length data. -/
+/-- A harmless one-vertex value, used for an empty chain and for as a junk value
+returned for malformed path-length data. -/
 def trivial_twice_marked_graph : TwiceMarkedGraph where
   graph :=
     { V := Fin 1
@@ -420,6 +420,14 @@ def mixed_chain_torsion_budget (factors : List CycleThetaFactor) : Prop :=
         (CycleThetaFactor.totalGenus (factors.drop i)) <
       (factors.get ⟨i, hi⟩).period
 
+/-- The one-sided torsion budget for marked generality at the left endpoint
+of a mixed chain.  At factor `i`, its period exceeds the total genus of the
+suffix beginning there. -/
+def mixed_chain_left_torsion_budget (factors : List CycleThetaFactor) : Prop :=
+  ∀ i : ℕ, ∀ hi : i < factors.length,
+    CycleThetaFactor.totalGenus (factors.drop i) <
+      (factors.get ⟨i, hi⟩).period
+
 /-- The twice-marked bridge-chain represented by mixed readable factors. -/
 def chain_of_cycles_and_thetas
     (factors : List CycleThetaFactor) : TwiceMarkedGraph :=
@@ -636,6 +644,31 @@ theorem cycle_chain_brill_noether_general_of_torsion
         (min (i + 1) (lengths.length - i))) :
     brill_noether_general (chain_of_cycles lengths).graph := by
   sorry
+
+/-- **Marked mixed cycle/theta chain theorem.**  Under the sharp one-sided
+torsion budget, a degree-`d`, rank-at-least-`r` divisor cannot retain rank zero
+after removing `r + rho + 1` chips at the left endpoint of the chain. -/
+theorem cycle_theta_chain_marked_no_high_multiplicity
+    (factors : List CycleThetaFactor)
+    (h_cycles_positive : ∀ m n : ℕ,
+      CycleThetaFactor.cycle m n ∈ factors → 0 < m ∧ 0 < n)
+    (h_thetas_evenly_marked : ∀ a b c u v k : ℕ,
+      CycleThetaFactor.theta a b c u v k ∈ factors →
+        evenlyMarkedK a b c u v k)
+    (h_torsion : mixed_chain_left_torsion_budget factors)
+    (D : CFDiv (chain_of_cycles_and_thetas factors).graph) (r d : ℤ)
+    (h_rank_nonnegative : 0 ≤ r)
+    (h_rank_below_genus :
+      r < genus (chain_of_cycles_and_thetas factors).graph)
+    (h_degree : deg D = d) (h_rank : rank_geq _ D r)
+    (h_rho : 0 ≤ brill_noether_number
+      (chain_of_cycles_and_thetas factors).graph r d) :
+    ¬rank_geq (chain_of_cycles_and_thetas factors).graph
+      (D - (r + brill_noether_number
+        (chain_of_cycles_and_thetas factors).graph r d + 1) •
+          one_chip (chain_of_cycles_and_thetas factors).u) 0 := by
+  sorry
+
 /-- **Mixed cycle/theta chain theorem.**  A chain whose factors are cycles or
 evenly marked theta graphs is Brill--Noether general whenever every cycle is
 nondegenerate and each factor satisfies the sharp minimum genus/torsion

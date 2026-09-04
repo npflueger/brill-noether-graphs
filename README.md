@@ -7,10 +7,18 @@ preparation to be added to the [Palomar
 registry](https://palomar-registry.org/). This work is ongoing, and new
 contributions are welcome!
 
+## Dependencies
+
+These formalizations build upon [Mathlib](github.com/leanprover-community/mathlib4) and the following two repositories.
+
+* [Chip-firing with Lean4](github.com/DhyeyMavani2003), developed by Dhyey Mavani and Nathan Pflueger. This provides the basic notions of divisor theory on graphs, including the Riemann--Roch theorem.
+* [Demazure products](github.com/npflueger/demazure), developed by Nathan Pflueger. This provides the theory of Demazure products on integer permutations, needed for vertex gluing arguments.
+
+
 ## Source papers
 
 - [A tropical proof of the Brill--Noether Theorem](https://doi.org/10.1016/j.aim.2012.02.019),
-  by F. Cools, J. Draisma, S. Payne, and E. Robeva (2012). The discrete form
+  by F. Cools, J. Draisma, S. Payne, and E. Robeva (2012). The finite-graph case
   of Theorem 1.1 has been formalized.
 - [A note on Brill--Noether existence for graphs of low genus](https://doi.org/10.1307/mmj/1519095622),
   by S. Atanasov and D. Ranganathan (2018). The main low-genus existence
@@ -43,10 +51,15 @@ contributions are welcome!
   the theorem that treewidth is at most divisorial gonality.
 - `Tricycle/` formalizes the tricycle counterexample showing that divisorial
   gonality can drop under regular subdivision.
-- `Highlights.lean` and `HighlightsStatements.lean` collect nine headline
+- `Highlights.lean` and `HighlightsStatements.lean` collect ten headline
   results in proved and Mathlib-only statement forms. `TwiceMarkedBananas.lean`
   and `TwiceMarkedBananasStatements.lean` provide a paper-order proved index
   and standalone statement audit for the paper of Pflueger and Solomon.
+- `Palomar/BNChains/Challenge.lean` contains the chain submission statement,
+  alongside its Comparator configuration and metadata; `Palomar/Solutions/`
+  contains the proved counterpart. Their `BNChains.*` and `Solutions.*` module
+  roots are kept distinct for compatibility with Palomar's protected Challenge
+  build.
 
 ## Building
 
@@ -70,7 +83,7 @@ On Linux, with Git, Go, Rust/Cargo, and Python 3 installed, run:
 ./scripts/verify-comparator.sh
 ```
 
-This checks both statement/solution pairs with pinned versions of Comparator,
+This checks all statement/solution pairs with pinned versions of Comparator,
 `lean4export`, Landrun, and NanoDa. GitHub Actions runs the same check on pushes
 and pull requests to `main`.
 

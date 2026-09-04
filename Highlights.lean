@@ -419,6 +419,14 @@ def mixed_chain_torsion_budget (factors : List CycleThetaFactor) : Prop :=
         (CycleThetaFactor.totalGenus (factors.drop i)) <
       (factors.get ⟨i, hi⟩).period
 
+/-- The one-sided torsion budget for marked generality at the left endpoint
+of a mixed chain.  At factor `i`, its period exceeds the total genus of the
+suffix beginning there. -/
+def mixed_chain_left_torsion_budget (factors : List CycleThetaFactor) : Prop :=
+  ∀ i : ℕ, ∀ hi : i < factors.length,
+    CycleThetaFactor.totalGenus (factors.drop i) <
+      (factors.get ⟨i, hi⟩).period
+
 /-- The twice-marked bridge-chain represented by mixed readable factors. -/
 def chain_of_cycles_and_thetas
     (factors : List CycleThetaFactor) : TwiceMarkedGraph :=
@@ -1107,6 +1115,18 @@ private theorem realized_chainMinBudget
     realized_chainFactorGenus_drop R, R.period_at i hi hi']
   exact_mod_cast h
 
+private theorem realized_chainSuffixBudget
+    {source : List CycleThetaFactor}
+    (R : ReadableFactorsRealization source)
+    (hBudget : mixed_chain_left_torsion_budget source) :
+    _root_.Bananas.ChainSuffixBudget R.libraryFactors := by
+  apply (_root_.Bananas.chainSuffixBudget_iff_indexed _).mpr
+  intro i hi
+  have hi' : i < source.length := by simpa [R.length_eq] using hi
+  have h := hBudget i hi'
+  rw [realized_chainFactorGenus_drop R, R.period_at i hi hi']
+  exact_mod_cast h
+
 /-- The readable construction above agrees exactly with the occurrence-safe
 regular subdivision used by the library. -/
 private theorem libraryGraph_regularSubdivision (G : CFGraph) (n : ℕ)
@@ -1445,6 +1465,126 @@ theorem cycle_chain_brill_noether_general_of_torsion
         (_root_.Bananas.contractBridgeChain P.factor.marked
           ((L.map _root_.ChainOfLoops.Loop.factor).map
             _root_.Bananas.KGeneralChainFactor.marked)) hWedgeGeneral
+
+set_option linter.unusedVariables false in
+/-- **Marked mixed cycle/theta chain theorem.**  Under the sharp one-sided
+torsion budget, a degree-`d`, rank-at-least-`r` divisor cannot retain rank zero
+after removing `r + rho + 1` chips at the left endpoint of the chain. -/
+theorem cycle_theta_chain_marked_no_high_multiplicity
+    (factors : List CycleThetaFactor)
+    (h_cycles_positive : ∀ m n : ℕ,
+      CycleThetaFactor.cycle m n ∈ factors → 0 < m ∧ 0 < n)
+    (h_thetas_evenly_marked : ∀ a b c u v k : ℕ,
+      CycleThetaFactor.theta a b c u v k ∈ factors →
+        evenlyMarkedK a b c u v k)
+    (h_torsion : mixed_chain_left_torsion_budget factors)
+    (D : CFDiv (chain_of_cycles_and_thetas factors).graph) (r d : ℤ)
+    (h_rank_nonnegative : 0 ≤ r)
+    (h_rank_below_genus :
+      r < genus (chain_of_cycles_and_thetas factors).graph)
+    (h_degree : deg D = d) (h_rank : rank_geq _ D r)
+    (h_rho : 0 ≤ brill_noether_number
+      (chain_of_cycles_and_thetas factors).graph r d) :
+    ¬rank_geq (chain_of_cycles_and_thetas factors).graph
+      (D - (r + brill_noether_number
+        (chain_of_cycles_and_thetas factors).graph r d + 1) •
+          one_chip (chain_of_cycles_and_thetas factors).u) 0 := by
+  cases factors with
+  | nil =>
+      have hGenus : genus (chain_of_cycles_and_thetas []).graph = 0 := rfl
+      rw [hGenus] at h_rank_below_genus
+      omega
+  | cons first rest =>
+      let R := realizeReadableFactors (first :: rest)
+        h_cycles_positive h_thetas_evenly_marked
+      have hSuffix := realized_chainSuffixBudget R h_torsion
+      cases hLibrary : R.libraryFactors with
+      | nil =>
+          have hLength := R.length_eq
+          rw [hLibrary] at hLength
+          simp at hLength
+      | cons F tail =>
+          have hMarked := R.marked_eq
+          rw [hLibrary] at hMarked
+          have hMarkedParts :
+              libraryMarkedGraph first.markedGraph = F.marked ∧
+              rest.map (fun Q => libraryMarkedGraph Q.markedGraph) =
+                tail.map _root_.Bananas.KGeneralChainFactor.marked := by
+            simpa only [List.map_cons, List.cons.injEq] using hMarked
+          rw [hLibrary] at hSuffix
+          have hSourceMarked :
+              libraryMarkedGraph
+                  (chain_of_cycles_and_thetas (first :: rest)) =
+                F.marked.bridgeChain
+                  (tail.map _root_.Bananas.KGeneralChainFactor.marked) := by
+            change libraryMarkedGraph
+                (glue_chain (first.markedGraph ::
+                  rest.map CycleThetaFactor.markedGraph)) = _
+            rw [libraryMarkedGraph_glue_chain_cons, hMarkedParts.1]
+            simp only [List.map_map]
+            have hTail :
+                rest.map
+                    (libraryMarkedGraph ∘ CycleThetaFactor.markedGraph) =
+                  tail.map _root_.Bananas.KGeneralChainFactor.marked := by
+              simpa only [Function.comp_def] using hMarkedParts.2
+            rw [hTail]
+          let source := libraryMarkedGraph
+            (chain_of_cycles_and_thetas (first :: rest))
+          let target := F.marked.chain
+            (tail.map _root_.Bananas.KGeneralChainFactor.marked)
+          let transport : _root_.Bananas.LeftRankTransport source target := by
+            dsimp only [source]
+            rw [hSourceMarked]
+            exact _root_.Bananas.contractBridgeChain F.marked
+              (tail.map _root_.Bananas.KGeneralChainFactor.marked)
+          change _root_.CFDiv source.graph at D
+          change _root_.deg D = d at h_degree
+          change _root_.rank_geq source.graph D r at h_rank
+          change ¬_root_.rank_geq source.graph
+            (D - (r + _root_.Utilities.bnNumber source.graph r d + 1) •
+              _root_.one_chip source.left) 0
+          intro hResidual
+          have hRankSource : r ≤ _root_.rank source.graph D :=
+            (_root_.rank_geq_iff source.graph D r).mp h_rank
+          have hResidualSource : 0 ≤ _root_.rank source.graph
+              (D - (r + _root_.Utilities.bnNumber source.graph r d + 1) •
+                _root_.one_chip source.left) :=
+            (_root_.rank_geq_iff source.graph _ 0).mp hResidual
+          have hRankTarget : r ≤
+              _root_.rank target.graph (transport.mapDiv D) := by
+            rw [transport.rank_map]
+            exact hRankSource
+          have hDegreeTarget : _root_.deg (transport.mapDiv D) = d := by
+            rw [transport.deg_map, h_degree]
+          have hOnceMarked : _root_.Bananas.OnceMarkedBrillNoetherGeneral
+              (_root_.Bananas.reversedMarkedChain F tail).graph
+              ((_root_.Bananas.reversedFactorChainIso F tail).vertexEquiv
+                target.left) := by
+            rw [_root_.Bananas.reversedFactorChainIso_apply_left]
+            exact
+              _root_.Bananas.onceMarkedBrillNoetherGeneral_reversedMixedTorsionChain
+                F tail hSuffix
+          have hNegative :=
+            _root_.ChainOfLoops.rank_sub_high_multiplicity_neg_of_iso
+              (_root_.Bananas.reversedFactorChainIso F tail)
+              (_root_.Bananas.graph_connected_factorChain F tail)
+              target.left hOnceMarked (transport.mapDiv D) r
+              h_rank_nonnegative hRankTarget
+          rw [hDegreeTarget] at hNegative
+          have hBn : _root_.Utilities.bnNumber target.graph r d =
+              _root_.Utilities.bnNumber source.graph r d := by
+            simp only [_root_.Utilities.bnNumber,
+              _root_.Utilities.rectangleWidth, transport.genus_eq]
+          have hMap : transport.mapDiv
+              (D - (r + _root_.Utilities.bnNumber source.graph r d + 1) •
+                _root_.one_chip source.left) =
+              transport.mapDiv D -
+                (r + _root_.Utilities.bnNumber target.graph r d + 1) •
+                  _root_.one_chip target.left := by
+            rw [transport.map_sub, transport.map_zsmul,
+              transport.map_one_chip, hBn]
+          rw [← hMap, transport.rank_map] at hNegative
+          exact (not_lt_of_ge hResidualSource) hNegative
 
 /-- **Mixed cycle/theta chain theorem.**  A chain whose factors are cycles or
 evenly marked theta graphs is Brill--Noether general whenever every cycle is
