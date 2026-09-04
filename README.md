@@ -55,11 +55,6 @@ These formalizations build upon [Mathlib](github.com/leanprover-community/mathli
   results in proved and Mathlib-only statement forms. `TwiceMarkedBananas.lean`
   and `TwiceMarkedBananasStatements.lean` provide a paper-order proved index
   and standalone statement audit for the paper of Pflueger and Solomon.
-- `Palomar/BNChains/Challenge.lean` contains the chain submission statement,
-  alongside its Comparator configuration and metadata; `Palomar/Solutions/`
-  contains the proved counterpart. Their `BNChains.*` and `Solutions.*` module
-  roots are kept distinct for compatibility with Palomar's protected Challenge
-  build.
 
 ## Building
 

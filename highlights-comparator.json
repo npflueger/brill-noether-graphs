@@ -6,6 +6,7 @@
     "Highlights.cdpr_marked_no_high_multiplicity",
     "Highlights.cdpr_chain_brill_noether_general",
     "Highlights.cycle_chain_brill_noether_general_of_torsion",
+    "Highlights.cycle_theta_chain_marked_no_high_multiplicity",
     "Highlights.cycle_theta_chain_brill_noether_general",
     "Highlights.cycle_theta_chain_gonality_eq_common_torsion",
     "Highlights.exists_graph_of_genus_and_gonality",

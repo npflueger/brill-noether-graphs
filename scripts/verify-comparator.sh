@@ -15,8 +15,7 @@ landrun_commit=811cfff51ceaf3d9843708aa6d22e9b84ccac8b4
 nanoda_commit=68d5ca9db226849b41a6fff59d796ff19d0a8840
 
 if [ "$#" -eq 0 ]; then
-  set -- highlights-comparator.json twice-marked-bananas-comparator.json \
-    Palomar/BNChains/comparator.json
+  set -- highlights-comparator.json twice-marked-bananas-comparator.json
 fi
 comparator_configs=("$@")
 
