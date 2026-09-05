@@ -157,6 +157,7 @@ import Utilities.Subdivision.SpanningTreeConnectivity
 import Utilities.Subdivision.SpecBurning
 import Utilities.Subdivision.SplitRampArithmetic
 import Utilities.Subdivision.SplitRampScript
+import Utilities.Subdivision.SquareRootDescent
 import Utilities.Subdivision.StrongSeparator
 import Utilities.Subdivision.SubdivisionArithmetic
 import Utilities.Subdivision.SubdivisionConnectivity
