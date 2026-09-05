@@ -1,0 +1,27 @@
+'Utilities.CommonOffsetRounding.exists_common_offset' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Utilities.abs_script_sub_le_deg_of_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Utilities.Certificate.DiscreteSpecialization.winnable_coreClassDivisor_of_stretch' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Utilities.Certificate.DiscreteSpecialization.rank_ge_one_coreClassDivisor_of_stretch' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'AtanasovRanganathan.GenusFiveTwoPoleClosed.row01_closedConstruction' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'AtanasovRanganathan.GenusFiveTwoPoleClosed.row02_closedConstruction' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'AtanasovRanganathan.GenusFiveTwoPoleClosed.row03_closedConstruction' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'AtanasovRanganathan.GenusFiveTwoPoleClosed.row04_closedConstruction' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'AtanasovRanganathan.GenusFiveTwoPoleClosed.row07_closedConstruction' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'AtanasovRanganathan.GenusFiveTwoPoleClosed.row13_closedConstruction' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'AtanasovRanganathan.brillNoetherExistenceThroughFive' depends on axioms: [propext, Classical.choice, Quot.sound]

@@ -56,6 +56,17 @@ These formalizations build upon [Mathlib](github.com/leanprover-community/mathli
   and `TwiceMarkedBananasStatements.lean` provide a paper-order proved index
   and standalone statement audit for the paper of Pflueger and Solomon.
 
+Genus-five rows 01, 02, 03, 04, 07, and 13 share the canonical two-pole construction in
+[`LowGenus/GenusFiveTwoPole.lean`](LowGenus/GenusFiveTwoPole.lean).
+It glues two genus-two canonical pencils by clamping firing scripts and
+bending one connector potential when needed. Integer rounding then extends
+the fixed core divisor over all permitted zero-length contraction faces in
+[`GenusFiveTwoPoleClosed`](LowGenus/GenusFiveTwoPoleClosed.lean). See the
+[proof and implementation note](Research/unmarked-genus-five-two-pole-proof.md).
+The [proof comparison](Research/genus-five-proof-comparison.md) records the
+source-size and compile-time measurements supporting replacement of the six
+old proofs.
+
 ## Building
 
 Install [Lean via `elan`](https://lean-lang.org/lean4/doc/setup.html), then run:
@@ -69,6 +80,20 @@ lake build
 The default build checks the principal libraries and proved indexes. Individual
 libraries can also be checked with, for example, `lake build LowGenus` or
 `lake build TreewidthGonality`.
+
+For work on the shared two-pole proof and its contraction closure, check their target with four
+Lean threads:
+
+```bash
+LEAN_NUM_THREADS=4 lake build LowGenus.GenusFiveTwoPoleClosed
+```
+
+After changing its integration or the library roots, check both affected
+libraries:
+
+```bash
+LEAN_NUM_THREADS=4 lake build Utilities LowGenus
+```
 
 ## Statement verification
 

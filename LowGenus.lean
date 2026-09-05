@@ -11,8 +11,6 @@ import LowGenus.ConfigurationMarkedCommon
 import LowGenus.ConfigurationMarkedRow
 import LowGenus.ConfigurationMarkedThree
 import LowGenus.ConfigurationMarkedTripod
-import LowGenus.ConfigurationReservoirChain
-import LowGenus.ConfigurationReservoirPair
 import LowGenus.ConfigurationSeven
 import LowGenus.ConfigurationThree
 import LowGenus.ConfigurationThreeChain
@@ -24,6 +22,9 @@ import LowGenus.GenusFourRow098Closed
 import LowGenus.GenusFiveClosedOrbit
 import LowGenus.GenusFiveConfigurations
 import LowGenus.GenusFiveConstructions
+import LowGenus.GenusFiveTwoPoleData
+import LowGenus.GenusFiveTwoPole
+import LowGenus.GenusFiveTwoPoleClosed
 import LowGenus.GenusFiveCoreAtlas
 import LowGenus.GenusFiveCubicAtlas
 import LowGenus.GenusFiveCanonicalClassifier
@@ -34,14 +35,9 @@ import LowGenus.GenusFourCanonicalClassifier
 import LowGenus.GenusFourCubicCoverage
 import LowGenus.GenusFourPseudocoreCoverage
 import LowGenus.GenusFourRowsClosed
-import LowGenus.GenusFiveRow01
-import LowGenus.GenusFiveRow02
-import LowGenus.GenusFiveRow03
-import LowGenus.GenusFiveRow04
 import LowGenus.GenusFiveRow05
 import LowGenus.GenusFiveRow05Symmetry
 import LowGenus.GenusFiveRow06
-import LowGenus.GenusFiveRow07
 import LowGenus.GenusFiveRow08
 import LowGenus.GenusFiveRow08ChamberOne
 import LowGenus.GenusFiveRow08ChamberThree
@@ -56,11 +52,9 @@ import LowGenus.GenusFiveRow11
 import LowGenus.GenusFiveRow12
 import LowGenus.GenusFiveRow12Tripod
 import LowGenus.GenusFiveRow12Guarding
-import LowGenus.GenusFiveRow13
 import LowGenus.GenusFiveRow14
 import LowGenus.GenusFiveRow15
 import LowGenus.GenusFiveRow16
-import LowGenus.GuardingOrbit
 import LowGenus.GuardingSet
 import LowGenus.Highlights
 import LowGenus.Infrastructure.CoreRelabelingClosed

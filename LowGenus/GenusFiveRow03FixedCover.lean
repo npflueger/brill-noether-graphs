@@ -1,8 +1,8 @@
 import LowGenus.GenusFiveClosedCover
 import LowGenus.GenusFiveCoreAtlas
 
-/-! **Independent generated check.** The main row-03 proof is the readable
-`GenusFiveRow03` construction via `ConfigurationThreeChain`; this module gives
+/-! **Independent generated check.** The main row-03 proof is now
+`GenusFiveTwoPoleClosed.row03_closedConstruction`; this module preserves
 an additional exact replay.
 
 Generated exact replay of the fixed AR row-03 divisor.

@@ -1,18 +1,13 @@
 import LowGenus.GenusFiveConfigurations
 import LowGenus.GenusFiveCoreAtlas
-import LowGenus.GenusFiveRow01
-import LowGenus.GenusFiveRow02
-import LowGenus.GenusFiveRow03
-import LowGenus.GenusFiveRow04
+import LowGenus.GenusFiveTwoPoleClosed
 import LowGenus.GenusFiveRow05
 import LowGenus.GenusFiveRow06
-import LowGenus.GenusFiveRow07
 import LowGenus.GenusFiveRow08
 import LowGenus.GenusFiveRow09
 import LowGenus.GenusFiveRow10
 import LowGenus.GenusFiveRow11
 import LowGenus.GenusFiveRow12Guarding
-import LowGenus.GenusFiveRow13
 import LowGenus.GenusFiveRow14
 import LowGenus.GenusFiveRow15
 import LowGenus.GenusFiveRow16
@@ -54,37 +49,20 @@ theorem RowConstruction.toPositiveSubdivisionPencil {core : Core}
 
 /-! ## The six length-dependent families -/
 
-/-- AR's first family (Figure-8 row 01): row 05's picture with adjacent
-bananas.  AR place two of their four chips at an interior point of a leg and
-split the length orthant into four chambers.  The readable proof is a
-**guarding set** instead and needs neither: the chips sit at `2, 3, 4, 5`, the
-four interior vertices of the band, and each of the four banana vertices is the
-target of one instance of `ConfigurationReservoirPair`, uniform on the whole
-closed orthant.  This replaces the four-module chamber decomposition
-(`GenusFiveRow01ChamberA`/`B`, `GenusFiveRow01Symmetry`), which is deleted
-rather than archived: those were readable proofs superseded by a readable
-proof. -/
+/-- AR's first family (Figure-8 row 01). Two genus-two canonical divisors
+give the positive construction; integer rounding closes every forest face. -/
 theorem row01_firstFamily : RowConstruction row01Core := by
-  exact GenusFiveRow01.row01_closedConstruction
+  exact GenusFiveTwoPoleClosed.row01_closedConstruction
 
-/-- AR's second family. The formalization uses a core-supported divisor and reads
-the chip-free set as two reservoir-backed pictures, uniform over the whole
-closed orthant including the exceptional contraction face. -/
+/-- AR's second family, including its exceptional contraction face, follows
+from the common canonical construction and discrete specialization. -/
 theorem row02_secondFamily : RowConstruction row02Core := by
-  exact GenusFiveRow02.row02_closedConstruction
+  exact GenusFiveTwoPoleClosed.row02_closedConstruction
 
-/-- AR's fourth family (“loops of loops”), the other exceptional contraction
-family.  AR present this row as a moving chip at distance `min(d+e,x)` across
-adjacent and non-adjacent longest-edge cases.  The readable proof is a
-**guarding set** and needs neither the moving chip nor the case split: the
-chips sit at `0, 2, 5, 6` -- the two adjacent chip pairs of the eight-cycle --
-and each of the four chip-free vertices is the target of one instance of
-`ConfigurationReservoirChain`, uniform over the whole closed orthant including
-the exceptional contraction faces.  The generated five-module fixed cover,
-which proved the same theorem by replaying a fixed divisor on a fundamental
-domain for the core's symmetry group, is retired to the archival root. -/
+/-- AR's fourth family (“loops of loops”) uses the common canonical
+construction and discrete specialization on the entire closed orthant. -/
 theorem row04_fourthFamily : RowConstruction row04Core := by
-  exact GenusFiveRow04.row04_closedConstruction
+  exact GenusFiveTwoPoleClosed.row04_closedConstruction
 
 /-- AR's sixth family (Figure-8 row 05).  The readable proof follows the
 paper's figure: two banana pairs and a marked configuration-3 pair, with the
@@ -109,13 +87,10 @@ theorem row10_ninthFamily : RowConstruction row10Core := by
 
 /-! ## The ten length-independent constructions -/
 
-/-- Third displayed core.  AR's own divisor here uses two length-dependent
-interior chips; the readable proof instead uses a core-supported divisor
-whose off-support vertices form chip-free three-chains, the configuration
-formalized in `ConfigurationThreeChain`.  The generated fixed cover remains in the
-tree as an independent check. -/
+/-- Third displayed core, closed by the common canonical construction and
+discrete specialization. -/
 theorem row03_straightforward : RowConstruction row03Core := by
-  exact GenusFiveRow03.row03_closedConstruction
+  exact GenusFiveTwoPoleClosed.row03_closedConstruction
 
 /-- Sixth displayed core, one of AR's straightforward constructions.  The
 readable proof is a **guarding set**: chips at `0, 3, 4, 7`, the hub `2`
@@ -126,9 +101,10 @@ archival root. -/
 theorem row06_straightforward : RowConstruction row06Core := by
   exact GenusFiveRow06.row06_closedConstruction
 
-/-- Seventh displayed core, one of AR's straightforward constructions. -/
+/-- Seventh displayed core, closed by the common canonical construction and
+discrete specialization. -/
 theorem row07_straightforward : RowConstruction row07Core := by
-  exact GenusFiveRow07.row07_closedConstruction
+  exact GenusFiveTwoPoleClosed.row07_closedConstruction
 
 /-- Ninth displayed core. The formalization uses the length-independent divisor with chips at
 `1,2,3,7`, read as one chipped triangle and one fifth-configuration
@@ -147,9 +123,10 @@ canonical proof is the guarding set of `GenusFiveRow12Guarding`: the row's two
 theorem row12_straightforward : RowConstruction row12Core := by
   exact GenusFiveRow12Guarding.row12_closedConstruction
 
-/-- Thirteenth displayed core, one of AR's straightforward constructions. -/
+/-- Thirteenth displayed core, closed by the common canonical construction
+and discrete specialization. -/
 theorem row13_straightforward : RowConstruction row13Core := by
-  exact GenusFiveRow13.row13_closedConstruction
+  exact GenusFiveTwoPoleClosed.row13_closedConstruction
 
 /-- Fourteenth displayed core.  The readable proof uses AR's own divisor and
 decomposition: three tripod centres and one banana-tail centre, the latter

@@ -1,0 +1,14 @@
+import LowGenus.AtanasovRanganathanExistence
+import LowGenus.GenusFiveTwoPoleClosed
+
+#print axioms Utilities.CommonOffsetRounding.exists_common_offset
+#print axioms Utilities.abs_script_sub_le_deg_of_le
+#print axioms Utilities.Certificate.DiscreteSpecialization.winnable_coreClassDivisor_of_stretch
+#print axioms Utilities.Certificate.DiscreteSpecialization.rank_ge_one_coreClassDivisor_of_stretch
+#print axioms AtanasovRanganathan.GenusFiveTwoPoleClosed.row01_closedConstruction
+#print axioms AtanasovRanganathan.GenusFiveTwoPoleClosed.row02_closedConstruction
+#print axioms AtanasovRanganathan.GenusFiveTwoPoleClosed.row03_closedConstruction
+#print axioms AtanasovRanganathan.GenusFiveTwoPoleClosed.row04_closedConstruction
+#print axioms AtanasovRanganathan.GenusFiveTwoPoleClosed.row07_closedConstruction
+#print axioms AtanasovRanganathan.GenusFiveTwoPoleClosed.row13_closedConstruction
+#print axioms AtanasovRanganathan.brillNoetherExistenceThroughFive

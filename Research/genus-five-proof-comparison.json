@@ -1,0 +1,392 @@
+{
+  "title": "Six closed genus-five constructions: cached replacement-cost A/B",
+  "schema_version": 1,
+  "snapshot_captured_at_utc": "2026-09-05T02:15:27.996349+00:00",
+  "toolchain": "leanprover/lean4:v4.33.0",
+  "threads": 4,
+  "methodology": {
+    "passes_per_arm": 1,
+    "order": [
+      "old",
+      "new"
+    ],
+    "condition": "Unchanged dependencies needed by other branches of the full public theorem were cached identically for both arms. Only replacement-exclusive modules were recompiled, in dependency order, followed by an endpoint probe.",
+    "not_measured": [
+      "A cold build",
+      "A complete public-theorem rebuild",
+      "Statistically replicated timing"
+    ],
+    "isolation": "Frozen source snapshots; one immutable shared artifact cache hard-linked into separate arm output trees; live project cache excluded; all local imports required isolated artifacts; serial Lean processes under one shared lock.",
+    "common_public_modules": 217,
+    "common_modules_needed_in_benchmark": 102,
+    "all_new_generic_infrastructure_included": true,
+    "wall_time": "Sum of per-module elapsed subprocess times. Snapshot creation, artifact staging, and hash checks are excluded.",
+    "cpu_time": "Sum of child-process user and system CPU seconds.",
+    "source_lines": "Includes comments and blank lines. Supplementary noncomment counts strip nested Lean block comments and line comments, preserve strings, and count nonblank lines.",
+    "baseline": "Earlier immutable source snapshot with only the interim construction ledger replaced by its pure-old HEAD version.",
+    "baseline_ledger_sha256": "c2141f06a24f45655a93c96919424943878041e6c4a46b79c7717b96dbbf1d82",
+    "excluded_attempt": "An initial old-arm import-path setup attempt exited before proof elaboration (0.793 seconds); its log was retained separately and it is excluded from all totals.",
+    "limitation": "One pass per arm on a memory-constrained machine; loading, OS caches, and scheduling affect elapsed time. Observed differences are not a guaranteed speedup.",
+    "source_hash_scope": "Hashes identify the measured frozen source snapshots. A later documentation-only header edit to GenusFiveTwoPole preserves its proof code and line count but changes its working-tree file hash."
+  },
+  "validation": {
+    "all_timed_modules_and_both_endpoint_probes_passed": true,
+    "endpoint_types_identical": true,
+    "required_endpoint_types": [
+      "AtanasovRanganathan.Configurations.ClosedSubdivisionDharConstruction AtanasovRanganathan.GenusFiveCoreAtlas.row01Core (by norm_num)",
+      "AtanasovRanganathan.Configurations.ClosedSubdivisionDharConstruction AtanasovRanganathan.GenusFiveCoreAtlas.row02Core (by norm_num)",
+      "AtanasovRanganathan.Configurations.ClosedSubdivisionDharConstruction AtanasovRanganathan.GenusFiveCoreAtlas.row03Core (by norm_num)",
+      "AtanasovRanganathan.Configurations.ClosedSubdivisionDharConstruction AtanasovRanganathan.GenusFiveCoreAtlas.row04Core (by norm_num)",
+      "AtanasovRanganathan.Configurations.ClosedSubdivisionDharConstruction AtanasovRanganathan.GenusFiveCoreAtlas.row07Core (by norm_num)",
+      "AtanasovRanganathan.Configurations.ClosedSubdivisionDharConstruction AtanasovRanganathan.GenusFiveCoreAtlas.row13Core (by norm_num)"
+    ],
+    "shared_artifacts_unchanged_after_both_passes": true,
+    "comment_aware_dependency_audit": "The only spurious tokens came from prose in GenusFiveCoreAtlas; none resolve to an existing local module. No real local imports were missed, and both branch/public closure counts were unchanged."
+  },
+  "arms": {
+    "old": {
+      "started_at_utc": "2026-09-05T02:18:50.385843+00:00",
+      "completed_at_utc": "2026-09-05T02:40:00.668570+00:00",
+      "roots": [
+        "LowGenus.GenusFiveRow01",
+        "LowGenus.GenusFiveRow02",
+        "LowGenus.GenusFiveRow03",
+        "LowGenus.GenusFiveRow04",
+        "LowGenus.GenusFiveRow07",
+        "LowGenus.GenusFiveRow13"
+      ],
+      "static_counts": {
+        "full_public": {
+          "modules": 233,
+          "lines": 85535,
+          "bytes": 4062336,
+          "nonblank_noncomment_lines": 65405
+        },
+        "branch": {
+          "modules": 111,
+          "lines": 40819,
+          "bytes": 1759282,
+          "nonblank_noncomment_lines": 30791
+        },
+        "timed": {
+          "modules": 11,
+          "lines": 6020,
+          "bytes": 264458,
+          "nonblank_noncomment_lines": 4428
+        },
+        "generic_infrastructure": {
+          "modules": 2,
+          "lines": 625,
+          "bytes": 26545
+        }
+      },
+      "per_module": [
+        {
+          "module": "LowGenus.ConfigurationReservoirPair",
+          "source_lines": 478,
+          "source_bytes": 22056,
+          "source_sha256": "759020c49e654761a1f380f7b4daddfcdd697f2e16e4ca8470d779470d0810bd",
+          "wall_seconds": 101.32082579098642,
+          "user_seconds": 9.118425,
+          "system_seconds": 11.489536,
+          "returncode": 0
+        },
+        {
+          "module": "Utilities.Subdivision.DegenerateCanonical",
+          "source_lines": 497,
+          "source_bytes": 21342,
+          "source_sha256": "c89987970147b580a783dcd98d9978599071b9c9221d16b94dee59053ca57715",
+          "wall_seconds": 109.16007274994627,
+          "user_seconds": 4.002447999999999,
+          "system_seconds": 12.352834000000001,
+          "returncode": 0
+        },
+        {
+          "module": "Utilities.Subdivision.DegenerateRelabelingReaches",
+          "source_lines": 128,
+          "source_bytes": 5203,
+          "source_sha256": "85fb02a62425446c5e21dcc6e32bf42687f12caa773cc471a19110403605106f",
+          "wall_seconds": 86.89792208280414,
+          "user_seconds": 1.689031,
+          "system_seconds": 9.420302999999997,
+          "returncode": 0
+        },
+        {
+          "module": "LowGenus.GuardingOrbit",
+          "source_lines": 334,
+          "source_bytes": 16079,
+          "source_sha256": "2c1ee59d76a05e9ad33658decba545cc54eb310ede910e72a4864fbd838c427b",
+          "wall_seconds": 107.0521972910501,
+          "user_seconds": 2.024255000000002,
+          "system_seconds": 11.193627,
+          "returncode": 0
+        },
+        {
+          "module": "LowGenus.GenusFiveRow01",
+          "source_lines": 715,
+          "source_bytes": 31619,
+          "source_sha256": "603772c7fd7787e372cf2d3e90294cb8eea5e087cd2448bf3eb4f7c77851ccd6",
+          "wall_seconds": 95.10852833394893,
+          "user_seconds": 5.467168999999998,
+          "system_seconds": 10.229517000000001,
+          "returncode": 0
+        },
+        {
+          "module": "LowGenus.ConfigurationReservoirChain",
+          "source_lines": 367,
+          "source_bytes": 16670,
+          "source_sha256": "646752b208986e4b456b9b2f27f6d54a6296c9d2840b3004aebf8427609deadb",
+          "wall_seconds": 91.98125120811164,
+          "user_seconds": 8.115504999999999,
+          "system_seconds": 10.035257999999999,
+          "returncode": 0
+        },
+        {
+          "module": "LowGenus.GenusFiveRow02",
+          "source_lines": 920,
+          "source_bytes": 41295,
+          "source_sha256": "f89fac61ac9104f4941cedafc47ce7d2311f02ef0675beb254159d49d9c90a3e",
+          "wall_seconds": 106.73280120803975,
+          "user_seconds": 6.737337000000004,
+          "system_seconds": 11.334041999999997,
+          "returncode": 0
+        },
+        {
+          "module": "LowGenus.GenusFiveRow03",
+          "source_lines": 1012,
+          "source_bytes": 44050,
+          "source_sha256": "b65c8ca2bb24a5710e2bccf71cb8a3f2d63879dfa92b3031035f6455b5d675c4",
+          "wall_seconds": 144.0771461671684,
+          "user_seconds": 27.465495000000004,
+          "system_seconds": 17.090063,
+          "returncode": 0
+        },
+        {
+          "module": "LowGenus.GenusFiveRow04",
+          "source_lines": 648,
+          "source_bytes": 28483,
+          "source_sha256": "ce98c0810b7b3a5ccae8828fd0e2304eb368f4848b2e3937799d2834deef03d7",
+          "wall_seconds": 108.87600770802237,
+          "user_seconds": 4.779987999999989,
+          "system_seconds": 11.859722000000005,
+          "returncode": 0
+        },
+        {
+          "module": "LowGenus.GenusFiveRow07",
+          "source_lines": 803,
+          "source_bytes": 34578,
+          "source_sha256": "283ae780c3e47daad01130dafe295541464305d4fe7264813a697d7dec6840e2",
+          "wall_seconds": 111.50842712493613,
+          "user_seconds": 17.312112,
+          "system_seconds": 12.016861000000006,
+          "returncode": 0
+        },
+        {
+          "module": "LowGenus.GenusFiveRow13",
+          "source_lines": 118,
+          "source_bytes": 3083,
+          "source_sha256": "5a7fa3943e2f33c99c32eb308c9093b28b757f7b9b616eb211acd6c55e8a5c42",
+          "wall_seconds": 97.6985706249252,
+          "user_seconds": 1.9024900000000002,
+          "system_seconds": 10.256458999999992,
+          "returncode": 0
+        }
+      ],
+      "endpoint_probe": {
+        "required_statements": 6,
+        "source_sha256": "e864bed1742fd8b6d613baa0dff7a669a0a81d456bfd0b5adbfb1e14619bc900",
+        "wall_seconds": 109.71594062494114,
+        "user_seconds": 1.5660799999999995,
+        "system_seconds": 11.4024,
+        "returncode": 0
+      },
+      "totals": {
+        "proof_wall_seconds": 1160.4137502899393,
+        "proof_cpu_seconds": 215.89247699999999,
+        "wall_seconds": 1270.1296909148805,
+        "user_seconds": 90.180335,
+        "system_seconds": 138.680622,
+        "cpu_seconds": 228.86095699999998
+      }
+    },
+    "new": {
+      "started_at_utc": "2026-09-05T02:40:32.261086+00:00",
+      "completed_at_utc": "2026-09-05T02:56:57.145432+00:00",
+      "roots": [
+        "LowGenus.GenusFiveTwoPoleClosed"
+      ],
+      "static_counts": {
+        "full_public": {
+          "modules": 234,
+          "lines": 82522,
+          "bytes": 3923778,
+          "nonblank_noncomment_lines": 63313
+        },
+        "branch": {
+          "modules": 98,
+          "lines": 30783,
+          "bytes": 1300074,
+          "nonblank_noncomment_lines": 23459
+        },
+        "timed": {
+          "modules": 12,
+          "lines": 3030,
+          "bytes": 127393,
+          "nonblank_noncomment_lines": 2341
+        },
+        "generic_infrastructure": {
+          "modules": 9,
+          "lines": 2110,
+          "bytes": 90320
+        }
+      },
+      "per_module": [
+        {
+          "module": "Utilities.Subdivision.TwoPoleSubdivision",
+          "source_lines": 247,
+          "source_bytes": 10504,
+          "source_sha256": "c8cfbeac14cffb78f970947f4a6a4694e32473104a7d7b10778389c649c09206",
+          "wall_seconds": 110.64285904192366,
+          "user_seconds": 2.2386290000000004,
+          "system_seconds": 11.543643000000001,
+          "returncode": 0
+        },
+        {
+          "module": "LowGenus.GenusFiveTwoPoleData",
+          "source_lines": 574,
+          "source_bytes": 20731,
+          "source_sha256": "00e31d0daa84e950ee2ce14558e419d146974d852c5aa0f512524ffec6ccc074",
+          "wall_seconds": 117.01831270800903,
+          "user_seconds": 6.186401999999999,
+          "system_seconds": 12.399935999999999,
+          "returncode": 0
+        },
+        {
+          "module": "Utilities.Subdivision.CanonicalDivisor",
+          "source_lines": 122,
+          "source_bytes": 5176,
+          "source_sha256": "da5ca730c5bd0e4e9ed969b40f444065f448176783caeb2e6578f04e6a651215",
+          "wall_seconds": 110.44742483296432,
+          "user_seconds": 1.778212,
+          "system_seconds": 11.413681000000004,
+          "returncode": 0
+        },
+        {
+          "module": "Utilities.Gluing.TwoPole",
+          "source_lines": 334,
+          "source_bytes": 13017,
+          "source_sha256": "7c475d3187bcb06cb77646089cea67275039f0c47f624cf337bd2b975cb1a0be",
+          "wall_seconds": 49.335329125169665,
+          "user_seconds": 1.7742740000000001,
+          "system_seconds": 5.550585999999996,
+          "returncode": 0
+        },
+        {
+          "module": "Utilities.Foundations.ScriptClamping",
+          "source_lines": 254,
+          "source_bytes": 10655,
+          "source_sha256": "6d29f057a275aa513ed9c916307c1b984039deefbee04c8b7c110e94480b9b83",
+          "wall_seconds": 24.362959624966606,
+          "user_seconds": 1.478321000000001,
+          "system_seconds": 3.182228000000002,
+          "returncode": 0
+        },
+        {
+          "module": "Utilities.Gluing.TwoPoleReachability",
+          "source_lines": 261,
+          "source_bytes": 11359,
+          "source_sha256": "41070956bb8cebb78fa8e9c3477256cf963450c40c9c7f252b577d3c683b4da7",
+          "wall_seconds": 31.481931542046368,
+          "user_seconds": 2.1297119999999996,
+          "system_seconds": 3.9685699999999997,
+          "returncode": 0
+        },
+        {
+          "module": "Utilities.Subdivision.TwoPoleSubdivisionGluing",
+          "source_lines": 152,
+          "source_bytes": 6749,
+          "source_sha256": "6c6c93d6ae23c0eab4c2c323b8cc3012657b8e43e9b287cadc67b6bdb0b3f990",
+          "wall_seconds": 103.12155391694978,
+          "user_seconds": 2.3946579999999997,
+          "system_seconds": 11.134616999999999,
+          "returncode": 0
+        },
+        {
+          "module": "LowGenus.GenusFiveTwoPole",
+          "source_lines": 262,
+          "source_bytes": 12375,
+          "source_sha256": "3ae5d25d649a2e681f1fa4c72adbee3f335d20a76462c000937e47181dc6c56e",
+          "wall_seconds": 110.67865145811811,
+          "user_seconds": 60.52611400000001,
+          "system_seconds": 12.672449999999998,
+          "returncode": 0
+        },
+        {
+          "module": "Utilities.Foundations.CommonOffsetRounding",
+          "source_lines": 160,
+          "source_bytes": 6647,
+          "source_sha256": "6bc98ef909b39242995dc61229081ebd0c51db40d14953ad5213013696fae4d6",
+          "wall_seconds": 26.93760308297351,
+          "user_seconds": 1.1324619999999896,
+          "system_seconds": 3.1339609999999993,
+          "returncode": 0
+        },
+        {
+          "module": "Utilities.Foundations.ConvexIntegerRounding",
+          "source_lines": 104,
+          "source_bytes": 4549,
+          "source_sha256": "ce712fa2b216786aea19b799199b03980648fd2e9f9f169ce0f80c66e369b407",
+          "wall_seconds": 19.78524825000204,
+          "user_seconds": 0.926440999999997,
+          "system_seconds": 2.6091559999999987,
+          "returncode": 0
+        },
+        {
+          "module": "Utilities.Subdivision.DiscreteSpecialization",
+          "source_lines": 476,
+          "source_bytes": 21664,
+          "source_sha256": "9b8bb5d33cdf9c07077266069be0ce326673762ff1786311e7ddb7dcce36fe54",
+          "wall_seconds": 93.81045470898971,
+          "user_seconds": 2.9656280000000095,
+          "system_seconds": 9.941061000000005,
+          "returncode": 0
+        },
+        {
+          "module": "LowGenus.GenusFiveTwoPoleClosed",
+          "source_lines": 84,
+          "source_bytes": 3967,
+          "source_sha256": "8b4d0785cb6cd331575dbaa408b2f50c60f1f6acc2638416ffc8c60da50ff3a7",
+          "wall_seconds": 99.47499349992722,
+          "user_seconds": 1.7122700000000037,
+          "system_seconds": 10.459464999999994,
+          "returncode": 0
+        }
+      ],
+      "endpoint_probe": {
+        "required_statements": 6,
+        "source_sha256": "57cb07c619477311bfd95ea03b5cb03160a2184be47a2ff23cdb388dc06b496b",
+        "wall_seconds": 87.63331029191613,
+        "user_seconds": 1.561417999999989,
+        "system_seconds": 9.269950000000009,
+        "returncode": 0
+      },
+      "totals": {
+        "proof_wall_seconds": 897.09732179204,
+        "proof_cpu_seconds": 183.252477,
+        "wall_seconds": 984.7306320839562,
+        "user_seconds": 86.804541,
+        "system_seconds": 107.279304,
+        "cpu_seconds": 194.083845
+      }
+    }
+  },
+  "observed_reductions_percent": {
+    "proof_wall_seconds": 22.6915984434093,
+    "proof_cpu_seconds": 15.118637042642291,
+    "wall_seconds": 22.470072219581773,
+    "cpu_seconds": 15.195738257792913,
+    "replacement_source_lines": 49.667774086378735,
+    "replacement_noncomment_lines": 47.13188798554652
+  },
+  "interpretation": "The new branch is substantially smaller and was faster in both elapsed and CPU time in this one-pass cached comparison. The endpoint checks establish that the comparison covers the same six closed statements, including contraction faces. Treat the timing percentages as observed measurements, with the stated variance limits."
+}

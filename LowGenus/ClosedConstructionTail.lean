@@ -94,4 +94,36 @@ theorem ClosedSubdivisionDharConstruction.ofReachesFaceClasses
     (reaches length forest not_loopy)
   exact core_connected
 
+/-- Combine a positive-subdivision proof with proofs only for the proper
+boundary faces.  This lets a shared positive construction become the
+load-bearing interior proof while retaining an existing row's contraction
+arguments.  Both branches produce the same closed-orthant obligation. -/
+theorem ClosedSubdivisionDharConstruction.ofPositiveAndBoundary
+    {n p : ℕ} {core : Certificate.ExplicitPotential.Core n p}
+    (core_nonempty : 0 < n)
+    (positive : ∀ spec : SubdivisionGraph.Spec n p, spec.core = core →
+      BNExists spec.graph 1 4)
+    (boundary : ∀ (length : Fin p → ℕ)
+      (forest : IsForest core (zeroSlots length))
+      (not_loopy : ¬ IsLoopy core (zeroSlots length)),
+      (∃ edge : Fin p, length edge = 0) →
+      Nonempty (DegreeFourDharPencil
+        (faceSpec core core_nonempty length forest not_loopy).graph)) :
+    ClosedSubdivisionDharConstruction core core_nonempty := by
+  classical
+  intro length forest not_loopy
+  by_cases hpos : ∀ edge : Fin p, 0 < length edge
+  · let d := faceSpec core core_nonempty length forest not_loopy
+    have hExists : BNExists (d.toSpec hpos).graph 1 4 :=
+      positive (d.toSpec hpos) rfl
+    exact DegreeFourDharPencil.nonempty_ofBNExists
+      ((d.bnExists_toSpec_iff hpos 1 4).mp hExists)
+  · apply boundary length forest not_loopy
+    by_contra hzero
+    apply hpos
+    intro edge
+    apply Nat.pos_of_ne_zero
+    intro he
+    exact hzero ⟨edge, he⟩
+
 end AtanasovRanganathan.Configurations
