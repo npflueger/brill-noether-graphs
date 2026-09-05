@@ -16,7 +16,7 @@
    "subDir": null,
    "scope": "",
    "rev": "98ec6a67dcb89d8ec96576f45aa3ab61cf3093ea",
-   "name": "«chip-firing-with-lean»",
+   "name": "chipFiringWithLean",
    "manifestFile": "lake-manifest.json",
    "inputRev": "98ec6a67dcb89d8ec96576f45aa3ab61cf3093ea",
    "inherited": false,
