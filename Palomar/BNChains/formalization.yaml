@@ -4,22 +4,21 @@ version: "v0.4"
 project:
   name: "Brill--Noether generality and gonality for chains of cycles and theta graphs"
   description: >-
-    A graph is called Brill--Noether general if the possible degrees and ranks
-    of its chip configurations, in the sense of Baker and Norine, match the
-    behavior of a general algebraic curve. Here we consider this only in the
-    existential sense, without computing dimensions, although we implement the
-    strategy of Cools--Draisma--Payne--Robeva by considering a mild
-    vanishing-order condition to allow recovery of dimension statements on the
-    algebraic side.  A Brill--Noether general graph also has the conjectural
-    maximum gonality in its genus.  This repository formalizes a construction of
-    Brill--Noether general graphs in every genus: a chain of graphs, which may
-    be a mixture of cycles and theta graphs, subject to a genericity condition
-    on path lengths and an evenly-marked condition on the theta graphs. The
-    chain of cycles case is a theorem of Cools--Draisma--Payne--Robeva, which
-    was generalized to allow evenly-marked theta graphs by
-    Pflueger--Solomon. Among other things, the construction shows the
-    existence, in every positive genus g, of graphs with every gonality
-    between 2 and ceil(g/2) + 1, inclusive.
+    This repository formalizes Brill--Noether generality for chains whose
+    factors may be cycles or theta graphs, subject to a genericity condition on
+    path lengths and an evenly-marked condition on the theta factors. A graph
+    is called Brill--Noether general if the possible degrees and ranks of its
+    chip configurations, in the sense of Baker and Norine, match the behavior
+    of a general algebraic curve. Here we use only the existential form of
+    Brill--Noether generality, without computing dimensions. Following
+    Cools--Draisma--Payne--Robeva, we also formalize a mild vanishing-order
+    condition that permits the recovery of dimension statements on the
+    algebraic side. A Brill--Noether general graph also has the conjectural
+    maximum gonality in its genus. The chain of cycles case is a theorem of
+    Cools--Draisma--Payne--Robeva, which Pflueger--Solomon generalized to allow
+    evenly-marked theta graphs. Among other things, the construction shows the
+    existence, in every positive genus g, of graphs with every gonality between
+    2 and ceil(g/2) + 1, inclusive.
   authors:
     - "Nathan Pflueger"
   license: "Apache-2.0"
