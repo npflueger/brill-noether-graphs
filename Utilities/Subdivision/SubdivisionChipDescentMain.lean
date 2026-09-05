@@ -373,13 +373,16 @@ theorem prin_roundedScript_ge {ι : Type*} [Fintype ι] (chips : ι → spec.Chi
     clear hlo hhi
     omega
 
-/-- **Descent of winnability.**  If the total rounding distance of the chips is
-less than `N`, winnability on the `N`-fold refinement of the embedded divisor
-plus the chips implies winnability on the coarse graph of the divisor plus the
-rounded chips. -/
-theorem winnable_of_winnable_scale {ι : Type*} [Fintype ι] (chips : ι → spec.Chip N)
+/-- **Descent of winnability, signed-budget form.**  If the sum over coarse
+steps of the absolute *signed* rounding cost of the chips in that step is less
+than `N`, winnability on the `N`-fold refinement of the embedded divisor plus
+the chips implies winnability on the coarse graph of the divisor plus the
+rounded chips.  Chips on one step rounded in opposite directions cancel: at
+`N = 3`, chips at offsets `1` and `2` of one edge, rounded left and right,
+cost nothing. -/
+theorem winnable_of_winnable_scale_cost {ι : Type*} [Fintype ι] (chips : ι → spec.Chip N)
     (D₀ : CFDiv spec.graph)
-    (hbudget : (∑ i, ((chips i).distance : ℤ)) < N)
+    (hcost : (∑ step : spec.Step, |spec.stepCost N chips step|) < N)
     (hwin : winnable (spec.scale N hN).graph
       (spec.embed N hN D₀ + spec.fineChips N hN chips)) :
     winnable spec.graph (D₀ + spec.coarseChips N chips) := by
@@ -410,7 +413,7 @@ theorem winnable_of_winnable_scale {ι : Type*} [Fintype ι] (chips : ι → spe
       congr 1
       ring
     rw [Finset.sum_congr rfl fun step _ => hrw step]
-    exact lt_of_le_of_lt (spec.sum_abs_stepCost_le N chips) hbudget
+    exact hcost
   obtain ⟨κ, hκ0⟩ := exists_common_offset (ι := spec.Step) N hN Finset.univ
     (fun step => spec.fineValue N hN σ step.1 (N * (step.2.val + 1)) +
       spec.stepCost N chips step)
@@ -450,11 +453,28 @@ theorem winnable_of_winnable_scale {ι : Type*} [Fintype ι] (chips : ι → spe
     exact (principal_iff_eq_prin spec.graph _).mpr
       ⟨spec.roundedScript N hN κ σ, hdiff⟩
 
-/-- **Descent of rank.**  Coarse rank tests embed into fine rank tests, so the
-descent of winnability upgrades to every rank lower bound. -/
-theorem rank_ge_of_rank_scale_ge {ι : Type*} [Fintype ι] (chips : ι → spec.Chip N)
-    (D₀ : CFDiv spec.graph) (r : ℤ)
+/-- **Descent of winnability, distance form.**  If the total rounding distance
+of the chips is less than `N`, winnability on the `N`-fold refinement of the
+embedded divisor plus the chips implies winnability on the coarse graph of
+the divisor plus the rounded chips.  This is the special case of the signed
+budget in which every chip is charged its full distance. -/
+theorem winnable_of_winnable_scale {ι : Type*} [Fintype ι] (chips : ι → spec.Chip N)
+    (D₀ : CFDiv spec.graph)
     (hbudget : (∑ i, ((chips i).distance : ℤ)) < N)
+    (hwin : winnable (spec.scale N hN).graph
+      (spec.embed N hN D₀ + spec.fineChips N hN chips)) :
+    winnable spec.graph (D₀ + spec.coarseChips N chips) :=
+  spec.winnable_of_winnable_scale_cost N hN chips D₀
+    (lt_of_le_of_lt (spec.sum_abs_stepCost_le N chips) hbudget) hwin
+
+/-- **Descent of rank, signed-budget form.**  Coarse rank tests embed into fine
+rank tests, so the descent of winnability upgrades to every rank lower bound.
+The hypothesis charges each coarse step only the absolute value of the
+*signed* sum of its chips' rounding costs, so chips on one step rounded in
+opposite directions cancel. -/
+theorem rank_ge_of_rank_scale_ge_cost {ι : Type*} [Fintype ι] (chips : ι → spec.Chip N)
+    (D₀ : CFDiv spec.graph) (r : ℤ)
+    (hcost : (∑ step : spec.Step, |spec.stepCost N chips step|) < N)
     (hrank : rank (spec.scale N hN).graph
       (spec.embed N hN D₀ + spec.fineChips N hN chips) ≥ r) :
     rank spec.graph (D₀ + spec.coarseChips N chips) ≥ r := by
@@ -471,10 +491,21 @@ theorem rank_ge_of_rank_scale_ge {ι : Type*} [Fintype ι] (chips : ι → spec.
     rw [spec.embed_sub N hN D₀ T]
     abel
   rw [hrw] at hfine
-  have hcoarse := spec.winnable_of_winnable_scale N hN chips (D₀ - T) hbudget hfine
+  have hcoarse := spec.winnable_of_winnable_scale_cost N hN chips (D₀ - T) hcost hfine
   have hrw2 : D₀ - T + spec.coarseChips N chips =
       D₀ + spec.coarseChips N chips - T := by abel
   rw [hrw2] at hcoarse
   exact hcoarse
+
+/-- **Descent of rank, distance form.**  The special case of the signed budget
+in which every chip is charged its full rounding distance. -/
+theorem rank_ge_of_rank_scale_ge {ι : Type*} [Fintype ι] (chips : ι → spec.Chip N)
+    (D₀ : CFDiv spec.graph) (r : ℤ)
+    (hbudget : (∑ i, ((chips i).distance : ℤ)) < N)
+    (hrank : rank (spec.scale N hN).graph
+      (spec.embed N hN D₀ + spec.fineChips N hN chips) ≥ r) :
+    rank spec.graph (D₀ + spec.coarseChips N chips) ≥ r :=
+  spec.rank_ge_of_rank_scale_ge_cost N hN chips D₀ r
+    (lt_of_le_of_lt (spec.sum_abs_stepCost_le N chips) hbudget) hrank
 
 end Utilities.Certificate.SubdivisionGraph.Spec

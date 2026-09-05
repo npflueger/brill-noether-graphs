@@ -22,7 +22,10 @@ its fine distance to that end.
 less than `N`, then winnability of the fine divisor implies winnability of the
 rounded coarse divisor `D₀ + z₁ + ⋯ + zₘ`.  The same holds for every rank
 lower bound (`rank_ge_of_rank_scale_ge`), because the coarse rank tests embed
-into fine rank tests.
+into fine rank tests.  The sharper forms `winnable_of_winnable_scale_cost` and
+`rank_ge_of_rank_scale_ge_cost` charge each coarse step only the absolute
+value of the *signed* sum of its chips' costs (`stepCost`), so chips on one
+step rounded in opposite directions cancel each other.
 
 Two chips on an *odd* refinement always satisfy the budget: each is within
 `(N - 1) / 2` of its nearest coarse vertex, so the total cost is at most
