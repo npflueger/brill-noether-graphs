@@ -42,6 +42,12 @@ These formalizations build upon [Mathlib](github.com/leanprover-community/mathli
 - `Utilities/` develops reusable graph-divisor infrastructure: rank and
   gonality, graph isomorphisms and contractions, gluing, transmission
   permutations, subdivisions, harmonic maps, and topological types of graphs.
+  It also defines the discrete Brill–Noether rank `w^r_d` of Lim–Payne–Potashnik
+  and Len (`Utilities/Foundations/BrillNoetherRank.lean`) and proves that it
+  descends along odd regular subdivisions when two residual chips are involved
+  (`Utilities/Subdivision/OddSubdivisionDescent.lean`): for every finite
+  loopless multigraph `G`, if some odd regular subdivision of `G` has
+  `w^1_4 ≥ 1`, then so does `G`.
 - `Bananas/` formalizes the theory of twice-marked banana and theta graphs,
   including Jacobians and torsion, transmission permutations, wedge and chain
   constructions, and applications to chains of loops and theta graphs.

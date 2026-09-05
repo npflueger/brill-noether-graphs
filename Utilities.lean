@@ -1,6 +1,7 @@
 import Utilities.Certificate.CubicMatrixReplay
 import Utilities.Certificate.CubicMatrixCanonical
 import Utilities.Foundations.AcyclicOrientation
+import Utilities.Foundations.BrillNoetherRank
 import Utilities.Foundations.CanonicalSlackPair
 import Utilities.Foundations.Duality
 import Utilities.Foundations.EdgeAddition
@@ -16,6 +17,7 @@ import Utilities.Foundations.RankInvariance
 import Utilities.Foundations.RankOne
 import Utilities.Foundations.RiemannRochWinnable
 import Utilities.Foundations.ScriptClamping
+import Utilities.Foundations.BlockSlopeRounding
 import Utilities.Foundations.CommonOffsetRounding
 import Utilities.Foundations.ConvexIntegerRounding
 import Utilities.Foundations.TopologicalVertices
@@ -115,6 +117,10 @@ import Utilities.Subdivision.DegenerateSpec
 import Utilities.Subdivision.DiscreteSpecialization
 import Utilities.Subdivision.DegenerateSubdivisionIso
 import Utilities.Subdivision.DegenerateSlopeScript
+import Utilities.Subdivision.OddSubdivisionDescent
+import Utilities.Subdivision.SubdivisionChipDescent
+import Utilities.Subdivision.SubdivisionChipDescentMain
+import Utilities.Subdivision.SubdivisionChipDescentStep
 import Utilities.Subdivision.ValidClosed
 import Utilities.Subdivision.WindowProfile
 import Utilities.Subdivision.WindowProfileReachability
