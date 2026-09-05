@@ -1,7 +1,7 @@
 name = "brill-noether-graphs"
 version = "0.1.0"
 keywords = ["mathematics", "graph-theory", "brill-noether", "chip-firing"]
-defaultTargets = ["Utilities", "Bananas", "LowGenus", "TreewidthGonality", "Tricycle", "TwiceMarkedBananas", "Highlights"]
+defaultTargets = ["Utilities", "Bananas", "LowGenus", "TreewidthGonality", "Tricycle", "TwiceMarkedBananas", "Highlights", "PalomarSolutions"]
 
 [[require]]
 name = "mathlib"
@@ -43,6 +43,21 @@ name = "Highlights"
 
 [[lean_lib]]
 name = "HighlightsStatements"
+
+# Palomar source files live under a dedicated source root so the protected
+# Challenge module (`BNChains.*`) and proved Solution module (`Solutions.*`)
+# have distinct first components, avoiding PalomarSubmission issue #108.
+[[lean_lib]]
+name = "PalomarBNChains"
+srcDir = "Palomar"
+roots = ["BNChains"]
+globs = ["BNChains.+"]
+
+[[lean_lib]]
+name = "PalomarSolutions"
+srcDir = "Palomar"
+roots = ["Solutions"]
+globs = ["Solutions.+"]
 
 # Paper-order index of formal counterparts for the twice-marked banana paper.
 # Imports only the `Bananas` library; build with `lake build TwiceMarkedBananas`.

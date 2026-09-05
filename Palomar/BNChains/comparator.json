@@ -1,0 +1,19 @@
+{
+  "challenge_module": "BNChains.Challenge",
+  "solution_module": "Solutions.BNChains",
+  "theorem_names": [
+    "BNChains.cdpr_marked_no_high_multiplicity",
+    "BNChains.cdpr_chain_brill_noether_general",
+    "BNChains.cycle_chain_brill_noether_general_of_torsion",
+    "BNChains.cycle_theta_chain_marked_no_high_multiplicity",
+    "BNChains.cycle_theta_chain_brill_noether_general",
+    "BNChains.cycle_theta_chain_gonality_eq_common_torsion",
+    "BNChains.exists_graph_of_genus_and_gonality"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "enable_nanoda": true
+}
