@@ -39,6 +39,7 @@ import Bananas.Transmission.KGeneralBNGeneral
 import Bananas.Transmission.KGeneralGonality
 import Bananas.Transmission.KGeneralSwap
 import Bananas.Transmission.LengthTwoTorsion
+import Bananas.Transmission.MidpointTorsion
 import Bananas.Transmission.MixedTorsionChainBalance
 import Bananas.Transmission.MixedTorsionChains
 import Bananas.Transmission.NonrecurrenceDisjoint

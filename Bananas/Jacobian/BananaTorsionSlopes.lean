@@ -669,71 +669,6 @@ theorem endpoint_penultimate_slope_period_gt_genus
   push_cast at hbound
   omega
 
-/-- The zero-rise arithmetic for a length-two first marked strand. -/
-theorem length_two_cross_slope_dichotomy
-    {g k n j : ℕ} (hg : 1 ≤ g) (hk : 0 < k)
-    (hjPos : 0 < j) (hjLt : j < n)
-    (sFirst sSecond rise : ℤ)
-    (otherSum : ℤ)
-    (hFirst : rise = 2 * sFirst - k)
-    (hSecond : rise = (n : ℤ) * sSecond +
-      ((n - j : ℕ) : ℤ) * (k : ℤ))
-    (hSum : sFirst + sSecond + otherSum = 0)
-    (hOtherPos : 0 < rise → (g - 1 : ℕ) ≤ otherSum)
-    (hOtherNeg : rise < 0 → otherSum ≤ -((g - 1 : ℕ) : ℤ))
-    (hOtherZero : rise = 0 → otherSum = 0) :
-    (2 * j = n) ∨ g ≤ k := by
-  rcases lt_trichotomy rise 0 with hneg | hzero | hpos
-  · right
-    have hsSecondNeg : sSecond < 0 := by
-      have hn : (0 : ℤ) < n := by exact_mod_cast (show 0 < n by omega)
-      have hnj : (0 : ℤ) < ((n - j : ℕ) : ℤ) := by
-        exact_mod_cast (show 0 < n - j by omega)
-      have hkz : (0 : ℤ) < k := by exact_mod_cast hk
-      nlinarith [hSecond]
-    have hsFirstLt : sFirst < k := by
-      have hkz : (0 : ℤ) < k := by exact_mod_cast hk
-      nlinarith [hFirst]
-    have hO := hOtherNeg hneg
-    have hgsub : (((g - 1 : ℕ) : ℤ)) = (g : ℤ) - 1 := by
-      rw [Nat.cast_sub hg]
-      norm_num
-    have hgkZ : (g : ℤ) < k := by
-      rw [hgsub] at hO
-      nlinarith [hSum, hsSecondNeg]
-    exact_mod_cast (show g ≤ k by omega)
-  · left
-    have hOtherZero' := hOtherZero hzero
-    have hFirst0 := hFirst
-    have hSecond0 := hSecond
-    rw [hzero] at hFirst0 hSecond0
-    have hkz : (0 : ℤ) < k := by exact_mod_cast hk
-    have hn : (0 : ℤ) < n := by exact_mod_cast (show 0 < n by omega)
-    have hnjCast : ((n - j : ℕ) : ℤ) = (n : ℤ) - j := by
-      rw [Nat.cast_sub (by omega)]
-    rw [hOtherZero'] at hSum
-    rw [hnjCast] at hSecond0
-    have : (2 : ℤ) * j = n := by nlinarith [hFirst0, hSecond0, hSum]
-    exact_mod_cast this
-  · right
-    have hsSecondGt : -(k : ℤ) < sSecond := by
-      have hn : (0 : ℤ) < n := by exact_mod_cast (show 0 < n by omega)
-      have hnj : ((n - j : ℕ) : ℤ) < n := by exact_mod_cast (show n - j < n by omega)
-      have hkz : (0 : ℤ) < k := by exact_mod_cast hk
-      nlinarith [hSecond]
-    have hsFirstPos : 0 < sFirst := by
-      have hkz : (0 : ℤ) < k := by exact_mod_cast hk
-      nlinarith [hFirst]
-    have hO := hOtherPos hpos
-    have hgsub : (((g - 1 : ℕ) : ℤ)) = (g : ℤ) - 1 := by
-      rw [Nat.cast_sub hg]
-      norm_num
-    have hgkZ : (g : ℤ) < k := by
-      rw [hgsub] at hO
-      nlinarith [hSum, hsFirstPos]
-    exact_mod_cast (show g ≤ k by omega)
-
-
 /-- For two distinct interior marks, a nonzero endpoint rise already forces
 the torsion period to be at least the genus.  This is the common sign argument
 behind all interior exceptional cases of Proposition 4.19. -/
@@ -835,47 +770,6 @@ theorem fintype_sum_eq_two_of_zero_off {n : ℕ} (s : Fin n → ℤ)
       · exact fun hbmem =>
           (hbmem (Finset.mem_erase.mpr ⟨hab.symm, Finset.mem_univ b⟩)).elim
 
-/-- In the zero-rise length-two-cross case, endpoint balance forces the other
-mark to be a midpoint. -/
-theorem zero_rise_length_two_cross_forces_midpoint
-    {g k : ℕ} (B : Banana g) (α β : Fin (g + 1))
-    (i : B.PathPosition α) (j : B.PathPosition β)
-    (hαβ : α ≠ β) (hαLen : B.length α = 2) (hi : i.val = 1)
-    (hj : B.IsInteriorPosition β j) (hk : 0 < k)
-    (slope : Fin (g + 1) → ℤ)
-    (hsum : (∑ γ, slope γ) = 0)
-    (hAlpha : (B.length α : ℤ) * slope α =
-      ((B.length α - i.val : ℕ) : ℤ) * k)
-    (hBeta : (B.length β : ℤ) * slope β =
-      -((B.length β - j.val : ℕ) : ℤ) * k)
-    (hOther : ∀ γ, γ ≠ α → γ ≠ β →
-      (B.length γ : ℤ) * slope γ = 0) :
-    2 * j.val = B.length β := by
-  have hOtherZero : ∀ γ, γ ≠ α → γ ≠ β → slope γ = 0 := by
-    intro γ hγα hγβ
-    have hEq := hOther γ hγα hγβ
-    have hlen : (0 : ℤ) < B.length γ := by exact_mod_cast B.length_pos γ
-    nlinarith
-  have hTwo := fintype_sum_eq_two_of_zero_off slope α β hαβ hOtherZero
-  rw [hTwo] at hsum
-  have hAlpha' : (2 : ℤ) * slope α = k := by
-    have hdiff : B.length α - i.val = 1 := by omega
-    rw [hdiff] at hAlpha
-    norm_num at hAlpha
-    simpa [hαLen] using hAlpha
-  have hslopePos : (0 : ℤ) < slope α := by
-    have hkz : (0 : ℤ) < k := by exact_mod_cast hk
-    nlinarith
-  have hBeta' := hBeta
-  rw [Nat.cast_sub (Nat.le_of_lt hj.2)] at hBeta'
-  have hfactor : (B.length β : ℤ) =
-      2 * ((B.length β : ℤ) - j.val) := by
-    have hmul : (B.length β : ℤ) * slope α =
-        2 * ((B.length β : ℤ) - j.val) * slope α := by
-      nlinarith [hBeta', hAlpha']
-    exact mul_right_cancel₀ (ne_of_gt hslopePos) (by simpa [mul_assoc] using hmul)
-  exact_mod_cast (show 2 * j.val = B.length β by nlinarith)
-
 /-- In the zero-rise near-opposite case, both marked strands have length two.
 This is the corrected zero-rise core of paper Lemma 4.27. -/
 theorem zero_rise_cross_oneOff_forces_both_length_two
@@ -939,41 +833,6 @@ theorem zero_rise_cross_oneOff_forces_both_length_two
   have hβeq : B.length β = 2 := by
     exact_mod_cast hfactor.symm
   exact ⟨hαeq, hβeq⟩
-
-/-- Corrected Lemma 4.27 for the length-two-cross exceptional family. -/
-theorem length_two_cross_torsion_dichotomy
-    {g k : ℕ} (hg : 1 ≤ g) (B : Banana g)
-    (α β : Fin (g + 1)) (i : B.PathPosition α) (j : B.PathPosition β)
-    (hαβ : α ≠ β) (hiInt : B.IsInteriorPosition α i)
-    (hjInt : B.IsInteriorPosition β j)
-    (hαLen : B.length α = 2) (hi : i.val = 1)
-    (hTO : IsTorsionOrder
-      (mark B.graph (strandVertex B α i) (strandVertex B β j)) k) :
-    (CorrectedMidpointException B α β i j ∧ k = 2) ∨ g ≤ k := by
-  obtain ⟨script, rise, slope, _hrise, hsum, hAlpha, hBeta, hOther,
-      hRise⟩ := interior_torsion_rise_zero_or_period_ge_genus hg B α β
-        i j hiInt hjInt hαβ hTO
-  rcases hRise with hzero | hge
-  · left
-    have hAlpha0 := hAlpha
-    have hBeta0 := hBeta
-    rw [hzero] at hAlpha0 hBeta0
-    simp only [zero_add, zero_sub] at hAlpha0 hBeta0
-    have hOther0 : ∀ γ, γ ≠ α → γ ≠ β →
-        (B.length γ : ℤ) * slope γ = 0 := by
-      intro γ hγα hγβ
-      simpa [hzero] using hOther γ hγα hγβ
-    have hjMid := zero_rise_length_two_cross_forces_midpoint B α β i j
-      hαβ hαLen hi hjInt hTO.1.1 slope hsum hAlpha0
-        (by simpa [neg_mul] using hBeta0) hOther0
-    have hiMid : 2 * i.val = B.length α := by omega
-    have hException : CorrectedMidpointException B α β i j :=
-      ⟨hαβ, hiMid, hjMid, Or.inl hαLen⟩
-    have hTwo := correctedMidpointException_torsionOrder_two B α β i j hException
-    have hkLe : k ≤ 2 := hTO.2 2 hTwo.1
-    have hTwoLe : 2 ≤ k := hTwo.2 k hTO.1
-    exact ⟨hException, by omega⟩
-  · exact Or.inr hge
 
 /-- Corrected Lemma 4.27 for the near-opposite interior family. -/
 theorem cross_oneOff_torsion_dichotomy

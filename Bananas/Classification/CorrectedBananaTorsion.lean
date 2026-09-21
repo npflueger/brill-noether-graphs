@@ -1,4 +1,5 @@
 import Bananas.Jacobian.BananaTorsionSlopes
+import Bananas.Transmission.MidpointTorsion
 import Bananas.SameStrand.EndpointCardinality
 import Bananas.SameStrand.NSMFullClassification
 
@@ -69,9 +70,10 @@ private theorem correctedMidpointException_swap
 
 Outside the corrected midpoint family, every exact torsion order compatible
 with all-divisor submodularity is at least the genus.  The proof combines the
-completed Theorem 3.9 classification with the endpoint and interior slope
-lower bounds.  The statement is deliberately separate from the Section 6
-assembly so that no later theorem can silently use an unrecorded
+completed Theorem 3.9 classification with the endpoint and near-opposite
+slope bounds and the reduced-divisor midpoint lemma `lem-midpointTorsion`.
+The statement is deliberately separate from the Section 6 assembly so that
+no later theorem can silently use an unrecorded
 classification assumption. -/
 theorem corrected_banana_torsion_dichotomy
     {g k : ℕ} (hg : 3 ≤ g) (B : Banana g) (α β : Fin (g + 1))

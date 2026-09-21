@@ -24,6 +24,19 @@ statements is transparent.
   by `CorrectedMidpointException`; the corresponding checked statements include
   `corrected_bananaSimple`, `corrected_banana_torsion_classification`, and
   `corrected_highGenus_banana_not_kGeneral`.
+- Revised Lemma 4.33 (`lem-midpointTorsion`) is proved in
+  `Bananas/Transmission/MidpointTorsion.lean`. Both assertions appear in the
+  proved index and statement-only challenge as `s4_lem4_33a` and `s4_lem4_33b`:
+  no positive even multiple through `2g - 2` is principal, and no positive
+  multiple below `g` is principal. These statements concern any proposed
+  period, not just the exact torsion order. The proof follows the manuscript's
+  quotient/remainder reduction and Dhar argument using the existing reduced
+  normal forms; the zero-remainder case absorbs the residue chip into the left
+  endpoint. The library proves the reflected case as well, and only needs the
+  first mark to be a midpoint (its strand need not have length two).
+  Proposition 4.19 now uses this result in its length-two branch. The obsolete
+  length-two slope argument has been removed; slope results needed for the
+  endpoint and near-opposite branches remain.
 - The cross-one-off calculation uses a single residue convention throughout.
   The checked row formula and inversion count are given by the declarations in
   `Bananas/CrossOneOff/`, including

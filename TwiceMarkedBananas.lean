@@ -2549,7 +2549,7 @@ Section 4.
 > reordering, n_0=n_1=2 and (G,u,v)=(G,v_{0,1},v_{1,1}), so k=2; or 2) the
 > torsion order is at least the genus, k ≥ g."
 
-**Formalization note.** The checked exception family includes distinct-strand midpoints when at least one supporting strand has length two. This is expressed by `CorrectedMidpointException`; see `Bananas/FORMALIZATION_NOTES.md`. -/
+**Formalization note.** The checked exception family includes distinct-strand midpoints when at least one supporting strand has length two. This is expressed by `CorrectedMidpointException`. The length-two branch now follows from the stronger revised Lemma 4.33 (`lem-midpointTorsion`); see `Bananas/FORMALIZATION_NOTES.md`. -/
 theorem _root_.Bananas.TwiceMarkedBananas.s4_prop4_19
     {g k : ℕ} (hg : 3 ≤ g) (B : Banana g) (α β : Fin (g + 1))
     (i : B.PathPosition α) (j : B.PathPosition β)
@@ -2816,6 +2816,42 @@ symmetric result to Corollary 4.31 "could be developed" via `gv_{0,0}`;
 states no theorem. (`isTorsionOrder_swap_marks`,
 `Bananas/Jacobian/BananaTorsionSlopes.lean`, supplies the mark-swap machinery such a
 development would use.) -/
+
+/-- **Lemma 4.33** (`lem-midpointTorsion`), even multiples, added in the
+revised manuscript. If one mark is the midpoint of a length-two strand and
+`1 ≤ j < n_beta / 2` on a distinct strand, no positive even `k ≤ 2g - 2`
+annihilates the marked difference. No all-divisor submodularity or exactness
+of the proposed period is assumed. -/
+theorem _root_.Bananas.TwiceMarkedBananas.s4_lem4_33a
+    {g k : ℕ} (_hg : 2 ≤ g) (B : Banana g) (α β : Fin (g + 1))
+    (i : B.PathPosition α) (j : B.PathPosition β)
+    (_hαβ : α ≠ β) (hαLen : B.length α = 2) (hi : i.val = 1)
+    (hj : 1 ≤ j.val) (hjHalf : 2 * j.val < B.length β)
+    (hk : 0 < k) (heven : Even k) (hbound : k ≤ 2 * g - 2) :
+    ¬ linear_equiv B.graph
+      ((k : ℤ) • one_chip (strandVertex B α i))
+      ((k : ℤ) • one_chip (strandVertex B β j)) := by
+  exact Bananas.midpoint_not_linearEquiv_even_multiple (toLibBanana B) α β i j
+    (show 2 * i.val = B.length α by omega)
+    (show B.IsInteriorPosition β j from ⟨by omega, by omega⟩)
+    (show 2 * j.val ≠ B.length β by omega) hk heven hbound
+
+/-- **Lemma 4.33** (`lem-midpointTorsion`), arbitrary small multiples.
+Doubling a putative positive period `k < g` contradicts the even-multiple
+assertion, so the torsion order is at least the genus. -/
+theorem _root_.Bananas.TwiceMarkedBananas.s4_lem4_33b
+    {g k : ℕ} (_hg : 2 ≤ g) (B : Banana g) (α β : Fin (g + 1))
+    (i : B.PathPosition α) (j : B.PathPosition β)
+    (_hαβ : α ≠ β) (hαLen : B.length α = 2) (hi : i.val = 1)
+    (hj : 1 ≤ j.val) (hjHalf : 2 * j.val < B.length β)
+    (hk : 0 < k) (hbound : k < g) :
+    ¬ linear_equiv B.graph
+      ((k : ℤ) • one_chip (strandVertex B α i))
+      ((k : ℤ) • one_chip (strandVertex B β j)) := by
+  exact Bananas.midpoint_not_linearEquiv_small_multiple (toLibBanana B) α β i j
+    (show 2 * i.val = B.length α by omega)
+    (show B.IsInteriorPosition β j from ⟨by omega, by omega⟩)
+    (show 2 * j.val ≠ B.length β by omega) hk hbound
 
 /-!
 ## Section 5 — Symmetries and Quasi-Symmetries of Transmission Permutations
