@@ -915,6 +915,33 @@ theorem rankDelta_lengthTwoCross_path_nonneg
     B α β i p a b E hαβ hα hi hp hE ha hb hNormalDeg
   omega
 
+/-- TeX label: `lem-midpointSubmodularity` (revised Lemma 4.34).
+
+Every divisor is submodular when one mark is the midpoint of a length-two
+strand and the other is interior to a distinct strand. There is no further
+genus restriction: distinct strand labels already force `1 ≤ g`.
+
+The proof uses canonical duality, reduced normal forms, the midpoint
+base-point criterion, and normalization of the deletion on the other strand.
+The latter includes endpoint coefficients equal to `-1`; these cases are
+handled by `rank_bananaNormalForm_remove_midpoint_chip_of_ge_neg_one`. -/
+theorem length_two_midpoint_allSubmodular
+    {g : ℕ} (B : Banana g) (α β : Fin (g + 1))
+    (i : B.PathPosition α) (j : B.PathPosition β)
+    (hαβ : α ≠ β) (hα : B.length α = 2) (hi : i.val = 1)
+    (hj : B.IsInteriorPosition β j) :
+    AllSubmodular (mark B.graph (strandVertex B α i) (strandVertex B β j)) := by
+  change 0 < j.val ∧ j.val < B.length β at hj
+  rw [allSubmodular_iff_rankDelta_nonneg]
+  intro D
+  -- Convert the second mark to the stored path orientation.
+  let q : B.PathPosition β := normalizedPathPosition B β j
+  have hq : B.IsInteriorPosition β q := normalizedPathPosition_isInterior B β j hj
+  have hv : strandVertex B β j = B.pathVertex β q :=
+    strandVertex_eq_pathVertex_normalized B β j
+  rw [hv]
+  exact rankDelta_lengthTwoCross_path_nonneg B α β i q hαβ hα hi hq D
+
 /-- TeX label: `thm-NSMForBanana` (Theorem 3.9), corrected length-two
 exception.
 
@@ -928,10 +955,8 @@ When `n_α = 2` and `i = 1` this fails: `v_{α,i+1} = v_{α,n_α}` is
 multivalent, so `D ∼ v_{α,0} + v_{α,n_α} + v_{β,n_β-1}` has rank `1` by
 `lem:g12`.
 
-The all-divisors rank argument is supplied by
-`rankDelta_lengthTwoCross_path_nonneg`: after canonical duality and banana
-normal-form reduction, deleting the second mark is normalized by one of the
-empty, tail-sum, head-excess, or reflected-pair semibreak calculations. -/
+This high-genus classification entry is a specialization of
+`length_two_midpoint_allSubmodular` (revised Lemma 4.34). -/
 theorem NSMForBananaLengthTwoCrossException :
   ∀ (g : ℕ) (B : Banana g) (α β : Fin (g + 1))
     (i : B.PathPosition α) (j : B.PathPosition β),
@@ -939,16 +964,6 @@ theorem NSMForBananaLengthTwoCrossException :
     B.IsInteriorPosition β j →
     AllSubmodular (mark B.graph (strandVertex B α i) (strandVertex B β j)) := by
   intro g B α β i j _hg hαβ hα hi hj
-  change 0 < j.val ∧ j.val < B.length β at hj
-  rw [allSubmodular_iff_rankDelta_nonneg]
-  intro D
-  -- `strandVertex` stores a strand in either orientation; move the second mark
-  -- to its raw path coordinate before applying the path-coordinate theorem.
-  let q : B.PathPosition β := normalizedPathPosition B β j
-  have hq : B.IsInteriorPosition β q := normalizedPathPosition_isInterior B β j hj
-  have hv : strandVertex B β j = B.pathVertex β q :=
-    strandVertex_eq_pathVertex_normalized B β j
-  rw [hv]
-  exact rankDelta_lengthTwoCross_path_nonneg B α β i q hαβ hα hi hq D
+  exact length_two_midpoint_allSubmodular B α β i j hαβ hα hi hj
 
 end Bananas

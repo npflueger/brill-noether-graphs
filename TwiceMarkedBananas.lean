@@ -2853,6 +2853,22 @@ theorem _root_.Bananas.TwiceMarkedBananas.s4_lem4_33b
     (show B.IsInteriorPosition β j from ⟨by omega, by omega⟩)
     (show 2 * j.val ≠ B.length β by omega) hk hbound
 
+/-- **Lemma 4.34** (`lem-midpointSubmodularity`), added in the revised
+manuscript. Every divisor is submodular when one mark is the midpoint of a
+length-two strand and the other is interior to a distinct strand.
+
+The genus-one and genus-two cases are included. The proof uses the same
+normal-form and midpoint base-point argument as the length-two exception in
+Theorem 3.9, with the endpoint-debt boundary cases made explicit. -/
+theorem _root_.Bananas.TwiceMarkedBananas.s4_lem4_34
+    {g : ℕ} (_hg : 1 ≤ g) (B : Banana g) (α β : Fin (g + 1))
+    (i : B.PathPosition α) (j : B.PathPosition β)
+    (hαβ : α ≠ β) (hαLen : B.length α = 2) (hi : i.val = 1)
+    (hj : B.IsInteriorPosition β j) :
+    AllSubmodular (mark B.graph (strandVertex B α i) (strandVertex B β j)) := by
+  exact (allSubmodular_toLib _).mpr
+    (Bananas.length_two_midpoint_allSubmodular (toLibBanana B) α β i j hαβ hαLen hi hj)
+
 /-!
 ## Section 5 — Symmetries and Quasi-Symmetries of Transmission Permutations
 -/
