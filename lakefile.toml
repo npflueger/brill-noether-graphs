@@ -1,7 +1,7 @@
 name = "brill-noether-graphs"
 version = "0.1.0"
 keywords = ["mathematics", "graph-theory", "brill-noether", "chip-firing"]
-defaultTargets = ["Utilities", "Bananas", "LowGenus", "TreewidthGonality", "Tricycle", "GenusSixOddDescent", "TwiceMarkedBananas", "Highlights", "PalomarSolutions"]
+defaultTargets = ["Utilities", "Bananas", "LowGenus", "TreewidthGonality", "Tricycle", "GenusSixOddDescent", "DraismaVargas", "TwiceMarkedBananas", "Highlights", "PalomarSolutions"]
 
 [[require]]
 name = "mathlib"
@@ -41,6 +41,12 @@ name = "Tricycle"
 # `Utilities` and external dependencies.
 [[lean_lib]]
 name = "GenusSixOddDescent"
+
+# Draisma--Vargas Part I in divisorial form: every connected graph has a regular
+# subdivision carrying a rank-one divisor of degree ceil(g/2) + 1.  It imports
+# `Utilities`, `LowGenus` (the genus-at-most-five cases) and external dependencies.
+[[lean_lib]]
+name = "DraismaVargas"
 
 # Reader-facing statements written over a self-contained local vocabulary,
 # with proof bodies that bridge explicitly to the repository's proved API.

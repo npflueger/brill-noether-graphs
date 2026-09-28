@@ -44,3 +44,24 @@ jobs:
             PalomarSolutions
             TwiceMarkedBananas
             TwiceMarkedBananasStatements
+
+  draisma-vargas:
+    name: Build the Draisma--Vargas libraries
+    runs-on: ubuntu-latest
+    # These libraries are several times larger than the rest of the repository, so they build
+    # in their own job, in parallel with the one above, with a longer time limit.
+    timeout-minutes: 300
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Build Lean project
+        uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9 # v1.5.0
+        with:
+          build: true
+          use-mathlib-cache: true
+          build-args: >-
+            DraismaVargas
