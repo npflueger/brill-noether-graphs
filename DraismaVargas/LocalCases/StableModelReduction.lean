@@ -73,7 +73,7 @@ A loop at `v` is a big slot with both endpoints in `T_v`
 big core**, which `ExpansionData.Conditions` forbids —
 `not_conditions_of_singleton_fibre` is that step, machine-checked.  The fibre
 identity itself is *not* formalised here; it is the Euler accounting of
-`Utilities.GraphContractionCertificate.fibreGraph_edge_card_add_one_eq_vertex_card_of_genus_eq`.
+`Certificate.GraphContractionCertificate.fibreGraph_edge_card_add_one_eq_vertex_card_of_genus_eq`.
 
 The excluded configuration is a **pendant loop**: a cycle meeting the rest of
 the graph at one point, attached by a bridge.  Such graphs exist at every genus

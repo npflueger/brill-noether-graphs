@@ -6,7 +6,7 @@ import DraismaVargasCount.StarPilot
 The count of the genus-six assembly is transported along segments of strictly positive
 requests, so the walls that matter are those inside the positive orthant.  If no frame had a
 coordinate vanishing inside the positive orthant, constancy of the count
-(`SegmentWalls.openAt_segment_iff_of_no_wall`) would carry it across every positive segment
+(`SegmentWalls.Frame.openAt_segment_iff_of_no_wall`) would carry it across every positive segment
 with no wall to cross.  This file gives the exact criterion for a frame coordinate to vanish
 somewhere in the strictly positive orthant, and shows that a frame with no such zero is a
 rare degeneracy: its length matrix is monomial, as the caterpillar frame's is.

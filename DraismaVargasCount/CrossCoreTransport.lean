@@ -80,7 +80,7 @@ move the datum.
   hypothesis.
 * `op_eq_of_step`, `exists_generalRequest_pair` -- the **matched-request**
   observation.  A Whitehead step keeps the slot set `Fin p` and the edge involution and
-  moves only the dart-to-vertex map (`CoreOfDarts.op_graph` and
+  moves only the dart-to-vertex map (`CoreOfDarts.CubicCore.op_graph` and
   `CoreRelabel.exists_perm_of_reaches`; `op_eq_of_step` below records it), so the
   geometry of the move is visible only when the two requests are the *same*
   vector, the shared wall being the locus where the moved slot has length zero.
@@ -499,7 +499,7 @@ end Witness
 /-! ## 5.  The matched-request refinement -/
 
 /-- **A Whitehead step keeps the slot set.**  Both cores' dart graphs carry the
-same edge involution `opposite` on `Fin p × Bool` (`CoreOfDarts.op_graph`), and
+same edge involution `opposite` on `Fin p × Bool` (`CoreOfDarts.CubicCore.op_graph`), and
 `CoreRelabel.exists_perm_of_reaches` shows a whole chain of moves changes only
 `vert`.  So the two cores of a step share their slots `Fin p` on the nose, the
 identity is the slot dictionary across the step, and the shared codimension-one

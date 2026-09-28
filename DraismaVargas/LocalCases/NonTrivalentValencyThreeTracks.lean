@@ -75,7 +75,7 @@ star count, and the wall-side geometry both rest on.
   pass-through occurrence over the contracted target edge, and it is the row,
   not the occurrence, that the star count consumes
   (`IncomingPairing.label_dart_of_row`).  The other orientation is
-  normalised by the caller with `CubicDarts.MoveData.swap`, which leaves
+  normalised by the caller with `CubicDartGraph.MoveData.swap`, which leaves
   `graph.move m` unchanged.
 * `prescribedDoubledMove_of_occurrence`: the occurrence-level clause
   (`first.2.1 = doubledLift ...`) implies (H-III).
@@ -694,8 +694,8 @@ a *pass-through* occurrence over the contracted target edge, in which case no
 dart at that end is the survivor's own occurrence.
 
 The other orientation is normalised away by the caller with
-`CubicDarts.MoveData.swap`, which leaves `graph.move m` unchanged
-(`CubicDarts.move_swap`) and exchanges `m.base` with `graph.op m.base`. -/
+`CubicDartGraph.MoveData.swap`, which leaves `graph.move m` unchanged
+(`CubicDartGraph.move_swap`) and exchanges `m.base` with `graph.op m.base`. -/
 def PrescribedDoubledMove
     (wallStar : ThreeStar (contract wd.coverTarget wd.hab wd.hOne) ⟨wd.a, wd.hab⟩)
     (src : ThreeBranchAnchor (contractDatum wd.cover wd.hc wd.hab wd.hOne) wallStar anchorBlk) :

@@ -1049,7 +1049,7 @@ The first conjunct is the orientation: the end of the vanishing row at
 stated with the hypothesis-free `IncomingPairing.baseDart` / `opBaseDart`, so it
 is literally the same clause in all three incoming sub-cases (`2 + 2`, `1 + 3`,
 `3 + 1`); the other orientation is normalised away by the caller with
-`CubicDarts.MoveData.swap`, which leaves `graph.move m` unchanged.
+`CubicDartGraph.MoveData.swap`, which leaves `graph.move m` unchanged.
 
 The survivor clause is at the level of **rows**, never of occurrences.  At the
 split that is forced twice over: `e_delta` reaches its end of the vanishing row

@@ -1750,7 +1750,7 @@ different, but gauge-equivalent, gluing data on one target.  Setting every
 The structure is `BalancedGlobal.GaugeFamily`, beside
 `BalancedGlobal.PresentedFamily`, with the same fields, the same positive exit,
 and `BalancedGlobal.PresentedFamily.toGaugeFamily` as its constant-base
-instance; `WallProgress.WallInput` and `SemanticAtlasMarch.PresentedProgress`
+instance; `WallProgress.WallInput` and `SemanticAtlasMarch.State.PresentedProgress`
 carry such gauge-mixed families.  This abbreviation provides the name used here
 and downstream. -/
 abbrev GaugeFamily (n : ℕ) (data : GluingDatum target degree)

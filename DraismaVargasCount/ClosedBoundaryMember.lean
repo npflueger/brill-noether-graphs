@@ -19,7 +19,7 @@ conclusion is the entry point of the endgame (step 5).
 * `exists_open_hasOddMult_of_general` / `exists_closed_hasOddMult_of_general` --
   the statement at a **general positive** request.  This is the easy half: the conclusion
   of `CountSchedule.C34` is `Odd (openOddCount …)`, an odd natural number is positive, and
-  `GeometricCount.exists_open_hasOddMult_of_openOddCount_pos` turns positivity
+  `GeometricFibre.exists_open_hasOddMult_of_openOddCount_pos` turns positivity
   of the count into an actual member.  `FibreMember.Closed.of_open` then weakens
   `Open` (`0 < z`) to `Closed` (`0 ≤ z`).
 * `exists_closed_hasOddMult_of_nonneg` -- the statement at **every** request with

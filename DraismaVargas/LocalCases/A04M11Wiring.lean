@@ -6,7 +6,7 @@ import DraismaVargas.LocalCases.M11HonestGaugeFamily
 # The wall input and the full-dimensional supply at the `w2M11` tag
 
 `A04FourTags` defines `FullDimSupply`, the two fields of
-`SemanticAtlasMarch.PresentedProgress` that are not derived automatically, read
+`SemanticAtlasMarch.State.PresentedProgress` that are not derived automatically, read
 at one `WallProgress.WallInput`: an outgoing full-dimensional presentation at
 every nonsingular member of the wall's family, and the statement that it
 presents that member.  It inhabits them for `w3Nd2CoarseFine`,

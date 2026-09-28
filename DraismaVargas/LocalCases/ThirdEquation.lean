@@ -131,7 +131,7 @@ occurrence partition refines both endpoint partitions — the only two that are
 not discrete are `u₁u₂ = 02∣1`, matching `u₁` and `u₂`, and `u₃u₄`, `u₅u₆`
 `= 01∣2`, matching their endpoints — and
 `ch(v) = ∑_{e ∋ v} m(e) - 2 b(v) - degree · (val(v) - 2)`
-(`Change.targetChange_eq_card_formula`) gives the `ch` row above, so
+(`GluingDatum.targetChange_eq_card_formula`) gives the `ch` row above, so
 `ch(v) + val(v) - 3 = 0` at every vertex and `fullDim.changeMinimal` holds.
 
 The source has `∑ b(v) = 21` vertices and `∑ m(e) = 24` occurrences, is
@@ -198,7 +198,7 @@ picture.
 
 ## Routing into the four shapes
 
-`SecondEquation.ramification_split_or_concentrated` had to branch, because
+`SecondEquation.W2SourceInput.ramification_split_or_concentrated` had to branch, because
 `ch(w₀) = 2` can sit on one block or on two.  Here `ch(w₀) = 1` and
 `WallProgress.exists_unique_localRamification_of_targetChange_eq_one` says the
 single unit sits on exactly one block, so **there is no split branch**: the
@@ -570,7 +570,7 @@ theorem localRamification_eq_zero_of_ne (input : W3SourceInput data star)
 trivalent wall `val(w₀) - 2 = 1`, so
 `NonDanglingValency.card_incidentSourceEdge_eq_localRamification_form` reads
 `N(A) = r(A) + 2 + |A|`: one more than the divalent wall's `r(A) + 2`
-(`SecondEquation.card_incidentSourceEdge_wallBlock`) for every block of size
+(`SecondEquation.W2SourceInput.card_incidentSourceEdge_wallBlock`) for every block of size
 one, and more still for larger blocks.  Only `val(w₀) = 3` is used, so this is
 stated for the three-star rather than for a `W3SourceInput`. -/
 theorem card_incidentSourceEdge_wallBlock (star : ThreeStar target wall)
@@ -602,7 +602,7 @@ theorem card_incidentSourceEdge_wallBlock (star : ThreeStar target wall)
 /-- **A wall block whose source degree exceeds three deletes an occurrence.**
 The trichotomy caps the surviving valency at `3`, so any excess incidence is
 dangling.  This is the trivalent counterpart of
-`SecondEquation.exists_isDangling_of_localRamification_eq_two`. -/
+`SecondEquation.W2SourceInput.exists_isDangling_of_localRamification_eq_two`. -/
 theorem exists_isDangling_of_four_le_card_incidentSourceEdge
     (input : W3SourceInput data star) (sourceBlock : WallBlock data wall)
     (hFour : 4 ≤ Fintype.card (IncidentSourceEdge data
@@ -688,7 +688,7 @@ resolved by the `nd3` half of `ResolutionCoarseFine`; `nd = 2` is Equation (5),
 tag `w3Nd2CoarseFine`, the
 `nd2` half of `ResolutionCoarseFine`; `nd = 0` is the isolated block, which is
 not a wall shape at all.  This is the trivalent replacement for
-`SecondEquation.ramification_split_or_concentrated`, and it is a trichotomy on
+`SecondEquation.W2SourceInput.ramification_split_or_concentrated`, and it is a trichotomy on
 one block rather than a genuine branch on how the change is distributed. -/
 theorem route (input : W3SourceInput data star) :
     nonDanglingValency data

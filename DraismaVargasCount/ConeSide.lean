@@ -11,7 +11,7 @@ whose matrices satisfy `AgreeOffColumn` at the wall column,
 `(A_q⁻¹ y)_{wall} = C(y) / det A_q` with `C(y)` common; hence the side on which
 `q` sits along a segment through the wall is `sign(det A_q) · sign(C)`.*
 
-The algebra is `DraismaVargas.Infrastructure.ConeWall`
+The algebra is `Utilities.IntegralGeometry.ConeWall`
 (`cramer_eq_of_agreeOffColumn`, `determinant_coordinate_eq`); the segment
 geometry is `DraismaVargas.Count.SegmentWalls` (`Frame`, `Frame.memberEquiv`,
 `Frame.coordsAt_segment`, `Frame.IsWallParam`) and, through it,
@@ -28,7 +28,7 @@ either.
 * `wallNumerator_eq_of_agree` -- **the numerator is common**: two frames over the
   same core whose slot permutations agree and whose matrices agree off `col` have
   the same `C(y)`, for every request `y`.  This is
-  `ConeWall.determinant_coordinate_eq` at the `Count` layer; it needs neither
+  `Infrastructure.determinant_coordinate_eq` at the `Count` layer; it needs neither
   frame to be nonsingular, though frames always are.
 * `sign_coordsAt_mul_sign_det_eq` -- **side = sign**, in the crisp form: the
   product `sign (A_φ⁻¹ y)_col · sign (det A_φ)` is the *same* for both members,
@@ -62,7 +62,7 @@ either.
   `catCrossing_sides_agree` exercises the law on it.
 * `FibreMember` restatements: `member_det_mul_coords_eq`,
   `member_coords_pos_iff_of_det_mul_pos`, `member_coords_pos_iff_of_det_mul_neg`
-  -- the same statements on `Count.Fibre.FibreMember`s over one request, through
+  -- the same statements on `Count.FibreMember`s over one request, through
   `Frame.memberEquiv`.
 
 ## What is NOT proved (every remaining hypothesis, explicitly)
@@ -132,7 +132,7 @@ theorem coordsAt_eq_wallNumerator_div (k : Frame core degree) (col : Fin p)
   rw [wallNumerator, mul_comm, mul_div_assoc, div_self k.det_ne_zero, mul_one]
 
 /-- **The numerator is common to two frames agreeing off the wall column.**
-This is `ConeWall.determinant_coordinate_eq` read on the two solutions
+This is `Infrastructure.determinant_coordinate_eq` read on the two solutions
 `Frame.coordsAt`, so it needs no inverse and no nonsingularity. -/
 theorem wallNumerator_eq_of_agree {k l : Frame core degree} {col : Fin p}
     (hslot : k.slot = l.slot)
@@ -434,7 +434,7 @@ theorem catCrossing_sides_agree (m : ℕ) (j : Fin (6 * m + 3))
 /-! ## 7.  The same statements on members of the fibre -/
 
 /-- **Side = sign on members.**  Through `Frame.memberEquiv` every statement
-above is a statement about `Count.Fibre.FibreMember`s over one request. -/
+above is a statement about `Count.FibreMember`s over one request. -/
 theorem member_det_mul_coords_eq {y : Fin p → ℚ}
     (mem₁ mem₂ : FibreMember core y degree) {col : Fin p}
     (hslot : (Frame.of mem₁).slot = (Frame.of mem₂).slot)

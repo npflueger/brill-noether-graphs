@@ -69,13 +69,13 @@ link at **every** wall datum of surviving valency four with no hypothesis beyond
   (`labelsOnSide_zero_false`, `first_second_zero_false`).
 * `swapArrival`, `swapWallData`, `linkOfSwap`, `facetEdge_swap`,
   `facetDartLeft_swap`: **the orientation is normalised by
-  `CubicDarts.MoveData.swap`.**  `m.swap.base = graph.op m.base`, so the arrival
+  `CubicDartGraph.MoveData.swap`.**  `m.swap.base = graph.op m.base`, so the arrival
   has to be re-read at the label of the opposite dart -- which is the same chart
   coordinate (`MovedIncidenceIso.label_op_of_tracks`), so the wall payload is
   literally unchanged and `swapWallData` is `wd`'s own fields.  The vanishing
   occurrence is unchanged (`facetEdge_swap`, by the uniqueness
   `NonTrivalentValencyFourTracks.eq_facetEdge`), hence so is the `A_1` dart, and
-  the moved graph is unchanged (`CubicDarts.move_swap`), so a link for `m.swap`
+  the moved graph is unchanged (`CubicDartGraph.move_swap`), so a link for `m.swap`
   transports to a link for `m` with only its `tracks` field rewritten.
 
 ### 4.  The headline
@@ -498,7 +498,7 @@ def swapWallData (m : graph.MoveData)
 
 /-- **A link for the swapped move is a link for the move.**  The two descriptions
 contract the same edge and permute the darts alike, so `graph.move m.swap` is
-`graph.move m` (`CubicDarts.move_swap`) and only the `tracks` field is rewritten;
+`graph.move m` (`CubicDartGraph.move_swap`) and only the `tracks` field is rewritten;
 the base stage, the candidate, its presentation and the common-minor agreement
 are literally the same data. -/
 def linkOfSwap (m : graph.MoveData)
@@ -683,7 +683,7 @@ theorem nonempty_typeChangeLink_of_orientation
 /-- **`OuterWalk.TypeChangeLink` at every four-valent wall datum of every Whitehead
 move, from the valency hypothesis alone.**  If the vanishing occurrence is
 oriented the other way, the move is re-read from the other end of the contracted
-edge (`CubicDarts.MoveData.swap`), which leaves the moved graph and the whole wall
+edge (`CubicDartGraph.MoveData.swap`), which leaves the moved graph and the whole wall
 payload unchanged. -/
 theorem typeChangeLink_four
     (h4 : (GluingDatum.incidentEdges (target := contract wd.coverTarget wd.hab wd.hOne)

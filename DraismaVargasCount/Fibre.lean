@@ -25,7 +25,7 @@ this docstring describes the strict interface.
   gluing datum with the *requested core* is a field of a member
   (`FibreMember.ident`), not something quotiented away.  This is what removes
   `lemma-count-realizations` and `Aut(H)`-triviality from the route, and it is
-  what `OuterWalk.TrackedState` already does.
+  what `LocalCases.TrackedState` already does.
 * The quotient is **only** by isomorphisms of the datum **over the identity of
   the core** (`MemberIso`): the induced dictionary of the stable graph has to
   carry `ident` to `ident` on the nose.  Nothing is quotiented by
@@ -90,13 +90,13 @@ this docstring describes the strict interface.
   is the named proposition `AbsMultDescends`, an explicit argument of `isOddClass_cls_iff`
   and of `Fibre.absMult`, and it is never assumed by a definition here.  It is
   **proved**, with no hypothesis, one file later:
-  `Count.TransportMultiplicity.absMultDescends` derives it from the `datum`
+  `Count.absMultDescends` derives it from the `datum`
   field, and `isOddClass_cls_iff'` and `Fibre.absMult'` are the hypothesis-free
   forms of the two statements below.
 * **`Fintype (Fibre …)` is supplied elsewhere, unconditionally.**  A `FibreMember` carries
   its own target `CFGraph.{0}`, so the type of members is not small; the needed step is a
   normal form for the target together with the transport of a gluing datum along it
-  (`Count.TargetNormalForm`, `Count.TransportMultiplicity`).
+  (`DraismaVargasCount.TargetNormalForm`, `DraismaVargasCount.TransportMultiplicity`).
   `Count.FibreNormalForm.instFiniteFibre` gives `Finite (Fibre …)` with no
   hypothesis on the core, the request or the degree, and no descent statement
   assumed; `Count.FibreNormalForm.instFintypeFibre` is the same fact as a
@@ -198,7 +198,7 @@ def Closed (member : FibreMember core y degree) : Prop := ∀ slot, 0 ≤ member
 theorem Closed.of_open {member : FibreMember core y degree} (hOpen : member.Open) :
     member.Closed := fun slot ↦ (hOpen slot).le
 
-/-- The multiplicity of a member, in the sense of `Count.Multiplicity`. -/
+/-- The multiplicity of a member, in the sense of `DraismaVargasCount.Multiplicity`. -/
 noncomputable def absMult (member : FibreMember core y degree) : ℚ :=
   fdAbsMult member.fullDim
 
@@ -278,7 +278,7 @@ a quotient of members rather than of bare data.
 
 Deliberately **not** a field: any correspondence of the two length matrices.
 That is the descent of `absMult`, proved unconditionally in
-`Count.TransportMultiplicity` (`absMultDescends`) from `datum` alone. -/
+`DraismaVargasCount.TransportMultiplicity` (`absMultDescends`) from `datum` alone. -/
 structure MemberIso {core : Core n p} {y : Fin p → ℚ} {degree : ℕ}
     (first second : FibreMember core y degree) where
   /-- The isomorphism of the two gluing data, compatibility included. -/
@@ -526,7 +526,7 @@ theorem finite_fibre_of_meets {index : Type} [Finite index]
 /-- **The descent of `absMult`, as an explicit hypothesis.**  `absMult` is invariant
 under isomorphism of gluing data over the identity of the core, hence descends
 to the fibre.  It is *not* proved here, and no definition below assumes it; it is
-proved in `Count.TransportMultiplicity` (`absMultDescends`). -/
+proved in `DraismaVargasCount.TransportMultiplicity` (`absMultDescends`). -/
 def AbsMultDescends (core : Core n p) (y : Fin p → ℚ) (degree : ℕ) : Prop :=
   ∀ first second : FibreMember core y degree, IsoOverCore first second →
     first.absMult = second.absMult

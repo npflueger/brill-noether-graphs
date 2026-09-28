@@ -692,7 +692,7 @@ theorem otherEnd_otherEnd {e : candidate.datum.SourceEdge} {v : candidate.datum.
 
 /-- **A contraction class is a set of vertices joined by contracted
 occurrences.**  The canonical representative map is the union-find fold over
-the face's zero set (`PrunedContractedSpecResidues.classOf_eq_iff`), and a
+the face's zero set (`ClearedFace.SourceContractionTopology.classOf_eq_iff`), and a
 census walk through those slots is a walk of zero steps. -/
 theorem reflTransGen_zeroStep_of_classOf_eq
     (topology : ClearedFace.SourceContractionTopology face)

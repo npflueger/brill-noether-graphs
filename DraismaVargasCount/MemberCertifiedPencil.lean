@@ -32,7 +32,7 @@ closed member of odd multiplicity.
 ## What is proved
 
 * `coreIdentOfEquivalence` -- a stable-graph incidence dictionary carries a
-  `Count.CoreIdentification`, in the shape `Count.TransportMultiplicity.transportIdent`
+  `Count.CoreIdentification`, in the shape `Count.transportIdent`
   has for a `DatumIso`.
 * `seedState`, `carriesCertifiedPencil_of_seed` -- **the producer**: a
   `LocalCases.SeedCandidate.Seed`, a full-dimensional presentation of its

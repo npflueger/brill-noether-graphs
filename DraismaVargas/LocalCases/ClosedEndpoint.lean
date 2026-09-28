@@ -20,7 +20,7 @@ This file states those inputs as concrete data and proves that they imply the
 regular-subdivision gonality bound.  In particular, no rank-one divisor is a
 field: it is derived from the contracted gluing datum by the uniform target
 tree theorem, and then **pushed forward across the deletion of the pendant
-trees** (`PrunedContractedSpecResidues.bnExists_prunedSpec'`) before the
+trees** (`SourceContractionTopology.bnExists_prunedSpec'`) before the
 refinement presentation transports it to the scaled requested specification.
 
 ## Why the refinement targets the pruned source
@@ -107,7 +107,7 @@ structure InputRefinement {n p : ℕ} (spec : SubdivisionGraph.Spec n p)
 
 /-- **The pendant pushforward, at the refinement.**  Rank one on the whole
 contracted quotient source is rank one on its pruned contracted spec.  This is
-`PrunedContractedSpecResidues.bnExists_prunedSpec'`, whose two inputs
+`SourceContractionTopology.bnExists_prunedSpec'`, whose two inputs
 (`pendantSeparated` and `classCard_add_keptSlots_card`) are theorems; the count
 needs connectivity of the quotient source. -/
 theorem InputRefinement.bnExists_prunedSpec

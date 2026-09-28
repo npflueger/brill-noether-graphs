@@ -220,7 +220,7 @@ theorem exteriorProfile_of_pictures
 
 /-! ### Items 1 and 3: the forest hypothesis `ContractionForest` -/
 
-/-- **Item 1.** `M₀.Valid`, given the incoming datum's own validity and the
+/-- **Item 1.** `(M₀).Valid`, given the incoming datum's own validity and the
 one named extra hypothesis. -/
 theorem contractDatum_valid_of_forest
     (data : GluingDatum target degree) (fd : FullDimensionalSourcePresentation data coordinate)

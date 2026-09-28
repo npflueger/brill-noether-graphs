@@ -27,12 +27,12 @@ valency-four limits (step 3 of `Assembly`).
   of `t` inside that of `s` once `k_t ≥ 2`.  At `K = 0` with `s, t` on the
   minus side this contradicts `|A₋| = |gB_t ∪ gB_s|` (`K + 1 = k_t` would be
   forced).  This is exactly why the `K = 0` background
-  (`KZero.BlockLocalBackground.pairingBackground`) *localizes* each canonical
+  (`PrescribedPairing.BlockLocalBackground.pairingBackground`) *localizes* each canonical
   resolution to its own wall block.
 * **The background, in its true shape** (`canonicalLocal`, `localBackground`,
   `exists_pairingBackground`): the background exists with, on every non-anchor
   block, the canonical W4 resolution *localized* to that block (`localize`, the
-  generic form of `KZero.BlockLocalBackground.localizedResolution`).
+  generic form of `PrescribedPairing.BlockLocalBackground.localizedResolution`).
 * **Source genus** (`candidate_sourceGenus_of_local`): over the localized
   background the candidate keeps the source genus of the gauged datum.
 * **The candidate** (`exists_valid_candidate`): the general-`K` candidate exists
@@ -292,7 +292,7 @@ block's singleton branch on the singleton's side.  So the literal equality
 forces the partner branch on that side to refine the singleton branch
 everywhere -- in particular on the anchor block, where the gauge has just
 placed the two classes with a prescribed overlap.  This is exactly why the
-`K = 0` background (`KZero.BlockLocalBackground.pairingBackground`)
+`K = 0` background (`PrescribedPairing.BlockLocalBackground.pairingBackground`)
 *localizes* each canonical resolution to its own wall block. -/
 
 /-- The literal background forces a global refinement between the two

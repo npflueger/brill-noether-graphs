@@ -84,10 +84,11 @@ the definition of the multiplicity is the one of Part II.
 
 ## Consumers
 
-`Count.Integrality` (integrality, `absMultNat`, oddness) proves `IsIntegralMultiplicity`;
-`Count.TransportMultiplicity` proves the invariance of `absMult` under isomorphism of gluing
-data; `Count.BallotMultiplicity` extends §6 from the zig-zag sequence to every ballot
-sequence; the balancing identities at walls consume `signedMult`.
+`DraismaVargasCount.Integrality` (integrality, `absMultNat`, oddness) proves
+`IsIntegralMultiplicity`; `DraismaVargasCount.TransportMultiplicity` proves the invariance
+of `absMult` under isomorphism of gluing data; `DraismaVargasCount.BallotMultiplicity`
+extends §6 from the zig-zag sequence to every ballot sequence; the balancing identities at
+walls consume `signedMult`.
 -/
 
 namespace DraismaVargas.Count

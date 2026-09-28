@@ -1230,9 +1230,10 @@ theorem sum_ndAt (hnd : nonDanglingValency D A = 4) :
   classical
   rw [L.ndAt_eq hnd, Finset.sum_image (fun i _ j _ h ↦ L.inj h), Fin.sum_univ_four]
 
-/-- **The anchor indices of a labelled valency-three anchor** (`ValencyThreeGeneral.AnchorIndices`):
-`|A|` is the anchor's local degree, `(⊞)` is the excess formula at ramification one and
-surviving valency four, and the three bounds are harmonicity in each direction. -/
+/-- **The anchor indices of a labelled valency-three anchor**
+(`ValencyThreeGeneral.Split7.AnchorIndices`): `|A|` is the anchor's local degree, `(⊞)` is
+the excess formula at ramification one and surviving valency four, and the three bounds are
+harmonicity in each direction. -/
 def indices (hNoGlue : DanglingEdgeNoGlue D) (hram : ram D A = 1)
     (hnd : nonDanglingValency D A = 4) : ValencyThreeGeneral.Split7.AnchorIndices where
   A := size D A

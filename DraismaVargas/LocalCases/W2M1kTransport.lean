@@ -92,7 +92,7 @@ variable {target : CFGraph} {degree : ℕ} {wall : target.V}
 
 /-- **Figure 33's gauge move, named.**  The branch swap across the `t₃` branch
 transposing the first pinned sheet with a chosen sheet of the same wall block.
-This is the relabelling `W2M1kSwapped.branchSwap_aligns` and
+This is the relabelling `W2M1kSourceCandidates.branchSwap_aligns` and
 `branchSwap_separates` study, and `W2M1kSwapped.swappedData` is its `apply`. -/
 noncomputable def swapRelabeling (profile : W2R2SourceProfile.SourceProfile data star block)
     (other : Fin degree)

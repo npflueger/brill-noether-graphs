@@ -104,7 +104,7 @@ Type III and is realized by Base II, never by Base I.
   geometric form of the paper's numerical condition and is *implied* by it only
   after a block-preserving branch gauge on the `t_3` side
   (`BlockPreservingBranchSwap.branchSwapOfPerm`, as in
-  `NonTrivalentValencyFourKZero.gaugedData`): with `k_alpha = k_beta` and
+  `NonTrivalentValencyFourKZero.PrescribedPairing.gaugedData`): with `k_alpha = k_beta` and
   `k_gamma = k_delta` a permutation of the anchor block carries the two
   `t_3`-classes onto the two `t_2`-classes, and the gauged datum satisfies
   `Aligned`.  `NonTrivalentValencyTwoGauge` produces that gauge and transports

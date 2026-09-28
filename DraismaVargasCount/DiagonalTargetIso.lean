@@ -52,7 +52,7 @@ fields, with the target maps pinned to `layer`.  `SheetLayer.toIso` is the
 (`GluingDatum.DatumMatching first (pullback second layer)` -- a
 cardinality-preserving bijection of source vertices over every target vertex and
 of source occurrences over every target edge, respecting containment) already
-*is* a sheet layer, via the block-matching engine `Infrastructure.BlockMatching`.  So the
+*is* a sheet layer, via the block-matching engine `DraismaVargasCount.BlockMatching`.  So the
 sheet layer is a **source-graph isomorphism over the target layer**; no
 within-block choice is constrained.
 
@@ -562,7 +562,7 @@ end Sheet
 /-! ### The sheet layer is block-level: pulling the second datum back
 
 `SheetLayer` asks for sheet permutations.  By the block-matching engine
-(`Infrastructure.BlockMatching`, `GluingDatum.DatumMatching.sheetRelabeling`) it is
+(`DraismaVargasCount.BlockMatching`, `GluingDatum.DatumMatching.sheetRelabeling`) it is
 enough to give, at every target vertex and occurrence, a cardinality-preserving
 bijection of **blocks** -- i.e. of source vertices and source occurrences -- that
 respects containment of occurrence blocks in vertex blocks: a source-graph

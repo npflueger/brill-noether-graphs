@@ -90,7 +90,7 @@ hypothesis is the paper's strict inequality `k_delta < k_alpha`.
 2. `graph_connected target`, `genus target = 0` and `data.Connected` are
    explicit: the first two separate the two star branches, the third is what
    makes pruning transport along a sheet relabelling.
-3. The orientation: `NonTrivalentValencyTwoCandidate.rightAssignment` puts the
+3. The orientation: `NonTrivalentValencyTwoCandidate.Prescribed.rightAssignment` puts the
    thick direction at the divalent endpoint `u`, so this module realizes the
    splits of a class over `star.edge 0`.  The mirror members (a class over
    `star.edge 1` splitting) need the reversed subdivision background and are
@@ -672,7 +672,7 @@ variable {data : GluingDatum target degree} {star : TwoStar target wall}
   {anchor : WallBlock data wall}
 
 /-- In Configuration A both directions carry two survivors, so
-`NonTrivalentValencyTwoCandidate.thickDirection` is `0`. -/
+`NonTrivalentValencyTwoCandidate.Prescribed.thickDirection` is `0`. -/
 theorem thickDirection_eq_zero
     (hSplit : (directionSurvivors data star anchor 0).card = 2) :
     thickDirection data star anchor = 0 := by
@@ -728,7 +728,7 @@ include source hSplit in
 survivors and the single numerical hypothesis `k_delta < k_alpha` produce
 `NonTrivalentValencyTwoSplitCandidate.SplitSetup` over the gauged wall datum:
 the splitting class is `e_alpha` (above `star.edge 0`, the direction
-`NonTrivalentValencyTwoCandidate.rightAssignment` puts at the divalent endpoint
+`NonTrivalentValencyTwoCandidate.Prescribed.rightAssignment` puts at the divalent endpoint
 `u`) and the piece is `e_delta` (above `star.edge 1`, at `v`). -/
 theorem splitSetup_gauged
     (hConnected : graph_connected target) (hGenus : genus target = 0)

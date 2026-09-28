@@ -18,7 +18,7 @@ and its content is a counting argument.  That census is what this module proves,
 proves it **from the member alone** plus one named hypothesis:
 
 * every target vertex has valency between one and three, which is
-  change-minimality (`Change.incidentEdges_card_le_three_of_changeMinimalAt`,
+  change-minimality (`GluingDatum.incidentEdges_card_le_three_of_changeMinimalAt`,
   `StableLocalProperties.incidentEdges_card_pos_of_changeMinimalAt`) and is
   *derived* here, not assumed;
 * `|E(T)| = p` and `|V(T)| = p + 1`, both read off the fields a `FibreMember`
@@ -44,7 +44,7 @@ The leaf bound `g ≤ leafCount` is **not** assumed: it is
   (`L + 2D + 3Tr = ∑ val`) — the three-way partition of a target all of whose
   valencies lie in `[1,3]`.
 * §2 `sum_valency` — the handshake `∑_v val(v) = 2|E|`, from
-  `Change.sum_incidentEdges`; and `census_identity`: `2L + D = |E| + 3`, for
+  `GluingDatum.sum_incidentEdges`; and `census_identity`: `2L + D = |E| + 3`, for
   any target with `|V| = |E| + 1` and valencies in `[1,3]`.  No genus, no
   degree, no Riemann--Hurwitz.
 * §3 at an arbitrary `FibreMember`: `valency_pos`, `valency_le_three`,
@@ -197,7 +197,7 @@ variable {target : CFGraph}
 
 /-- **The handshake.**  Every target edge occurrence has two distinct endpoints
 (`CFGraph.loopless`), so the valencies sum to twice the edge count.  This is
-`Change.sum_incidentEdges` at the constant weight one. -/
+`GluingDatum.sum_incidentEdges` at the constant weight one. -/
 theorem sum_valency (target : CFGraph) :
     (∑ vertex : target.V, (valency target vertex : ℤ)) =
       2 * (Fintype.card target.edges : ℤ) := by

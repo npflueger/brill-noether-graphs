@@ -35,8 +35,8 @@ ordered endpoint.
 * `GluingDatum.sourceEnds_sourceEdgeOfOccurrence` (in
   `DraismaVargas.Infrastructure.GluingRealization`) identifies `edgeAt G slot`
   with `sourceEnds (sourceEdgeAt slot)` as an **ordered** pair.
-* `SourceCorrespondenceSpec.sourceEnds_edgeMap` is stated with the ordered pair
-  `(vertexMap (sourceEnds e).1, vertexMap (sourceEnds e).2)`.
+* `IteratedContractionSource.SourceCorrespondence.sourceEnds_edgeMap` is stated with
+  the ordered pair `(vertexMap (sourceEnds e).1, vertexMap (sourceEnds e).2)`.
 
 So no `Spec.Relabeling` composition is needed, and the rest is bookkeeping.
 
@@ -85,7 +85,7 @@ universe u
 
 /-! ## Endpoint decoding on the degenerate side
 
-The positive side already has `GluingRealization.sourceVertexAt_core_tail` and
+The positive side already has `GluingDatum.IntegralRealization.sourceVertexAt_core_tail` and
 `_head`.  These are the same two statements for the canonical degenerate
 subdivision of a nonnegative realization; they are the first half of the
 orientation check. -/
@@ -512,7 +512,7 @@ section Assemble
 /-- The composite, at the level of bare specifications: the canonical
 positive contraction of a `DegSpec` is Laplacian-equivalent to any positive
 `Spec` it contracts onto.  This is the shape of
-`DegenerateRepRigidity.repEquiv` and of `ZeroFreeTerminalFace.sourceEquiv`. -/
+`DegSpec.repEquiv` and of `ZeroFreeTerminalFace.sourceEquiv`. -/
 noncomputable def sourceEquivOfContraction {n p n' p' : ℕ} {d : DegSpec n p}
     {positiveSpec : SubdivisionGraph.Spec n' p'} (c : DegSpec.Contraction d positiveSpec) :
     LaplacianEquiv d.contractedSpec.graph positiveSpec.graph :=
@@ -541,7 +541,7 @@ noncomputable def sourceEquiv (sc : SourceCorrespondenceSpec s t)
   sourceEquivOfContraction (contraction sc positive hForest hNotLoopy hZero hLength)
 
 /-- Brill--Noether existence transports across `sourceEquiv`; this is the only
-property `ClosedEndpoint.bnExists` consumes. -/
+property `ContractedGluing.bnExists` consumes. -/
 theorem bnExists_iff_of_sourceEquiv (sc : SourceCorrespondenceSpec s t)
     (positive : t.data.IntegralRealization)
     (hForest : IsForest (UnitSubdivisionPresentation.core s.data.sourceGraph)

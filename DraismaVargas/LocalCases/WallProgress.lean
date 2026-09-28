@@ -6,7 +6,7 @@ import DraismaVargas.LocalCases.SecondEquation
 
 This module classifies the walls of the march by the valency of the wall
 vertex, and packages what a local classification must supply at one wall
-(`WallInput`) into the fields of `SemanticAtlasMarch.PresentedProgress`.
+(`WallInput`) into the fields of `SemanticAtlasMarch.State.PresentedProgress`.
 
 The valency analysis below is arithmetic.  `MonovalentWall` proves Part I's
 loop-12 argument and excludes valency one on exactly this module's incoming
@@ -19,7 +19,7 @@ classifier by themselves: concentrated ramification alone does not exclude the
 paper's nd2 cases (Figure 36), and empty-path presentations do not supply an
 honest nonsingular incoming member.
 
-`SemanticAtlasMarch.PresentedProgress`'s `familyAt` field asks for a
+`SemanticAtlasMarch.State.PresentedProgress`'s `familyAt` field asks for a
 `BalancedGlobal.GaugeFamily` at **every** coordinate.  The four-valent wall
 reaches one through `W4Bridge.auxR0SourceInput_of_contraction` and
 `W4StableSource.AuxR0SourceInput.presentedFamily`, and the divalent one through

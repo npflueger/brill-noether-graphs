@@ -37,7 +37,7 @@ honest square labellings of the two actual members
 `W2R1SourceCandidates.Pair.candidate`.  No abstract family, no new structure.
 
 * `leafCount_candidate` -- **unconditional**: `l(T⁽ᵠ⁾) = l(T₀)` for both
-  members, from `W2R1SourceCandidates.candidate_target_valencies`
+  members, from `W2R1SourceCandidates.Pair.candidate_target_valencies`
   (both expand the divalent wall into the divalent/divalent `T₂`) and
   `TrivalentWeight.leafCount_graph_of_divalent_split`.  Both members in fact
   carry the *same* expansion `star.right`, so `leafCount_members_eq` is

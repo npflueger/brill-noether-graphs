@@ -5120,8 +5120,8 @@ Two things are deliberately not done here.
   belongs with the stable-graph local properties, not here.  Without it the
   traversal is still defined and still nodup, still a chain and still confined
   to its class, but it need not exhaust a class that is a cycle.
-* Nothing here builds a `Utilities.RefinementPresentation`.  Matching an
-  ordered row against a `Utilities.OrderedPathSplit` also needs the third of
+* Nothing here builds a `IteratedSplitRefinement.RefinementPresentation`.  Matching an
+  ordered row against a `IteratedSplitRefinement.OrderedPathSplit` also needs the third of
   those properties — compatibility of the target occurrences under a row with
   the coordinate labelling the row — and the split chain itself.
 -/

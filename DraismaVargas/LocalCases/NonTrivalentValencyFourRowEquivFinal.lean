@@ -95,7 +95,7 @@ consecutive pairs, sending a retained occurrence to its wall row and the bridge
 to `none`; `Quot.lift rowOfEdge` is then a literal left inverse of `retainedRow`
 (`Option.some` is injective).  Constancy is a surviving-star census at every
 vertex of the candidate, and the vertices are enumerated exactly as in
-`LimitChainCore.rowOfEdge_eq_of_consecutive`: `cases vertex.1.1` splits into
+`LimitChainCore.SelectedData.rowOfEdge_eq_of_consecutive`: `cases vertex.1.1` splits into
 `oldVertex place`, `oldVertex wall` and `freshVertex`, and
 `ResolutionAwayFromWall.exists_retainedVertex_of_target` turns the first into a
 retained vertex while the other two are `endpointVertex false/true vertex.1.2`.
@@ -110,7 +110,7 @@ Then:
    sheet to `selectedRepresentative`, where
    `nonDanglingValency_endpointVertex` is three; on the smaller side either the
    sheet is `finePartition`-related to it and the same applies, or
-   `NonTrivalentValencyFourKZero.finePartition_rel_or_singleton` makes its fine
+   `NonTrivalentValencyFourKZero.PrescribedPairing.finePartition_rel_or_singleton` makes its fine
    block a singleton and `nonDanglingIncident_singleton_subset` bounds the
    surviving star by one occurrence;
 3. at a non-anchor block, `nonDanglingIncident_ret_dichotomy` and

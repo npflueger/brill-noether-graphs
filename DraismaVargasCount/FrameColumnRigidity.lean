@@ -32,10 +32,10 @@ coordinate-distinctness hypothesis.
   `σ` on columns, and `N` agrees with `M` (rows aligned by `σ`, columns aligned
   by `φ`) *off one column*, then `π = φ`.  The invertibility used is that of
   `M` and `N` themselves; nothing about a request enters.
-* `Frame.inv_apply_of_coordsAt_perm` -- the matrix form of a `coordsAt`
+* `FrameColumnRigidity.inv_apply_of_coordsAt_perm` -- the matrix form of a `coordsAt`
   intertwiner: a permutation `π` with `l.coordsAt y (π c) = k.coordsAt y c` for
   *all* `y` satisfies `l.matrix⁻¹ (π c) r = k.matrix⁻¹ c (k.slot.symm (l.slot r))`.
-* `Frame.perm_eq_of_coordsAt_perm_of_agree` -- the two combined.
+* `FrameColumnRigidity.perm_eq_of_coordsAt_perm_of_agree` -- the two combined.
 * `FrameIso.column_eq_of_retainedColumns` -- the same conclusion from the
   hypothesis shape `StarMetricCompatibility.RetainedColumnsAgree` already uses.
 * `FrameIso.column_eq_of_agree` and `FrameIso.column_eq_id_of_agreeOffColumn`
@@ -48,7 +48,7 @@ coordinate-distinctness hypothesis.
   carries each column label of the source frame to the same column label of the
   target frame.  This is the generic form of the input that
   `Count.W4PairingRigidity`'s `hlabel` hypothesis asks for.
-* `FrameIso.column_eq_allColumns` -- the general statement.  For two
+* `FrameColumnRigidity.column_eq_allColumns` -- the general statement.  For two
   `WallStar.Regrowth`s at a nondegenerate request carrying a geometric limit
   isomorphism that preserves the inherited row labels, *every* frame
   isomorphism between their frames induces exactly the column dictionary
@@ -70,8 +70,8 @@ coordinate-distinctness hypothesis.
   hypotheses are stated with rows read through each frame's own
   `Frame.slot`; nothing here proves two given frames have a common slot map.
 * **No star, count, multiplicity or parity statement is made.**  Nothing here
-  evaluates a star, exhibits a star member, or discharges
-  `W4PairingRigidity.hlabel` for any concrete wall.
+  evaluates a star, exhibits a star member, or discharges the `hlabel`
+  hypothesis of `Count.W4PairingRigidity` for any concrete wall.
 * **No claim that `allColumns` is the identity.**  `column_eq_allColumns`
   identifies the frame-iso column permutation with the limit isomorphism's
   dictionary; whether that dictionary is the identity at a given wall is a

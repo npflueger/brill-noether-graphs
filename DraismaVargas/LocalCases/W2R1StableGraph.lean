@@ -144,7 +144,7 @@ position `q` and `secondMember` at `B₀` with position `other q`; every row
 above applies at each.  Which of the two tables a given block gets is decided
 by `position = doubleLabel` there, so in the *aligned* configuration each
 member retains one block and resolves the other, and in the *opposite* one a
-member retains or resolves both -- `W2R1SourceCandidates.aligned_counts`,
+member retains or resolves both -- `W2R1SourceCandidates.Pair.aligned_counts`,
 `opposite_counts`.  The census is stated so that neither configuration is
 assumed.
 

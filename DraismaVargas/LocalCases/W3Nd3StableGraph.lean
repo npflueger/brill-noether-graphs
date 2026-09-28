@@ -43,7 +43,7 @@ stable loop through the branch vertex is not excluded.
 ## Where the nd2 route transfers, and where it does not
 
 Transferring: the pasted endpoint dictionary, `ResolutionPruning.sourceEdge_cases`,
-`W3Nd2EndRows.old_incident_fresh_selected_info` (which is stated for an arbitrary
+`LimitChainCore.old_incident_fresh_selected_info` (which is stated for an arbitrary
 candidate and block), the `nonDanglingIncident` computation and
 `stablePath_eq_of_consecutive`.
 
@@ -308,7 +308,7 @@ theorem fine_pasted_right_block_selected (input : W3SourceInput data star)
 
 /-! ## The divalent-endpoint counterpart of `old_incident_fresh_selected_info`
 
-`W3Nd2EndRows.old_incident_fresh_selected_info` classifies an old occurrence
+`LimitChainCore.old_incident_fresh_selected_info` classifies an old occurrence
 incident to a **fresh** selected endpoint.  Both Figure 30 members also need
 the same statement at the retained **old** endpoint, which is where the nd3
 branch vertex sits.  It is `LimitChainCore.old_incident_old_selected_info`,

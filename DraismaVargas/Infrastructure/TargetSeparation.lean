@@ -39,7 +39,7 @@ Everything else here is that theorem in the form a consumer wants it:
 `graph_connected target` and `genus target = 0` are the two standing Part-I
 hypotheses on the target, carried together by
 `FullDimensionalSource.FullDimensionalSourcePresentation` (fields
-`targetConnected`, `targetGenus`) and by `SemanticAtlasMarch.PresentedProgress`;
+`targetConnected`, `targetGenus`) and by `SemanticAtlasMarch.State.PresentedProgress`;
 a path on three vertices satisfies both and has a divalent vertex, so the extra
 demand of two distinct incident occurrences is satisfiable as well.  The
 conclusion is not vacuous for the same reason: on such a target the deleted

@@ -29,7 +29,7 @@ positive terminal point the zero set is empty.  Consequently:
 
 `Candidate.ClearedFace.InputRefinement` is taken as a **hypothesis**, not proved
 and not admitted.  It says that the canonical contracted source with its pendant
-trees deleted, `PrunedContractedSpec.prunedSpec` (in the zero-free leafless case,
+trees deleted, `SourceContractionTopology.prunedSpec` (in the zero-free leafless case,
 the contracted source itself), *is* the requested stable specification `spec`,
 scaled by `face.scale` and subdivided at the block boundaries of the cover.  It
 cannot be derived from a presentation alone, in this case or in any other,

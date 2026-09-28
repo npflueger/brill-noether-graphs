@@ -7,7 +7,7 @@ import DraismaVargasCount.GeometricCountFamily
 ("the slope sequence determines the morphism").  This module supplies the separation
 criterion that the injective half of the ballot classification needs -- members with
 different slope sequences are not isomorphic over the core -- in a form strictly stronger than
-the multiset criterion of `Count.GeometricCountFamily`.
+the multiset criterion of `DraismaVargasCount.GeometricCountFamily`.
 
 ## Why the coordinate *multiset* is not enough
 
@@ -82,7 +82,7 @@ hypothesis (pairwise distinct edge lengths) as an extra assumption.
 * **`Diagonal` is a genuine hypothesis.**  The rigidity lemma fails as
   stated without it: for members whose length matrices are not diagonal the row
   and column dictionaries need not agree, and only the multiset invariant of
-  `Count.GeometricCountFamily` is available.  Both members must be diagonal;
+  `DraismaVargasCount.GeometricCountFamily` is available.  Both members must be diagonal;
   diagonality of one does not suffice for the argument given.
 * **No member is constructed.**  The members over the caterpillar core are built
   elsewhere: `FibreCaterpillar.caterpillarMember` at the zig-zag, and

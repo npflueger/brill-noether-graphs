@@ -36,7 +36,7 @@ spends that chain on `CountSchedule.Site`.
 * `RelabelInvariant` -- the one further obligation, named: the count is
   unchanged by a relabelling of the core together with the matching
   relabelling of the request.  It is proved in `CoreRelabelInvariance`
-  (`CoreRelabelInvariance.relabelInvariant`).
+  (`CoreRelabel.relabelInvariant`).
 * `exists_siteChain_to_target`, `odd_of_chain` -- assuming `RelabelInvariant`
   the chain reaches the requested core itself, and oddness of the count
   transports along it.
@@ -66,7 +66,7 @@ chain are trivalent.
   `CoreOfDarts.exists_chain` ends at a core `CoreIso`-related to the target,
   because a Whitehead move precomposes the vertex map with a transposition of
   darts and never permutes vertex *labels*, while
-  `Infrastructure.WhiteheadConnectivity.reachesIso_of_genus_eq` concludes only
+  `Infrastructure.CubicDarts.reachesIso_of_genus_eq` concludes only
   `ReachesIso`.  `CoreOfDarts.coreIsoOfIso` and `CoreOfDarts.CoreIso.toIso`
   show that `CoreIso` is exactly what remains, so `RelabelInvariant` is stated at
   exactly the needed strength and not stronger.  It is an equivariance
@@ -153,7 +153,7 @@ theorem exists_siteChain (hsupply : StepSupply degree n p) (hGenus : 2 ≤ p + 1
 invariant.  A `CoreIso` carries slot `e` to `slot e`, so the request matching
 `y` over the relabelled core is `y ∘ slot.symm`.
 
-It is proved in `CoreRelabelInvariance` (`CoreRelabelInvariance.relabelInvariant`).  It is
+It is proved in `CoreRelabelInvariance` (`CoreRelabel.relabelInvariant`).  It is
 exactly what `CoreOfDarts.exists_chain` leaves: no weaker statement removes the `CoreIso`,
 and by `CoreOfDarts.CoreIso.toIso` no stronger one is needed. -/
 def RelabelInvariant (degree : ℕ) : Prop :=

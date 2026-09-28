@@ -19,7 +19,7 @@ second vertex `B₀` above `w₀` with `r₀(B₀) = 1`.  Equation (10) is the s
 **two** wall vertices' contributions, and `ch u = ch v = 1` forces
 `δ⁽ᵠ⁾(Ã) ≠ δ⁽ᵠ⁾(B̃)`, which is what makes `δ⁽ᵠ⁾(Ã)` determine the member.
 `Pair` below is therefore two blocks from the start -- it is literally the
-payload of `IncomingSourceCases.Classification.r1` -- and the coupling is
+payload of `IncomingSourceCases.W2.Classification.r1` -- and the coupling is
 carried by `other`, so `Pair.candidates` has arity two by construction
 (`Pair.positions_opposite`, `Pair.member_determined`).
 
@@ -647,7 +647,7 @@ end Shapes
 
 /-! ## 3.  The two-block datum and its two coupled candidates
 
-`Pair` is exactly the payload of `IncomingSourceCases.Classification.r1`: two
+`Pair` is exactly the payload of `IncomingSourceCases.W2.Classification.r1`: two
 **distinct** wall blocks of local ramification one, each with its own actual
 `W2R1SourceProfile.SourceProfile`, and a background of unramified blocks.
 

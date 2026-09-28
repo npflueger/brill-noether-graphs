@@ -4,7 +4,7 @@ import DraismaVargas.LocalCases.WallDegeneration
 /-!
 # Feeding the four-valent wall interface from a contraction, under the paper's own hypothesis
 
-`FullDimensionalSource.false_of_auxR0SourceInput` shows that
+`FullDimensionalSourcePresentation.false_of_auxR0SourceInput` shows that
 `W4StableSource.AuxR0SourceInput data star` cannot be fed from a single datum.
 The interface describes the **codimension-one wall datum** (target one
 occurrence short, excess `1` at the wall, one more stable path than the wall

@@ -838,7 +838,7 @@ of the vanishing row at `graph.vert m.base`.
 
 The first conjunct is the orientation: the end of the vanishing row at
 `graph.vert m.base` is the anchor end `p`, and the other end is `q`.  The other
-orientation is normalised away by the caller with `CubicDarts.MoveData.swap`,
+orientation is normalised away by the caller with `CubicDartGraph.MoveData.swap`,
 which leaves `graph.move m` unchanged.
 
 The survivor clause is stated at the level of **rows**, not of occurrences: a

@@ -359,7 +359,7 @@ end TransportSupply
 
 /-! ## 5.  Non-vacuity on the caterpillar of loops
 
-`LocalCases.CaterpillarStable.fullDim` is the full-dimensional presentation of the
+`LocalCases.CaterpillarRows.fullDim` is the full-dimensional presentation of the
 caterpillar of loops, and `Count.EdgeDenominator.rowDenominator_cat_pairEdge`
 says a pair edge of `T^CL_g` -- a stem or a slope-two spine edge -- carries a
 row of constant dilation index `2`.  That is a genuinely ramified witness, so

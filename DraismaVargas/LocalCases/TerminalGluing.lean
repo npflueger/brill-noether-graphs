@@ -478,7 +478,7 @@ noncomputable def contractedGluing_of_incoming
 
 /-! ### The rank-one pencil on the canonical contracted source
 
-This is the whole point of the receipt: `ClosedEndpoint.exists_subdivisionPencil`
+This is the whole point of the receipt: `ClearedFace.exists_subdivisionPencil`
 consumes `ContractedGluing` only through `ContractedGluing.bnExists`. -/
 
 /-- **A terminal face whose zero source set is a census forest carries the
@@ -495,7 +495,7 @@ theorem bnExists_contractedSpec
 
 /-- The gonality bound at a terminal face, once the second receipt
 (`InputRefinement`) is supplied.  This is
-`ClosedEndpoint.regularSubdivisionGonality_le` with its first argument
+`ClearedFace.regularSubdivisionGonality_le` with its first argument
 discharged; the connectivity its pendant pushforward needs is `hValid.1`. -/
 theorem regularSubdivisionGonality_le
     {n p : ℕ} {spec : SubdivisionGraph.Spec n p}

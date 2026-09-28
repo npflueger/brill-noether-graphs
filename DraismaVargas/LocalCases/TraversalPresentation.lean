@@ -20,7 +20,7 @@ form only when it needs strength.
 ## The row conditions, reconciled
 
 **`PresentationDecomposition.Decomposes` and
-`W4StableSource.orderedPath_chain` agree, exactly.**
+`W4StableSource.StableLengthMatrixLabelling.orderedPath_chain` agree, exactly.**
 
 * A **row** is, in both, the set of surviving source occurrences of one
   stable-path class.  `Decomposes` describes it as a set — duplicate-free,
@@ -269,7 +269,8 @@ variable {data : GluingDatum target degree}
 
 /-- Consecutive occurrences of a row meet at a surviving valency-two source
 vertex.  Written once, so that `PresentationDecomposition` and
-`W4StableSource.orderedPath_chain` can be compared as the same predicate. -/
+`W4StableSource.StableLengthMatrixLabelling.orderedPath_chain` can be compared as
+the same predicate. -/
 def MeetsAt (data : GluingDatum target degree)
     (first second : data.SourceEdge) : Prop :=
   ∃ vertex : data.SourceVertex, Incident data first vertex ∧
@@ -283,7 +284,7 @@ paths of the pruned source, listed in traversal order:
 * `decomposes` — the rows partition the surviving occurrences
   (`PresentationDecomposition.Decomposes`);
 * `chain` — consecutive entries of a row meet at a surviving valency-two
-  vertex (`W4StableSource.orderedPath_chain`);
+  vertex (`W4StableSource.StableLengthMatrixLabelling.orderedPath_chain`);
 * `start`, `finish`, `head_isPathEnd`, `getLast_isPathEnd` — each row carries
   two named source vertices, and its first and last occurrences sit at them
   through ends the stable path does not continue through;
@@ -501,7 +502,7 @@ variable {data : GluingDatum target degree}
 omit [Fintype coordinate] [DecidableEq coordinate] in
 /-- The chain predicate `MeetsAt`, unfolded: the two occurrences share a
 surviving valency-two vertex.  This is the predicate of
-`W4StableSource.orderedPath_chain`. -/
+`W4StableSource.StableLengthMatrixLabelling.orderedPath_chain`. -/
 theorem meetsAt_iff (first second : data.SourceEdge) :
     MeetsAt data first second ↔
       ∃ vertex : data.SourceVertex, Incident data first vertex ∧
@@ -541,7 +542,7 @@ variable {wall : target.V} {candidate : Candidate target degree data wall}
 condition imposed on every stable slot `i : Fin p` is a condition imposed on
 every matrix row, and conversely.  This is what lets a row condition stated
 on slots and one stated on matrix rows (such as
-`W4StableSource.orderedPath_chain`) be compared at all. -/
+`W4StableSource.StableLengthMatrixLabelling.orderedPath_chain`) be compared at all. -/
 theorem forall_slot_iff (iface : InputInterface spec presentation coordinates)
     (property : coordinate → Prop) :
     (∀ i : Fin p, property (iface.slot i)) ↔ ∀ row : coordinate, property row :=

@@ -424,7 +424,7 @@ theorem movedStar_op :
   rw [CubicDartGraph.move_swap] at h
   exact h
 
-/-- **No Whitehead move is trivial.**  `CubicDarts.MoveData` carries `left ≠ base`,
+/-- **No Whitehead move is trivial.**  `CubicDartGraph.MoveData` carries `left ≠ base`,
 `right ≠ op base` and `nonloop`, and the move sends the dart `m.left` to the *other* end
 of the contracted edge, so `graph.move m` is never `graph`.  The case "the move does not
 change the ambient graph" therefore does not arise in the walk's `link` binder, and the
@@ -1163,7 +1163,7 @@ section Headline
 /-- **The valency-two dispatch.**  At every two-valent wall datum, either the link is
 already there -- the two survivors the move brings together lie over the same target
 direction, so the Base II merge realises it, possibly after re-reading the move from the
-other end of the contracted edge (`CubicDarts.MoveData.swap`) -- or the wall carries the
+other end of the contracted edge (`CubicDartGraph.MoveData.swap`) -- or the wall carries the
 Configuration A `2 + 2` distribution and the move names a **cross pair**: one survivor
 over each direction, whose incoming rows are the rows of the two occurrences the move
 brings together, in one of the two orders.

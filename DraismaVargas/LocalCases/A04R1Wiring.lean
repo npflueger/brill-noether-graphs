@@ -5,7 +5,7 @@ import DraismaVargas.LocalCases.W2R1ArbitraryIncomingExit
 # The wall dispatcher and the full-dimensional supply at the `w2R1` tag
 
 `A04FourTags` defines `FullDimSupply` -- the two gated fields of
-`SemanticAtlasMarch.PresentedProgress` at one `WallProgress.WallInput` -- and
+`SemanticAtlasMarch.State.PresentedProgress` at one `WallProgress.WallInput` -- and
 inhabits it for `w3Nd2CoarseFine`, `w3Nd3CoarseFine` and `w4`; `A04MoreTags`
 does `w2P`, `w2Mkk` in both orientations and `w3Four`, and bundles the per-wall
 data as `RoutedWall`; `A04M11Wiring` does `w2M11` and `A04ShiftWiring` does

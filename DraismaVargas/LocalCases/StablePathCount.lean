@@ -781,7 +781,7 @@ theorem sum_stableValency_eq_two_mul_card_stablePath_int
 `Trivalence.nonDanglingValency_le_three_of_sum_le`, the count replaces the
 numerical saturation hypothesis of `Trivalence.trivalent_of_euler_saturated` by
 a comparison between the number of stable paths — which
-`FullDimensionalSource.stablePath_card` identifies with `|E(target)|` — and the
+`FullDimensionalSourcePresentation.stablePath_card` identifies with `|E(target)|` — and the
 number of stable vertices. -/
 theorem nonDanglingValency_le_three_of_two_mul_card_stablePath_le
     (data : GluingDatum target degree) (hConnected : data.Connected)
@@ -875,7 +875,7 @@ What else trivalence needs is unchanged by this file except in its shape.
 `nonDanglingValency_le_three_of_two_mul_card_stablePath_le` reduces the
 numerical saturation hypothesis of `Trivalence.trivalent_of_euler_saturated` to
 `2 · #stable paths ≤ 3 · |V₃|`, in which the left-hand side is what
-`FullDimensionalSource.stablePath_card` controls.  The second identification
+`FullDimensionalSourcePresentation.stablePath_card` controls.  The second identification
 named by `Trivalence` — that deleting the dangling occurrences does not change
 the first Betti number — is not addressed here.
 -/

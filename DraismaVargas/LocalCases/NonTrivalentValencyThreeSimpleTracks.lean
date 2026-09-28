@@ -150,7 +150,7 @@ relabellings.
   retained row of `e_delta` (`newSourceEdge_stablePath_eq_retained`), so the
   three *stable rows* at `A_u` are `h_1`, `h_alpha`, `h_delta`, exactly as the
   clause names.  The other orientation is normalised by the caller with
-  `CubicDarts.MoveData.swap`, which leaves `graph.move m` unchanged.
+  `CubicDartGraph.MoveData.swap`, which leaves `graph.move m` unchanged.
 * `prescribedSimpleMove_of_occurrence`: the old occurrence-level clause
   (`first.2.1 = alphaLift ...`) implies (H-I/II).
 * `prescribedSimpleMove_of_rows`: (H-I/II) from the orientation clause together
@@ -932,7 +932,7 @@ both Type I and Type II: they differ only in the order condition on the four
 indices, not in which pair the resolution brings together.
 
 The other orientation is normalised away by the caller with
-`CubicDarts.MoveData.swap`, which leaves `graph.move m` unchanged. -/
+`CubicDartGraph.MoveData.swap`, which leaves `graph.move m` unchanged. -/
 def PrescribedSimpleMove : Prop :=
   wd.tracks.iso.dart (facetDartLeft m wd wallStar) = m.base ∧
     ∃ first second : StableSourceDarts.Dart wd.cover,

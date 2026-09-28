@@ -668,7 +668,7 @@ theorem exists_sourceLength_eq_of_contractsMany {s t : Step.{u} degree}
       obtain ⟨f, hf⟩ := ih g
       exact ⟨f, hf.trans hg⟩
 
-/-- The three invariants wanted by `LocalCases.ClosedEndpoint.ContractedGluing`,
+/-- The three invariants wanted by `Candidate.ClearedFace.ContractedGluing`,
 preserved together. -/
 theorem invariants_of_contractsMany {s t : Step.{u} degree} (h : ContractsMany s t)
     (hValid : s.data.Valid) (hConnected : graph_connected s.target)
@@ -797,7 +797,7 @@ zero, and reached by contracting zero-length occurrences only
 
 By `Step.integralRealization` the terminal stage carries a genuine positive
 `GluingDatum.IntegralRealization`; that is the object
-`LocalCases.ClosedEndpoint.ContractedGluing` asks for.
+`Candidate.ClearedFace.ContractedGluing` asks for.
 
 The forest receipt is left exactly as the driver's hypothesis.  On the
 `LocalCases` side it is discharged by
@@ -840,7 +840,7 @@ theorem exists_terminal_positive (s : Step.{u} degree) (hValid : s.data.Valid)
 
 /-- The same terminal stage with the positive source lengths that the dilation
 equation forces, packaged as the positive `GluingDatum.IntegralRealization`
-that `LocalCases.ClosedEndpoint.ContractedGluing` consumes. -/
+that `Candidate.ClearedFace.ContractedGluing` consumes. -/
 theorem exists_terminal_integralRealization (s : Step.{u} degree) (hValid : s.data.Valid)
     (hConnected : graph_connected s.target) (hGenus : genus s.target = 0)
     (hForest : ∀ t : Step.{u} degree, ContractsMany s t → t.data.Valid →

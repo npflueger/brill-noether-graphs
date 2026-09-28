@@ -50,7 +50,7 @@ source occurrences — preserving length, and a bijection from (stable core
 vertices ⊔ row breakpoints) to the **kept contraction classes** — those
 meeting a surviving occurrence — matching endpoints, with an orientation flag
 per occurrence.  Kept slots and kept classes are the slots and vertices of
-`PrunedContractedSpec.prunedSpec`, the contracted quotient source with its
+`SourceContractionTopology.prunedSpec`, the contracted quotient source with its
 pendant trees deleted, which is the target of the refinement presentation at a
 terminal face.  `SourceModel.laplacianEquiv` is the missing identification, and
 `SourceModel.inputRefinement` packages it as the closed-face input refinement.

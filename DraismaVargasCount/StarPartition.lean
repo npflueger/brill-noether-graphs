@@ -30,7 +30,7 @@ proof ever unfolds a concrete membership test inside a `simp` or a `convert`
   *is* the discrete partition, literally, so a slope-one spine edge needs no
   special case.
 * `card_star_eq_card_range` -- counting inside `Fin (n+1)` is counting inside
-  `range (n+1)`, which is how `Count.SlopeStack`'s interval counts are used.
+  `range (n+1)`, which is how `DraismaVargasCount.SlopeStack`'s interval counts are used.
 
 ## What is NOT proved here (every surviving hypothesis, explicitly)
 

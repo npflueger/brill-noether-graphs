@@ -30,7 +30,7 @@ single residue `M11StarExhaustion`, which is *equivalent* to the census
   members of the wall's star, each for *any* full-dimensional presentation of its datum.
   Positions `0` and `2` are wall-anchored; position `1` (Figure 32's remote split) is
   anchored at the branch-swapped datum `M11RemoteCandidates.swappedDatum` and carried to
-  the wall by `M11StarParityFree.branchIso.symm` (`remote_branchSquare`,
+  the wall by the inverse of `M11StarParityFree.branchIso` (`remote_branchSquare`,
   `remote_rowSquare`).  `rep` selects the member of each nonsingular position (its
   presentation transported from the census's own incoming one, `fdAt`), and `multNat_rep`
   identifies its class multiplicity with `|num (signedMult (lab q))|`.
@@ -366,8 +366,8 @@ noncomputable def member2 : GeometricStar.StarMember hy w :=
 /-! ### Position `1`: the remote split, anchored at the branch-swapped datum
 
 This is where the anchor is not the wall: the member's limit is literally the swapped
-datum `M11RemoteCandidates.swappedDatum`, carried to the wall by the inverse branch swap
-`M11StarParityFree.branchIso.symm`. -/
+datum `M11RemoteCandidates.swappedDatum`, carried to the wall by the inverse of the branch
+swap `M11StarParityFree.branchIso`. -/
 
 /-- The merged partition of the swapped datum is the wall's, a constructed join. -/
 theorem swapped_join :

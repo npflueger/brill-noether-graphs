@@ -10,7 +10,7 @@ Section 5.1 ("Combinatorial setup and local determinants"), where a
 combinatorial type change is recorded as a Whitehead move on the *ambient
 tracked graph*, not on a second cover.
 
-`StableSourceDartsTransport.isoOfIncidenceEquivalence` produces
+`StableSourceDarts.isoOfIncidenceEquivalence` produces
 `Iso (ofDatum data …) (ofDatum other …)` from a
 `StableGraphIncidence.Equivalence`: a branch-vertex bijection, a stable-row
 bijection, and equality of the row-filtered stars; the occurrence-level

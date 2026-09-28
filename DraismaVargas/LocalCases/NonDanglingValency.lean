@@ -841,7 +841,7 @@ describes the **codimension-one wall datum**: its target is one occurrence
 short and it carries excess `1` at the wall.  A *square* honest stable
 presentation describes the **full-dimensional datum**: change-minimal, with one
 stable path per target occurrence.  Those are different data, so no adapter on a single `data` can
-exist, and `FullDimensionalSource.false_of_auxR0SourceInput` proves exactly that.
+exist, and `FullDimensionalSourcePresentation.false_of_auxR0SourceInput` proves exactly that.
 
 Everything above this declaration is unaffected; in particular
 `nonDanglingValency_ne_one` and the trichotomy are genuine.  The sound approach

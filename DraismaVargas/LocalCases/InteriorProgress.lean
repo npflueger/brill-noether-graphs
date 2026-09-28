@@ -60,7 +60,7 @@ Everything else at that coordinate is derived with no further hypothesis:
   `0 ≤ restartTime` (reachability from a time-zero seed), `0 < baseStart` and
   `0 ≤ baseFinish`.
 * `exists_admissibleColumn_of_nonterminal`: at a nonterminal state with
-  `SimpleNegativeCrossings`, `PositiveOrthantExit.exists_first_positiveOrthant_exit`
+  `SimpleNegativeCrossings`, `RationalAffineWall.exists_first_positiveOrthant_exit`
   produces the first wall, and that coordinate *is* admissible.  So the
   coordinate the march actually crosses always satisfies the hypothesis.
 * `separated_of_admissibleColumn` and

@@ -127,7 +127,7 @@ how the prescribed pairing distributes the survivors of `B`.
   conjunct: `m.base` is the dart of `h_1` at the `A_1` end).  Side `false` is the
   side whose `K = 0` endpoint vertex `vertexEquiv` sends to `graph.vert m.base`
   (`vertexEquiv_anchor_false`).  The other orientation is normalised by the
-  caller with `CubicDarts.MoveData.swap`, which leaves `graph.move m` unchanged.
+  caller with `CubicDartGraph.MoveData.swap`, which leaves `graph.move m` unchanged.
 * `SelectedSeparated`: the geometric content of a *type change* -- the two
   survivors of the side the move collects lift to occurrences at the two
   **different** ends of `h_1`.  Without it `A_1` sees exactly the star of
@@ -1872,8 +1872,8 @@ dart of the vanishing occurrence at the `A_1` end.
 
 Side `false` is the side whose `K = 0` endpoint vertex is `vertexEquiv`'s image of
 `graph.vert m.base` (`vertexEquiv_anchor_false`).  The other orientation is
-normalised away by the caller with `CubicDarts.MoveData.swap`, which leaves
-`graph.move m` unchanged (`CubicDarts.move_swap`) and exchanges `m.base` with
+normalised away by the caller with `CubicDartGraph.MoveData.swap`, which leaves
+`graph.move m` unchanged (`CubicDartGraph.move_swap`) and exchanges `m.base` with
 `graph.op m.base`. -/
 def PrescribedPairingMove : Prop :=
   wd.tracks.iso.dart (facetDartLeft m wd wallStar) = m.base ∧

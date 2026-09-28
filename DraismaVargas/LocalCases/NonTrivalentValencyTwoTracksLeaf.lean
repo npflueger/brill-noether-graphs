@@ -56,7 +56,7 @@ module restates §§1 and 5 of `NonTrivalentValencyTwoTracks` there, reuses its
   coincided the vanishing row would be a loop of the stable graph and every
   branch vertex would meet it twice or not at all, contradicting
   `InteriorGraphTracking.Tracks.hasSimpleEnd` at the non-loop dart `m.base`
-  (`CubicDarts.MoveData.nonloop`).  This is what replaces
+  (`CubicDartGraph.MoveData.nonloop`).  This is what replaces
   `wd.cover.sourceEnds_ne` in `NonTrivalentValencyTwoTracks`, which is
   unavailable because the two ends now belong to two *different* occurrences.
 * `three_le_nonDanglingValency_leftEnd`, `..._rightEnd`: **both outer ends are

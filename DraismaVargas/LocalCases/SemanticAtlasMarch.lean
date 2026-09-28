@@ -35,7 +35,7 @@ variable {coordinate chart : Type*}
 
 The march crosses exactly one coordinate at a time: the coordinate whose
 crossing time is least, selected from the incoming coordinates alone by
-`PositiveOrthantExit.exists_first_positiveOrthant_exit`.  Every source-side
+`RationalAffineWall.exists_first_positiveOrthant_exit`.  Every source-side
 input below is asked *only there*.
 
 This guard is what makes the source-side demand satisfiable.  A wall input at a
@@ -52,7 +52,7 @@ march actually crosses, where
 /-- **`wall` is a first wall of the segment from `start` to `finish`**: at some
 interior time the segment vanishes at `wall` and is strictly positive at every
 other coordinate.  This is exactly the conclusion
-`PositiveOrthantExit.exists_first_positiveOrthant_exit` returns about the
+`RationalAffineWall.exists_first_positiveOrthant_exit` returns about the
 coordinate it selects, minus the "no earlier event" clause no consumer uses. -/
 def IsFirstWall (start finish : coordinate → ℚ) (wall : coordinate) : Prop :=
   ∃ time : ℚ, 0 < time ∧ time < 1 ∧
@@ -212,7 +212,7 @@ def Terminal (state : State degree matrix baseStart baseFinish) : Prop :=
 /-- **The march's guard at a semantic state**: `wall` is the first wall of the
 state's own current segment.  Every source-side field of `PresentedProgress`
 below is asked only here, and `PresentedProgress.exists_step` discharges it at
-the coordinate `PositiveOrthantExit.exists_first_positiveOrthant_exit` selects.
+the coordinate `RationalAffineWall.exists_first_positiveOrthant_exit` selects.
 This is `IsFirstWall` read at the state, and it is reducible, so a consumer may
 use either spelling. -/
 abbrev FirstWall (current : State degree matrix baseStart baseFinish)
@@ -798,7 +798,7 @@ coordinate over which a whole stable class of the cover lies has none
 (`InteriorProgress.not_admissibleColumn_of_stablePath_over_column`): the march
 never crosses such a coordinate, and demanding wall data there was not merely
 unproved but false.  `exists_step` discharges the guard at the coordinate
-`PositiveOrthantExit.exists_first_positiveOrthant_exit` selects, and returns it
+`RationalAffineWall.exists_first_positiveOrthant_exit` selects, and returns it
 alongside the selected wall, so a consumer reads the fields at the same proof.
 Proof irrelevance makes the choice of `hw` immaterial. -/
 structure PresentedProgress

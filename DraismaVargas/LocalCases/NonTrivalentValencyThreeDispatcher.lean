@@ -103,7 +103,7 @@ puts the complementary pair at `graph.vert m.base`
   is the complement of the realisable one.
 * `dart_facetDartLeft_cases_three`, `facetRow_swap_three`, `facetEdge_swap_three`,
   `facetDartLeft_swap_three`: the orientation is normalised by
-  `CubicDarts.MoveData.swap` exactly as at valency four, reusing
+  `CubicDartGraph.MoveData.swap` exactly as at valency four, reusing
   `NonTrivalentValencyFourDispatcher`'s `swapArrival`, `swapWallData` and
   `linkOfSwap`.
 * `typeChangeLink_three`, `typeChangeLink_three'`: **`OuterWalk.TypeChangeLink` at

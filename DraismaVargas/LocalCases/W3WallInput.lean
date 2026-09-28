@@ -55,7 +55,7 @@ a per-member `base : Fin n → GluingDatum target degree`.
 `W3FourStableGraph.Figure28Receipts.gaugeFamily` instantiates it at
 `base := fun i ↦ (receipts.member i).base`, four gauge copies.
 
-`WallProgress.WallInput.family` and `SemanticAtlasMarch.PresentedProgress.familyAt`
+`WallProgress.WallInput.family` and `SemanticAtlasMarch.State.PresentedProgress.familyAt`
 both carry a `BalancedGlobal.GaugeFamily`, so they accept that family.
 `WallProgress.WallInput.ofGauge` is the constructor, and `ofFour` below is
 Figure 28's instance of it, reindexed from `Option target.edges` to the ambient
@@ -100,7 +100,7 @@ incoming datum actually exists.
 
 ## Full-dimensional presentations, for the cases routed here
 
-`SemanticAtlasMarch.PresentedProgress` carries `fullDimAt`/`fullDimPresentation`
+`SemanticAtlasMarch.State.PresentedProgress` carries `fullDimAt`/`fullDimPresentation`
 as fields, gated on `det ≠ 0` at the outgoing member.  For the two coarse–fine
 cases they come from a transport:
 `StableGraphFullDimensional.presentationOfEquivalence` transports
@@ -546,7 +546,7 @@ end Four
 
 /-! ## 4.  The full-dimensional field pair, and its shape
 
-`SemanticAtlasMarch.PresentedProgress` carries
+`SemanticAtlasMarch.State.PresentedProgress` carries
 
 ```
 fullDimAt : ∀ wall (outgoing : Fin (caseAt wall).arity),

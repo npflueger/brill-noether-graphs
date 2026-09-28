@@ -22,7 +22,7 @@ labelling, whose matrix is the Equation (2) family's own presented matrix.
 `target₂.edges.card = target₁.edges.card`.  A member's datum lives over
 `TargetExpansion.graph target wall right`, which has **one edge more** than
 `target`, so the incoming datum `data` is never an admissible source: consistently
-with `FullDimensionalSource.stablePath_card`, the incoming wall datum carries
+with `FullDimensionalSourcePresentation.stablePath_card`, the incoming wall datum carries
 `|E(target)| + 1` stable rows and no square honest labelling at all.  Every
 transport below is therefore **member to member**, between two of Figure 28's
 four members, whose expanded targets differ only in the `right` field and so have
@@ -57,11 +57,11 @@ census and no presentation is transported member to member.
 * `growOutgoingPresentation`, `positionOneOutgoingPresentation`,
   `positionTwoOutgoingPresentation` -- **the four members' own exits**, each
   from any other member over the same expanded wall.
-* `HonestFigure28.presentationAt` -- the exit at a position of the honest
+* `HonestFigure28Exit.presentationAt` -- the exit at a position of the honest
   receipts, gated on the **Equation (2) family's** determinant at that position
   and presenting `HonestFigure28.labelling`, so the family's nonsingularity gate
   and the member's honest one are literally the same condition.
-* `HonestFigure28.exists_valid_positive_exit_presentation` -- the positive exit
+* `HonestFigure28Exit.exists_valid_positive_exit_presentation` -- the positive exit
   of `W3FourHonestBalance` with a full-dimensional presentation of the outgoing
   member attached: the exit's own `det(incoming) * det(outgoing) < 0` discharges
   `presentationAt`'s gate.

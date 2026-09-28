@@ -855,7 +855,7 @@ theorem exists_terminal_positive_of_isForest (s : Step.{u} degree) (hValid : s.d
     hConnectedFinal, hGenusFinal, hForestFinal⟩
 
 /-- The terminal stage packaged with the positive `GluingDatum.IntegralRealization`
-that `LocalCases.ClosedEndpoint.ContractedGluing` consumes, from the starting
+that `Candidate.ClearedFace.ContractedGluing` consumes, from the starting
 census forest alone. -/
 theorem exists_terminal_integralRealization_of_isForest (s : Step.{u} degree)
     (hValid : s.data.Valid) (hConnected : graph_connected s.target)

@@ -405,13 +405,13 @@ dictionary against the incoming stable graph is therefore the composite
 * `StableGraphIncidence.sheetRelabel relabeling input.valid.1 :
   Equivalence data (swappedData star geometry)`, the relabelling bridge, with
 * `W2M1kGraphData.dividedEquivalence` instantiated at the swapped datum, the
-  swapped profile, shape and `DividedData` that `W2M1kSwapped.swappedSecondPattern`
-  supplies,
+  swapped profile, shape and `DividedData` that
+  `W2M1kSwapped.AlignedProfile.swappedSecondPattern` supplies,
 
 and its genus receipt is `divided_sourceGenus` at the swapped datum composed
-with the relabelling's own
-`GluingDatum.SheetRelabeling.sourceGraphLaplacianEquiv.genus_eq`.  **This is the same general
-statement M-kk needs** -- the pair
+with `LaplacianEquiv.genus_eq` applied to the relabelling's own
+`GluingDatum.SheetRelabeling.sourceGraphLaplacianEquiv`.  **This is the same
+general statement M-kk needs** -- the pair
 `Nonempty (StableGraphIncidence.Equivalence data relabeling.apply)` together
 with `genus relabeling.apply.sourceGraph = genus data.sourceGraph`, for an
 arbitrary compatible relabelling, with no case data whatsoever.  M-1k needs no

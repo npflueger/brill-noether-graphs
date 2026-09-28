@@ -57,7 +57,7 @@ occurrences appears anywhere below.
   matrix `LocalCases.StableSourceMatrix.matrix` is preserved.
 * `branchVertexEquiv`, `incidenceCount_map`, **`graphEquivalence`** -- the
   induced dictionary of the stable graph, in
-  `LocalCases.StableGraphIncidence.Equivalence`'s shape.  `Count.Fibre.MemberIso`'s
+  `LocalCases.StableGraphIncidence.Equivalence`'s shape.  `Count.MemberIso`'s
   dictionaries `stableVertex`, `stableRow` and `incidence` are constructed from it.
 * `branchVertexEquiv_refl`/`_symm`/`_trans`, `stablePathEquiv_refl`/`_symm`/
   `_trans` -- **functoriality of the induced dictionary**: it is compatible
@@ -86,16 +86,16 @@ pair partition `{0, j}`).
 
 ## What is not proved here
 
-* `Count.Fibre.MemberIso` carries a `DatumIso` as its `datum` field; the transport of
+* `Count.MemberIso` carries a `DatumIso` as its `datum` field; the transport of
   presentations, length matrices and multiplicities along it is
-  `Count.TransportMultiplicity`, and none of them appears in this file.
+  `DraismaVargasCount.TransportMultiplicity`, and none of them appears in this file.
 * Nothing is claimed about the *existence* of an isomorphism between two given
   data, in particular no normal form for the target tree.  That is the other
-  half of the finiteness of the fibre, `Count.TargetNormalForm`.
+  half of the finiteness of the fibre, `DraismaVargasCount.TargetNormalForm`.
 
 ## Consumers
 
-`DraismaVargas.Count.TransportMultiplicity` (the invariance and descent of the
+`DraismaVargasCount.TransportMultiplicity` (the invariance and descent of the
 multiplicity), and the finiteness `Fintype (Fibre …)` of `Count.FibreNormalForm`, which
 needs this transport together with a normal form for genus-zero targets.
 -/

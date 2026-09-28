@@ -175,7 +175,7 @@ Consequently this module builds a `BalancedGlobal.Family` and
 `exists_valid_opposite`, and **not** a `PresentedFamily` or a cleared pencil:
 that is the same boundary `GlobalM1k.exists_valid_positive_exit_swapped` and
 `W2M1kSwapped.SwappedBundle.exists_valid_positive_exit` stop at, and for the
-same reason.  `W2PCommonBalance.honestPresentedFamily` is available to P and
+same reason.  `W2PCommonBalance.LimitColumns.honestPresentedFamily` is available to P and
 not here precisely because a `PresentedFamily`'s `candidate` field is
 `Fin 3 → Candidate target degree data wall`.
 

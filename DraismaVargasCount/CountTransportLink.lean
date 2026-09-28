@@ -96,7 +96,7 @@ which one exists.  Explicitly:
   identification of the two *fibres* it sits between is not made here.
 * `openOddCount` is `GeometricFibre.openOddCount` -- the orientation-independent
   labelled count.  Nothing here compares it with the strict
-  `Fibre.openOddCount`.
+  `Count.openOddCount`.
 
 Consumers: `CountSchedule`, and through it `CountSchedule.C34`, the statement
 proved in step 4 of `Assembly`.

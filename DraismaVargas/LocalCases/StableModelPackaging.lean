@@ -55,7 +55,7 @@ On a reduced core, the `Utilities` lemma `exists_markedShapeAt` produces a
 `MarkedShape`:
 every vertex is either stable or a bivalent marker whose two slots run to one
 stable partner.  That is **not** a `Marking`: `Marking` (and through it
-`CoreExpansion.MarkerIsolated`) demands that of the two slots at a marker
+`CoreExpansion.ExpansionData.MarkerIsolated`) demands that of the two slots at a marker
 exactly one has its *head* there, and a reduced core can have both ends
 pointing in.
 

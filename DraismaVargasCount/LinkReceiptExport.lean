@@ -516,7 +516,7 @@ theorem receiptLink_of_orientation_four
 /-- **`OuterWalk.TypeChangeLink` at every four-valent wall datum of every Whitehead
 move, from the valency hypothesis alone.**  If the vanishing occurrence is
 oriented the other way, the move is re-read from the other end of the contracted
-edge (`CubicDarts.MoveData.swap`), which leaves the moved graph and the whole wall
+edge (`CubicDartGraph.MoveData.swap`), which leaves the moved graph and the whole wall
 payload unchanged. -/
 theorem receiptLink_four
     (h4 : (GluingDatum.incidentEdges (target := contract wd.coverTarget wd.hab wd.hOne)
@@ -890,7 +890,7 @@ theorem receiptLink_of_thick_rows
 /-- **The valency-two dispatch.**  At every two-valent wall datum, either the link is
 already there -- the two survivors the move brings together lie over the same target
 direction, so the Base II merge realises it, possibly after re-reading the move from the
-other end of the contracted edge (`CubicDarts.MoveData.swap`) -- or the wall carries the
+other end of the contracted edge (`CubicDartGraph.MoveData.swap`) -- or the wall carries the
 Configuration A `2 + 2` distribution and the move names a **cross pair**: one survivor
 over each direction, whose incoming rows are the rows of the two occurrences the move
 brings together, in one of the two orders.

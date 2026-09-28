@@ -55,7 +55,7 @@ chambers meet along the facet `{y e₀ = 0}`.  The machine:
 * **The limit relation must be the geometric one.**  `OpenOdd` lives on
   `CrossCoreTransport.FrameClass`, the quotient by the *geometric* frame isomorphism,
   and only `GeometricDatumIso` of limits is carried along it
-  (`GeometricLimitTransport.limitIso`); with the strict `WallStar.SameLimit` the
+  (`GeometricLimitTransport.limitIso`); with the strict `WallStar.Regrowth.SameLimit` the
   specialisation of a class would not be single-valued.
 * **No core identification of the limit is needed.**  The machine never identifies
   a limit's stable graph with the contracted core; `FacetLimit` is the *unlabelled*

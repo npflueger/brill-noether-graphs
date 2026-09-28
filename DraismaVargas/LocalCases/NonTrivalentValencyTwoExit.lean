@@ -117,7 +117,7 @@ the incoming one in *every* row off the contracted column.
    Whitehead move of the tracked ambient graph.  It is carried here as a
    hypothesis of `typeChangeLink_of_receipts`, so the rest of the link is
    proved here.  The matching of `m`'s darts to the two merged thick survivors
-   is expressed through the parameter `sel`, and `CubicDarts.MoveData.swap`
+   is expressed through the parameter `sel`, and `CubicDartGraph.MoveData.swap`
    (with `move_swap`) lets the matching read `m` from either end of the
    contracted edge; `NonTrivalentValencyTwoTracks` builds the dictionary.
 

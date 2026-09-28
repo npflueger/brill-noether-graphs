@@ -240,7 +240,7 @@ for counting but all of which a genuine path-splitting argument would use:
 
 Consequently `Decomposes` alone is *not* enough to build the
 `Candidate.ClearedFace.InputRefinement` receipt.  That field is a
-`Utilities.RefinementPresentation`, i.e. a `CanonicalSplitChain` of
+`IteratedSplitRefinement.RefinementPresentation`, i.e. a `CanonicalSplitChain` of
 `OrderedPathSplit`s followed by a `relabeling : LaplacianEquiv`, and an
 `OrderedPathSplit` cuts one target slot into an **ordered list of segments**.
 Matching a row against such a list needs the row itself to be ordered along the

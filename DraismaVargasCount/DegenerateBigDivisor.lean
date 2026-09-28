@@ -42,7 +42,7 @@ empty there rather than failing.
   source graph onto the small subdivision.
 * `rank_pushDivisor_of_pushableRepresentatives` -- **`ForestContractionRank` reduced to
   an interface of `Utilities`.**  `ExpansionData.vertexMap` is
-  `Utilities.Certificate.CoreExpansion`'s own contraction certificate, which is valid
+  `Utilities.Subdivision.CoreExpansion`'s own contraction certificate, which is valid
   (`certificate_valid`), and
   `GraphContractionCertificate.rank_ge_one_pushDiv_of_pushableRepresentatives`
   turns `PushableReachabilityAtRepresentatives` into the rank hypothesis.  So the rank

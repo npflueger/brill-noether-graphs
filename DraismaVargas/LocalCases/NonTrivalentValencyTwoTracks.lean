@@ -130,7 +130,7 @@ endpoint vertices, one per side of the new target edge.
   through a pass-through occurrence over the contracted target edge, and it is
   the row, not the occurrence, that the star count consumes
   (`IncomingPairing.label_dart_of_row`).  The other orientation is
-  normalised by the caller with `CubicDarts.MoveData.swap`, which leaves
+  normalised by the caller with `CubicDartGraph.MoveData.swap`, which leaves
   `graph.move m` unchanged.
 * `prescribedMergedMove_of_occurrence`: the old occurrence-level clause
   (`first.2.1 = selectedLift ...`) implies (H-II).
@@ -1353,8 +1353,8 @@ so the pair is forced and both directions are doubled; in Configuration B
 `NonTrivalentValencyTwoExit`.  A single clause therefore covers both sub-cases.
 
 The other orientation is normalised away by the caller with
-`CubicDarts.MoveData.swap`, which leaves `graph.move m` unchanged
-(`CubicDarts.move_swap`) and exchanges `m.base` with `graph.op m.base`. -/
+`CubicDartGraph.MoveData.swap`, which leaves `graph.move m` unchanged
+(`CubicDartGraph.move_swap`) and exchanges `m.base` with `graph.op m.base`. -/
 def PrescribedMergedMove : Prop :=
   wd.tracks.iso.dart (facetDartLeft m wd hNoReturn) = m.base ∧
     ∃ first second : StableSourceDarts.Dart wd.cover,
@@ -1726,9 +1726,9 @@ include hOrd in
 /-- **Away from the merged target vertex the candidate does not change the
 star.**  This is `ResolutionStableIncidence.incidenceCount_retainedVertex` with
 its row *equivalence* hypothesis weakened to injectivity of the retained-row
-map, which is what `NonTrivalentValencyTwoRowEquiv.retainedRow` supplies (its
-complement is the bridge row).  The proof uses the equivalence only through
-`row.injective`. -/
+map `NonTrivalentValencyTwoDescent.retainedRow`, which `injective_retainedRow`
+supplies (the one row outside its image is the bridge row).  The proof uses the
+equivalence only through `row.injective`. -/
 theorem incidenceCount_retainedVertex_retainedRow
     (w : (contractDatum wd.cover wd.hc wd.hab wd.hOne).SourceVertex)
     (hAway : w.1.1 ≠ (⟨wd.a, wd.hab⟩ : GraphContraction.Vertex wd.coverTarget wd.b))

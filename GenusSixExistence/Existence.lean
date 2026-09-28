@@ -50,7 +50,7 @@ theorem criticalPencil (G : CFGraph.{u}) (hConnected : graph_connected G)
 
 /-- **Brill--Noether existence through genus six.** Every connected finite graph of genus at
 most six satisfies Brill--Noether existence, stated exactly as
-`AtanasovRanganathan.BrillNoetherExistenceThroughFive` (the library's degree-exact,
+`Utilities.BrillNoetherExistenceThroughFive` (the library's degree-exact,
 rank-lower-bound convention `brill_noether_conjecture`, for all `r d : ℤ`). Genus at most five
 is `AtanasovRanganathan.brillNoetherExistenceThroughFive`; genus six is `bnExists`; a negative
 `r` is trivial because every rank is at least `-1`. -/

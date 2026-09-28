@@ -19,7 +19,7 @@ The degree is `d = g/2 + 1 = m + 2`; sheet `0` is the spine sheet.  Every
 partition used is a **star partition** (`SheetPartition.sheetStar`, from `StarPartition`):
 one block through sheet `0`, singletons elsewhere.  Writing `s_i` for the slope on the spine
 edge `h_i` and `cum s i` for the number of labels introduced up to `h_i`
-(`Count.SlopeStack`), the blocks are
+(`DraismaVargasCount.SlopeStack`), the blocks are
 
 | target piece | block | size |
 |---|---|---|
@@ -84,8 +84,8 @@ one").  The construction here is the one forced by harmonicity.
   uniqueness half and does not enter the construction here, which is purely
   combinatorial and mentions no lengths at all.
 * The genus of the source is **not** proved in this module; it is
-  `Count.BallotGenus.genus_sourceGraph_ballotDatum`.
-* `Slopes g` is used only through `Count.Slopes` and `Count.SlopeStack`; the
+  `Count.BallotDatum.genus_sourceGraph_ballotDatum`.
+* `Slopes g` is used only through `Count.Slopes` and `DraismaVargasCount.SlopeStack`; the
   hypothesis `g = 2 * (m + 1)` is built into the type of the argument `s` and
   is never assumed silently elsewhere.
 -/

@@ -67,7 +67,7 @@ incoming-matching members are the *same* terms --
 `W2M1kLimitColumns.localLeafMember`, `localDividedMember` and `joinedMember`
 define their `right` and `datum` fields to be exactly
 `LeafPair.candidate`'s, `DividedData.candidate`'s and `joinedCandidate`'s, and
-the orientations' `member` fields are `Matrix.cons` literals -- so the routed
+the orientations' `member` fields are `Matrix.vecCons` literals -- so the routed
 wall's family slot presents the incoming-matching member definitionally and the
 regrown-column identities compose with `Eq.trans` alone.
 

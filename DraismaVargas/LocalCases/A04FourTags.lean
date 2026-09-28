@@ -5,7 +5,7 @@ import DraismaVargas.LocalCases.W4PositiveExit
 # The full-dimensional supply at a wall, for the tags with a stable-incidence dictionary
 
 `WallProgress.presentedProgressOfWallInputs` assembles a
-`SemanticAtlasMarch.PresentedProgress` from nine inputs.  The last two are the
+`SemanticAtlasMarch.State.PresentedProgress` from nine inputs.  The last two are the
 outgoing full-dimensional presentations and the statement that they present
 the outgoing members:
 
@@ -87,7 +87,7 @@ coordinates `M11FullDimensional` works in.
 
 `BalancedGlobal.GaugeFamily` removes the obstruction.  It has a per-member
 `base : Fin n → GluingDatum target degree` and its own `valid_of_old`;
-`WallProgress.WallInput.family` and `SemanticAtlasMarch.PresentedProgress.familyAt`
+`WallProgress.WallInput.family` and `SemanticAtlasMarch.State.PresentedProgress.familyAt`
 carry it, and `WallProgress.WallInput.ofGauge` is the constructor
 (`W3WallInput.ofFour` uses it for Figure 28's four gauge copies).  What each
 divalent tag needs is its family in gauge form, with the presentations kept
@@ -121,7 +121,7 @@ variable {coordinate : Type} [Fintype coordinate] [DecidableEq coordinate]
 /-! ## 1.  The pair, at one wall -/
 
 /-- **The full-dimensional supply at one wall.**  Exactly the two gated fields
-of `SemanticAtlasMarch.PresentedProgress` that the wall input does not
+of `SemanticAtlasMarch.State.PresentedProgress` that the wall input does not
 determine, read at one `WallProgress.WallInput`: an outgoing full-dimensional
 presentation at every nonsingular member of the wall's family, and the statement
 that it presents that member. -/

@@ -62,7 +62,7 @@ values are the row's ends.
   occurrence sits.
 * `slotEquiv` — the refined slots **are** the kept slots of the contraction
   topology — the positive non-dangling occurrences, the slots of the pruned
-  contracted spec `PrunedContractedSpec.prunedSpec` — bijectively.  Derived,
+  contracted spec `SourceContractionTopology.prunedSpec` — bijectively.  Derived,
   from `Decomposes` alone; no dictionary field is used.
 * `vertexClass` — the canonical map from refined core vertices to contraction
   classes: a stable core vertex to the class of the vertex `vertexAt` puts it

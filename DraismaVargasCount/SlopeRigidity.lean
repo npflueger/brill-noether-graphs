@@ -9,7 +9,7 @@ every admissible slope sequence uniquely determines a tropical morphism.  In thi
 uniqueness is the statement `CoreDiagRigid` below: two open members of odd multiplicity
 with the same core diagonal lie in the same class.  (The `rigid` field of
 `Count.BallotSlopes.DiagonalClassification` is the same statement restricted to diagonal
-members, `DiagonalRigidityObligation.DiagonalRigid`.)  The other half of the uniqueness, that
+members, `SlopeRigidity.DiagonalRigid`.)  The other half of the uniqueness, that
 different slope sequences give different classes, is in `Count/CoreSlotCoords.lean`.
 
 This module does not prove `CoreDiagRigid`.  It isolates a *necessary* condition for
@@ -70,7 +70,7 @@ hypothesis in the type.  What does control the obligation is the stabiliser of t
   (`cls_eq_iff_exists_trivial_defect`).
 * `coreDiag_eq_defect` -- **the core diagonal transports along *any* datum
   isomorphism**, moved by the defect.  This is
-  `CoreSlotCoords.coreDiag_eq_of_geometricIso` with both `overCore` hypotheses dropped,
+  `Count.coreDiag_eq_of_geometricIso` with both `overCore` hypotheses dropped,
   and with its `∀ slot, y slot ≠ 0` dropped too: the proof goes through the length
   matrix, not through the coordinates.  `defect_stabilises_coreDiag` is the
   consequence used below, and `coreDiag_eq_of_geometricIso_of_diagonal` is that lemma
@@ -90,7 +90,7 @@ hypothesis in the type.  What does control the obligation is the stabiliser of t
   *necessary* condition for it.
 * **No `Realizes` is established or refuted here for any member.**  Discharging
   `realizes_of_coreDiagRigid`'s conclusion at the caterpillar member means
-  exhibiting a self-`GeometricDatumIso` of `FibreCaterpillar.caterpillarDatum`;
+  exhibiting a self-`GeometricDatumIso` of `CaterpillarDatum.caterpillarDatum`;
   refuting it means showing there is none.  Neither is attempted here.
 * **`Diagonal` is a genuine hypothesis of `twistMember`**, and it is not
   optional: re-solving the realization equation entry by entry is what a
@@ -106,7 +106,7 @@ hypothesis in the type.  What does control the obligation is the stabiliser of t
 * `coreDiagRigid_iff` assumes `hdiag`, that every open odd member is diagonal.  That
   fails over every fibre with an open odd member
   (`ColumnTwist.not_forall_diagonal_of_openOdd`), so `coreDiagRigid_iff` applies to no
-  such fibre; `DiagonalRigidityObligation.diagonalRigid_iff` is the same reduction for
+  such fibre; `SlopeRigidity.diagonalRigid_iff` is the same reduction for
   diagonal members, with no such hypothesis.
 * Nothing here is about the count, the ballot family, or parity.
 -/
@@ -435,7 +435,7 @@ theorem cls_eq_iff_exists_trivial_defect :
 /-- **The core diagonal transports along an arbitrary datum isomorphism, moved
 by the defect.**
 
-This is `CoreSlotCoords.coreDiag_eq_of_geometricIso` with the two `overCore`
+This is `Count.coreDiag_eq_of_geometricIso` with the two `overCore`
 hypotheses removed -- what they buy is exactly that the defect is trivial -- and
 it needs **no hypothesis on the request**, because it goes through the length
 matrix rather than through the coordinates.  Both members must be diagonal: it
@@ -486,7 +486,7 @@ theorem coreDiag_eq_defect (h₁ : first.Diagonal) (h₂ : second.Diagonal)
       (first.slotMap.symm (first.slotMap (ρ r)))
   rw [Equiv.symm_apply_apply]
 
-/-- **`CoreSlotCoords.coreDiag_eq_of_geometricIso`, with its hypothesis on the
+/-- **`Count.coreDiag_eq_of_geometricIso`, with its hypothesis on the
 request removed.**  That lemma carries `∀ slot, y slot ≠ 0` because it recovers
 the diagonal from the coordinates by division; going through the length matrix
 instead, the hypothesis is unnecessary. -/

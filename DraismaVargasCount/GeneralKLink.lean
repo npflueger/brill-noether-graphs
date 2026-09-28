@@ -11,7 +11,7 @@ parity at valency-four limits (step 3 of `Assembly`).
 ## What is proved
 
 * `linkK`: the `K`-member `OuterWalk.TypeChangeLink m wd`, assembled as
-  `NonTrivalentValencyFourExitLink.typeChangeLink_of_receipts` assembles the `K = 0`
+  `NonTrivalentValencyFourExit.typeChangeLink_of_receipts` assembles the `K = 0`
   one.  Its `base` is `position.datum` (the general-`K` gauged wall datum), its
   `baseValid` is `Position.datum_valid`, and its `candidate` is `GeneralKExitSetup.candK`.
   The presentation, its agreement and its tracking are arguments.
@@ -147,7 +147,7 @@ variable (position : GeneralKReceipts.Position
 local notation "cK" => (candK m wd wallStar anchorBlock hAnchor pairing position geometry)
 
 /-- **The `K`-member type-change link**, assembled as
-`NonTrivalentValencyFourExitLink.typeChangeLink_of_receipts` assembles the `K = 0` one:
+`NonTrivalentValencyFourExit.typeChangeLink_of_receipts` assembles the `K = 0` one:
 `base := position.datum`, `candidate := candK`, and the presentation, its tracking and its
 common minor supplied. -/
 noncomputable def linkK

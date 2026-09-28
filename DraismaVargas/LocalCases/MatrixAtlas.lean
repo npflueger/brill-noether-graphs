@@ -51,7 +51,7 @@ which is why the entry bound is stated for honest presentations.
   `matrix_isAtlasMatrix_of_nodup` and the `Decomposes` corollary;
 * `chart`, `atlasMatrix`, `atlasMatrix_det_ne_zero`;
 * `encode` and `atlasMatrix_encode`, the registration direction that
-  `FiniteAtlasMarch.exists_step_of_classified_first_wall` consumes as
+  `FiniteAtlasMarch.State.exists_step_of_classified_first_wall` consumes as
   `houtgoingMatrix`.
 -/
 

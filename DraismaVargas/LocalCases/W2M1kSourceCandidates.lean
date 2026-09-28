@@ -23,7 +23,7 @@ side of the `AuxR0SourceInput` / `FullDimensionalSourcePresentation` bridge --
 the same side as `AuxR0SourceInput`, never a
 `FullDimensionalSourcePresentation` datum.
 
-`Shape`'s fields are jointly satisfiable: `W2R2SourceProfile.cases` already
+`Shape`'s fields are jointly satisfiable: `W2R2SourceProfile.SourceProfile.cases` already
 offers Cardinality M as one of its two disjuncts, `unit_index` fixes which of
 the two survivors of the double direction is `e₁`, and `1 < k` is exactly what
 separates this case from `w2M11` (`k = 1`) and is compatible with everything
@@ -79,7 +79,7 @@ takes the second member over the branch-swapped datum instead.  The
 branch-swap lemmas here carry the branch **separation** as the explicit
 hypothesis `hSeparated`.  It is proved in general, from
 `graph_connected target` and `genus target = 0`
-(`FullDimensionalSource.targetConnected` / `targetGenus`), by
+(`FullDimensionalSourcePresentation.targetConnected` / `targetGenus`), by
 `Infrastructure.TargetSeparation.edgeMoved_eq_false`.  But
 `branchSwapped_block_fixed`, `branchSwap_aligns` and `branchSwap_separates`
 below take neither of those two target-tree hypotheses -- only `data`, `star`,
@@ -870,7 +870,7 @@ dangling sheet alone above `t₃`).
 The obstruction is a gauge, not a contradiction in the source: a branch swap
 of the two sheets across one of the two wall directions exchanges the two
 situations, exactly as `M11RemoteCandidates` realizes Figure 32's second split
-over `M11SourceCandidates.swappedDatum` rather than over `data`.
+over `M11RemoteCandidates.swappedDatum` rather than over `data`.
 `GlobalM1k.candidates` takes all three patterns over one `data` and one
 `Geometry`, whereas `GlobalM11Arbitrary.candidates` takes its second member
 over `SwappedDatum`; `GlobalM1k.swappedCandidates` is the M-1k form of that

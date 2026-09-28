@@ -41,7 +41,7 @@ This module discharges that hypothesis.
 
 * **`rowOfEdge_eq_of_consecutive` and `retainedRow_injective'` (Sections 6--7).**
   The source vertices of the candidate are enumerated as in
-  `LimitChainCore.rowOfEdge_eq_of_consecutive`: away from the wall both partners
+  `LimitChainCore.SelectedData.rowOfEdge_eq_of_consecutive`: away from the wall both partners
   are retained and the surviving valencies agree, and the two vertices above the
   wall are the endpoint vertices of the crossing.  `Quot.lift rowOfEdge` is then
   `rowDescend`, and `rowDescend_retainedRow` makes it a literal left inverse of
@@ -1364,7 +1364,7 @@ theorem rowOfEdge_eq_wall
 
 /-- **The row assignment is constant on consecutive pairs.**  The source
 vertices of the candidate are enumerated as in
-`LimitChainCore.rowOfEdge_eq_of_consecutive`: an old vertex away from the wall
+`LimitChainCore.SelectedData.rowOfEdge_eq_of_consecutive`: an old vertex away from the wall
 is a retained vertex, and the two vertices above the wall are the endpoint
 vertices of the crossing. -/
 theorem rowOfEdge_eq_of_consecutive

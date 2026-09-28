@@ -29,8 +29,8 @@ further passage to transcribe.
    `sheetRelabeling` shape needs (i) an actual second `GluingDatum`, and
    (ii) `SameBlocks` (or, better, literal equality) at every *other* vertex
    and edge too.
-2. **Graph.** The natural second datum is the actual outgoing candidate
-   `GlobalW4.PairingReceipts.candidate.datum`, but by construction
+2. **Graph.** The natural second datum is the `datum` of the actual outgoing
+   candidate `GlobalW4.PairingReceipts.candidate`, but by construction
    (`GlobalAssembly.datum`/`GlobalResolution.datum`) it lives on
    `TargetExpansion.graph (contract target hab hOne) ⟨a, hab⟩ (star.right q)`,
    a *different* (though canonically isomorphic) graph from `target`.

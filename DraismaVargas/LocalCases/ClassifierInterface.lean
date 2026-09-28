@@ -2,9 +2,9 @@ import DraismaVargas.LocalCases.MatrixAtlas
 import DraismaVargas.LocalCases.SemanticAtlasMarch
 
 /-!
-# Adapters between the source classifier and `SemanticAtlasMarch.PresentedProgress`
+# Adapters between the source classifier and `SemanticAtlasMarch.State.PresentedProgress`
 
-The fields of `SemanticAtlasMarch.PresentedProgress` are produced by several
+The fields of `SemanticAtlasMarch.State.PresentedProgress` are produced by several
 different parts of the construction.  This module contains the short, reusable
 adapters between them and the source classifier.  **The classification itself
 is not attempted here**, and nothing in this file asserts that a
@@ -17,7 +17,7 @@ Four groups.
   whereas `PresentedProgress` needs one fixed ambient `coordinate`.
   `reindex` moves a `LengthMatrixPresentation` along a coordinate equivalence;
   its matrix is the corresponding `Matrix.submatrix`, so determinants are
-  unchanged and `PresentedFamily.reindex` follows.
+  unchanged and `ClassifierInterface.familyReindex` follows.
 * **Presentation congruence.**  The length matrix depends on a presentation
   only through `targetEdge` and the *multiset* of each row, so a canonical
   path family and the stable labelling's path family have the same matrix as
@@ -149,7 +149,7 @@ variable {coordinate coordinate' : Type*}
 /-- **Move a presented balanced family to a different coordinate labelling.**
 The families produced for the valency-four wall (Case `w4` of Draisma--Vargas
 Part I) live over `Option target.edges`;
-`SemanticAtlasMarch.PresentedProgress` needs them over the ambient
+`SemanticAtlasMarch.State.PresentedProgress` needs them over the ambient
 `coordinate` of the march, and the two are related by an equivalence, never by
 definitional equality. -/
 noncomputable def familyReindex (relabel : coordinate ≃ coordinate')

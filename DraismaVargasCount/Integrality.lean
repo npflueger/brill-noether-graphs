@@ -10,7 +10,7 @@ the least common denominators of the rows of `A_φ` and `l(T)` the number of lea
 target.  This module proves that `Mult φ` is an integer.  The cleared matrix
 `B' = diag(dᵢ) · A_φ · diag(½ on leaf columns, 1 elsewhere)` and the unconditional
 determinant identity `det B' = D_φ · det A_φ · (1/2)^{#leaf columns}` are
-`Count.Multiplicity`'s.
+`DraismaVargasCount.Multiplicity`'s.
 
 ## What is proved
 
@@ -19,8 +19,9 @@ hypothesis on the target, the degree or the genus survives.
 
 * `noLeafToLeafEdge_of_fullDimensional` -- **no target edge of a
   full-dimensional presentation joins two leaves.**  This supplies the hypothesis
-  `NoLeafToLeafEdge` of `Count.Multiplicity` and `Count.LeafFibre`, and it needs neither
-  connectivity nor an edge count: if `t` joined the leaves `u` and `v` then every
+  `NoLeafToLeafEdge` of `DraismaVargasCount.Multiplicity` and
+  `DraismaVargasCount.LeafFibre`, and it needs neither connectivity nor an edge
+  count: if `t` joined the leaves `u` and `v` then every
   surviving occurrence above `t` would have its two endpoints at the core
   vertices `A_u` and `A_v`, both of surviving valency two; the property "lies
   above `t`" is then closed under `Consecutive` (a surviving occurrence at `A_u`
@@ -37,12 +38,13 @@ hypothesis on the target, the degree or the genus survives.
   `det_clearedMatrix_eq_cast` -- **`B'` is an integer matrix**, and its
   determinant is the cast of an integer determinant.  Off the leaf columns the
   entry is `dᵢ · A_φ(i,t)`, integral because `dᵢ` is by definition the least
-  common denominator of row `i` (`Denominator.integral_commonDenominator_mul`);
+  common denominator of row `i` (`Infrastructure.integral_commonDenominator_mul`);
   the row denominators are used only through that, so this half needs no index
   pattern at all.
 * `signedMult_eq_det_clearedMatrix` -- `Mult φ = det B'` on the nose (not just
-  up to sign), and hence **`isIntegralMultiplicity`**: `Count.Multiplicity`'s
-  predicate `IsIntegralMultiplicity` is a theorem with no hypotheses.
+  up to sign), and hence **`isIntegralMultiplicity`**: the predicate
+  `IsIntegralMultiplicity` of `DraismaVargasCount.Multiplicity` is a theorem with no
+  hypotheses.
 * `absMultNat`, `fdAbsMultNat` -- the **natural-number multiplicity**, with
   `absMult_eq_absMultNat`, `fdAbsMult_eq_fdAbsMultNat` and
   `fdAbsMultNat_pos`.
@@ -59,8 +61,8 @@ hypothesis on the target, the degree or the genus survives.
   `e_{h(v)}`.  So no part of this module inherits
   `EdgeDenominator.RowIndicesConsecutive`.
 * Nothing here is about the descent of `absMult` to the fibre quotient.
-  `Count.Fibre.AbsMultDescends` names that statement, and
-  `Count.TransportMultiplicity.absMultDescends` proves it unconditionally; this
+  `Count.AbsMultDescends` names that statement, and
+  `Count.absMultDescends` proves it unconditionally; this
   module neither uses nor supplies it.
 * Nothing here says any particular multiplicity is odd; it says the
   multiplicity is a natural number, so that oddness can be stated of it.
@@ -268,7 +270,7 @@ theorem det_clearedMatrix_eq_cast
 /-! ## 4.  Integrality of the multiplicity, and `absMultNat` -/
 
 /-- **`Mult φ = det B'` on the nose**, once the leaf columns are counted by the
-leaves.  `Count.Multiplicity.absMult_eq_abs_det_clearedMatrix` is its absolute
+leaves.  `Count.absMult_eq_abs_det_clearedMatrix` is its absolute
 value. -/
 theorem signedMult_eq_det_clearedMatrix
     (presentation : data.LengthMatrixPresentation coordinate)
@@ -284,7 +286,7 @@ theorem fdSignedMult_eq_det_clearedMatrix
     (leafColumns_card_eq_leafCount_of_fullDimensional fd), det_clearedMatrix_eq_cast]
 
 /-- **`IsIntegralMultiplicity` is a theorem with no hypotheses.**  This is the
-predicate `Count.Multiplicity` names and does not prove. -/
+predicate `DraismaVargasCount.Multiplicity` names and does not prove. -/
 theorem isIntegralMultiplicity
     (fd : FullDimensionalSourcePresentation data coordinate) :
     IsIntegralMultiplicity fd.labelling.presentation :=
@@ -377,7 +379,7 @@ open DraismaVargas.Count.FibreCaterpillar
 
 /-- **Non-vacuity of `noLeafToLeafEdge_of_fullDimensional`**: derived for the
 caterpillar of loops, it reproves the combinatorial
-`Count.Multiplicity.Caterpillar.noLeafToLeafEdge_catTree`. -/
+`Count.Caterpillar.noLeafToLeafEdge_catTree`. -/
 example (m : ℕ) : NoLeafToLeafEdge (catTree m) :=
   noLeafToLeafEdge_of_fullDimensional (CaterpillarRows.fullDim m)
 

@@ -259,7 +259,7 @@ theorem not_isMarker_of_exists_fib (hCond : D.Conditions spec₀.core) {w : Fin 
 /-! ## 4.  Where the marker sits along its row -/
 
 /-- **On a `single` slot the cut is at the end of the row**, so nothing is
-cut: `RetainedCut.cutList` at the row total leaves every occurrence whole. -/
+cut: `OccurrenceCut.cutList` at the row total leaves every occurrence whole. -/
 theorem cutOffsetAt_single (hCond : D.Conditions spec₀.core)
     (face : ClearedFace candidate strong.toPresentation coordinates)
     {e : {x : Fin Q // x ∉ expansionForest D}} {j : Fin p₀}

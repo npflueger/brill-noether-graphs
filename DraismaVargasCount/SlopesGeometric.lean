@@ -27,7 +27,7 @@ shape the proof wants:
 `StableLocalProperties.localRamification_eq_nonDangling_form` is 3
 (`r = nd(A) - 2 + 2|A| - Σ_{surviving} m(e)`, which is the same identity after
 the substitution `Σ_e (m(e)-1) = Σ_{surviving} m(e) - nd(A)`), and
-`NonDanglingValency.sourceEdgeIndex_le_blockCard` is 4.  **So the whole of the
+`StableLocalProperties.sourceEdgeIndex_le_blockCard` is 4.  **So the whole of the
 step condition is proved here, over an arbitrary gluing datum, with 1 and 2 as
 named hypotheses and nothing else.**  That is `slopeStepRel_of_trivalent_unramified`.
 
@@ -164,7 +164,7 @@ surviving valency three and vanishing local ramification, whose three surviving
 occurrences have indices `a`, `b` and `2`, has `SlopeStepRel a b`.
 
 The two balancing hypotheses `ha`, `hb` are
-`NonDanglingValency.sourceEdgeIndex_le_blockCard` at the two occurrences, and are
+`StableLocalProperties.sourceEdgeIndex_le_blockCard` at the two occurrences, and are
 stated rather than derived because this lemma does not know which occurrences
 carry `a` and `b`. -/
 theorem slopeStepRel_of_trivalent_unramified
@@ -377,7 +377,7 @@ leaf slots, `1/2` on the stem slots and `1 / σ i` on the spine slot of the pape
 satisfies the four conditions of `prop-caterpillar-ballot`(1) at `g = 2m + 2`.
 
 This is the step that turns "the slopes of this morphism obey the ballot
-conditions" into the form `Count.BallotSlopeSeparation` consumes, namely an
+conditions" into the form `DraismaVargasCount.BallotSlopeSeparation` consumes, namely an
 equation between a member's `coreDiag` and `ballotCoreDiag m s`. -/
 theorem exists_ballotCoreDiag_of_values {m : ℕ} (d : Fin (6 * m + 3) → ℚ)
     (σ : ℕ → ℕ)

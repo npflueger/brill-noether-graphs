@@ -62,7 +62,7 @@ second.
 ## What is not proved here
 
 * Nothing about multiplicities, presentations or length matrices: the transport
-  of those along a `DatumIso` is `Count.TransportMultiplicity`.
+  of those along a `DatumIso` is `DraismaVargasCount.TransportMultiplicity`.
 * `exists_normalForm` assumes exactly `graph_connected G` and `genus G = 0`,
   both explicit; no trivalence, no full-dimensionality and no gluing datum.
 * No `Fintype`/`Finite` statement about the fibre: that assembly is
@@ -70,7 +70,7 @@ second.
 
 ## Consumers
 
-`DraismaVargas.Count.FibreNormalForm` (finiteness of `Count.Fibre.Fibre`).
+`DraismaVargas.Count.FibreNormalForm` (finiteness of `Count.Fibre`).
 -/
 
 

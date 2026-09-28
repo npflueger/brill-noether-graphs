@@ -66,8 +66,9 @@ collapsed.  Sections 1-3 replace the choice by the honest far end:
 
 §4 then takes `tailDart c` to be the dart the core's *tail* end of slot
 `slots c` names, through `tracking.iso.trans endpoint`; `tail_eq` and `head_eq`
-become the two halves of `Iso.vert_map`, `Faithful` is injectivity of
-`Iso.vtx.symm`, and `Spanning` is cubicity of the core (`card_fibre`).
+become the two halves of `Iso.vert_map`, `Faithful` is injectivity of the
+inverse of the vertex bijection `Iso.vtx`, and `Spanning` is cubicity of the
+core (`card_fibre`).
 
 **What is not proved here.**  Nothing about the march itself: the tracked
 state, its terminal-ness, the graph isomorphism onto the core and the slot map

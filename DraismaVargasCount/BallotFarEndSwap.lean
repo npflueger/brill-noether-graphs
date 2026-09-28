@@ -552,7 +552,7 @@ theorem farSwap_ends (m : ℕ) (edge : (catTree (m + 1)).edges) :
 The near end needs a genuine sheet transposition
 (`BallotEndSwapSheetIso.bSwap`, non-trivial by `bSwap_six_ne_refl`); §3 shows the
 far end does not.  So the far-end isomorphism is built by the same
-partition-preservation route `EndSwapRealized.endSwapSheetIso` uses for
+partition-preservation route `SlopeRigidity.endSwapSheetIso` uses for
 the caterpillar datum, with the identity sheet permutation throughout.
 -/
 

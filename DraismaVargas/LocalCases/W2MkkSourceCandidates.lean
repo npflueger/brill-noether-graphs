@@ -71,7 +71,7 @@ takes the second member over the branch-swapped datum
 
 ## The shape's fields are jointly satisfiable
 
-`deleted_single` is one of the two disjuncts of `W2R2SourceProfile.cases`, and
+`deleted_single` is one of the two disjuncts of `W2R2SourceProfile.SourceProfile.cases`, and
 `one_lt_first`/`one_lt_second` are the case hypothesis `k₁, k₂ ≥ 2` verbatim.
 They are compatible: together they force `|A₀| = k₁ + k₂ ≥ 4` and
 `k₃ = k₁ + k₂ - 1 ≥ 3`, which is consistent with every other field of the

@@ -93,7 +93,7 @@ reduces the exhaustion of the kept classes to a genus identity.
 
 ## Relation to the rest of the library
 
-* `FullDimensionalSource.false_of_auxR0SourceInput` is the other precedent in
+* `FullDimensionalSourcePresentation.false_of_auxR0SourceInput` is the other precedent in
   this library for a theorem whose content is that something cannot be done from
   where it stands.
 * `Faithful` and `Spanning` are the two conditions `CertifiedPencil` carries,

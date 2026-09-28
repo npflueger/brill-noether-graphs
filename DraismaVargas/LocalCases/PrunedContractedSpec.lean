@@ -79,7 +79,7 @@ zero and whose classes never escape it — which is a theorem about
 
 ## Layering
 
-`ClosedEndpoint.InputRefinement` targets `prunedSpec`, so this module must sit
+`Candidate.ClearedFace.InputRefinement` targets `prunedSpec`, so this module must sit
 **strictly below** `ClosedEndpoint`.  It therefore cannot import
 `InputRefinementData` or `RefinementCore`, which import `ClosedEndpoint`.  In
 particular the genus of `contractedSpec` is proved here directly as
@@ -339,7 +339,7 @@ theorem bnExists_prunedSpec_of_count (topology : SourceContractionTopology face)
 `bnExists_prunedSpec` asks for connectivity of `contractedSpec.graph` and for
 the genus identity. Both are free at the point of use, and the two lemmas below
 are the generic form of that, stated without mentioning
-`ClosedEndpoint.ContractedGluing` or `ClosedEndpoint.InputRefinement` (this
+`Candidate.ClearedFace.ContractedGluing` or `Candidate.ClearedFace.InputRefinement` (this
 module sits below `ClosedEndpoint`).
 
 * Connectivity: `ContractedGluing.sourceEquiv` is a `LaplacianEquiv` onto

@@ -545,9 +545,9 @@ determinant sign against the *original* matrix; the whole segment stays
 positive; the affine metric equation is the original one; and the cleared
 rank-one pencil sits on the selected member's actual source subdivision.
 
-This is `W3Nd3ArbitraryExit.exists_positive_exit_with_pencil`'s statement at
-`Fin 3`, with the per-position stable-incidence dictionary explicit because one
-Figure 34 position is remote (§5). -/
+The family has three positions (`Fin 3`), and the per-position stable-incidence
+dictionary is an explicit argument because one Figure 34 position is remote
+(§5). -/
 theorem exists_positive_exit_in_original_coordinates (limit : LimitColumns profile shape)
     (input : W2SourceInput data star)
     (dictionary : ∀ position : Fin 3,

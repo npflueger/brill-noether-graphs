@@ -34,11 +34,10 @@ are Figure 37's.
 
 `selected_sum_single`, `selected_sum_pair` and `selected_sum_pair_of_dangling`
 are stated for an arbitrary `LimitChainTwoBlock.SelectedData` over an
-arbitrary finite anchor set.  They would fit beside
-`LimitChainTwoBlock.SelectedData.selected_set` and `selected_set_of_dangling`
-in `LimitChainTwoBlock.lean` §7, under the names
-`SelectedData.selected_sum_single`, `SelectedData.selected_sum_pair` and
-`SelectedData.selected_sum_pair_of_dangling`.
+arbitrary finite anchor set, so nothing in them is specific to this case.  They
+are the summed forms of `LimitChainTwoBlock.SelectedData.selected_set` and
+`LimitChainTwoBlock.SelectedData.selected_set_of_dangling`, which identify the
+regrown occurrences above one block as a set.
 -/
 
 namespace DraismaVargas.LocalCases.W2R1LimitMatrix

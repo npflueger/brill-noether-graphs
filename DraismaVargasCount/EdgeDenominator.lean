@@ -442,7 +442,7 @@ theorem rowDenominator_trichotomy
 
 /-! ## 6.  Non-vacuity: the caterpillar of loops
 
-`Count.Multiplicity.Caterpillar.matrix_diag_cat` computes the whole diagonal of
+`Count.Caterpillar.matrix_diag_cat` computes the whole diagonal of
 `A_φ` for the caterpillar of loops, and `den_matrix_diag_cat` reads its
 denominators: `2` on a pair edge, `1` elsewhere.  Every case of the trichotomy
 is inhabited there, and the values agree. -/
@@ -505,7 +505,7 @@ theorem rowFibre_cat_notLeafEdge (m : ℕ) {i : Fin (6 * m + 3)}
 
 /-- **Case (b) is inhabited with `k = 2`**: a pair edge of `T^CL_g` -- a stem or
 a slope-two spine edge -- carries a row of constant index `2`, whose denominator
-is `2`.  This agrees with `Count.Multiplicity.Caterpillar.den_matrix_diag_cat`. -/
+is `2`.  This agrees with `Count.Caterpillar.den_matrix_diag_cat`. -/
 theorem rowDenominator_cat_pairEdge (m : ℕ) {i : Fin (6 * m + 3)}
     (hPair : IsPairEdge m i.val) :
     rowDenominator (CaterpillarRows.labelling m).presentation i = 2 := by

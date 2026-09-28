@@ -135,7 +135,7 @@ genus six.
   obstruction; they do not construct `vertexPerm`, `edgePerm`, `targetVertex`,
   `targetEdge`, `ends`, or check a single `compatible` obligation.
 * **The tree-level reading of the reversal is not constructed here.**  There is
-  no `catTree`-level `Equiv` here matching `EndSwapRealized.endSwapTgtEquiv` (that
+  no `catTree`-level `Equiv` here matching `SlopeRigidity.endSwapTgtEquiv` (that
   is `BallotSpineReversalSheetIso.revTgtEquiv`); `vertPred_last` and
   `not_vertPred_zero` are stated at the two vertex *indices* `6m+2` and `0`,
   which `revVtxVal_branchIdx_zero` records the reversal exchanges at the core

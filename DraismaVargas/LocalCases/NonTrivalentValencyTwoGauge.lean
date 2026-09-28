@@ -23,7 +23,7 @@ that `Aligned` implies the paper's numerical condition `|e_α| = |e_β|`
 (`not_aligned_of_sourceEdgeIndex_ne`).  The converse is **false over a fixed
 datum** -- which of Type I and Type II is realized is a property of the datum,
 not of the four indices -- and **true after a block-preserving branch gauge**,
-exactly as at valency four (`NonTrivalentValencyFourKZero.gaugedData`).  This
+exactly as at valency four (`NonTrivalentValencyFourKZero.PrescribedPairing.gaugedData`).  This
 module supplies that gauge.
 
 ## What is proved

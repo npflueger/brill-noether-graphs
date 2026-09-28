@@ -24,7 +24,7 @@ places at `graph.vert m.base` -- and each candidate family realises only *one*
 of the two complementary pairs of its own `2+2` partition (at valency three the
 `SimpleBase` inequality `k_beta + k_delta <= |A|` holds for exactly one of the
 two complementary realisations, because the four survivor indices sum to
-`2|A| + 1`).  `CubicDarts.MoveData.swap` does not repair this: it toggles the
+`2|A| + 1`).  `CubicDartGraph.MoveData.swap` does not repair this: it toggles the
 orientation clause and the pair at `graph.vert m.base` together.
 
 The remedy is the **mirror move**.  Write the star of `graph.vert m.base` as
@@ -76,7 +76,7 @@ isomorphic by the label-preserving isomorphism that exchanges the two ends.
 No structure and no `Prop` is introduced.  `thirdLeft`, `thirdRight` name darts
 of the graph already in hand, `mirror` inhabits the existing
 `CubicDarts.CubicDartGraph.MoveData`, `moveMirrorIso` the existing
-`CubicDarts.Iso`, `tracksOfIso` the existing `InteriorGraphTracking.Tracks` and
+`CubicDarts.CubicDartGraph.Iso`, `tracksOfIso` the existing `InteriorGraphTracking.Tracks` and
 `linkOfMirror` the existing `OuterWalk.TypeChangeLink`; `mirror_mirror` and
 `mirror_ne_self` witness that the construction is the intended involution and
 is not the identity.

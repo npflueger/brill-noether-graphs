@@ -162,7 +162,7 @@ The fields, and the consumer that forces each:
 * `valid` — ambient source data; every local case needs it, and
   `nonDanglingValency_ne_one` needs its connectedness half.
 * `targetConnected`, `targetGenus` — the standing Part-I target hypotheses,
-  carried by `SemanticAtlasMarch.PresentedProgress` itself.  `targetConnected`
+  carried by `SemanticAtlasMarch.State.PresentedProgress` itself.  `targetConnected`
   is what `CombinatorialType.correctionNonnegative` consumes and `targetGenus`
   is what `dimensionCorrection_of_target_genus_zero` consumes.
 * `saturated` — full-dimensionality as a *number*, in exactly the form
@@ -181,7 +181,7 @@ The fields, and the consumer that forces each:
 * `pathEnds` — trivalence again, in the complementary form "no stable path is
   a cycle".  This is the hypothesis
   `W4StableSource.StableLengthMatrixLabelling.orderedPath` carries, and hence
-  what the `ClosedEndpoint.InputRefinement` receipt consumes.  It does not
+  what the `Candidate.ClearedFace.InputRefinement` receipt consumes.  It does not
   follow from `trivalent`: a pruned source all of whose vertices have
   surviving valency two is a disjoint union of cycles, satisfies `trivalent`,
   and has no path end anywhere.

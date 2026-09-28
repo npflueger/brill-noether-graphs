@@ -82,7 +82,7 @@ surviving slots `4`, `7`, `10`; the general-`m` forms are stated alongside.
   can *do* to the diagonal, at every genus, without enumerating the relabellings, and
   `BallotSpineReversalSheetIso.hStab_genusSix` realises every relabelling in each of the two
   branches it distinguishes (from `BallotEndSwapSheetIso`'s identity branch and
-  `BallotFarEndSwap`'s reduction).  `EndSwapRealized.realizes_endSwap` is a statement
+  `BallotFarEndSwap`'s reduction).  `SlopeRigidity.realizes_endSwap` is a statement
   about the zig-zag member `FibreCaterpillar.caterpillarMember`, and does not by itself give
   `hStab` for the other ballot members.
 * **`hThree`** says that three rational numbers read off an arbitrary diagonal open odd
