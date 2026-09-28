@@ -37,6 +37,7 @@ jobs:
             LowGenus
             TreewidthGonality
             Tricycle
+            GenusSixOddDescent
             Highlights
             HighlightsStatements
             PalomarBNChains

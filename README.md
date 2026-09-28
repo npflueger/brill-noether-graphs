@@ -57,6 +57,13 @@ These formalizations build upon [Mathlib](github.com/leanprover-community/mathli
   the theorem that treewidth is at most divisorial gonality.
 - `Tricycle/` formalizes the tricycle counterexample showing that divisorial
   gonality can drop under regular subdivision.
+- `GenusSixOddDescent/` formalizes odd-subdivision descent for genus-six
+  graphs: a divisor of degree four and rank at least one on an odd regular
+  subdivision of a bridgeless connected genus-six graph descends to the graph
+  itself. It derives a conditional theorem: every connected genus-six graph
+  satisfies Brill–Noether existence, provided each has such a divisor on some
+  odd regular subdivision, a hypothesis supplied by the forthcoming
+  Draisma–Vargas count.
 - `Highlights.lean` and `HighlightsStatements.lean` collect ten headline
   results in proved and Mathlib-only statement forms. `TwiceMarkedBananas.lean`
   and `TwiceMarkedBananasStatements.lean` provide a paper-order proved index

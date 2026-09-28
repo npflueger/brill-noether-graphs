@@ -1,7 +1,7 @@
 name = "brill-noether-graphs"
 version = "0.1.0"
 keywords = ["mathematics", "graph-theory", "brill-noether", "chip-firing"]
-defaultTargets = ["Utilities", "Bananas", "LowGenus", "TreewidthGonality", "Tricycle", "TwiceMarkedBananas", "Highlights", "PalomarSolutions"]
+defaultTargets = ["Utilities", "Bananas", "LowGenus", "TreewidthGonality", "Tricycle", "GenusSixOddDescent", "TwiceMarkedBananas", "Highlights", "PalomarSolutions"]
 
 [[require]]
 name = "mathlib"
@@ -35,6 +35,12 @@ name = "TreewidthGonality"
 # It imports only `Utilities` and external dependencies.
 [[lean_lib]]
 name = "Tricycle"
+
+# Odd-subdivision descent for connected genus-six graphs, and the conditional
+# genus-six Brill--Noether existence theorem it yields.  It imports only
+# `Utilities` and external dependencies.
+[[lean_lib]]
+name = "GenusSixOddDescent"
 
 # Reader-facing statements written over a self-contained local vocabulary,
 # with proof bodies that bridge explicitly to the repository's proved API.
