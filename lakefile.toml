@@ -1,7 +1,7 @@
 name = "brill-noether-graphs"
 version = "0.1.0"
 keywords = ["mathematics", "graph-theory", "brill-noether", "chip-firing"]
-defaultTargets = ["Utilities", "Bananas", "LowGenus", "TreewidthGonality", "Tricycle", "GenusSixOddDescent", "DraismaVargas", "DraismaVargasCount", "TwiceMarkedBananas", "Highlights", "PalomarSolutions"]
+defaultTargets = ["Utilities", "Bananas", "LowGenus", "TreewidthGonality", "Tricycle", "GenusSixOddDescent", "DraismaVargas", "DraismaVargasCount", "GenusSixExistence", "TwiceMarkedBananas", "Highlights", "PalomarSolutions"]
 
 [[require]]
 name = "mathlib"
@@ -53,6 +53,13 @@ name = "DraismaVargas"
 # external dependencies.
 [[lean_lib]]
 name = "DraismaVargasCount"
+
+# Brill--Noether existence in genus six, and once-marked existence through
+# genus five deduced from it.  It imports `GenusSixOddDescent`,
+# `DraismaVargasCount`, `DraismaVargas`, `LowGenus`, `Utilities` and external
+# dependencies.
+[[lean_lib]]
+name = "GenusSixExistence"
 
 # Reader-facing statements written over a self-contained local vocabulary,
 # with proof bodies that bridge explicitly to the repository's proved API.

@@ -32,6 +32,17 @@ These formalizations build upon [Mathlib](github.com/leanprover-community/mathli
   tricycle counterexample has been formalized in its discrete,
   regular-subdivision form; the paper's identification with metric gonality
   has not been formalized.
+- [Catalan-many tropical morphisms to trees; Part I: Constructions](https://arxiv.org/abs/1909.12924),
+  by J. Draisma and A. Vargas (2019). The main theorem, that a graph of genus `g`
+  has gonality at most `⌈g/2⌉ + 1`, has been formalized in its discrete,
+  regular-subdivision form; its identification with metric gonality has not
+  been formalized. In even genus the construction follows the route of Part II
+  below.
+- [Catalan-many tropical morphisms to trees; Part II: A space and a count](https://arxiv.org/abs/2609.09109),
+  by A. Vargas (2026). Its walk through the space of metric graphs by Whitehead
+  moves is used in the proof of Part I here, and its count of tropical
+  morphisms to trees has been formalized modulo 2 in genus six, as far as needed
+  for Brill–Noether existence in genus six.
 - [Twice-marked banana graphs & Brill--Noether generality](https://doi.org/10.5802/alco.443),
   by N. Pflueger and N. Solomon (2025). The paper's principal results are
   formalized; formulation and scope differences are documented alongside the
@@ -64,6 +75,19 @@ These formalizations build upon [Mathlib](github.com/leanprover-community/mathli
   satisfies Brill–Noether existence, provided each has such a divisor on some
   odd regular subdivision, a hypothesis supplied by the forthcoming
   Draisma–Vargas count.
+- `DraismaVargas/` formalizes the Draisma–Vargas bound in divisorial form: every
+  connected finite graph of genus `g` has a regular subdivision carrying a
+  divisor of degree `⌈g/2⌉ + 1` and rank at least one, and the same holds for
+  graphs with positive integer edge lengths.
+- `DraismaVargasCount/` proves that every connected graph of genus six has a
+  regular subdivision of odd order carrying a divisor of degree four and rank
+  at least one, by a mod-2 form of the Draisma–Vargas count of tropical
+  morphisms to trees. Together with `GenusSixOddDescent` this gives
+  Brill–Noether existence in genus six.
+- `GenusSixExistence/` proves Brill–Noether existence for every connected graph
+  of genus six, and hence through genus six, extending the Atanasov–Ranganathan
+  theorem of `LowGenus`. It also deduces once-marked Brill–Noether existence at
+  every vertex of every connected graph of genus at most five.
 - `Highlights.lean` and `HighlightsStatements.lean` collect ten headline
   results in proved and Mathlib-only statement forms. `TwiceMarkedBananas.lean`
   and `TwiceMarkedBananasStatements.lean` provide a paper-order proved index

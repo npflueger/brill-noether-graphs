@@ -66,3 +66,4 @@ jobs:
           build-args: >-
             DraismaVargas
             DraismaVargasCount
+            GenusSixExistence
