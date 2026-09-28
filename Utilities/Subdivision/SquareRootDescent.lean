@@ -189,7 +189,8 @@ end Chip
 
 /-! ## Descending a doubled degree-two divisor -/
 
-private theorem embed_sum {n p : ℕ} (spec : Spec n p) (N : ℕ) (hN : 0 < N)
+/-- Embedding a coarse divisor into the refinement commutes with finite sums. -/
+theorem embed_sum {n p : ℕ} (spec : Spec n p) (N : ℕ) (hN : 0 < N)
     {ι : Type*} [Fintype ι] (f : ι → CFDiv spec.graph) :
     spec.embed N hN (∑ i, f i) = ∑ i, spec.embed N hN (f i) := by
   funext y
@@ -200,13 +201,15 @@ private theorem embed_sum {n p : ℕ} (spec : Spec n p) (N : ℕ) (hN : 0 < N)
   · rfl
   · exact Finset.sum_const_zero.symm
 
-private theorem effective_sum_one_chip {G : CFGraph} {ι : Type*} [Fintype ι] (v : ι → G.V) :
+/-- A finite sum of single chips is effective. -/
+theorem effective_sum_one_chip {G : CFGraph} {ι : Type*} [Fintype ι] (v : ι → G.V) :
     effective (∑ i, one_chip (v i) : CFDiv G) := by
   intro w
   rw [Finset.sum_apply]
   exact Finset.sum_nonneg fun i _ => eff_one_chip (v i) w
 
-private theorem deg_sum_one_chip {G : CFGraph} {ι : Type*} [Fintype ι] (v : ι → G.V) :
+/-- A sum of single chips indexed by `ι` has degree `#ι`. -/
+theorem deg_sum_one_chip {G : CFGraph} {ι : Type*} [Fintype ι] (v : ι → G.V) :
     deg (∑ i, one_chip (v i) : CFDiv G) = (Fintype.card ι : ℤ) := by
   rw [map_sum]
   simp

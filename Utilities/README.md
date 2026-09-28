@@ -25,7 +25,9 @@ libraries, such as `TreewidthGonality/` and `Tricycle/`.
 - **Gluing/** — bridge and vertex-wedge constructors, bridge divisors and
   rank-one gluing, the wedge rank formula, genus-three/cycle rank-one gluing,
   one-vertex cuts and their factor inheritance, cycle and
-  two-edge-connected rigidity, iterated chain gluing.
+  two-edge-connected rigidity, iterated chain gluing, and the collapse of a
+  rigid genus-one wedge factor (a rank-one pencil on `G` wedged with a cycle at
+  `x` is exactly a pencil on `G` containing `2x`).
 - **Transmission/** — the transmission-locus framework for twice-marked
   graphs: the defining predicate, finite-corner reduction, shifts, duality,
   existence, Riemann–Roch and Brill–Noether interfaces, wedge gluing (with
@@ -44,13 +46,17 @@ libraries, such as `TreewidthGonality/` and `Tricycle/`.
   affine-positioned moving-chip and multi-break rank-one certificates, compact
   affine wall-decision covers, checked core bridge and rigid-cycle cuts, linear spanning-tree
   connectivity witnesses, ordered path refinements (including deletion
-  of zero source segments before canonical splitting), leaf reduction, and
+  of zero source segments before canonical splitting), leaf reduction,
+  cuts and cographic flats of the core, slot-interval firing and propagation
+  of legal sets along a slot at arbitrary scale, edge-sum rounding descent, and
   the endpoint pencil.
 - **Gonality/** — the generic divisorial gonality API: the `Nat.sInf`
   definition and its attainment, legal firings and the nested legal chain to a
-  `q`-reduced divisor, the maximal legal ("burned") set that replaces Dhar's
-  algorithm, the linear non-existence certificate, transport of gonality along
-  subdivision and relabelling, and the orientation model at degree `g-1`.
+  `q`-reduced divisor, legal firing chains between effective divisors and the
+  maximum principle for reduced divisors, the maximal legal ("burned") set that
+  replaces Dhar's algorithm, the linear non-existence certificate, transport of
+  gonality along subdivision and relabelling, transport to the unit presentation
+  and bridgelessness of its core, and the orientation model at degree `g-1`.
   The two applications built on it — `treewidth <= gonality` and the
   discrete/metric gap — live in `TreewidthGonality/` and `Tricycle/`.
 - **Pseudocore/** — loop-aware pseudocores: the validity API, split-metadata

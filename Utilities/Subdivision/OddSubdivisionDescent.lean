@@ -30,8 +30,8 @@ The consequence for the discrete Brill--Noether rank `w^r_d` of
 
 None of this needs a genus hypothesis or any algebraic-geometric input.  The
 *production* of an odd refinement carrying `w^1_4 ≥ 1` (or of the pairwise
-witnesses) for a genus-five graph is a separate matter, discussed in the
-private research notes; this file proves only the descent.
+witnesses) for a genus-five graph is a separate matter; this file proves only
+the descent.
 -/
 
 namespace Utilities.Certificate.SubdivisionGraph.Spec
@@ -210,7 +210,8 @@ theorem embed_one_chip (x : spec.Vertex) :
   · intro hmem
     exact absurd (Finset.mem_univ x) hmem
 
-private theorem embed_zero : spec.embed N hN 0 = 0 := by
+/-- The embedding of the zero coarse divisor is zero. -/
+theorem embed_zero : spec.embed N hN 0 = 0 := by
   funext y
   unfold embed
   simp
