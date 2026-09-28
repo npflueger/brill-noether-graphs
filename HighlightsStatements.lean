@@ -438,8 +438,8 @@ def chain_of_cycles_and_thetas
 Every occurrence of an edge gets its own slot, so parallel edges remain
 distinct. In the `n`th regular subdivision that slot is replaced by a path of
 `n` unit edges. Its `n - 1` new vertices remember the edge occurrence and
-their position along that path. The expressions `n * 1` in the implementation
-reduce definitionally to `n`; they make the unit-edge scaling explicit.
+their position along that path. The expressions `n * 1` equal `n` (`Nat.mul_one`), though not
+definitionally for a variable `n`; they make the unit-edge scaling explicit.
 -/
 
 /-- A canonical enumeration of the occurrences in the edge multiset.  The

@@ -439,7 +439,7 @@ distinct.  In the `n`th regular subdivision that slot is replaced by a path of
 `n` unit edges.  Its `n - 1` new vertices remember the edge occurrence and
 their position along that path.  The implementation below spells these counts
 as `n * 1` only to make the later bridge to “scale a unit edge by `n`” exact;
-this reduces definitionally to `n`.
+this equals `n` (`Nat.mul_one`), though not definitionally for a variable `n`.
 -/
 
 /-- A canonical enumeration of the occurrences in the edge multiset.  The
