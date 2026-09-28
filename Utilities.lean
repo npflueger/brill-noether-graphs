@@ -102,8 +102,10 @@ import Utilities.Subdivision.CoreBridgeCut
 import Utilities.Subdivision.CoreBridgeRankOne
 import Utilities.Subdivision.CoreCutsAndFlats
 import Utilities.Subdivision.CoreExpansion
+import Utilities.Subdivision.CoreExpansionClosed
 import Utilities.Subdivision.CoreSymmetry
 import Utilities.Subdivision.ClosedContraction
+import Utilities.Subdivision.ClosedFaceDispatch
 import Utilities.Subdivision.ClosedCoreSymmetry
 import Utilities.Subdivision.ClosedFaceCensus
 import Utilities.Subdivision.CoreVertexCut
