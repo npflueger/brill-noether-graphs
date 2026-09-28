@@ -78,6 +78,21 @@ srcDir = "Palomar"
 roots = ["BNChains"]
 globs = ["BNChains.+"]
 
+# Draft Palomar entries: the statements only, for now.  Each imports only
+# Mathlib, and each advertised theorem ends in `sorry`; the solutions,
+# comparator configurations and formalization metadata are not written yet.
+[[lean_lib]]
+name = "PalomarGenusSixChallenge"
+srcDir = "Palomar"
+roots = ["GenusSixChallenge"]
+globs = ["GenusSixChallenge.+"]
+
+[[lean_lib]]
+name = "PalomarDraismaVargasChallenge"
+srcDir = "Palomar"
+roots = ["DraismaVargasChallenge"]
+globs = ["DraismaVargasChallenge.+"]
+
 [[lean_lib]]
 name = "PalomarSolutions"
 srcDir = "Palomar"

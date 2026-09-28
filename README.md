@@ -48,6 +48,16 @@ These formalizations build upon [Mathlib](github.com/leanprover-community/mathli
   formalized; formulation and scope differences are documented alongside the
   statements.
 
+## Palomar entries
+
+`Palomar/BNChains/` is a complete entry: a Mathlib-only challenge, its solution,
+a comparator configuration and formalization metadata. `Palomar/GenusSixChallenge/`
+(Brill–Noether existence in genus six, through genus six, and once-marked
+existence through genus five) and `Palomar/DraismaVargasChallenge/` (the
+Draisma–Vargas bound on gonality up to subdivision) are drafts: they state the
+theorems over a Mathlib-only vocabulary, and their solutions are still to be
+written.
+
 ## Contents
 
 - `Utilities/` develops reusable graph-divisor infrastructure: rank and
