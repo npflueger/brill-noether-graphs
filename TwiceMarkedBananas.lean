@@ -1390,8 +1390,8 @@ Formalized as `Bananas.KGeneralTransmission`
 (`Bananas/Basics/Definitions.lean`), stated directly in terms of transmission
 permutations and their `k`-inversion counts, with an added explicit
 finiteness conjunct (`Set.ncard` is `0` on an infinite set, so without it the
-bound would be vacuous). Known gap (`Bananas/FORMALIZATION_NOTES.md`, "Distinctness of
-the two marks"): `TwiceMarked` does not itself encode `u ≠ v`. -/
+bound would be vacuous). Known gap (`Bananas/FORMALIZATION_NOTES.md`):
+`TwiceMarked` does not itself encode `u ≠ v`. -/
 
 /-- **Example 1.11** (`eg:cycle`). Section 1.
 
@@ -1461,8 +1461,8 @@ Corollary 6.16, part 1).
 > Brill--Noether general marked graph."
 
 Exact, with the intended left-associated `MarkedGraph.chain` recursion
-replacing the paper's self-referential display (`Bananas/FORMALIZATION_NOTES.md`, "Chain
-theorem notation"). -/
+replacing the paper's self-referential display
+(`Bananas/FORMALIZATION_NOTES.md`). -/
 theorem _root_.Bananas.TwiceMarkedBananas.s1_thm1_13a
     (head : KGeneralChainFactor) (tail : List KGeneralChainFactor)
     (hHeadBudget : genus head.marked.graph < (head.period : ℤ))
@@ -1502,9 +1502,15 @@ theorem _root_.Bananas.TwiceMarkedBananas.s1_thm1_13b
 
 > "Let (G,u,v) be a banana graph of genus g ≥ 3, marked at two vertices u,v,
 > at least one of which lies at least distance 2 from both multivalent
-> vertices. Then there exist non-submodular divisors on (G,u,v)."
+> vertices, and neither of which is the midpoint of a length-2 strand. Then
+> there exist non-submodular divisors on (G,u,v)."
 
-**Formalization note.** The checked statement includes the additional case in which the other mark is the midpoint of a distinct length-two strand. This is represented by `CorrectedBananaSimpleException`; see `Bananas/FORMALIZATION_NOTES.md`. -/
+Exact. The hypothesis that neither mark is the midpoint of a length-2 strand
+appears as the alternative `CorrectedBananaSimpleException` in the
+conclusion; given `hFar`, the two formulations are equivalent, since such a
+midpoint is never far from the endpoints and so lies on a different strand
+from the far mark. This exceptional family was missing from the published
+(journal) statement; see `Bananas/FORMALIZATION_NOTES.md`. -/
 theorem _root_.Bananas.TwiceMarkedBananas.s1_thm1_16
     {g : ℕ} (hg : 3 ≤ g) (B : Banana g) (alpha beta : Fin (g + 1))
     (i : B.PathPosition alpha) (j : B.PathPosition beta)
@@ -1524,10 +1530,10 @@ theorem _root_.Bananas.TwiceMarkedBananas.s1_thm1_16
 > "A twice-marked banana graph of genus g ≥ 3 does not have k-general
 > transmission for any k ≥ 3."
 
-**Corrected, now complete.** The published Proposition 4.19 exception family
-it rests on was enlarged to `CorrectedMidpointException`
-(`Bananas/FORMALIZATION_NOTES.md`); with that correction the theorem itself is exact and
-unconditional. -/
+Exact and unconditional. The theorem rests on Proposition 4.19, whose
+exceptional family `CorrectedMidpointException` matches the revised
+manuscript; the published (journal) Proposition 4.19 stated a smaller family,
+but Theorem 1.17 itself was unaffected (`Bananas/FORMALIZATION_NOTES.md`). -/
 theorem _root_.Bananas.TwiceMarkedBananas.s1_thm1_17
     {g k : ℕ} (hg : 3 ≤ g) (hk : 3 ≤ k) (B : Banana g)
     (α β : Fin (g + 1)) (i : B.PathPosition α) (j : B.PathPosition β) :
@@ -1591,11 +1597,11 @@ left-associated. -/
 
 /-- **Lemma 2.3** (`lem-bridgelessFacts`), part 1). Section 2.
 
-> "If G is a bridgeless graph then 1) If u,v ∈ V(G) then u = v if and only
-> if u ∼ v."
+> "If G is a bridgeless graph of positive genus, then 1) If u,v ∈ V(G) then
+> u = v if and only if u ∼ v."
 
-Corrected: formalized with `TwoEdgeCutCondition` as the precise no-bridge
-hypothesis. -/
+Exact, with `TwoEdgeCutCondition` (plus connectivity) as the precise
+no-bridge hypothesis; positive genus is not needed for this part. -/
 theorem _root_.Bananas.TwiceMarkedBananas.s2_lem2_3a
     (G : CFGraph) (hConnected : graph_connected G)
     (hCut : TwoEdgeCutCondition G) (u v : G.V) :
@@ -1771,7 +1777,8 @@ rather than as a separately-defined `Jac(G)`. -/
 > ℤ²/⟨(a+c,c),(-a,b)⟩."
 
 Exact: `Bananas.thetaLatticeQuotientEquivClassRange`
-(`Bananas/Theta/ThetaJacobianPresentation.lean`). (the checked declaration is the reference used hererow calling this partial; the isomorphism is present.) -/
+(`Bananas/Theta/ThetaJacobianPresentation.lean`). This index has no separate
+statement theorem for it. -/
 
 /- **Definition 2.17** (unlabeled) — "Abel-Jacobi Map".
 
@@ -1798,10 +1805,14 @@ choice of integer rank. -/
 
 /-- **Lemma 2.20** (`lem:g12`). Section 2.
 
-> "For any banana graph G = B_{n_0,…,n_g}, the divisor v_{0,0}+v_{0,n_0}
-> has rank 1."
+> "For any banana graph G = B_{n_0,…,n_g} with g ≥ 1, the divisor
+> v_{0,0}+v_{0,n_0} has rank 1."
 
-Exact. Same underlying fact as Remark 1.18, claim 1. -/
+Weaker than printed: this index statement only asserts that some degree-2
+divisor has rank at least 1 (`BNExists B.graph 1 2`), the consequence used
+for Remark 1.18, claim 1. The exact rank computation is
+`rank_endpointPencil_nsmul_eq` (`Bananas/SameStrand/EndpointInversions.lean`,
+with `b = 1`); it is also the case a = b = 1, E = 0 of Corollary 2.24. -/
 theorem _root_.Bananas.TwiceMarkedBananas.s2_lem2_20 {g : ℕ} (B : Banana g) : BNExists B.graph 1 2 := by
   exact (bnExists_toLib _ _ _).mpr (toLibBanana B).bnExists_one_two_of_two_core_vertices
 
@@ -1817,7 +1828,7 @@ theorem _root_.Bananas.TwiceMarkedBananas.s2_lem2_21 {g : ℕ} (B : Banana g) :
 
 /-- **Lemma 2.23** (unlabeled), existence half. Section 2.
 
-> "If D ∈ Pic(B_{n_0,…,n_g}) is v_{0,0}-reduced then D = av_{0,0}+bv_{0,n_0}+E
+> "If D ∈ Div(B_{n_0,…,n_g}) is v_{0,0}-reduced then D = av_{0,0}+bv_{0,n_0}+E
 > where E is an effective divisor with at most one chip on each strand and
 > no chips at either multivalent vertex, and 0 ≤ b ≤ g - deg E." -/
 theorem _root_.Bananas.TwiceMarkedBananas.s2_lem2_23a {g : ℕ} (B : Banana g) (D : CFDiv B.graph) :
@@ -2000,15 +2011,16 @@ theorem _root_.Bananas.TwiceMarkedBananas.s3_thm3_4
 
 /-- **Lemma 3.5** (`lem-SameStrand`). Section 3.
 
-> "On a banana graph B_{n_0,…,n_g} if r(v_{α,i}+v_{β,j}-v_{γ,k}) = 0, then
-> one of: 1) v_{α,i}=v_{γ,k}; 2) v_{β,j}=v_{γ,k}; 3) the bar of v_{α,i}
-> equals v_{β,j}; 4) v_{α,i},v_{β,j},v_{γ,k} all on the same strand."
+> "On a genus g ≥ 2 banana graph B_{n_0,…,n_g}, if
+> r(v_{α,i}+v_{β,j}-v_{γ,k}) = 0, then one of: 1) v_{α,i}=v_{γ,k};
+> 2) v_{β,j}=v_{γ,k}; 3) the bar of v_{α,i} equals v_{β,j}; or
+> 4) v_{α,i},v_{β,j},v_{γ,k} are all on the same strand."
 
-**Corrected.** The paper's coordinate-pair parentheticals for 1), 2), 4)
-(e.g. "i.e. (α,i)=(γ,k)") are false at the two shared endpoints, where
-distinct strand labels name the same physical vertex
-(`Bananas/FORMALIZATION_NOTES.md`). The Lean statement below uses physical vertex
-equality and `VerticesOnCommonBananaStrand` instead. -/
+Exact. Like the revised statement, the Lean statement uses physical vertex
+equality and `VerticesOnCommonBananaStrand`. (The published version added
+coordinate-pair parentheticals such as "i.e. (α,i)=(γ,k)", which are false at
+the two shared endpoints, where distinct strand labels name the same physical
+vertex; the revision removed them. See `Bananas/FORMALIZATION_NOTES.md`.) -/
 theorem _root_.Bananas.TwiceMarkedBananas.s3_lem3_5
     {g : ℕ} (hg : 2 ≤ g) (B : Banana g)
     (alpha beta gamma : Fin (g + 1))
@@ -2032,13 +2044,14 @@ theorem _root_.Bananas.TwiceMarkedBananas.s3_lem3_5
 classification. Section 3.
 
 > "Given a theta graph (G,v_{α,i},v_{β,j}) every divisor is submodular if
-> and only if either 1) α ≠ β, or 2) α = β and (i,j) ∈
-> {(0,n_α-1),(0,n_α)} or (i,j) = (1,n_α) up to reordering."
+> and only if either 1) the marked vertices are not on the same strand, or
+> 2) they are on the same strand, so without loss of generality α = β and
+> i < j, and either a) i = 0, j ∈ {n_α-1,n_α}, or b) i = 1, j = n_α."
 
-Corrected then exact: clause 1) "α ≠ β" is not itself an invariant condition
-(a multivalent vertex lies on every strand), so it is replaced by the
-endpoint-safe `ThetaAllSubmodularCoordinates`
-(`Bananas/Theta/ThetaBoundarySubmodularity.lean`). -/
+Exact, via the endpoint-safe `ThetaAllSubmodularCoordinates`
+(`Bananas/Theta/ThetaBoundarySubmodularity.lean`). (The published clause 1)
+read "α ≠ β", which is not an invariant condition because a multivalent
+vertex lies on every strand; the revision rephrased it as above.) -/
 theorem _root_.Bananas.TwiceMarkedBananas.s3_cor3_6
     (B : Banana 2) (alpha beta : Fin 3)
     (i : B.PathPosition alpha) (j : B.PathPosition beta) :
@@ -2052,8 +2065,8 @@ theorem _root_.Bananas.TwiceMarkedBananas.s3_cor3_6
 `\begin{prop}`), distinct-loop clause. Section 3.
 
 > "On a chain of two loops, every divisor is submodular if and only if the
-> marked points are on distinct loops or if n_α = 2 and
-> {u,v}={v_{α,0},v_{α,1}}."
+> marked points are on distinct loops (and neither is the glued vertex), or
+> if n_α = 2 and {u,v}={v_{α,0},v_{α,1}}."
 
 This is the distinct-loop direction; the two same-loop iff's
 (`chainTwoLoops_allSubmodular_same_left_arbitrary_iff` /
@@ -2083,8 +2096,8 @@ theorem _root_.Bananas.TwiceMarkedBananas.s3_prop3_7
 
 /-- **Corollary 3.8** (`cor:suppUV`), general genus. Section 3.
 
-> "If u,v are vertices on B_{n_0,…,n_g} that do not lie on the same strand,
-> then Supp(u+v) = {u,v}." -/
+> "If g ≥ 2 and vertices u,v on B_{n_0,…,n_g} do not lie on the same
+> strand, then Supp(u+v) = {u,v}." -/
 theorem _root_.Bananas.TwiceMarkedBananas.s3_cor3_8
     {g : ℕ} (hg : 2 ≤ g) (B : Banana g) (α β : Fin (g + 1))
     (i : B.PathPosition α) (j : B.PathPosition β)
@@ -2096,14 +2109,20 @@ theorem _root_.Bananas.TwiceMarkedBananas.s3_cor3_8
   rw [rankSupport_toLib]
   exact Bananas.suppUV hg (toLibBanana B) α β i j hi hj hαβ
 
-/-- **Theorem 3.9** (`thm-NSMForBanana`), corrected and complete. Section 3.
+/-- **Theorem 3.9** (`thm-NSMForBanana`). Section 3.
 
 > "Let (G,u,v) = (B_{n_0,…,n_g},v_{α,i},v_{β,j}) be a banana graph of genus
-> g ≥ 3. Then either: 1a) α=β and, up to swapping u,v,
-> (i,j) ∈ {(0,n_α),(1,n_α),(0,n_α-1)}; 1b) α≠β and, up to reversing each
-> strand, (i,j)=(1,n_β-1); or 2) there exist divisors D with Δ(D) < 0."
+> g ≥ 3. Then either 1) up to exchanging u and v, one of the following five
+> possibilities holds: a) i = 0 and j = n_β; b) i = 1 < n_α and j = n_β;
+> c) i = 0 and 1 ≤ j = n_β-1; d) α ≠ β, n_α ≥ 2, n_β ≥ 2, and
+> (i,j) = (1,n_β-1); e) α ≠ β, n_α = 2, i = 1, and 1 ≤ j ≤ n_β-1; or
+> 2) there exist divisors D with Δ(D) < 0."
 
-**Formalization note.** The checked statement includes the additional length-two midpoint family as `NSMForBananaLengthTwoCrossException` and uses equality of represented vertices at shared endpoints rather than equality of strand labels; see `Bananas/FORMALIZATION_NOTES.md`. -/
+Exact. The alternatives 1a)–1e) are encoded by `NSMForBananaException`
+(with `NSMForBananaInteriorException` for two interior marks), using equality
+of represented vertices at the shared endpoints rather than equality of
+strand labels. Case 1e), the length-two midpoint family, was missing from the
+published (journal) statement; see `Bananas/FORMALIZATION_NOTES.md`. -/
 theorem _root_.Bananas.TwiceMarkedBananas.s3_thm3_9
     {g : ℕ} (hg : 3 ≤ g) (B : Banana g) (α β : Fin (g + 1))
     (i : B.PathPosition α) (j : B.PathPosition β) :
@@ -2139,13 +2158,15 @@ theorem _root_.Bananas.TwiceMarkedBananas.s4_rem4_1
 
 /-- **Lemma 4.2** (`lem:kgtImpliesTorsionOrder`). Section 4.
 
-> "If (G,u,v) is a twice-marked graph with k-general transmission, then k
-> is the torsion order of (G,u,v)."
+> "If (G,u,v) is a twice-marked graph with g ≥ 1 and k-general
+> transmission, then k is the torsion order of (G,u,v)."
 
-Exact, with three explicit hypotheses beyond the paper's statement that are
-genuine gaps in a literal reading (connectivity, positive genus, and mark
-distinctness — see the docstring of `KGeneralTransmission.isTorsionOrder`,
-`Bananas/Transmission/TorsionOrderExact.lean`). -/
+Stated here for banana graphs. The general version,
+`KGeneralTransmission.isTorsionOrder`
+(`Bananas/Transmission/TorsionOrderExact.lean`), makes explicit connectivity
+(part of the paper's standing convention, Definition 2.1), positive genus
+(now in the revised statement), and `u ≠ v` (automatic when g ≥ 1, since
+Δ(u) = -1 if u = v). -/
 theorem _root_.Bananas.TwiceMarkedBananas.s4_lem4_2
     {g k : ℕ} (B : Banana g) (u v : B.graph.V) (huv : u ≠ v)
     (hg : 0 < genus B.graph)
@@ -2226,8 +2247,12 @@ Picard-quotient classes, specialized to `[D]=[u-v]` of a `TwiceMarked`:
 
 /-- **Lemma 4.7** (`lem:nonrecDisjoint`). Section 4.
 
-> "If G has genus 2 and [D] ∈ Pic^0(G), then [D] is non-recurrent if and
-> only if the sets {Supp(K_G-nD) : n ∈ ℤ, nD ≁ 0} are pairwise disjoint." -/
+> "If G has genus 2 and [D] ∈ Pic^0(G) has order k, then [D] is
+> non-recurrent if and only if all the sets Supp(K_G-nD) for 1 ≤ n ≤ k-1
+> are pairwise disjoint."
+
+Stated for the class [u-v] of a twice-marked graph, the case used in
+Theorem 4.8, with an arbitrary period k in place of the order of [u-v]. -/
 theorem _root_.Bananas.TwiceMarkedBananas.s4_lem4_7
     {M : TwiceMarked} {k : ℕ} (hconn : graph_connected M.graph)
     (hgenus : genus M.graph = 2) :
@@ -2304,15 +2329,15 @@ Lemma 4.12 below. -/
 /-- **Lemma 4.12** (`lem:invtauGeneral`), equivalent finite-period form.
 Section 4.
 
-> "Let D,E be divisors on (G,u,v) of any genus with torsion order k, D
-> submodular. Then inv_k(τ_D) = S_D(K_G) - S_D(K_G-u) - S_D(K_G-v) +
-> S_D(K_G-u-v)."
+> "Let D be a submodular divisor on a twice-marked graph (G,u,v) of any
+> genus with torsion order k. Then inv_k(τ_D) = S_D(K_G) - S_D(K_G-u) -
+> S_D(K_G-v) + S_D(K_G-u-v)."
 
-Corrected/equivalent: valid in every genus as claimed, but expressed as a
-finite sum of complementary ranks over one fundamental period rather than
-the four-term `S_D` alternating sum (which recovers exactly by expanding
-`rankDelta_eq_rankPlusOne_inclusionExclusion`). The extraneous variable `E`
-in the paper's own statement is unused there too. -/
+Partial/equivalent: valid in every genus as claimed, but expressed as a
+finite sum of complementary ranks over one fundamental period (the
+intermediate formula in the paper's proof) rather than the four-term `S_D`
+alternating sum. The `S_D` identity itself is not separately formalized; it
+follows by expanding `rankDelta_eq_rankPlusOne_inclusionExclusion`. -/
 theorem _root_.Bananas.TwiceMarkedBananas.s4_lem4_12
     {M : TwiceMarked} (D : CFDiv M.graph)
     (hconn : graph_connected M.graph)
@@ -2332,8 +2357,8 @@ theorem _root_.Bananas.TwiceMarkedBananas.s4_lem4_12
 transmission on bridgeless genus-two graphs.
 
 > "If (G,u,v) is a twice-marked bridgeless graph of genus 2 and torsion
-> order k, then G has k-general transmission if and only if: 1) vertex
-> gluing of two twice-marked cycles of equal torsion order k; 2) vertex
+> order k, with u ≠ v, then G has k-general transmission if and only if:
+> 1) vertex gluing of two twice-marked cycles of equal torsion order k; 2) vertex
 > gluing of two cycles, one of length 2, marked at its two vertices; or
 > 3) a theta graph with [u-v] non-recurrent and one of three coordinate
 > families."
@@ -2541,15 +2566,18 @@ theorem _root_.Bananas.TwiceMarkedBananas.s4_thm4_18_crossOneOff
     (Bananas.crossOneOff_has_quadratic_inversion_lower_bound_of_not_both_two (toLibBanana B) alpha beta
       hg hab hAlpha hBeta hLong ((allSubmodular_toLib _).mp hSub) hTO)
 
-/-- **Proposition 4.19** (`prop-bananTorsion`), full corrected dichotomy.
-Section 4.
+/-- **Proposition 4.19** (`prop-bananTorsion`). Section 4.
 
 > "If (G,u,v) is a twice-marked banana graph of genus ≥ 3 and torsion
-> order k where every divisor is submodular then either: 1) up to
-> reordering, n_0=n_1=2 and (G,u,v)=(G,v_{0,1},v_{1,1}), so k=2; or 2) the
-> torsion order is at least the genus, k ≥ g."
+> order k where every divisor is submodular then either 1) up to reordering
+> the strands and swapping u and v, n_0 = 2, n_1 is even, and
+> (G,u,v) = (G,v_{0,1},v_{1,n_1/2}), and thus k = 2; or 2) the torsion order
+> is at least the genus, i.e. k ≥ g."
 
-**Formalization note.** The checked exception family includes distinct-strand midpoints when at least one supporting strand has length two. This is expressed by `CorrectedMidpointException`. The length-two branch now follows from the stronger revised Lemma 4.33 (`lem-midpointTorsion`); see `Bananas/FORMALIZATION_NOTES.md`. -/
+Exact: case 1) is `CorrectedMidpointException ∧ k = 2` (distinct-strand
+midpoints, at least one strand of length two). The published (journal)
+statement had only n_0 = n_1 = 2 in case 1). The length-two branch follows
+from Lemma 4.33 (`lem-midpointTorsion`); see `Bananas/FORMALIZATION_NOTES.md`. -/
 theorem _root_.Bananas.TwiceMarkedBananas.s4_prop4_19
     {g k : ℕ} (hg : 3 ≤ g) (B : Banana g) (α β : Fin (g + 1))
     (i : B.PathPosition α) (j : B.PathPosition β)
@@ -2681,10 +2709,10 @@ Section 4.
 > "The torsion order k of (G,v_{0,1},v_{1,n_1-1}) is at least g unless
 > n_0=n_1=2, in which case k=2."
 
-**Corrected** (same correction as Proposition 4.19): the exceptional branch
-is `CorrectedMidpointException ∧ k = 2` rather than the paper's literal
-`n_0=n_1=2` — for this specific marking the two agree, since zero rise does
-force both strands to length two (`zero_rise_cross_oneOff_forces_both_length_two`). -/
+Equivalent: the exceptional branch is phrased as
+`CorrectedMidpointException ∧ k = 2`, as in Proposition 4.19. For this
+marking it agrees with the paper's `n_0=n_1=2`, since zero rise forces both
+strands to have length two (`zero_rise_cross_oneOff_forces_both_length_two`). -/
 theorem _root_.Bananas.TwiceMarkedBananas.s4_lem4_27
     {g k : ℕ} (hg : 1 ≤ g) (B : Banana g)
     (α β : Fin (g + 1)) (i : B.PathPosition α) (j : B.PathPosition β)
@@ -2699,13 +2727,13 @@ theorem _root_.Bananas.TwiceMarkedBananas.s4_lem4_27
 /-- **Lemma 4.28** (`lem-topOffBottomOffSimple`), long-strand
 specialization. Section 4.
 
-> "For max{2,g+2-n_0} ≤ b ≤ min{g-1,n_1-2} and D=gv_{0,n_0} we have
+> "For max{2,g+3-n_0} ≤ b ≤ min{g-1,n_1-2} and D=gv_{0,n_0} we have
 > τ_D(b)=g-b+2."
 
-Partial/restricted: proved for the long-strand specialization
-`2 ≤ b ≤ g-1` under `CrossOneOffLongEnough` rather than the paper's general
-two-sided range, which is subsumed by the corrected Lemma 4.30 block
-below. -/
+Partial/restricted: proved only for long strands (`n_1 ≥ g+1` and
+`CrossOneOffLongEnough`), where the paper's range is exactly `2 ≤ b ≤ g-1`.
+The paper's range for shorter strands is not formalized; Lemma 4.30 below
+carries the same long-strand hypothesis. -/
 theorem _root_.Bananas.TwiceMarkedBananas.s4_lem4_28
     {g : ℕ} (B : Banana g) (alpha beta : Fin (g + 1))
     (tau : ℤ → ℤ)
@@ -2748,13 +2776,17 @@ theorem _root_.Bananas.TwiceMarkedBananas.s4_cor4_29
   exact Bananas.crossOneOff_simple_inversion_lower_bound (toLibBanana B) alpha beta tau hg hab
     hAlpha hBetaLong hLong ((isTransmissionPermutation_toLib _ _ _).mp hTau) hSeparate hfinite
 
-/-- **Lemma 4.30** (`lem-topOffBottomOff`), the corrected uniform block.
-Section 4.
+/-- **Lemma 4.30** (`lem-topOffBottomOff`), uniform block. Section 4.
 
 > "If D=gv_{0,n_0}, τ=τ_D then three residue-indexed cases give τ(b) as
-> b/n_1+1, g+(b+1)/n_1, or g+2⌊b/n_1⌋-b+2 according to b mod n_1."
+> b/n_1+1 (b ≡ 0), g+(b+1)/n_1 (b ≡ -1), or g+2(b+n)/n_1-b
+> (b ≡ -n, 2 ≤ n ≤ n_1-1), each on a stated range of b."
 
-**Formalization note.** The checked block starts at `b = 2`, uses a single positive-remainder convention, and includes the `+2` term in the positive-residue row; see `Bananas/FORMALIZATION_NOTES.md`. -/
+Partial/restricted: the three rows are proved for `2 ≤ b ≤ ⌊n_1 g/(n_1-1)⌋`
+(`crossOneOffCutoff`) under `CrossOneOffLongEnough`, using a single
+positive-remainder convention; the third row g+2(b+n)/n_1-b equals
+g+2⌊b/n_1⌋-b+2. The paper's per-case ranges without the long-strand
+hypothesis are not formalized. See `Bananas/FORMALIZATION_NOTES.md`. -/
 theorem _root_.Bananas.TwiceMarkedBananas.s4_lem4_30
     {g : ℕ} (B : Banana g) (alpha beta : Fin (g + 1))
     (b : ℕ) (tau : ℤ → ℤ)
@@ -2997,9 +3029,9 @@ only). Instantiates Lemma 5.3 on the `(g+1)`-valently-marked bananas of
 /-- **Proposition 5.5** (unlabeled), the final unlabelled proposition of
 Section 5. Section 5.
 
-> "If φ is a marked point automorphism of (G,u,v) and D such that
-> φ(D)+D ∼ K_G+u+v, then inv_k(τ_D) ≥ ∑_{M∈[k]} [r(D+(M-1)u-Mv) -
-> r(D+(M-2)u-Mv)]."
+> "If φ is a marked point automorphism of (G,u,v) transposing u and v, and
+> D such that φ(D)+D ∼ K_G+u+v, then inv_k(τ_D) ≥ ∑_{M∈[k]}
+> [r(D+(M-1)u-Mv) - r(D+(M-2)u-Mv)]."
 
 The self-inverse hypothesis is deliberately refactored to a direct
 hypothesis `hInvolutive` rather than the paper's `φ(D)+D∼K_G+u+v` — Lemma
@@ -3035,7 +3067,7 @@ divisor of the torsion order). -/
 > transmission, and k ≥ g/2+1, then G is Brill--Noether general (as an
 > unmarked graph)."
 
-**Corrected (natural-number threshold).** The paper's real threshold
+**Exact (natural-number threshold).** The paper's real threshold
 `k ≥ g/2+1` is formalized as `g+2 ≤ 2k`; the naive `g/2+1 ≤ k` is too weak
 for odd `g` (`Bananas/FORMALIZATION_NOTES.md`). Rests on a
 crossing-inversion pigeonhole argument, `Bananas/CrossOneOff/CrossingInversionCount.lean`. -/
@@ -3057,7 +3089,7 @@ in the source). Section 6.
 > If each (G_i,u_i,v_i) has k-general transmission for the *same* k, and
 > k ≥ ½(g_1+…+g_ℓ)+1, then G is Brill--Noether general."
 
-Corrected threshold, as in Proposition 6.1. The paper cites [Pfl22, Thm A]
+Same natural-number threshold as Proposition 6.1. The paper cites [Pfl22, Thm A]
 for preservation of `k`-general transmission under chaining; Lean re-proves
 it via the affine reduction developed for Proposition 6.13 instead of
 importing it. -/
@@ -3083,13 +3115,13 @@ theorem _root_.Bananas.TwiceMarkedBananas.s6_cor6_3
 
 /-- **Corollary 6.4** (`cor:bananasWithKGT`). Section 6.
 
-> "The only banana graphs of genus ≥ 3 which have k-general transmission
-> are (B_{n_0,…,n_g},v_{α,1},v_{β,1}) with α≠β, n_α=n_β=2; these examples
-> have 2-general transmission."
+> "The only twice-marked banana graphs of genus ≥ 3 which have k-general
+> transmission are (B_{n_0,…,n_g},v_{α,n_α/2},v_{β,n_β/2}) with α≠β, both
+> n_α, n_β even, and either n_α = 2 or n_β = 2. These examples have
+> 2-general transmission."
 
-**Corrected**, same correction as Proposition 4.19: the exceptional family
-only demands the two marks be distinct-strand *midpoints* with at least one
-strand of length two, not literally `n_α=n_β=2`. -/
+Exact: the family is `CorrectedMidpointException`, with k = 2. (The
+published (journal) statement listed only n_α = n_β = 2.) -/
 theorem _root_.Bananas.TwiceMarkedBananas.s6_cor6_4
     {g k : ℕ} (hg : 3 ≤ g) (B : Banana g) (α β : Fin (g + 1))
     (i : B.PathPosition α) (j : B.PathPosition β) :
@@ -3200,7 +3232,7 @@ proof, restated), part 1). Section 6.
 
 Same statement and same Lean wrapper as `s1_thm1_13a`, above. The paper's
 displayed definition of the iterated gluing "(G,u,v)=(G,u_1,v_ℓ)" is
-self-referential (`Bananas/FORMALIZATION_NOTES.md`, "Chain theorem notation"; the same
+self-referential (`Bananas/FORMALIZATION_NOTES.md`; the same
 pattern recurs in Corollary 6.3 and Theorem 6.6); Lean uses the intended
 left-associated `MarkedGraph.chain`. -/
 theorem _root_.Bananas.TwiceMarkedBananas.s6_cor6_16a
@@ -3269,10 +3301,10 @@ Exact, as a concrete five-factor instantiation
 instances are built by `bananaOfLengths`, a two-vertex core with `g + 1`
 parallel positive-length strands. The five per-factor torsion orders are
 `4, 4, 5, 5, 3` (`Bananas/Examples/ExampleBngChain.lean`'s `bngF1`–`bngF5`), matching
-the paper's own per-factor computations rather than its displayed
-`4, 5, 5, 5, 3` (`Bananas/FORMALIZATION_NOTES.md`); the discrepancy is immaterial, since
+the paper's per-factor computations and the revised manuscript's displayed
+list (the published version displayed `4, 5, 5, 5, 3`, a misprint);
 `bngChainMinBudget` checks the minimum-budget hypothesis directly against
-the correct values. -/
+these values. -/
 theorem s1_eg1_15 :
     BrillNoetherGeneral
       (bngF1.marked.chain
@@ -3281,12 +3313,14 @@ theorem s1_eg1_15 :
 
 /-- **Lemma 2.3** (`lem-bridgelessFacts`), part 2). Section 2.
 
-> "2) There is a bijection between rank 0 divisors in Pic^1(G) and vertices
-> in V(G)."
+> "If G is a bridgeless graph of positive genus, then ... 2) There is a
+> bijection between rank 0 divisors in Pic^1(G) and vertices in V(G)."
 
-**Corrected**: false as printed for the edgeless one-vertex graph (whose
-unique degree-one class has rank one), so an explicit nontriviality
-hypothesis `∃ p q, p ≠ q` is added. -/
+Exact. The positive-genus hypothesis appears as the equivalent nontriviality
+hypothesis `∃ p q, p ≠ q`: a connected, loopless, bridgeless graph has
+positive genus if and only if it has two distinct vertices. (The published
+statement omitted this hypothesis, and fails for the one-vertex graph, whose
+unique degree-one class has rank one.) -/
 theorem s2_lem2_3b
     (G : CFGraph) (hConnected : _root_.graph_connected G)
     (hCut : TwoEdgeCutCondition G)
@@ -3295,7 +3329,9 @@ theorem s2_lem2_3b
       (bridgelessDegreeOneClassMap G hConnected hCut hNontrivial) :=
   bridgelessDegreeOneClassMap_bijective G hConnected hCut hNontrivial
 
-/-- Equation 6.11 (`eq:tauGlued`, alongside `eq:starSigma`). Section 6.
+/-- Displayed equation (10) (`eq:tauGlued`; `eq:starSigma` is equation (9)).
+Section 6. The declaration name `s6_eq6_11` does not follow the PDF's
+equation numbering.
 
 > "If (G,u,v) is the vertex gluing of (G_1,u_1,v_1) and (G_2,u_2,v_2), D_1
 > submodular on G_1, D_2 submodular on G_2, then D=D_1+D_2 is submodular on
