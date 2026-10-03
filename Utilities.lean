@@ -50,7 +50,11 @@ import Utilities.Gluing.GenusTwoTwoPole
 import Utilities.Gluing.GenusThreeCycleWedge
 import Utilities.Gluing.GenusFourVertexCut
 import Utilities.Gluing.GenusFiveVertexCut
+import Utilities.Gluing.HandleGraph
+import Utilities.Gluing.HandleRestriction
+import Utilities.Gluing.HandleSpread
 import Utilities.Gluing.InteriorScriptTransport
+import Utilities.Gluing.LongHandle
 import Utilities.Gluing.MarkedTwistDegree
 import Utilities.Gluing.OneVertexCutFactors
 import Utilities.Gluing.OneVertexCutReaches
