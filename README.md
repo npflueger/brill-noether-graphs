@@ -69,7 +69,11 @@ and its solution is still to be written.
   descends along odd regular subdivisions when two residual chips are involved
   (`Utilities/Subdivision/OddSubdivisionDescent.lean`): for every finite
   loopless multigraph `G`, if some odd regular subdivision of `G` has
-  `w^1_4 ≥ 1`, then so does `G`.
+  `w^1_4 ≥ 1`, then so does `G`. The long-handle lemma
+  (`Utilities/Gluing/LongHandle.lean`) attaches a long path between two
+  vertices `x` and `y` of a connected graph: a divisor of degree `d` and rank
+  at least one on the new graph gives one on the old graph with a chip at `x`
+  and a chip at `y`. See the [proof note](Research/long-handle-lemma.md).
 - `Bananas/` formalizes the theory of twice-marked banana and theta graphs,
   including Jacobians and torsion, transmission permutations, wedge and chain
   constructions, and applications to chains of loops and theta graphs.
