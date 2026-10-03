@@ -1,0 +1,14 @@
+{
+  "challenge_module": "GenusSix.Challenge",
+  "solution_module": "Solutions.GenusSix",
+  "theorem_names": [
+    "GenusSix.brill_noether_existence_through_six",
+    "GenusSix.once_marked_brill_noether_existence_through_five"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "enable_nanoda": true
+}

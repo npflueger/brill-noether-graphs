@@ -30,9 +30,8 @@ below.  The other three cannot, and the reason splits in two:
 | 05 | a core-supported uniform divisor exists (`1_{2,3,4,5}`), but no library picture recognises its chip-free set: two banana pairs with **unequal** arms.  A *library gap* |
 | 08, 10 | **no** core-supported degree-four divisor is uniformly rank one.  An interior chip is forced, and no unmarked guarding set can exist at this degree |
 
-The two failure modes are the genus-five instances of
-auxiliary calculations §2a, and the classification there was reached
-with a rank oracle (direct Dhar reduction), not a certificate-search proxy.
+The classification into these two failure modes was reached with a rank
+oracle (direct Dhar reduction), not a certificate-search proxy.
 Row 05's entry is a correction: its own docstring used to claim it had no
 core-supported divisor at all, and so did row 01's before row 01 was reproved
 from `{2, 3, 4, 5}`.
@@ -50,8 +49,7 @@ Nothing here is new mathematics; it is the statement that the per-row gluing
 step is generic.  What that buys is a precise reduction: with this theorem in
 hand, Brill--Noether existence for a family of cores is exactly the pure graph
 theory question "does every core in the family admit a guarding set?", with no
-Dhar arithmetic left in it.  The numerical side of that question is probed in
-auxiliary calculations.
+Dhar arithmetic left in it.
 
 ## Why the chip side is free
 

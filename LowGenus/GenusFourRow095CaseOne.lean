@@ -5,9 +5,8 @@ import LowGenus.GenusFourRow095
 
 This is the `B ≥ C` chamber of the first-family picture.  The moving chip is
 on slot `3`, at distance `P = B - C` from the vertex `1`.  The two window
-profiles below are exactly the two Dhar moves recorded in the reassessment
-note: the first reaches vertex `1`, and the second simultaneously reaches
-vertices `2` and `3`.
+profiles below are two Dhar moves: the first reaches vertex `1`, and the
+second simultaneously reaches vertices `2` and `3`.
 
 The proof deliberately uses only signed-window endpoint identities.  Thus
 the rather complicated firing scripts on arbitrary subdivisions are never

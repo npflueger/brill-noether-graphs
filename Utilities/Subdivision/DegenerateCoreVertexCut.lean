@@ -61,8 +61,8 @@ assumed away:
 
 * the *contracted* core is loopless — supplied by `DegSpec.rep_loopless`,
   which on `censusSpec` comes from the census hypothesis `¬ IsLoopy`.  This is
-  the `RESULTS.md` §9 hazard: core vertices are not rank-determining on a
-  loop-carrying core.  It enters here through `contractedSpec.core_loopless`.
+  the loop hazard: core vertices are not rank-determining on a loop-carrying
+  core.  It enters here through `contractedSpec.core_loopless`.
 * the *uncontracted* core is loopless — needed to know that no core slot lies
   in both sides at once (`leftSlots_disjoint_rightSlots`).  A `DegSpec` does
   not imply it (a vanishing slot could be a loop), so it is carried as an

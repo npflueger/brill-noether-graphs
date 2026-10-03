@@ -22,10 +22,10 @@ Each factor's `k`-general transmission comes from `cycle_kGeneralTransmission`
 genera are `1, 2, 1, 2, 2`, summing to the paper's genus `8`, and the minimum
 prefix/suffix budget of Corollary 6.16(2) checks out by direct computation:
 `min(1,8) < 4`, `min(3,7) < 4`, `min(4,5) < 5`, `min(6,4) < 5`,
-`min(8,2) < 3`. (`FORMALIZATION_NOTES.md` records that the paper's own displayed torsion
-orders `4,5,5,5,3` disagree with its per-factor computations `4,4,5,5,3`;
-the `k`-values used here are the correct per-factor ones, and the conclusion
-is unaffected either way.) -/
+`min(8,2) < 3`. (The paper's own displayed torsion orders `4,5,5,5,3`
+disagree with its per-factor computations `4,4,5,5,3`; the `k`-values used
+here are the correct per-factor ones, and the conclusion is unaffected either
+way.) -/
 
 namespace Bananas
 

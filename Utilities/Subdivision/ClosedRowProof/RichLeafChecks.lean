@@ -149,14 +149,14 @@ strict separation receipt.
 
 The run `i … j` ranges over *all* named interior indices `1 ≤ i ≤ j ≤ k − 1`.
 It is exempt only when it is pinned to an endpoint by `tailConfined` /
-`headConfined`, which is the sound reading of spec §4.3's "every named
-interior point and every collapsed run of them".
+`headConfined`, which is the sound reading of the requirement that every
+named interior point and every collapsed run of them be checked.
 
 The earlier implementation instead skipped `i ≤ α` and `j > k − 1 − ω`, using
 the *declared* endpoint slack.  That is unsound: `α` bounds how many named
 points **may** slide onto the tail, not how many **do**, so a run starting at
 `i ≤ α` can collapse at a strictly interior vertex whose residual then goes
-unchecked.  See the accompanying analysis. -/
+unchecked. -/
 def w4Checks (w : RichWitness) (_core : ExplicitPotential.Core n p) (Γ : Context) : Bool :=
   ExplicitPotential.allFin (fun a : Fin n => ExplicitPotential.allFin fun e : Fin p =>
     let k := (w.blockList a.val e.val).length

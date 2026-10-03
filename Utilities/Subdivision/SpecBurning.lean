@@ -249,8 +249,7 @@ theorem two_le_num_edges_of_parallel_unit {e₁ e₂ : Fin p} (hne : e₁ ≠ e�
 
 Every chip count in the tricycle argument is a linear combination of the `n`
 core-vertex values and the `p` slot-interior totals, so the bookkeeping of
-Lemma 3.6 never needs a `Finset` union.  This is the mitigation of blueprint
-risk R1, one step further than the blueprint's own suggestion: not merely a
+Lemma 3.6 never needs a `Finset` union.  The decomposition is not merely a
 disjoint partition, but a *coordinate system*. -/
 
 /-- The chips on the interior of slot `edge`. -/

@@ -47,9 +47,7 @@ through `rep_eq_of_compFold_eq`.
 ## What is *not* proved here
 
 Nothing about non-forest faces.  On those `rep` genuinely is not determined
-by the length vector, and the enumeration in
-the accompanying analysis measures how many such
-faces a genus-five legged row has.
+by the length vector.
 -/
 
 -- `Certificate` is a structure inside a namespace already ending in `Certificate`.

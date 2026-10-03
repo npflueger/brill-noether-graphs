@@ -654,7 +654,7 @@ once-marked general at its right mark under the *suffix* budget
 `g - i < k_i`, and whose isomorphism `Bananas.reversedFactorChainIso` to the
 canonical chain carries `v_0` to that mark.  Under CDPR genericity both
 budgets hold, so the orientation costs nothing -- but it is not optional:
-testing at `v_0` under the prefix budget is false (blueprint section 6.4). -/
+testing at `v_0` under the prefix budget is false. -/
 theorem cdpr_no_high_multiplicity_left (P : Loop) (L : List Loop)
     (hg : 2 ≤ L.length + 1) (hGeneric : CDPRGeneric (P :: L))
     (D : CFDiv (chainGraph P L)) (r d : ℤ) (hr : 0 ≤ r)

@@ -256,7 +256,7 @@ literal reading of the lemma (not artificial strengthenings): `hconn`
 section) and `hg` (positive genus, since at genus `0` every positive `k`
 satisfies `KGeneralTransmission` simultaneously, so `k` is never pinned to
 the torsion order `1` there). `huv` matches the paper's own distinctness
-convention (`FORMALIZATION_NOTES.md`, "Distinctness of the two marks"); the diagonal
+convention (`Bananas/FORMALIZATION_NOTES.md`); the diagonal
 marking `u = v` has a `TorsionWitness` at *every* period
 (`torsionWitness_diagonal`), so minimality can fail without it. -/
 theorem banana_kGeneral_isTorsionOrder

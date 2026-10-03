@@ -23,8 +23,8 @@ a *hub system* that cannot exist in genus six.  Running the descent on the
 fossil of `G` removes every structural hypothesis, so a supply of pencils on
 odd subdivisions — the hypothesis `GenusSixOddSubdivisionWitness` — gives
 Brill–Noether existence for every connected genus-six graph.  That hypothesis
-is proved separately, by the Draisma–Vargas count, which is to be published as
-the library `DraismaVargasCount`.
+is proved separately, by the Draisma–Vargas count, in the library
+`DraismaVargasCount`.
 
 Throughout, `regularSubdivision G N hN` is the `N`-fold regular subdivision
 `σ_N(G)` (`Utilities/Gonality/GonalityTransport.lean`), and

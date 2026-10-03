@@ -4,10 +4,9 @@ import Utilities.Subdivision.DegenerateSpecCensus
 /-!
 # `leaf_sound`: the row-proof leaf, lowered to Lean
 
-This is step B of the proof-data source.  A `LEAF` node of a row proof carries a
-local witness (spec §4.3); this file turns an accepted witness into
-`BNExists … 1 d` on the degenerate subdivision determined by *any* length
-vector whose vanishing set is a non-loopy forest.
+A `LEAF` node of a row proof carries a local witness; this file turns an
+accepted witness into `BNExists … 1 d` on the degenerate subdivision
+determined by *any* length vector whose vanishing set is a non-loopy forest.
 
 ## Representation discipline
 
@@ -19,9 +18,9 @@ layer speaks: `toAffineForm` reads the coefficients out of the list with
 
 ## Where the soundness hazard is discharged
 
-`RESULTS.md` §9 records that on a core carrying a loop the core vertices are
-*not* rank determining, so the strong-separator step is unsound there.  In
-this file that hazard is discharged in exactly one place: `censusSpec`'s
+On a core carrying a loop the core vertices are *not* rank determining, so
+the strong-separator step is unsound there.  In this file that hazard is
+discharged in exactly one place: `censusSpec`'s
 `rep_loopless` field, which is supplied by the row obligation's own
 `¬ IsLoopy` census hypothesis through
 `ContractionForestCensusGeneral.rep_loopless_of_not_isLoopy`.  Every
@@ -32,7 +31,7 @@ conclusion does not typecheck without it.
 
 ## What the checker accepts, and what it deliberately refuses
 
-`Witness` is the spec's §4.3 record verbatim (chips, a block list per slot,
+`Witness` is the full leaf-witness record (chips, a block list per slot,
 head/tail slack).  `Witness.leafChecks` is **fail-closed** on the parts of
 that record whose Lean support does not exist yet:
 
@@ -44,12 +43,12 @@ interior named points, W1's slack and W4's interior residual are vacuous, and
 W5 collapses to the per-core-vertex integer test `ValidClosed` already makes.
 
 This is not a toy restriction: it is exactly the leaf the implemented
-generator emits.  the proof-data source's `verify_leaf` checks precisely
+generator emits.  The generator's `verify_leaf` checks precisely
 `lo_e ≤ hi_e`, `lo_e·ℓ_e ≤ F(head e) − F(tail e) ≤ hi_e·ℓ_e`, and the core
-residual, and all four leaves in the proof-data source (`banana3`,
-`g4row002`, `g4row010`, `g4row011`) have `(chips)` empty and one `(b …)` per
-slot.  The multi-block half of §4.3 is unexercised by every accepted proof in
-the catalog; see the note at the end of this file for what it would cost.
+residual, and all four leaves it has produced (`banana3`, `g4row002`,
+`g4row010`, `g4row011`) have `(chips)` empty and one `(b …)` per slot.  The
+multi-block half of the witness is unexercised by every accepted proof in the
+catalog; see the note at the end of this file for what it would cost.
 -/
 
 namespace Utilities.Subdivision.ClosedRowProof
@@ -150,10 +149,10 @@ theorem eval_coordForm_ofFn {m : ℕ} (point : Fin m → ℤ) (e : Fin m) :
   rw [eval_coordForm, List.getD_eq_getElem _ _ (by simp)]
   simp
 
-/-! ## §2  The leaf witness, spec §4.3
+/-! ## §2  The leaf witness
 
-The record is the specification's, verbatim; the *checker* is what refuses the
-half of it that has no Lean support (see the module docstring). -/
+The record is the full witness format; the *checker* is what refuses the half
+of it that has no Lean support (see the module docstring). -/
 
 /-- One block of a slot script: over the stretch ending at `endForm` the script
 rises by `rise`, its first unit slope is at least `lo` and its last at most
@@ -173,7 +172,7 @@ def Block.dflt : Block := ⟨[], [], 1, 0⟩
 
 /-- The firing script attached to one anchor: a potential at each core vertex,
 a block list per slot, the declared endpoint slacks of W1, and the entailment
-certificates for the two realizability rows of §13.1. -/
+certificates for the two realizability rows of W2. -/
 structure AnchorPlan where
   /-- One form per core vertex. -/
   potential : List Form
@@ -370,7 +369,7 @@ def Witness.leafChecks (w : Witness) (m : ℕ) (core : ExplicitPotential.Core n 
   ExplicitPotential.allFin (fun a : Fin n => ExplicitPotential.allFin fun e : Fin p =>
     formEq (w.block a.val e.val).rise
       (subForm (w.pot a.val (core.head e).val) (w.pot a.val (core.tail e).val))) &&
-  -- W2 realizability (§13.1), entailed from Γ: `lo_e·σ_e ≤ rise_e ≤ hi_e·σ_e`
+  -- W2 realizability, entailed from Γ: `lo_e·σ_e ≤ rise_e ≤ hi_e·σ_e`
   ExplicitPotential.allFin (fun a : Fin n => ExplicitPotential.allFin fun e : Fin p =>
     ((w.plan a.val).loCert.getD e.val Cert.dflt).check Γ
       (subForm (w.block a.val e.val).rise
@@ -394,15 +393,16 @@ def Witness.leafChecks (w : Witness) (m : ℕ) (core : ExplicitPotential.Core n 
 
 /-! ## §5  The degenerate subdivision determined by a length vector
 
-This is where the soundness hazard of `RESULTS.md` §9 is discharged: the
-`rep_loopless` field below is supplied by `hNotLoopy` and by nothing else. -/
+This is where the loop soundness hazard (see the module docstring) is
+discharged: the `rep_loopless` field below is supplied by `hNotLoopy` and by
+nothing else. -/
 
 /-- The vanishing set of a length vector. -/
 def zeroSet {p : ℕ} (ℓ : Fin p → ℕ) : Finset (Fin p) :=
   Finset.univ.filter (fun e => ℓ e = 0)
 
 /-- **The row obligation's target object.**  The degenerate subdivision of
-`core` at lengths `ℓ`, given the two census hypotheses of spec §3.
+`core` at lengths `ℓ`, given the two census hypotheses of the row obligation.
 
 `hForest` is genus preservation and `hNotLoopy` is looplessness of the
 contracted core — which is exactly what the strong-separator step needs, and
@@ -450,12 +450,12 @@ whose vanishing set is a non-loopy forest.
 Provenance of the hypotheses:
 
 * `hp`, `hlen` — the format's own convention that coordinate `e` *is* the
-  length of slot `e` (spec §4.1);
+  length of slot `e`;
 * `hn` — needed to state the conclusion at all (`DegSpec.core_nonempty`);
 * `hchk` — the Boolean leaf checker;
 * `hΓ` — the context holds at the point; supplied by the tree layer, and
   trivial at the closed root (see `leaf_sound_closed_root`);
-* `hForest`, `hNotLoopy` — the two census hypotheses of spec §3, inputs to the
+* `hForest`, `hNotLoopy` — the two census hypotheses, inputs to the
   row obligation.  `hNotLoopy` is the one that pays for the
   rank-determining-set step; see `censusSpec`. -/
 theorem leaf_sound (hp : p ≤ m) (hn : 0 < n)
@@ -579,9 +579,9 @@ end LeafSound
 
 /-! ## §7  The root of a `(domain closed)` proof
 
-Spec §4.1: the root context is the closed orthant `[σ_0, …, σ_{p−1}]` with no
+The root context is the closed orthant `[σ_0, …, σ_{p−1}]` with no
 equalities.  Specialising `leaf_sound` there removes `point`, `hΓ` and `hlen`
-and leaves exactly the row obligation of §3: *for every* `ℓ : Fin p → ℕ` whose
+and leaves exactly the row obligation: *for every* `ℓ : Fin p → ℕ` whose
 vanishing set is a non-loopy forest, the goal holds. -/
 
 /-- The closed-orthant root context. -/
@@ -600,7 +600,7 @@ theorem rootContextClosed_holds {p : ℕ} (ℓ : Fin p → ℕ) :
 
 /-- **The row obligation, verbatim.**  An accepted single-block leaf at the
 closed root proves the goal on every face of the closed length orthant whose
-vanishing set is a non-loopy forest.  Compare spec §3 and
+vanishing set is a non-loopy forest.  Compare
 `AllMarksCoreCase.SolvedAllMarksClosedCensus`. -/
 theorem leaf_sound_closed_root {n p : ℕ} (core : ExplicitPotential.Core n p)
     (w : Witness) (degree : ℤ) (hn : 0 < n)
@@ -613,13 +613,14 @@ theorem leaf_sound_closed_root {n p : ℕ} (core : ExplicitPotential.Core n p)
     (fun e : Fin p => (ℓ e : ℤ)) (rootContextClosed_holds ℓ) ℓ (fun _ => rfl)
     hForest hNotLoopy
 
-/-! ## §8  What the multi-block half of §4.3 would cost
+/-! ## §8  What the multi-block half of the witness would cost
 
-Spec §5.3 calls the leaf "composition, not new mathematics" and points at
-`Certificate/SlopeScript.lean` and `Certificate/AffinePositionMultiBreak.lean`
-for the multi-break script.  That is only true on the **open** orthant: both
-of those modules are stated for `SubdivisionGraph.Spec`, which carries
-`length_pos`, whereas the leaf obligation of a `(domain closed)` proof lives
+One might expect the multi-block leaf to be composition, not new mathematics,
+using the multi-break scripts of `Subdivision/SlopeScript.lean` and
+`Subdivision/AffinePositionMultiBreak.lean`.  That is only true on the
+**open** orthant: both of those modules are stated for
+`SubdivisionGraph.Spec`, which carries `length_pos`, whereas the leaf
+obligation of a `(domain closed)` proof lives
 on `Utilities.Certificate.DegenerateSpec.DegSpec`, where lengths may vanish.  The closed-orthant
 script layer that exists is
 `Utilities.Certificate.DegenerateSpec.DegSpec.interpolatedScript` — *one* affine interpolation per
@@ -632,11 +633,11 @@ core vertices, plus the `α_e`/`ω_e` slack reading of W5.  That is the
 `DegSpec` port of `SlopeScript` + `AffinePositionMultiBreak`, and it is where
 W4 (which is vacuous here) starts doing work.
 
-Nothing in the catalog needs it yet: the proof-data source only ever
-emits one block per slot, and §13.5 proves that a *single* whole-orthant leaf
-on a two-edge-connected core with more core vertices than degree cannot exist
-at all — those rows need a chamber split or an interior chip, which is the
-tree layer and the chips, not more blocks. -/
+Nothing in the catalog needs it yet: the generator only ever emits one block
+per slot, and a *single* whole-orthant leaf on a two-edge-connected core with
+more core vertices than degree cannot exist at all — those rows need a
+chamber split or an interior chip, which is the tree layer and the chips, not
+more blocks. -/
 
 end Utilities.Subdivision.ClosedRowProof
 

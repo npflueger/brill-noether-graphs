@@ -1,14 +1,14 @@
-import Mathlib
+import GenusSixExistence.Existence
+import GenusSixExistence.OnceMarked
 
 /-!
-# Brill--Noether existence for graphs of genus six
+# Solutions for the genus-six Brill--Noether existence submission
 
-This is the Mathlib-only Challenge surface for Brill--Noether existence through
-genus six (extending the Atanasov--Ranganathan theorem through genus five) and
-its consequence, once-marked Brill--Noether existence through genus five.  The
-file contains the advertised theorem statements and the complete local
-vocabulary needed to read them.  The advertised declarations deliberately end in
-`sorry`.
+This is the proved Solution surface corresponding to `GenusSix.Challenge`.
+Its statement vocabulary is copied verbatim from the Challenge.  Each theorem
+is a thin wrapper around a proved declaration of the library
+`GenusSixExistence`: `GenusSixExistence.brillNoetherExistenceThroughSix` and
+`GenusSixExistence.onceMarkedBNExistenceThroughFive`.
 -/
 
 namespace GenusSix
@@ -108,6 +108,20 @@ def rank_geq (G : CFGraph) (D : CFDiv G) (k : ℤ) : Prop :=
 def one_chip {G : CFGraph} (v : G.V) : CFDiv G :=
   fun w => if w = v then 1 else 0
 
+/-! ## Proof bridges
+
+Everything above this point is statement vocabulary.  The following private
+conversion is where the file deliberately crosses into the implementation
+library. -/
+
+private def libraryGraph (G : CFGraph) : _root_.CFGraph :=
+  { V := G.V
+    instDecidableEq := G.instDecidableEq
+    instFintype := G.instFintype
+    instNonempty := G.instNonempty
+    edges := G.edges
+    loopless := G.loopless }
+
 /-! ## Brill--Noether existence through genus six -/
 
 /-- **Brill--Noether existence through genus six.**  Every connected finite
@@ -128,7 +142,23 @@ theorem brill_noether_existence_through_six
     (g r d : ℤ) (h_genus : genus G = g) (h_genus_le_six : g ≤ 6)
     (h_brill_noether : (r + 1) * (g - d + r) ≤ g) :
     ∃ D : CFDiv G, deg D = d ∧ rank_geq G D r := by
-  sorry
+  have library_connected : _root_.graph_connected (libraryGraph G) :=
+    h_connected
+  have library_genus : _root_.genus (libraryGraph G) = g := h_genus
+  have library_genus_le_six : _root_.genus (libraryGraph G) ≤ 6 := by
+    rw [library_genus]
+    exact h_genus_le_six
+  have library_brill_noether :
+      0 ≤ _root_.genus (libraryGraph G) -
+        (r + 1) * (_root_.genus (libraryGraph G) - d + r) := by
+    rw [library_genus]
+    omega
+  obtain ⟨D, h_rank, h_degree⟩ :=
+    _root_.GenusSixExistence.brillNoetherExistenceThroughSix
+      (libraryGraph G) library_connected library_genus_le_six r d
+      library_brill_noether
+  refine ⟨D, h_degree, ?_⟩
+  exact (_root_.rank_geq_iff (libraryGraph G) D r).mpr h_rank
 
 /-! ## Once-marked Brill--Noether existence through genus five -/
 
@@ -155,6 +185,13 @@ theorem once_marked_brill_noether_existence_through_five
     ∃ D : CFDiv G, deg D = genus G ∧
       ∀ (i : ℕ) (hi : i < μ.rowLens.length),
         rank_geq G (D + ((i : ℤ) - (μ.rowLens[i] : ℤ)) • one_chip u) (i : ℤ) := by
-  sorry
+  have library_connected : _root_.graph_connected (libraryGraph G) :=
+    h_connected
+  obtain ⟨D, h_degree, h_rows⟩ :=
+    (_root_.Utilities.onceMarkedBNExists_iff_rank_rows (libraryGraph G) u μ).mp
+      (_root_.GenusSixExistence.onceMarkedBNExistenceThroughFive
+        (libraryGraph G) library_connected h_genus_le_five u μ h_size)
+  refine ⟨D, h_degree, fun i hi => ?_⟩
+  exact (_root_.rank_geq_iff (libraryGraph G) _ (i : ℤ)).mpr (h_rows i hi)
 
 end GenusSix

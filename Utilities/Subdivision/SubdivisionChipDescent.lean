@@ -53,9 +53,9 @@ chips supply.  No total unimodularity, period lattice, or cycle space is
 involved; the argument is one-dimensional on each step.
 
 The proof is a genuine descent theorem and not the "prove it metrically, then
-round" fallacy recorded in the research notes: the rounding is justified step
-by step from the fine script, and the budget hypothesis is exactly what fails
-for two chips at the midpoints of an even refinement.
+round" fallacy: the rounding is justified step by step from the fine script,
+and the budget hypothesis is exactly what fails for two chips at the midpoints
+of an even refinement.
 -/
 
 namespace Utilities.Certificate.SubdivisionGraph.Spec

@@ -20,8 +20,7 @@ skeleton of a *symbolic* replacement in the style of
 `GenusFourCore099/100/097`, from the divisor rule discovered and empirically
 verified on 2026-08-13 (400/400 random positive length vectors, plus a
 member-by-member verification of the complete regime-1 pencil on 45/45
-vectors; see the accompanying analysis §6 and
-auxiliary calculations):
+vectors):
 
 Rotate by the order-three necklace rotation so that `a₀ = max(a₀,a₁,a₂)`,
 and write `x = a₀ − a₁ − a₂`.
@@ -98,7 +97,7 @@ def rotReversed : Fin 9 → Bool := fun _ => false
 
 -- v4.33: `backward.isDefEq.respectTransparency` now defaults to `true`; unifying
 -- instance-implicit arguments through the semireducible core constructions no
--- longer unfolds them.  See the accompanying analysis.
+-- longer unfolds them.
 set_option backward.isDefEq.respectTransparency false in
 theorem rot_tail : ∀ edge : Fin 9,
 row096Core.tail (rotSlot edge) =
@@ -107,7 +106,7 @@ else rotVertex (row096Core.tail edge) := by decide
 
 -- v4.33: `backward.isDefEq.respectTransparency` now defaults to `true`; unifying
 -- instance-implicit arguments through the semireducible core constructions no
--- longer unfolds them.  See the accompanying analysis.
+-- longer unfolds them.
 set_option backward.isDefEq.respectTransparency false in
 theorem rot_head : ∀ edge : Fin 9,
 row096Core.head (rotSlot edge) =
@@ -127,7 +126,7 @@ def swapVertex : Equiv.Perm (Fin 6) := Equiv.refl _
 
 -- v4.33: `backward.isDefEq.respectTransparency` now defaults to `true`; unifying
 -- instance-implicit arguments through the semireducible core constructions no
--- longer unfolds them.  See the accompanying analysis.
+-- longer unfolds them.
 set_option backward.isDefEq.respectTransparency false in
 theorem swap_tail : ∀ edge : Fin 9,
 row096Core.tail (swapSlot edge) =
@@ -136,7 +135,7 @@ else swapVertex (row096Core.tail edge) := by decide
 
 -- v4.33: `backward.isDefEq.respectTransparency` now defaults to `true`; unifying
 -- instance-implicit arguments through the semireducible core constructions no
--- longer unfolds them.  See the accompanying analysis.
+-- longer unfolds them.
 set_option backward.isDefEq.respectTransparency false in
 theorem swap_head : ∀ edge : Fin 9,
 row096Core.head (swapSlot edge) =
@@ -820,9 +819,8 @@ end Regime1March
 `bnExists_regime1` is reduced to *one* statement: that the pencil reaches the
 six core vertices.  Nothing about interior vertices is needed.
 
-That is the anchor-only route back-ported into
-the accompanying analysis from the row-proof-format branch:
-the embedded core vertices are a strong separator of any positive
+That is the anchor-only route: the embedded core vertices are a strong
+separator of any positive
 subdivision, so `Certificate.CoreVertexReachability.bnExists_of_reaches_coreVertices`
 upgrades reachability at the core to `rank ≥ 1` outright.  The capped
 reflections that sweep the nine slots are needed only to *exhibit* the pencil,
@@ -1466,10 +1464,10 @@ theorem bnExists_regime1
 arc `e6` of `β₂` is at least as long as `e7`.
 `D = v0 + v5 + (point on e6 at distance min(x, length e7) from v3)`.
 
-Verified empirically on 153/153 regime-2 random vectors
-(auxiliary calculations); proved by `regime2_reaches_core`,
-whose chain of cut marches is described in the section docstring above.  Only
-the six core vertices are needed, by the strong-separator route. -/
+Verified empirically on 153/153 regime-2 random vectors; proved by
+`regime2_reaches_core`, whose chain of cut marches is described in the section
+docstring above.  Only the six core vertices are needed, by the
+strong-separator route. -/
 theorem bnExists_regime2
     (hx : length 3 + length 8 < length 0)
     (harc : length 7 ≤ length 6) :

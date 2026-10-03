@@ -154,12 +154,13 @@ theorem orientable_of_not_winnable (h_conn : graph_connected G) (D : CFDiv G)
 orient the *winnable* ones; the unwinnable ones are already done by
 `orientable_of_not_winnable`.
 
-This was the reduction §2c was attacked through while the winnable case was open; §3 has
-since closed that case, so the lemma is no longer on the path to `orientable_of_deg_eq`. It
-still records why the winnable case was the hard one: such a class is by
-`isAcyclic_iff_not_winnable_ordiv` (`Foundations/OrientationReversal.lean`) never the divisor
-of an acyclic orientation, so any witness for it must be cyclic, and cyclic orientations were
-precisely what `CFOrientation.no_bidirectional` failed to represent on a multigraph. -/
+This was the reduction through which the orientability theorem was attacked while the
+winnable case was open; §3 has since closed that case, so the lemma is no longer on the path
+to `orientable_of_deg_eq`. It still records why the winnable case was the hard one: such a
+class is by `isAcyclic_iff_not_winnable_ordiv` (`Foundations/OrientationReversal.lean`)
+never the divisor of an acyclic orientation, so any witness for it must be cyclic, and cyclic
+orientations were precisely what `CFOrientation.no_bidirectional` failed to represent on a
+multigraph. -/
 theorem orientable_of_forall_winnable (h_conn : graph_connected G)
     (hwin : ∀ D : CFDiv G, deg D = genus G - 1 → winnable G D → Orientable G D)
     (D : CFDiv G) (hDeg : deg D = genus G - 1) : Orientable G D := by
@@ -179,7 +180,7 @@ def edgesWithin (G : CFGraph) (S : Finset G.V) : ℕ :=
 
 This is An–Baker–Kuperberg–Shokrieh's `χ(S,D)`
 (An--Baker--Kuperberg--Shokrieh, arXiv:1304.4259), the function whose
-submodularity drives the whole proof of §2c. -/
+submodularity drives the whole proof of `orientable_of_deg_eq`. -/
 def eulerChi (G : CFGraph) (S : Finset G.V) (D : CFDiv G) : ℤ :=
   (∑ v ∈ S, D v) + (S.card : ℤ) - (edgesWithin G S : ℤ)
 
@@ -983,9 +984,9 @@ theorem orientable_of_deg_eq (h_conn : graph_connected G) (D : CFDiv G)
   obtain ⟨O, hO⟩ := exists_ordiv_eq_of_chi_nonneg D' hDeg' hchi
   exact ⟨O, by rw [← hO]; exact hEquiv⟩
 
-/-- **§2c as a biconditional.** On a connected graph the orientable divisors are exactly the
-divisors of degree `genus G - 1`. The `→` direction is unconditional (`Orientable.deg_eq`);
-only `←` needs connectivity. -/
+/-- **Orientability as a biconditional.** On a connected graph the orientable divisors are
+exactly the divisors of degree `genus G - 1`. The `→` direction is unconditional
+(`Orientable.deg_eq`); only `←` needs connectivity. -/
 theorem orientable_iff_deg_eq (h_conn : graph_connected G) (D : CFDiv G) :
     Orientable G D ↔ deg D = genus G - 1 :=
   ⟨Orientable.deg_eq, orientable_of_deg_eq h_conn D⟩

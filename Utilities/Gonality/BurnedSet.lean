@@ -16,8 +16,7 @@ so the maximal legal subset of `V \ {q}` is a `Finset.sup` over a powerset:
 * `maximalLegal G D q` — the join of every legal `U ⊆ univ.erase q`;
 * `burned G D q := (maximalLegal G D q)ᶜ` — the burned set.
 
-The API below is the whole of Dhar that the tricycle campaign
-(the accompanying analysis §4.1) ever uses:
+The API below is the whole of Dhar that the tricycle campaign ever uses:
 
 * `legalSet_maximalLegal`, `subset_maximalLegal_of_legal` — maximality;
 * `mem_burned_self`, `mem_burned_of_lt`, `mem_burned_of_subset_lt`,
@@ -31,7 +30,7 @@ The API below is the whole of Dhar that the tricycle campaign
   `q` is never burned by a fire started anywhere else.
 
 No algorithm, no termination proof, no fuel.  `maximalLegal` is `noncomputable`
-and is only ever used propositionally; never `decide` it (blueprint risk R2).
+and is only ever used propositionally; never `decide` it.
 -/
 
 namespace Utilities.Gonality

@@ -64,3 +64,34 @@ jobs:
           highlights-comparator.json
           twice-marked-bananas-comparator.json
           Palomar/BNChains/comparator.json
+
+  comparator-genus-six:
+    name: Compare the genus-six statements with their proved solutions
+    runs-on: ubuntu-latest
+    # `Solutions.GenusSix` imports the Draisma--Vargas libraries, which are several times larger
+    # than the rest of the repository, so this check runs in its own job, in parallel with the one
+    # above, with the time limit of the Lean CI job that builds those libraries.
+    timeout-minutes: 300
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Install Lean and fetch Mathlib cache
+        uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9 # v1.5.0
+        with:
+          build: false
+          use-mathlib-cache: true
+
+      - name: Install Go
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e
+        with:
+          go-version: "1.24.0"
+          cache: false
+
+      - name: Run Comparator and NanoDa
+        run: >-
+          ./scripts/verify-comparator.sh
+          Palomar/GenusSix/comparator.json

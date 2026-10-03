@@ -29,9 +29,9 @@ as every unit step touching it has its other end in `A`.
 
 A component's picture becomes a statement about the component, provable once
 and reusable in every ambient core the shape occurs in.  Concretely, the
-genus-six "two-banana chain" (auxiliary calculations Sec. 5a)
-occupies six of core 46's ten vertices; localizing to it replaces a genus-six
-Dhar calculation by a genus-two one with two frozen endpoints.
+genus-six "two-banana chain" occupies six of core 46's ten vertices;
+localizing to it replaces a genus-six Dhar calculation by a genus-two one with
+two frozen endpoints.
 
 ## Layering
 

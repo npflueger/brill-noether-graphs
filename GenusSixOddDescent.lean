@@ -41,7 +41,7 @@ only `Utilities` and external dependencies.
 `GenusSixOddSubdivisionWitness` enters only as an explicit hypothesis of
 `bnExists_genus_six_of_oddWitness`; every other result of the library is
 unconditional.  The hypothesis is proved separately, by the Draisma--Vargas
-count, which is to be published as the library `DraismaVargasCount`.
+count, in the library `DraismaVargasCount`.
 
 ## The modules
 

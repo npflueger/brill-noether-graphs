@@ -51,12 +51,13 @@ These formalizations build upon [Mathlib](github.com/leanprover-community/mathli
 ## Palomar entries
 
 `Palomar/BNChains/` is a complete entry: a Mathlib-only challenge, its solution,
-a comparator configuration and formalization metadata. `Palomar/GenusSixChallenge/`
-(Brill–Noether existence in genus six, through genus six, and once-marked
-existence through genus five) and `Palomar/DraismaVargasChallenge/` (the
-Draisma–Vargas bound on gonality up to subdivision) are drafts: they state the
-theorems over a Mathlib-only vocabulary, and their solutions are still to be
-written.
+a comparator configuration and formalization metadata. `Palomar/GenusSix/`
+(Brill–Noether existence through genus six, and once-marked existence through
+genus five) has its challenge, its solution `Palomar/Solutions/GenusSix.lean` and
+a comparator configuration; its formalization metadata is a draft.
+`Palomar/SubdivisionGonality/` (the Draisma–Vargas bound on gonality up to
+subdivision) is a draft: it states the theorems over a Mathlib-only vocabulary,
+and its solution is still to be written.
 
 ## Contents
 
@@ -83,8 +84,8 @@ written.
   subdivision of a bridgeless connected genus-six graph descends to the graph
   itself. It derives a conditional theorem: every connected genus-six graph
   satisfies Brill–Noether existence, provided each has such a divisor on some
-  odd regular subdivision, a hypothesis supplied by the forthcoming
-  Draisma–Vargas count.
+  odd regular subdivision, a hypothesis supplied by the Draisma–Vargas count
+  of `DraismaVargasCount`.
 - `DraismaVargas/` formalizes the Draisma–Vargas bound in divisorial form: every
   connected finite graph of genus `g` has a regular subdivision carrying a
   divisor of degree `⌈g/2⌉ + 1` and rank at least one, and the same holds for
@@ -152,7 +153,19 @@ On Linux, with Git, Go, Rust/Cargo, and Python 3 installed, run:
 
 This checks all statement/solution pairs with pinned versions of Comparator,
 `lean4export`, Landrun, and NanoDa. GitHub Actions runs the same check on pushes
-and pull requests to `main`.
+and pull requests to `main`. Pass config paths to check only those pairs, for
+example `./scripts/verify-comparator.sh Palomar/GenusSix/comparator.json`.
+
+On macOS, where Landrun cannot run, set `PALOMAR_FAKE_LANDRUN=1` to replace it
+with Comparator's development shim, which runs the build and export steps
+without a sandbox; Go is then not needed:
+
+```bash
+PALOMAR_FAKE_LANDRUN=1 ./scripts/verify-comparator.sh Palomar/GenusSix/comparator.json
+```
+
+The statement, axiom and kernel checks are the same, so this is a useful check
+before submission, but it is weaker evidence than the sandboxed run in CI.
 
 ## License
 

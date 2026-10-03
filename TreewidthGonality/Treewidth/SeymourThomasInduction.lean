@@ -203,9 +203,9 @@ noncomputable def rerootSep (t : D.Node) : Finset V :=
 
 variable {D s X C home}
 
-/-- **The Menger-free separation lemma** (blueprint §4, Lemma ST-Sep).  Screened
-exhaustively over all configurations with `|V| ≤ 4` and `|T| ≤ 3` (680496 of
-them) and randomly to `|V| = 7` before being written down.
+/-- **The Menger-free separation lemma.**  Screened exhaustively over all
+configurations with `|V| ≤ 4` and `|T| ≤ 3` (680496 of them) and randomly to
+`|V| = 7` before being written down.
 
 Discharge plan.  Suppose a walk from `a ∈ X` to `b ∈ bag s` avoids
 `rerootSep t`.  Pass to a path `P` meeting `X` only in its first vertex `x` and
@@ -321,7 +321,7 @@ theorem rerootSep_separates (hhome : ∀ x ∈ X, x ∈ D.bag (home x))
     | succ n ih => exact body (n + 1) (fun a b q hq => ih a b q (by omega))
   exact fun a ha b hbs p => main p.length a b p le_rfl (Or.inl ha) hbs
 
-/-- **Lemma 2, Menger-free** (blueprint §4, Lemma ST-Card).
+/-- **Lemma 2, Menger-free.**
 
 Discharge plan: `rerootSep_separates` + `Bramble.isHittingSet_of_separates`
 (Lemma 4) make `rerootSep t` a cover of `𝔅`, so `hXmin` gives

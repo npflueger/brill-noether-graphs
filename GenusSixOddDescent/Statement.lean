@@ -13,11 +13,16 @@ Two definitions, and nothing else.
   existence theorem `GenusSixOddDescent.bnExists_genus_six_of_oddWitness`.
 
 The witness is a hypothesis here, not a theorem of this library. It is proved separately,
-by the Draisma--Vargas count, which is to be published as the library `DraismaVargasCount`.
-It is also motivated by algebraic geometry: Baker's specialization lemma, applied to a
-degeneration of a genus-six curve with dual graph `G`, carries a degree-four pencil of the
-curve to a degree-four pencil on some regular subdivision of `G`; the witness asks for a
-subdivision of odd scale.
+by a mod-2 form of the Draisma--Vargas count, in the library `DraismaVargasCount`.
+
+The witness is the combinatorial form of a prediction from algebraic geometry, due to
+K. Christ and Q. Ma, *Bounding the number of graph refinements for Brill--Noether existence*,
+arXiv:2304.07405. Degenerate a curve to one with dual graph `G`. A closed point of degree `k` of
+the Brill--Noether scheme `W¹₄` of the generic fibre gives, by Baker's specialization lemma, a
+degree-four pencil on the `k`-fold regular subdivision of `G` (their Proposition 4). That scheme
+has degree five, the number of degree-four pencils on a general curve of genus six, which is
+the bound of their Theorem 1. Five is odd, so some closed point has odd degree: some odd
+regular subdivision carries a degree-four pencil, which is what the witness asserts.
 
 The proofs are in `GenusSixOddDescent.Main`.
 -/

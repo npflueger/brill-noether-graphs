@@ -19,7 +19,7 @@ with the lengths, and the conclusion is read on the finite graph obtained by
 cutting each edge into unit pieces.
 -/
 
-namespace DraismaVargasChallenge
+namespace SubdivisionGonality
 
 universe u
 
@@ -257,4 +257,4 @@ theorem common_refinement_gonality_le_ceil_half_genus_add_one
         (⌈(genus G : ℚ) / 2⌉ + 1) := by
   sorry
 
-end DraismaVargasChallenge
+end SubdivisionGonality

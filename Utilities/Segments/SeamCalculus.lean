@@ -6,7 +6,7 @@ import Utilities.Foundations.EdgeAddition
 Fix a graph `H`, two marks `x ≠ y`, the *seam divisor* `α = (x) - (y)`
 (`seamDivisor`, from `EdgeAddition.lean`), and a base divisor `C`.  For `m : ℤ`
 the *`m`-twist* is `C + m • α` (`seamTwist`).  A firing script `f : V → ℤ` acts
-on divisors through `prin H f` (the note's `Δf`), and its *displacement* is
+on divisors through `prin H f` (written `Δf`), and its *displacement* is
 `t(f) = f x - f y` (`displacement`).  The displacement set of the `m`-twist is
 
   `d(A_m) = { t(f) : C + m • α + Δf ≥ 0 }`   (`IsDisplacement`).
@@ -15,7 +15,7 @@ The *junction class* of the pair `m | m+1` is
 `ξ_m = [C + m•α - (y)] = [C + (m+1)•α - (x)]` (`junction`), and the junction
 *has a gap* when every displacement of the `(m+1)`-twist strictly exceeds every
 displacement of the `m`-twist (`HasGap`).  The main theorem, `hasGap_iff`, is
-Theorem C together with Theorem C′ of §5/§12:
+the gap-rigidity equivalence:
 
   `HasGap C x y m  ↔  ¬ winnable H (junction C x y m)`.
 
@@ -26,18 +26,19 @@ Theorem C together with Theorem C′ of §5/§12:
   defined on representatives (uses connectedness).
 * `winnable_sub_one_chip_iff_of_qReduced` — the chip test for reduced divisors.
 * `isMaxDisplacement_of_qReduced_y`, `isMinDisplacement_of_qReduced_x` —
-  Proposition 1, extremal half: `b_m` is attained at the `y`-reduced
-  representative, `a_m` at the `x`-reduced one.
+  extremality: `b_m` is attained at the `y`-reduced representative, `a_m` at
+  the `x`-reduced one.
 * `isDisplacement_succ_of_junction_winnable`,
-  `isDisplacement_succ_of_isMaxDisplacement` — Theorem C.
+  `isDisplacement_succ_of_isMaxDisplacement` — an effective junction class
+  kills the gap.
 * `isDisplacement_pred_of_junction_winnable`,
-  `isDisplacement_of_isMinDisplacement_succ` — Theorem C from the `x`-side
+  `isDisplacement_of_isMinDisplacement_succ` — the same from the `x`-side
   (the same junction class controls the junction from both sides).
 * `le_displacement_of_qReduced_succ`, `exists_isDisplacement_succ_ge`,
-  `isMaxDisplacement_mono`, `exists_isDisplacement_le` — Lemma M.
-* `lt_script_of_qReduced_no_chip`, `hasGap_of_junction_not_winnable` —
-  Theorem C′, and `hasGap_iff` for the equivalence.
-* `not_hasGap_of_rank_pos` — Corollary C1.
+  `isMaxDisplacement_mono`, `exists_isDisplacement_le` — monotonicity.
+* `lt_script_of_qReduced_no_chip`, `hasGap_of_junction_not_winnable` — a
+  non-effective junction class forces a gap; `hasGap_iff` for the equivalence.
+* `not_hasGap_of_rank_pos` — positive rank kills gaps.
 
 ## Phase-0 API survey (`.lake/packages/chip-firing-with-lean`)
 
@@ -48,8 +49,8 @@ What the library **has** (all of it used below):
   (`ChipFiringWithLean.Basic`).
 * Firing scripts as plain functions: `firing_script G = G.V → ℤ` together with
   the additive map `prin G : firing_script G →+ CFDiv G`, given by
-  `prin G σ v = ∑ u, (σ u - σ v) * num_edges G v u`.  This **is** the `Δ` of
-  the note (the negative of the Laplacian action; see the docstring of `prin`).
+  `prin G σ v = ∑ u, (σ u - σ v) * num_edges G v u`.  This **is** the `Δ`
+  above (the negative of the Laplacian action; see the docstring of `prin`).
   `principal_iff_eq_prin` identifies `principal_divisors` with the image of
   `prin`.  There is also `firing_vector`, `set_firing`, `laplacian_matrix`,
   `apply_laplacian`, none of which are needed here.
@@ -69,10 +70,10 @@ What the library **lacks**, and how it is handled here:
   `dhar_outdeg`, `dharBurningSet`, `findQReducedDivisor`, `dhar`, `burn`, but
   proves *nothing* about them: there is no lemma "every effective divisor
   reaches its `q`-reduced representative by a finite sequence of legal
-  `q`-avoiding firings".  Consequently the *interval* half of Proposition 1 of
-  the note ("every intermediate displacement is attained") is **not**
-  formalized here.  Nothing below needs it: the extremal half of Proposition 1,
-  Lemma M, Theorem C and Theorem C′ are all proved by direct level-set
+  `q`-avoiding firings".  Consequently the statement that every intermediate
+  displacement is attained (so that `d(A_m)` is an *interval*) is **not**
+  formalized here.  Nothing below needs it: extremality, monotonicity and both
+  directions of gap rigidity are all proved by direct level-set
   (threshold-firing) arguments, unconditionally.
 * **Level sets of a script.**  `Basic.lean` contains a `private lemma
   maxset_of_script` with exactly the required inequality, but it is private and
@@ -83,8 +84,8 @@ What the library **lacks**, and how it is handled here:
 * **"Two scripts with the same principal divisor differ by a constant".**
   Absent (only the connectivity-free `q_reducer` shadow, which is private);
   proved here as `script_const_of_prin_eq_zero`.
-* ℚ-valued potentials and effective resistance: absent.  Theorems B and D of
-  the note need them and are deliberately not attempted.
+* ℚ-valued potentials and effective resistance: absent.  Results that need
+  them are deliberately not attempted.
 
 **No `sorry`, no new axioms, no stated-but-unproved hypotheses:** every result
 below is proved outright from the library's API.
@@ -298,11 +299,11 @@ def displacementSet (C : CFDiv H) (x y : H.V) (m : ℤ) : Set ℤ :=
 @[simp] lemma mem_displacementSet {C : CFDiv H} {x y : H.V} {m t : ℤ} :
     t ∈ displacementSet C x y m ↔ IsDisplacement C x y m t := Iff.rfl
 
-/-- `t` is the largest displacement of the `m`-twist (`b_m` of the note). -/
+/-- `t` is the largest displacement `b_m` of the `m`-twist. -/
 def IsMaxDisplacement (C : CFDiv H) (x y : H.V) (m t : ℤ) : Prop :=
   IsDisplacement C x y m t ∧ ∀ s, IsDisplacement C x y m s → s ≤ t
 
-/-- `t` is the smallest displacement of the `m`-twist (`a_m` of the note). -/
+/-- `t` is the smallest displacement `a_m` of the `m`-twist. -/
 def IsMinDisplacement (C : CFDiv H) (x y : H.V) (m t : ℤ) : Prop :=
   IsDisplacement C x y m t ∧ ∀ s, IsDisplacement C x y m s → t ≤ s
 
@@ -414,13 +415,12 @@ theorem script_min_at_of_qReduced (q : H.V) (D β : CFDiv H) (g : firing_script 
   rw [h2] at hlt'
   omega
 
-/-! ## Proposition 1 (extremal half): the reduced representatives are extremal
+/-! ## The reduced representatives are extremal
 
 The `y`-reduced representative maximizes the displacement, the `x`-reduced one
-minimizes it.  (The other half of Proposition 1 of the note — that every
-intermediate integer is attained, so that `d(A_m)` is an *interval* — requires
-the Dhar reduction path, which the library does not certify.  It is not used
-anywhere below.)
+minimizes it.  (The complementary statement — that every intermediate integer
+is attained, so that `d(A_m)` is an *interval* — requires the Dhar reduction
+path, which the library does not certify.  It is not used anywhere below.)
 -/
 
 /-- The `y`-reduced effective representative attains the maximal displacement. -/
@@ -485,7 +485,7 @@ lemma IsMinDisplacement.unique {C : CFDiv H} {x y : H.V} {m a a' : ℤ}
     a = a' :=
   le_antisymm (h.2 _ h'.1) (h'.2 _ h.1)
 
-/-! ## Theorem C: an effective junction class kills the gap -/
+/-! ## An effective junction class kills the gap -/
 
 /-- The junction class `ξ_m` is effective iff the `y`-reduced representative of
 the `m`-twist carries a chip at `y`. -/
@@ -499,10 +499,10 @@ theorem junction_winnable_iff_chip (C : CFDiv H) (x y : H.V) (m : ℤ)
     rw [junction]; abel
   rw [hshift, winnable_add_prin_iff]
 
-/-- **Theorem C (forward form).**  If the junction class `ξ_m` is effective then
-the `y`-reduced effective representative of the `m`-twist, translated by the
-seam, is an effective representative of the `(m+1)`-twist *with the same
-script* — hence with the same displacement. -/
+/-- **Effective junction, forward form.**  If the junction class `ξ_m` is
+effective then the `y`-reduced effective representative of the `m`-twist,
+translated by the seam, is an effective representative of the `(m+1)`-twist
+*with the same script* — hence with the same displacement. -/
 theorem isDisplacement_succ_of_junction_winnable (C : CFDiv H) (x y : H.V)
     (hxy : x ≠ y) (m : ℤ) {f : firing_script H}
     (heff : effective (seamTwist C x y m + prin H f))
@@ -526,8 +526,8 @@ theorem isDisplacement_succ_of_junction_winnable (C : CFDiv H) (x y : H.V)
     have h2 := seamDivisor_nonneg_of_ne_right x y hvy
     omega
 
-/-- **Theorem C, packaged.**  If the junction class is effective then the
-maximal displacement of the `m`-twist is again a displacement of the
+/-- **Effective junction, packaged.**  If the junction class is effective then
+the maximal displacement of the `m`-twist is again a displacement of the
 `(m+1)`-twist; in particular `b_{m+1} ≥ b_m`, i.e. `gap_m ≤ 0`. -/
 theorem isDisplacement_succ_of_isMaxDisplacement (hconn : graph_connected H)
     (C : CFDiv H) (x y : H.V) (hxy : x ≠ y) (m b : ℤ)
@@ -541,10 +541,10 @@ theorem isDisplacement_succ_of_isMaxDisplacement (hconn : graph_connected H)
   rw [hbf]
   exact isDisplacement_succ_of_junction_winnable C x y hxy m heff hred hjun
 
-/-! ## Lemma M: monotonicity of the displacement interval -/
+/-! ## Monotonicity of the displacement interval -/
 
-/-- **Lemma M (`b`-side, non-strict).**  Every displacement of the `m`-twist is
-at most the displacement of the `y`-reduced representative of the
+/-- **Monotonicity (`b`-side, non-strict).**  Every displacement of the
+`m`-twist is at most the displacement of the `y`-reduced representative of the
 `(m+1)`-twist.  Equivalently `b_m ≤ b_{m+1}`. -/
 theorem le_displacement_of_qReduced_succ (C : CFDiv H) (x y : H.V) (m : ℤ)
     {f f' : firing_script H}
@@ -562,9 +562,9 @@ theorem le_displacement_of_qReduced_succ (C : CFDiv H) (x y : H.V) (m : ℤ)
   simp only [displacement]
   omega
 
-/-- **Lemma M, `∃`-representative form.**  If the `(m+1)`-twist is winnable then
-every displacement of the `m`-twist is dominated by some displacement of the
-`(m+1)`-twist. -/
+/-- **Monotonicity, `∃`-representative form.**  If the `(m+1)`-twist is
+winnable then every displacement of the `m`-twist is dominated by some
+displacement of the `(m+1)`-twist. -/
 theorem exists_isDisplacement_succ_ge (hconn : graph_connected H) (C : CFDiv H)
     (x y : H.V) (m s : ℤ) (hs : IsDisplacement C x y m s)
     (hw : winnable H (seamTwist C x y (m + 1))) :
@@ -574,7 +574,7 @@ theorem exists_isDisplacement_succ_ge (hconn : graph_connected H) (C : CFDiv H)
   exact ⟨displacement x y f', ⟨f', heff', rfl⟩,
     le_displacement_of_qReduced_succ C x y m heff hred'⟩
 
-/-- **Lemma M, maximal form**: `b_m ≤ b_{m+1}`. -/
+/-- **Monotonicity, maximal form**: `b_m ≤ b_{m+1}`. -/
 theorem isMaxDisplacement_mono (hconn : graph_connected H) (C : CFDiv H)
     (x y : H.V) (m b b' : ℤ)
     (hb : IsMaxDisplacement C x y m b)
@@ -584,15 +584,15 @@ theorem isMaxDisplacement_mono (hconn : graph_connected H) (C : CFDiv H)
     (winnable_of_isDisplacement hb'.1)
   exact le_trans hle (hb'.2 t ht)
 
-/-! ## Theorem C′: a non-effective junction class forces a gap
+/-! ## A non-effective junction class forces a gap
 
-This is §12 of the note.  The argument there runs a terminating level-set
-firing iteration; the proof below shortcuts it.  A *single* level set decides
-the matter: a `y`-reduced representative of the `m`-twist with no chip at `y`
-cannot tolerate `y` sitting at the top level of the transition script.
+Rather than running a terminating level-set firing iteration, the proof below
+takes a shortcut.  A *single* level set decides the matter: a `y`-reduced
+representative of the `m`-twist with no chip at `y` cannot tolerate `y` sitting
+at the top level of the transition script.
 -/
 
-/-- **The level-set core of Theorem C′.**  Let `D` be effective and `y`-reduced
+/-- **The level-set core of gap forcing.**  Let `D` be effective and `y`-reduced
 with *no chip at* `y`, and suppose `D + α + Δg` is effective.  Then `g` is
 strictly larger at `x` than at `y`: the seam step strictly increases the
 displacement. -/
@@ -631,12 +631,12 @@ theorem lt_script_of_qReduced_no_chip (x y : H.V) (hxy : x ≠ y)
   omega
 
 /-- The junction `m | m+1` *has a gap*: every displacement of the `(m+1)`-twist
-strictly exceeds every displacement of the `m`-twist.  In the notation of the
-note this is `gap_m = a_{m+1} - b_m ≥ 1`. -/
+strictly exceeds every displacement of the `m`-twist.  In terms of the extremal
+displacements this is `gap_m = a_{m+1} - b_m ≥ 1`. -/
 def HasGap (C : CFDiv H) (x y : H.V) (m : ℤ) : Prop :=
   ∀ s t : ℤ, IsDisplacement C x y m s → IsDisplacement C x y (m + 1) t → s < t
 
-/-- **Theorem C′.**  A non-effective junction class forces a gap. -/
+/-- **Gap forcing.**  A non-effective junction class forces a gap. -/
 theorem hasGap_of_junction_not_winnable (hconn : graph_connected H) (C : CFDiv H)
     (x y : H.V) (hxy : x ≠ y) (m : ℤ)
     (hjun : ¬ winnable H (junction C x y m)) :
@@ -663,9 +663,9 @@ theorem hasGap_of_junction_not_winnable (hconn : graph_connected H) (C : CFDiv H
   simp only [displacement] at hs' ⊢
   omega
 
-/-- **Theorem C, contrapositive form.**  An effective junction class rules out a
-gap (assuming the `m`-twist is winnable, so that there is something to rule
-out). -/
+/-- **Effective junction, contrapositive form.**  An effective junction class
+rules out a gap (assuming the `m`-twist is winnable, so that there is something
+to rule out). -/
 theorem not_hasGap_of_junction_winnable (hconn : graph_connected H) (C : CFDiv H)
     (x y : H.V) (hxy : x ≠ y) (m : ℤ)
     (hw : winnable H (seamTwist C x y m))
@@ -676,10 +676,9 @@ theorem not_hasGap_of_junction_winnable (hconn : graph_connected H) (C : CFDiv H
   exact absurd (hgap _ _ ⟨f, heff, rfl⟩
     (isDisplacement_succ_of_junction_winnable C x y hxy m heff hred hjun)) (lt_irrefl _)
 
-/-- **Theorem C ⟺ Theorem C′ (gap rigidity is an equivalence).**  For a winnable
-`m`-twist on a connected graph, the junction `m | m+1` has a gap exactly when
-its junction class `ξ_m = [C + m•α - (y)] = [C + (m+1)•α - (x)]` fails to be
-effective. -/
+/-- **Gap rigidity is an equivalence.**  For a winnable `m`-twist on a connected
+graph, the junction `m | m+1` has a gap exactly when its junction class
+`ξ_m = [C + m•α - (y)] = [C + (m+1)•α - (x)]` fails to be effective. -/
 theorem hasGap_iff (hconn : graph_connected H) (C : CFDiv H) (x y : H.V)
     (hxy : x ≠ y) (m : ℤ) (hw : winnable H (seamTwist C x y m)) :
     HasGap C x y m ↔ ¬ winnable H (junction C x y m) := by
@@ -688,7 +687,7 @@ theorem hasGap_iff (hconn : graph_connected H) (C : CFDiv H) (x y : H.V)
     exact not_hasGap_of_junction_winnable hconn C x y hxy m hw hjun hgap
   · exact hasGap_of_junction_not_winnable hconn C x y hxy m
 
-/-- **Corollary C1 (rank kills gaps).**  If the `m`-twist has positive rank then
+/-- **Rank kills gaps.**  If the `m`-twist has positive rank then
 its junction class is effective, so the junction `m | m+1` has no gap. -/
 theorem not_hasGap_of_rank_pos (hconn : graph_connected H) (C : CFDiv H)
     (x y : H.V) (hxy : x ≠ y) (m : ℤ)
@@ -702,7 +701,7 @@ theorem not_hasGap_of_rank_pos (hconn : graph_connected H) (C : CFDiv H)
     omega
   exact not_hasGap_of_junction_winnable hconn C x y hxy m hw hjun
 
-/-- **Lemma M, strict form.**  When the junction class is not effective the
+/-- **Monotonicity, strict form.**  When the junction class is not effective the
 displacement strictly increases: `b_{m+1} ≥ b_m + 1`. -/
 theorem exists_isDisplacement_succ_gt (hconn : graph_connected H) (C : CFDiv H)
     (x y : H.V) (hxy : x ≠ y) (m s : ℤ) (hs : IsDisplacement C x y m s)
@@ -712,7 +711,7 @@ theorem exists_isDisplacement_succ_gt (hconn : graph_connected H) (C : CFDiv H)
   obtain ⟨t, ht, _⟩ := exists_isDisplacement_succ_ge hconn C x y m s hs hw
   exact ⟨t, ht, hasGap_of_junction_not_winnable hconn C x y hxy m hjun s t hs ht⟩
 
-/-! ## The `x ↔ y` symmetry, and the `a`-side of Lemma M
+/-! ## The `x ↔ y` symmetry, and the `a`-side of monotonicity
 
 Swapping the two marks negates the seam, the twist index and the displacement.
 -/
@@ -745,8 +744,8 @@ lemma junction_swap (C : CFDiv H) (x y : H.V) (m : ℤ) :
   congr 2
   omega
 
-/-- **Theorem C, `x`-side form.**  The junction has a *single* obstruction
-class, seen from both sides (§5 of the note): the same hypothesis
+/-- **Effective junction, `x`-side form.**  The junction has a *single*
+obstruction class, seen from both sides: the same hypothesis
 `ξ_m = [C + (m+1)•α - (x)]` effective shows that the `x`-reduced effective
 representative of the `(m+1)`-twist, translated back by the seam, is an
 effective representative of the `m`-twist with the same script. -/
@@ -769,9 +768,9 @@ theorem isDisplacement_pred_of_junction_winnable (C : CFDiv H) (x y : H.V)
   rw [neg_neg, displacement_swap, neg_neg] at h
   exact h
 
-/-- **Theorem C, `x`-side packaged.**  If the junction class is effective, the
-minimal displacement of the `(m+1)`-twist is again a displacement of the
-`m`-twist; in particular `a_m ≤ a_{m+1}` is not strict. -/
+/-- **Effective junction, `x`-side packaged.**  If the junction class is
+effective, the minimal displacement of the `(m+1)`-twist is again a
+displacement of the `m`-twist; in particular `a_m ≤ a_{m+1}` is not strict. -/
 theorem isDisplacement_of_isMinDisplacement_succ (hconn : graph_connected H)
     (C : CFDiv H) (x y : H.V) (hxy : x ≠ y) (m a : ℤ)
     (ha : IsMinDisplacement C x y (m + 1) a)
@@ -784,7 +783,7 @@ theorem isDisplacement_of_isMinDisplacement_succ (hconn : graph_connected H)
   rw [haf]
   exact isDisplacement_pred_of_junction_winnable C x y hxy m heff hred hjun
 
-/-- **Lemma M (`a`-side).**  If the `m`-twist is winnable then every
+/-- **Monotonicity (`a`-side).**  If the `m`-twist is winnable then every
 displacement of the `(m+1)`-twist dominates some displacement of the `m`-twist:
 `a_m ≤ a_{m+1}`. -/
 theorem exists_isDisplacement_le (hconn : graph_connected H) (C : CFDiv H)

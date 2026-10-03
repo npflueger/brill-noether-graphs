@@ -11,8 +11,7 @@ proves `crossOneOffCutoff g (B.length beta) ≤ k` for the near-opposite marking
 sharp bound holds for every torsion witness whenever the two strand lengths
 are not *both* equal to two.
 
-The argument (`Bananas/FORMALIZATION_NOTES.md`, "the short-strand period separation is
-provable — closed-form torsion order") extracts from the slope framework of
+The argument extracts from the slope framework of
 `Bananas/BananaTorsionSlopes.lean` the exact identity `m = p + r + Σ_γ q_γ`
 where `p := d/a`, `r := d/b` (`d` a common multiple of the two marked
 lengths) and each `q_γ` a common-multiple share of `|rise|` over the other

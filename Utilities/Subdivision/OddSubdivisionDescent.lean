@@ -476,8 +476,8 @@ theorem bnRankGe_one_four_of_exists_odd_regularSubdivision (G : CFGraph)
 /-- **The odd pair witness.**  Every pair of original vertices `x, y` (equal
 or not) admits, on some odd regular subdivision depending on the pair, an
 effective degree-two completion of `x + y` to a divisor of rank at least
-one.  This is the exact combinatorial input that the algebraic degree-five
-argument of the research notes is meant to produce for genus-five graphs. -/
+one.  This is the exact combinatorial input that an algebraic degree-five
+argument for genus-five graphs is meant to produce. -/
 def OddPairWitness (G : CFGraph) : Prop :=
   ∀ x y : G.V, ∃ (N : ℕ) (hN : 0 < N), Odd N ∧
     ∃ F : CFDiv (regularSubdivision G N hN), effective F ∧ deg F = 2 ∧

@@ -27,7 +27,8 @@ That is `RepInvariant`, and it is genuinely an extra input:
   (`ExplicitPotential.Certificate.potential_eq_of_segment_eval_zero`);
 * on a whole class it is exactly the statement that `rep` merges only vertices
   joined by chains of collapsed slots.  The `forest` field does not imply this
-  (see the caveat in the design note), so it is supplied, and
+  (see the caveat in the header of `Utilities/Subdivision/DegenerateSpec.lean`),
+  so it is supplied, and
   `repInvariant_evaluatedPotential_of_zeroReach` in
   `Certificate/DegenerateRankOne.lean` discharges it from such a chain.
 

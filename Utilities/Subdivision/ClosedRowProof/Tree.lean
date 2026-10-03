@@ -5,26 +5,25 @@ import Utilities.Subdivision.ClosedRowProof.ClosedVertexCut
 /-!
 # The row-proof tree layer, deep-embedded
 
-Step C of the proof-data source needs a way to lower a `SPLIT` node.  `NEXT.md`
-proposed lowering it *shallowly*, as a generated `rcases le_or_gt`; this file
-takes the deep-embedded route instead, for the same reason the corresponding closed-row proof module
-deep-embeds the arithmetic:
+A `SPLIT` node could be lowered *shallowly*, as a generated `rcases le_or_gt`;
+this file takes the deep-embedded route instead, for the same reason the
+corresponding closed-row proof module deep-embeds the arithmetic:
 
 * the whole tree becomes one piece of data and one `decide`, instead of one
   `decide` per leaf plus a generated tactic script whose size is the number of
   nodes — for `g4row099` that is 64 leaves and 63 splits;
 * the accumulated context at a leaf is *computed* by `PTree.checks` rather than
   transcribed by the emitter, so the emitter cannot get it wrong;
-* the `rcases le_or_gt` of the shallow plan survives verbatim, once, inside
+* the `rcases le_or_gt` of the shallow lowering survives verbatim, once, inside
   `PTree.sound` below, where it is proved rather than generated.
 
 The tree layer is deliberately minimal: `SPLIT`, `LEAF`, `USE`, `AUTO`,
 `ABSURD`, and the one `REDUCE` opcode whose Lean theorem exists on the closed
-orthant, `REDUCE CUTVERTEX`.  Spec §4.2's other opcodes (`SPLIT3`, `MOD`,
-`CITE`, and the other `REDUCE` operations) are absent on purpose — spec
-§13.6's rule is that a node shape is a reject until its Lean theorem exists,
-and adding a constructor here with no soundness case would break `PTree.sound`
-rather than silently weaken it.
+orthant, `REDUCE CUTVERTEX`.  The format's other opcodes (`SPLIT3`, `MOD`,
+`CITE`, and the other `REDUCE` operations) are absent on purpose — a node
+shape is a reject until its Lean theorem exists, and adding a constructor here
+with no soundness case would break `PTree.sound` rather than silently weaken
+it.
 
 ## `ABSURD`
 
@@ -71,7 +70,7 @@ become 15 subtrees plus 64 entailment citations.
 ## `REDUCE CUTVERTEX`
 
 `(reduce cutvertex v c_0 … c_{p-1})` names an articulation vertex `v` and
-two-colours the slots.  the proof-data source verifies that the colouring
+two-colours the slots.  The external checker verifies that the colouring
 really does split the core at `v` into two connected positive-genus factors
 meeting only there, and then cites the factorwise gluing theorem.  On the Lean
 side that citation is
@@ -97,8 +96,8 @@ Three things make the fit exact rather than approximate.
 ## The context discipline
 
 `SPLIT g` pushes `g` in the first branch and `−1 − g` in the second; over the
-integers those are exhaustive, and that is the entire coverage argument (spec
-§4.2).  New rows are appended at the **end** of `Γ.ge`, so a context row's
+integers those are exhaustive, and that is the entire coverage argument.
+New rows are appended at the **end** of `Γ.ge`, so a context row's
 index never changes as the tree descends: at a leaf of a depth-`k` branch the
 root's `p` coordinate rows still sit at indices `0 … p−1` and the branch
 conditions at `p … p+k−1`.  That stability is what lets the emitter address
@@ -258,10 +257,10 @@ theorem entryChecks_sound {Γ : Context} {x : List ℤ} (hΓ : Γ.Holds x) :
       · exact Cert.check_sound h.1 hΓ
       · exact entryChecks_sound hΓ (entry := gs) (certs := cs.tail) h.2 f hf
 
-/-- A row proof tree: spec §4.2 restricted to the node shapes that have a Lean
-soundness theorem. -/
+/-- A row proof tree, restricted to the node shapes that have a Lean soundness
+theorem. -/
 inductive PTree where
-  /-- A leaf carrying the local witness of spec §4.3. -/
+  /-- A leaf carrying a single-block local witness. -/
   | leaf : Witness → PTree
   /-- A full W1--W5 leaf with multiple blocks and positioned chips. -/
   | richLeaf : RichWitness → PTree
@@ -390,12 +389,12 @@ theorem subContext_holds (hp : p ≤ m) (point : Fin m → ℤ) (ℓ : Fin p →
 Every branch of an accepted tree ends in an accepted leaf whose context holds
 at the point, or in an `ABSURD` node whose context holds at no point at all.
 The two `SPLIT` branches are exhaustive over `ℤ`, which is the coverage
-argument of spec §4.2 and the only place it is used.
+argument and the only place it is used.
 
 The extra hypothesis `hE` is the induction's account of `USE`: every entry
 context in scope is one whose satisfaction already yields the goal.  A `use`
 node consumes it by re-deriving that entry context here, which is the context
-weakening spec §4.2 asks of a citation and nothing more. -/
+weakening a citation asks for and nothing more. -/
 theorem PTree.sound (hp : p ≤ m) (hn : 0 < n) (point : Fin m → ℤ)
     (ℓ : Fin p → ℕ) (hlen : ∀ e : Fin p, (ℓ e : ℤ) = point (Fin.castLE hp e))
     (hForest : IsForest core (zeroSet ℓ))
@@ -536,7 +535,7 @@ end Sound
 An accepted tree at the closed root proves the goal on every face of the closed
 length orthant whose vanishing set is a non-loopy forest — that is, on every
 subdivision of the core *and* every equal-genus contraction of one.  Compare
-spec §3 and `AllMarksCoreCase.SolvedAllMarksClosedCensus`. -/
+`AllMarksCoreCase.SolvedAllMarksClosedCensus`. -/
 theorem tree_sound_closed_root {n p : ℕ} (core : ExplicitPotential.Core n p)
     (t : PTree) (degree : ℤ) (hn : 0 < n)
     (hchk : PTree.checks p core degree (rootContextClosed p) t = true)

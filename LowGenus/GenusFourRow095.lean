@@ -7,9 +7,8 @@ import LowGenus.GenusFourCubicAtlas
 # The signed-window proof for genus-four Core 095
 
 Core 095 is the loopless six-vertex, nine-slot core occurring as the first
-family in Atanasov--Ranganathan.  This file translates the short firing
-profiles recorded in the accompanying analysis
-into the generic signed-window API.
+family in Atanasov--Ranganathan.  This file translates short firing
+profiles into the generic signed-window API.
 
 The catalog orientation is
 

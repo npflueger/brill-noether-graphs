@@ -39,7 +39,7 @@ separates `a` from `b` inside `U`.
 Note that no `t ≠ s` hypothesis is needed: `s ∈ Anc hT s nb` always, so `h2`
 already forces `t ≠ s`.
 
-Discharge plan (the σ-colouring argument of the blueprint §3.4).  For `u ∈ U`
+Discharge plan (a σ-colouring argument).  For `u ∈ U`
 with `u ∉ bag t`, `D.coherent` makes `S u := {n | u ∈ bag n}` connected and it
 misses `t`, so `subset_below_or_disjoint` puts it wholly inside `Below` or
 wholly outside.  Along an `H`-edge inside `U`, `D.cover_edge` supplies a node in

@@ -124,8 +124,7 @@ theorem rowDivisor_coreVertex (d : DegSpec 8 12) (r : Fin 8) :
 
 /-! ## The nested-min heights
 
-Two pictures, four readings, all four verbatim from
-auxiliary calculations §3.3. -/
+Two pictures, four readings. -/
 
 /-- `a = min |e0| |e2|`, the outer centre's arm minimum. -/
 def armMin (d : DegSpec 8 12) : ℕ := min (d.length 0) (d.length 2)

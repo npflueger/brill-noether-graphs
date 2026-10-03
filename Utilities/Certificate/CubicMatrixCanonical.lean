@@ -48,8 +48,7 @@ the most.
 The remaining obligation is named `CanonicalRepresentative`: every candidate is
 isomorphic to a canonical one.  **It is stated here and not proved.**  Its
 empirical form was checked at `n = 6`, where the 20 canonical connected leaves
-carry all six atlas indices; see
-the accompanying analysis.
+carry all six atlas indices.
 -/
 
 namespace Utilities.Certificate.CubicMatrixReplay

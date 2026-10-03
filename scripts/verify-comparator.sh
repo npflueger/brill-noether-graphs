@@ -14,13 +14,24 @@ lean4export_commit=15f6055e299ad5b89345e533cc2192f4cc00f659
 landrun_commit=811cfff51ceaf3d9843708aa6d22e9b84ccac8b4
 nanoda_commit=68d5ca9db226849b41a6fff59d796ff19d0a8840
 
+# PALOMAR_FAKE_LANDRUN=1 replaces Landrun with Comparator's development shim
+# `scripts/fake-landrun.sh`, which runs every command unsandboxed.  It is for
+# systems without Landlock, such as macOS, where Landrun cannot run.  The
+# statement, axiom and kernel checks are unchanged, but the build and export
+# steps are not sandboxed, so a passing run is weaker evidence than the CI run.
+fake_landrun=${PALOMAR_FAKE_LANDRUN:-0}
+
 if [ "$#" -eq 0 ]; then
   set -- highlights-comparator.json twice-marked-bananas-comparator.json \
-    Palomar/BNChains/comparator.json
+    Palomar/BNChains/comparator.json Palomar/GenusSix/comparator.json
 fi
 comparator_configs=("$@")
 
-for required_command in cargo git go lake python3; do
+required_commands=(cargo git lake python3)
+if [ "$fake_landrun" != 1 ]; then
+  required_commands+=(go)
+fi
+for required_command in "${required_commands[@]}"; do
   if ! command -v "$required_command" >/dev/null 2>&1; then
     echo "error: $required_command is required to run Comparator" >&2
     exit 1
@@ -74,7 +85,13 @@ fi
 checkout_exact https://github.com/leanprover/comparator.git "$comparator_dir" "$comparator_commit"
 checkout_exact https://github.com/robsimmons/nanoda_lib.git "$nanoda_dir" "$nanoda_commit"
 
-GOBIN="$bin_dir" go install "github.com/zouuup/landrun/cmd/landrun@$landrun_commit"
+if [ "$fake_landrun" = 1 ]; then
+  echo "warning: PALOMAR_FAKE_LANDRUN=1: Comparator's builds and exports run UNSANDBOXED" >&2
+  landrun_binary="$comparator_dir/scripts/fake-landrun.sh"
+else
+  GOBIN="$bin_dir" go install "github.com/zouuup/landrun/cmd/landrun@$landrun_commit"
+  landrun_binary="$bin_dir/landrun"
+fi
 (cd "$comparator_dir" && lake build comparator)
 (cd "$lean4export_dir" && lake build lean4export)
 (cd "$nanoda_dir" && cargo build --release --locked)
@@ -83,7 +100,7 @@ cd "$repository_root"
 lake exe cache get
 for config in "${comparator_configs[@]}"; do
   echo "==> Checking $config"
-  PALOMAR_LANDRUN_BIN="$bin_dir/landrun" \
+  PALOMAR_LANDRUN_BIN="$landrun_binary" \
   COMPARATOR_LEAN4EXPORT="$lean4export_dir/.lake/build/bin/lean4export" \
   COMPARATOR_NANODA="$nanoda_dir/target/release/nanoda_bin" \
   COMPARATOR_LANDRUN="$repository_root/scripts/landrun-wrapper.sh" \

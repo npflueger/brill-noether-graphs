@@ -6,14 +6,13 @@ import Utilities.Subdivision.OneEdgeSplitRefinement
 /-!
 # Legged cores: marked points as legs
 
-The marked-moduli organization (`PHILOSOPHY.md` §1): a marked point is a
-**leg** attached at its own vertex of the core, contributing one incidence
-to valence.  The leg construction on the ordered-slot core is a one-slot
-split — the same combinatorial move as
-`OneEdgeSplitRefinement.splitCore`, restated here at the `Core` level so it
-can be iterated (the second leg of a two-marked row lands on the once-legged
-core) and consumed by the closed-orthant machinery, which never sees a
-`Spec`.
+The marked-moduli organization: a marked point is a **leg** attached at its
+own vertex of the core, contributing one incidence to valence.  The leg
+construction on the ordered-slot core is a one-slot split — the same
+combinatorial move as `OneEdgeSplitRefinement.splitCore`, restated here at the
+`Core` level so it can be iterated (the second leg of a two-marked row lands on
+the once-legged core) and consumed by the closed-orthant machinery, which never
+sees a `Spec`.
 
 `MarkedCore` packages a core with distinguished marked vertices, and
 `LegStable` is the maximal-cone condition of `M_{g,n}^trop`: marked vertices

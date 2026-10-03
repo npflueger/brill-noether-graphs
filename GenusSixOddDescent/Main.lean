@@ -23,9 +23,11 @@ minimum-degree, wedge, or bridgelessness hypothesis.
 
 The witness `GenusSixOddSubdivisionWitness` is a hypothesis of the final
 theorem, not an axiom and not an admitted theorem.  It is proved separately, by
-the Draisma--Vargas count, which is to be published as the library
-`DraismaVargasCount`; it is also motivated by Baker's specialization of linear
-systems from curves to graphs.  The descent implication itself is
+the Draisma--Vargas count, in the library `DraismaVargasCount`.  It is the
+combinatorial form of a prediction of K. Christ and Q. Ma (*Bounding the number
+of graph refinements for Brill--Noether existence*, arXiv:2304.07405), obtained
+from Baker's specialization of linear systems from curves to graphs; see
+`GenusSixOddDescent.Statement`.  The descent implication itself is
 unconditional.
 -/
 
@@ -204,8 +206,8 @@ bridgelessness of the core through `twoEdgeCutCondition_fossil` and
 `core_bridgeless_of_twoEdgeCutCondition`, and `BNExists_fossil_iff` carries the
 pencil back to `G`.
 
-The witness is proved separately, by the Draisma--Vargas count (to be published
-as the library `DraismaVargasCount`). -/
+The witness is proved separately, by the Draisma--Vargas count, in the library
+`DraismaVargasCount`. -/
 theorem bnExists_genus_six_of_oddWitness (hwit : GenusSixOddSubdivisionWitness.{u})
     (G : CFGraph.{u}) (hconn : graph_connected G) (hgenus : genus G = 6)
     {r d : ℤ} (hR : 0 ≤ r) (hRho : 0 ≤ bnNumber G r d) :

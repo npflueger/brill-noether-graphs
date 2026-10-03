@@ -3,18 +3,17 @@ import Mathlib.Tactic
 /-!
 # The row-proof arithmetic layer, deep-embedded
 
-This is step A of the proof-data source: affine forms, contexts, and the
-entailment checker of the format spec §4.1 / §13.4, as `Bool` functions over
-`List ℤ`, proved sound once.
+This file provides affine forms, contexts, and the entailment checker of the
+row-proof certificate format, as `Bool` functions over `List ℤ`, proved sound
+once.
 
 ## Representation discipline
 
 Everything generated is `List ℤ` addressed with `List.getD`.  No `![…]`, no
 `Fin`-indexed functions, no `Matrix.cons`.  This is not a style preference:
-the accompanying analysis §5 measured 198 s of kernel
-type-checking for one `rfl` through `![…]` at a `Fin` numeral against 15 ms
-for the same goal by `decide`, and the accompanying analysis records 189,527
-unfoldings of `instDecidableEqSum.decEq` from the same family of mistake.
+one `rfl` through `![…]` at a `Fin` numeral was measured at 198 s of kernel
+type-checking against 15 ms for the same goal by `decide`, and the same family
+of mistake has produced 189,527 unfoldings of `instDecidableEqSum.decEq`.
 
 ## The one design decision worth recording
 
@@ -173,8 +172,8 @@ structure Cert where
 def Cert.combination (w : Cert) (Γ : Context) : Form :=
   addForm [w.c] (addForm (combineRows Γ.ge w.lam) (combineRows Γ.eq w.mu))
 
-/-- The checker of spec §4.1.  One pass over the sparse lists and one vector
-comparison; **no rounding**, deliberately (§13.4). -/
+/-- The entailment checker.  One pass over the sparse lists and one vector
+comparison; **no rounding**, deliberately. -/
 def Cert.check (w : Cert) (Γ : Context) (g : Form) : Bool :=
   decide (1 ≤ w.k) && decide (0 ≤ w.c) &&
     w.lam.all (fun p => decide (0 ≤ p.2)) &&
