@@ -93,6 +93,7 @@ import Utilities.Highlights
 import Utilities.IntegralGeometry.ConeWall
 import Utilities.IntegralGeometry.Denominator
 import Utilities.IntegralGeometry.DeterminantDenominator
+import Utilities.IntegralGeometry.DeterminantExpansion
 import Utilities.IntegralGeometry.FiniteStrictMarch
 import Utilities.IntegralGeometry.PositiveOrthantExit
 import Utilities.IntegralGeometry.RationalGenericStart
@@ -123,6 +124,8 @@ import Utilities.Subdivision.AffineCoverData
 import Utilities.Subdivision.AffineDecisionCoverData
 import Utilities.Subdivision.AffinePosition
 import Utilities.Subdivision.AffinePositionMultiBreak
+import Utilities.Subdivision.BivalentPaths
+import Utilities.Subdivision.BridgeLift
 import Utilities.Subdivision.CanonicalDivisor
 import Utilities.Subdivision.CensusSpanningForest
 import Utilities.Subdivision.CorePairMultiplicity
@@ -190,6 +193,7 @@ import Utilities.Subdivision.RankOne
 import Utilities.Subdivision.RampScript
 import Utilities.Subdivision.ReorientContraction
 import Utilities.Subdivision.ScaleComposition
+import Utilities.Subdivision.ScaleLift
 import Utilities.Subdivision.SlopeScript
 import Utilities.Subdivision.SlotGrid
 import Utilities.Subdivision.SlotIntervalFiring
