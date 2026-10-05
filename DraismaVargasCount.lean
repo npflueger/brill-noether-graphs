@@ -3,6 +3,7 @@ import DraismaVargasCount.AttachmentFibre
 import DraismaVargasCount.BallotCoreIdentification
 import DraismaVargasCount.BallotDatum
 import DraismaVargasCount.BallotDiagonal
+import DraismaVargasCount.BallotEndSwapGeneral
 import DraismaVargasCount.BallotEndSwapSheetIso
 import DraismaVargasCount.BallotFarEndSwap
 import DraismaVargasCount.BallotFullDimensional
@@ -54,6 +55,7 @@ import DraismaVargasCount.DiscreteContraction
 import DraismaVargasCount.DiscreteW4Normalization
 import DraismaVargasCount.EdgeDenominator
 import DraismaVargasCount.EndSwapRealized
+import DraismaVargasCount.EvenGenusParity
 import DraismaVargasCount.ExpansionSeriesMoment
 import DraismaVargasCount.ExtractGenusTwo
 import DraismaVargasCount.FacetAdapterPilot
@@ -278,8 +280,11 @@ the propagation of the parity to every cubic core, and the endgame that turns an
 pencil on an odd regular subdivision.
 
 Much of the machinery (fibres and their multiplicities, wall crossings, star censuses, and the
-type-change correspondences) is stated for general degree and core size. The base count and the
-endgame are specific to genus six.
+type-change correspondences) is stated for general degree and core size. The base count over the
+caterpillar of loops and the propagation of its parity hold in every even genus at least six
+(`BallotEndSwapGeneral`, `EvenGenusParity`): over every connected cubic core of genus `2k + 2`,
+`k ≥ 2`, the open odd count in degree `k + 2` has the parity of `catalan (k + 1)`. The endgame is
+specific to genus six.
 
 The witness is exactly the hypothesis of `GenusSixOddDescent.bnExists_genus_six_of_oddWitness`;
 together they give Brill--Noether existence in genus six. Declarations live in the namespace

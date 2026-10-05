@@ -98,7 +98,10 @@ and its solution is still to be written.
   regular subdivision of odd order carrying a divisor of degree four and rank
   at least one, by a mod-2 form of the Draisma–Vargas count of tropical
   morphisms to trees. Together with `GenusSixOddDescent` this gives
-  Brill–Noether existence in genus six.
+  Brill–Noether existence in genus six. It also proves the mod-2 count in every
+  even genus `2k + 2` with `k ≥ 2`: over every connected cubic core, the number
+  of open classes of odd multiplicity in degree `k + 2` has the parity of the
+  Catalan number `catalan (k + 1)` (`DraismaVargasCount/EvenGenusParity.lean`).
 - `GenusSixExistence/` proves Brill–Noether existence for every connected graph
   of genus six, and hence through genus six, extending the Atanasov–Ranganathan
   theorem of `LowGenus`. It also deduces once-marked Brill–Noether existence at
