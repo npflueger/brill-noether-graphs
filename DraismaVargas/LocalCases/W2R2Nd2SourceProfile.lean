@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W2R2SourceProfile
-import DraismaVargas.LocalCases.W3R1SourceProfile
+module
+
+public import DraismaVargas.LocalCases.W2R2SourceProfile
+public import DraismaVargas.LocalCases.W3R1SourceProfile
+
+@[expose] public section
 
 /-!
 # The actual index profiles of the two excluded nd2 cases of Case {w2-r2}

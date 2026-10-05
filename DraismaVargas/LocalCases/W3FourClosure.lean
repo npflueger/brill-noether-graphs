@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W3FourDisjointness
+module
+
+public import DraismaVargas.LocalCases.W3FourDisjointness
+
+@[expose] public section
 
 /-!
 # Figure 28's Position I and Position II.b members, on branch-swapped wall data
@@ -138,7 +142,7 @@ when `e₂` is a proper nonempty subset, which the case's index identity
 
 section SplitAlong
 
-private def splitAlongRepr (coarse fine : SheetPartition d) (pivot alt i : Fin d) :
+def splitAlongRepr (coarse fine : SheetPartition d) (pivot alt i : Fin d) :
     Fin d :=
   if coarse.Rel pivot i then (if fine.Rel pivot i then pivot else alt)
   else coarse.repr i
@@ -154,15 +158,15 @@ def splitAlong (coarse fine : SheetPartition d) (pivot alt : Fin d)
     intro i
     unfold splitAlongRepr
     by_cases hi : coarse.Rel pivot i
-    · rw [if_pos hi]
+    · rw [ite_eq_left hi]
       by_cases hf : fine.Rel pivot i
-      · rw [if_pos hf, if_pos (show coarse.Rel pivot pivot from rfl),
-          if_pos (show fine.Rel pivot pivot from rfl)]
-      · rw [if_neg hf, if_pos hAlt, if_neg hSep]
-    · rw [if_neg hi]
+      · rw [ite_eq_left hf, ite_eq_left (show coarse.Rel pivot pivot from rfl),
+          ite_eq_left (show fine.Rel pivot pivot from rfl)]
+      · rw [ite_eq_right hf, ite_eq_left hAlt, ite_eq_right hSep]
+    · rw [ite_eq_right hi]
       have hRepr : ¬coarse.Rel pivot (coarse.repr i) := fun h ↦
         hi (h.trans (coarse.rel_repr_left i))
-      rw [if_neg hRepr, coarse.repr_idem i]
+      rw [ite_eq_right hRepr, coarse.repr_idem i]
 
 variable {coarse fine : SheetPartition d} {pivot alt : Fin d}
 
@@ -180,13 +184,13 @@ theorem splitAlong_pivot_ne_alt (hSep : ¬fine.Rel pivot alt) : pivot ≠ alt :=
 theorem splitAlong_repr_pivot (hAlt : coarse.Rel pivot alt)
     (hSep : ¬fine.Rel pivot alt) :
     (splitAlong coarse fine pivot alt hAlt hSep).repr pivot = pivot := by
-  rw [splitAlong_repr_eq, if_pos (show coarse.Rel pivot pivot from rfl),
-    if_pos (show fine.Rel pivot pivot from rfl)]
+  rw [splitAlong_repr_eq, ite_eq_left (show coarse.Rel pivot pivot from rfl),
+    ite_eq_left (show fine.Rel pivot pivot from rfl)]
 
 theorem splitAlong_repr_alt (hAlt : coarse.Rel pivot alt)
     (hSep : ¬fine.Rel pivot alt) :
     (splitAlong coarse fine pivot alt hAlt hSep).repr alt = alt := by
-  rw [splitAlong_repr_eq, if_pos hAlt, if_neg hSep]
+  rw [splitAlong_repr_eq, ite_eq_left hAlt, ite_eq_right hSep]
 
 /-- Outside the split block the canonical representative is neither of the two
 new ones. -/
@@ -204,22 +208,22 @@ theorem splitAlong_refines (hAlt : coarse.Rel pivot alt)
   intro i j hij
   rw [SheetPartition.rel_iff, splitAlong_repr_eq, splitAlong_repr_eq] at hij
   by_cases hi : coarse.Rel pivot i
-  · rw [if_pos hi] at hij
+  · rw [ite_eq_left hi] at hij
     by_cases hj : coarse.Rel pivot j
     · exact hi.symm.trans hj
-    · rw [if_neg hj] at hij
+    · rw [ite_eq_right hj] at hij
       obtain ⟨hPivot, hAltNe⟩ := repr_ne_of_not_rel hAlt hj
       split_ifs at hij
       · exact absurd hij.symm hPivot
       · exact absurd hij.symm hAltNe
-  · rw [if_neg hi] at hij
+  · rw [ite_eq_right hi] at hij
     obtain ⟨hPivot, hAltNe⟩ := repr_ne_of_not_rel hAlt hi
     by_cases hj : coarse.Rel pivot j
-    · rw [if_pos hj] at hij
+    · rw [ite_eq_left hj] at hij
       split_ifs at hij
       · exact absurd hij hPivot
       · exact absurd hij hAltNe
-    · rw [if_neg hj] at hij
+    · rw [ite_eq_right hj] at hij
       exact hij
 
 /-- Any partition refining `coarse` which never separates the `fine` class
@@ -236,12 +240,12 @@ theorem refines_splitAlong (hAlt : coarse.Rel pivot alt)
   rw [SheetPartition.rel_iff, splitAlong_repr_eq, splitAlong_repr_eq]
   by_cases hi : coarse.Rel pivot i
   · have hj : coarse.Rel pivot j := hi.trans hCoarse
-    rw [if_pos hi, if_pos hj]
+    rw [ite_eq_left hi, ite_eq_left hj]
     by_cases hf : fine.Rel pivot i
-    · rw [if_pos hf, if_pos ((hCompat i j hi hij).mp hf)]
-    · rw [if_neg hf, if_neg (fun h ↦ hf ((hCompat i j hi hij).mpr h))]
+    · rw [ite_eq_left hf, ite_eq_left ((hCompat i j hi hij).mp hf)]
+    · rw [ite_eq_right hf, ite_eq_right (fun h ↦ hf ((hCompat i j hi hij).mpr h))]
   · have hj : ¬coarse.Rel pivot j := fun h ↦ hi (h.trans hCoarse.symm)
-    rw [if_neg hi, if_neg hj]
+    rw [ite_eq_right hi, ite_eq_right hj]
     exact hCoarse
 
 /-- The `fine` class through `pivot` is one block of the split partition. -/
@@ -253,13 +257,13 @@ theorem splitAlong_block_pivot (hAlt : coarse.Rel pivot alt)
   rw [SheetPartition.mem_block_iff, SheetPartition.mem_block_iff,
     SheetPartition.rel_iff, splitAlong_repr_pivot hAlt hSep, splitAlong_repr_eq]
   by_cases hj : coarse.Rel pivot j
-  · rw [if_pos hj]
+  · rw [ite_eq_left hj]
     by_cases hf : fine.Rel pivot j
-    · rw [if_pos hf]
+    · rw [ite_eq_left hf]
       exact iff_of_true rfl hf
-    · rw [if_neg hf]
+    · rw [ite_eq_right hf]
       exact iff_of_false (splitAlong_pivot_ne_alt hSep) hf
-  · rw [if_neg hj]
+  · rw [ite_eq_right hj]
     obtain ⟨hPivot, _⟩ := repr_ne_of_not_rel hAlt hj
     exact iff_of_false (fun h ↦ hPivot h.symm) (fun h ↦ hj (hFine.rel h))
 
@@ -273,14 +277,14 @@ theorem splitAlong_block_alt (hAlt : coarse.Rel pivot alt)
     SheetPartition.mem_block_iff, SheetPartition.rel_iff,
     splitAlong_repr_alt hAlt hSep, splitAlong_repr_eq]
   by_cases hj : coarse.Rel pivot j
-  · rw [if_pos hj]
+  · rw [ite_eq_left hj]
     by_cases hf : fine.Rel pivot j
-    · rw [if_pos hf]
+    · rw [ite_eq_left hf]
       exact iff_of_false (fun h ↦ splitAlong_pivot_ne_alt hSep h.symm)
         (fun h ↦ h.2 hf)
-    · rw [if_neg hf]
+    · rw [ite_eq_right hf]
       exact iff_of_true rfl ⟨hj, hf⟩
-  · rw [if_neg hj]
+  · rw [ite_eq_right hj]
     obtain ⟨_, hAltNe⟩ := repr_ne_of_not_rel hAlt hj
     exact iff_of_false (fun h ↦ hAltNe h.symm) (fun h ↦ hj h.1)
 
@@ -691,7 +695,7 @@ noncomputable def wallBackground (geometry : FourStarGeometry data wall) :
       exact SheetPartition.Refines.refl fine
     · have hRight : rightOf geometry.largestTarget edge = true := by
         simp [rightOf, hEq]
-      rw [hRight, if_pos rfl]
+      rw [hRight, ite_eq_left rfl]
       change (data.edgePartition edge).Refines (data.vertexPartition wall)
       exact refines_of_mem_incidentEdges data hAt
   · rw [wallEdgesAssigned_false orientation]
@@ -753,7 +757,7 @@ noncomputable def reversedCandidate (geometry : FourStarGeometry data wall)
       exact refines_of_mem_incidentEdges data hAt
     · have hRight : rightOf geometry.largestTarget edge = true := by
         simp [rightOf, hLargest]
-      simp only [background, FourStarGeometry.wallBackground, hRight, if_true,
+      simp only [background, FourStarGeometry.wallBackground, hRight, ite_true,
         selected, LocalResolution.reverse_right, fineResolution]
       have hCases : edge = geometry.growTarget ∨ edge = geometry.otherTarget := by
         rw [geometry.incidentEdges_eq] at hAt

@@ -1,7 +1,11 @@
-import Utilities.Foundations.ElementaryExistence
-import Utilities.Gonality.GonalityTransport
-import Utilities.Iso.GraphContractionFibreTree
-import Mathlib.Tactic
+module
+
+public import Utilities.Foundations.ElementaryExistence
+public import Utilities.Gonality.GonalityTransport
+public import Utilities.Iso.GraphContractionFibreTree
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # Elementary subdivision-gonality bounds

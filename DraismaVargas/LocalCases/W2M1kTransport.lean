@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.LimitChainCore
-import DraismaVargas.LocalCases.W2SourceTransport
+module
+
+public import DraismaVargas.LocalCases.LimitChainCore
+public import DraismaVargas.LocalCases.W2SourceTransport
+
+@[expose] public section
 
 /-!
 # Transporting Figure 33's M-1k data across the branch swap

@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.M11JoinedBranch
+module
+
+public import DraismaVargas.LocalCases.M11JoinedBranch
+
+@[expose] public section
 
 /-!
 # Branch-vertex classification over the joined M11 wall

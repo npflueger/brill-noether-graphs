@@ -1,6 +1,10 @@
-import Utilities.Segments.AtanasovRanganathan
-import Utilities.Subdivision.MovingPosition
-import Utilities.Segments.GenusFourLoopLemma
+module
+
+public import Utilities.Segments.AtanasovRanganathan
+public import Utilities.Subdivision.MovingPosition
+public import Utilities.Segments.GenusFourLoopLemma
+
+@[expose] public section
 
 /-!
 # Reusable Atanasov--Ranganathan configuration moves

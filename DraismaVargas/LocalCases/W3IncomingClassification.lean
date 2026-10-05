@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.ClassifiedContinuation
-import DraismaVargas.LocalCases.W3R1SourceProfile
+module
+
+public import DraismaVargas.LocalCases.ClassifiedContinuation
+public import DraismaVargas.LocalCases.W3R1SourceProfile
+
+@[expose] public section
 
 /-!
 # Exhaustive incoming source cases at a trivalent wall

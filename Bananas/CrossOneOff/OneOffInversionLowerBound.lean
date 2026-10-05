@@ -1,5 +1,9 @@
-import Bananas.CrossOneOff.OneOffPeriodBound
-import Bananas.SameStrand.EndpointCardinality
+module
+
+public import Bananas.CrossOneOff.OneOffPeriodBound
+public import Bananas.SameStrand.EndpointCardinality
+
+@[expose] public section
 
 /-!
 # The immediate one-off inversion bound

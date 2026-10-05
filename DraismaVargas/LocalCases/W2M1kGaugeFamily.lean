@@ -1,7 +1,11 @@
-import DraismaVargas.LocalCases.W2M1kLimitColumns
-import DraismaVargas.LocalCases.W2M1kStableIncidence
-import DraismaVargas.LocalCases.W2M1kLeafStableGraph
-import DraismaVargas.LocalCases.SheetRelabelIncidence
+module
+
+public import DraismaVargas.LocalCases.W2M1kLimitColumns
+public import DraismaVargas.LocalCases.W2M1kStableIncidence
+public import DraismaVargas.LocalCases.W2M1kLeafStableGraph
+public import DraismaVargas.LocalCases.SheetRelabelIncidence
+
+@[expose] public section
 
 /-!
 # Figure 33 as a `BalancedGlobal.GaugeFamily`, in both orientations

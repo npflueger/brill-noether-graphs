@@ -1,4 +1,8 @@
-import DraismaVargasCount.SpineRowLength
+module
+
+public import DraismaVargasCount.SpineRowLength
+
+@[expose] public section
 
 /-!
 # The edge budget at the caterpillar of loops: the `2g` lollipop edges, and the residue
@@ -184,10 +188,10 @@ theorem catCore_not_loop_to_loop (m : ℕ) (hm : 1 ≤ m) {t first second : Fin 
   rw [tail_eq_tail_iff, head_eq_tail_iff, hSV] at hT2
   by_cases hLeafT : IsLeafEdge m t
   · have hLeafTVal : t.val % 3 = 0 ∨ t.val = 6 * m + 2 := hLeafT
-    rw [hHead, if_pos hLeafT, ← hTail] at hT1 hT2
+    rw [hHead, ite_eq_left hLeafT, ← hTail] at hT1 hT2
     rcases hT1 with h1 | h1 <;> rcases hT2 with h2 | h2 <;> exact hNeVal (h1.symm.trans h2)
   · have hNotLeafTVal : ¬ (t.val % 3 = 0 ∨ t.val = 6 * m + 2) := hLeafT
-    rw [hHead, if_neg hLeafT] at hT1 hT2
+    rw [hHead, ite_eq_right hLeafT] at hT1 hT2
     rw [hTail, hParent] at hT1 hT2
     rcases hT1 with h1 | h1 <;> rcases hT2 with h2 | h2
     · exact hNeVal (h1.symm.trans h2)
@@ -345,8 +349,8 @@ theorem mem_lollipopEdges_iff (m : ℕ) {request : Fin (6 * m + 3) → ℚ}
   · rintro ⟨x, hx⟩
     refine ⟨x.1.1, x.1.2, ?_⟩
     by_cases hb : x.2 = true
-    · rw [if_pos hb] at hx; exact Or.inr hx.symm
-    · rw [if_neg hb] at hx; exact Or.inl hx.symm
+    · rw [ite_eq_left hb] at hx; exact Or.inr hx.symm
+    · rw [ite_eq_right hb] at hx; exact Or.inl hx.symm
   · rintro ⟨slot, hLoop, hEq | hEq⟩
     · exact ⟨(⟨slot, hLoop⟩, false), by simpa using hEq.symm⟩
     · exact ⟨(⟨slot, hLoop⟩, true), by simpa using hEq.symm⟩
@@ -362,7 +366,7 @@ private theorem lollipopEdge_injective (m : ℕ) (hm : 1 ≤ m)
         if x.2 then loopBridgeEdge member x.1.2 else loopLeafEdge member x.1.2) := by
   rintro ⟨⟨i, hi⟩, bi⟩ ⟨⟨j, hj⟩, bj⟩ hEq
   simp only at hEq
-  cases bi <;> cases bj <;> simp only [Bool.false_eq_true, if_false, if_true] at hEq
+  cases bi <;> cases bj <;> simp only [Bool.false_eq_true, ite_false, ite_true] at hEq
   · have hij : i = j := loopLeafEdge_inj member hi hj hEq
     subst hij; rfl
   · exact absurd hEq (loopLeafEdge_ne_loopBridgeEdge m member hAdj hi hj)
@@ -630,8 +634,8 @@ theorem mem_lollipopRows_iff (m : ℕ) {request : Fin (6 * m + 3) → ℚ}
   · rintro ⟨x, hx⟩
     refine ⟨x.1.1, x.1.2, ?_⟩
     by_cases hb : x.2 = true
-    · rw [if_pos hb] at hx; exact Or.inr hx.symm
-    · rw [if_neg hb] at hx; exact Or.inl hx.symm
+    · rw [ite_eq_left hb] at hx; exact Or.inr hx.symm
+    · rw [ite_eq_right hb] at hx; exact Or.inl hx.symm
   · rintro ⟨slot, hLoop, hEq | hEq⟩
     · exact ⟨(⟨slot, hLoop⟩, false), by simpa using hEq.symm⟩
     · exact ⟨(⟨slot, hLoop⟩, true), by simpa using hEq.symm⟩
@@ -662,7 +666,7 @@ theorem lollipopRows_card (m : ℕ) (hm : 1 ≤ m) {request : Fin (6 * m + 3) �
         if x.2 then bridgeRow member x.1.2 else loopRowIndex member x.1.1) := by
     rintro ⟨⟨i, hi⟩, bi⟩ ⟨⟨j, hj⟩, bj⟩ hEq
     simp only at hEq
-    cases bi <;> cases bj <;> simp only [Bool.false_eq_true, if_false, if_true] at hEq
+    cases bi <;> cases bj <;> simp only [Bool.false_eq_true, ite_false, ite_true] at hEq
     · have hij : i = j := member.ident.row.symm.injective
         (member.fullDim.labelling.row.injective hEq)
       subst hij; rfl

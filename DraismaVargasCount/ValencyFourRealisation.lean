@@ -1,5 +1,9 @@
-import DraismaVargasCount.ValencyFourRigidity
-import DraismaVargasCount.GeneralKStarCount
+module
+
+public import DraismaVargasCount.ValencyFourRigidity
+public import DraismaVargasCount.GeneralKStarCount
+
+@[expose] public section
 
 /-!
 # Per-`K` realisation at a valency-four metric limit, and the valency-four clause
@@ -250,7 +254,7 @@ theorem anchor_rel_of_nd4 (fdOut : FullDimensionalSourcePresentation (cK).datum 
       ((congrArg (contractVertex _ _) (W4LimitContraction.fst_eq hc hcon)).trans
         (contract_oldVertex _ _ _))
   have hP : (FacetAdapterPilot.candidateLimitIso (cK) hc hab hOne hcon).vertexPerm ⟨a, hab⟩ =
-      FacetAdapterPilot.mergePerm (cK) hc hcon := if_pos rfl
+      FacetAdapterPilot.mergePerm (cK) hc hcon := ite_eq_left rfl
   rw [hT, hP] at h1
   have hRel : (position.datum.vertexPartition ⟨wd.a, wd.hab⟩).Rel
       (FacetAdapterPilot.mergePerm (cK) hc hcon block.1) block.1 :=
@@ -354,10 +358,10 @@ theorem readsK_candK (fdOut : FullDimensionalSourcePresentation (cK).datum coord
     split_ifs <;> rfl
   rw [e0, e1] at hK
   by_cases hSide : smallerSide vSrc pairing = true
-  · rw [if_neg (by rw [hSide]; decide), if_pos hSide.symm] at hK
+  · rw [ite_eq_right (by rw [hSide]; decide), ite_eq_left hSide.symm] at hK
     omega
   · rw [Bool.not_eq_true] at hSide
-    rw [if_pos hSide.symm, if_neg (by rw [hSide]; decide)] at hK
+    rw [ite_eq_left hSide.symm, ite_eq_right (by rw [hSide]; decide)] at hK
     omega
 
 /-! ### The general-`K` links, with the read record

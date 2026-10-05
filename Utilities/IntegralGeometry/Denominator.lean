@@ -1,6 +1,10 @@
-import Mathlib.Data.Rat.Lemmas
-import Mathlib.Algebra.GCDMonoid.Finset
-import Mathlib.Tactic
+module
+
+public import Mathlib.Data.Rat.Lemmas
+public import Mathlib.Algebra.GCDMonoid.Finset
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # Exact denominators of finite rational families

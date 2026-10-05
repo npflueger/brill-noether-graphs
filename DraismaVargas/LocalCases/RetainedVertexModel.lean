@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.RetainedStraddle
-import DraismaVargas.LocalCases.RetainedStatement
+module
+
+public import DraismaVargas.LocalCases.RetainedStraddle
+public import DraismaVargas.LocalCases.RetainedStatement
+
+@[expose] public section
 
 /-!
 # The vertex map of the retained core model, and its endpoint equations
@@ -193,7 +197,7 @@ theorem pieceCount_of_not_straddles (idx : RetainedIndex spec F small)
     {x : SlotIndex iface face} (h : ¬ Straddles iface face idx x) :
     pieceCount iface face idx x = 1 := by
   show (OrderedPathSplit.positiveSegments (pieces iface face idx x)).length = 1
-  rw [positiveSegments_pieces idx x, if_neg h]
+  rw [positiveSegments_pieces idx x, ite_eq_right h]
   rfl
 
 theorem pieceCount_pos (idx : RetainedIndex spec F small) (x : SlotIndex iface face) :
@@ -351,12 +355,12 @@ theorem cutTail_of_zero (x : SlotIndex iface face) :
       cutLeft idx topology rev hKept
         (RefinementCore.keptClassIndex topology
           ⟨startClass topology x, keptClass_startClass topology x⟩) :=
-  dif_neg (fun h ↦ h.2 rfl)
+  dite_eq_right (fun h ↦ h.2 rfl)
 
 theorem cutTail_of_ne_zero {x : SlotIndex iface face} {t : ℕ} (ht : t ≠ 0)
     (h : Straddles iface face idx x) :
     cutTail idx topology rev hKept x t = splitVertex idx topology rev hKept h :=
-  dif_pos ⟨h, ht⟩
+  dite_eq_left ⟨h, ht⟩
 
 theorem cutTail_of_not_straddles {x : SlotIndex iface face}
     (h : ¬ Straddles iface face idx x) (t : ℕ) :
@@ -364,19 +368,19 @@ theorem cutTail_of_not_straddles {x : SlotIndex iface face}
       cutLeft idx topology rev hKept
         (RefinementCore.keptClassIndex topology
           ⟨startClass topology x, keptClass_startClass topology x⟩) :=
-  dif_neg (fun hc ↦ h hc.1)
+  dite_eq_right (fun hc ↦ h hc.1)
 
 theorem cutHead_of_zero_of_straddles {x : SlotIndex iface face}
     (h : Straddles iface face idx x) :
     cutHead idx topology rev hKept x 0 = splitVertex idx topology rev hKept h :=
-  dif_pos ⟨h, rfl⟩
+  dite_eq_left ⟨h, rfl⟩
 
 theorem cutHead_of_ne_zero {x : SlotIndex iface face} {t : ℕ} (ht : t ≠ 0) :
     cutHead idx topology rev hKept x t =
       cutLeft idx topology rev hKept
         (RefinementCore.keptClassIndex topology
           ⟨endClass topology x, keptClass_endClass topology x⟩) :=
-  dif_neg (fun h ↦ ht h.2)
+  dite_eq_right (fun h ↦ ht h.2)
 
 theorem cutHead_of_not_straddles {x : SlotIndex iface face}
     (h : ¬ Straddles iface face idx x) (t : ℕ) :
@@ -384,7 +388,7 @@ theorem cutHead_of_not_straddles {x : SlotIndex iface face}
       cutLeft idx topology rev hKept
         (RefinementCore.keptClassIndex topology
           ⟨endClass topology x, keptClass_endClass topology x⟩) :=
-  dif_neg (fun hc ↦ h hc.1)
+  dite_eq_right (fun hc ↦ h hc.1)
 
 /-- **The last piece of a kept slot ends where the row leaves the
 occurrence.** -/
@@ -410,13 +414,13 @@ variable {source : PackedSpec} {data : SegmentData source}
 theorem segmentTailVertex_of_zero
     {y : Σ i : Fin source.p, Fin (data.segments i).length} (h : (y.2 : ℕ) = 0) :
     RefinementCore.segmentTailVertex data y = Sum.inl (source.spec.core.tail y.1) :=
-  dif_pos h
+  dite_eq_left h
 
 theorem segmentTailVertex_of_ne_zero
     {y : Σ i : Fin source.p, Fin (data.segments i).length} (h : (y.2 : ℕ) ≠ 0)
     {k : Fin ((data.segments y.1).length - 1)} (hk : (k : ℕ) + 1 = (y.2 : ℕ)) :
     RefinementCore.segmentTailVertex data y = Sum.inr ⟨y.1, k⟩ := by
-  refine (dif_neg h).trans (congrArg (fun m ↦ Sum.inr (Sigma.mk y.1 m)) (Fin.ext ?_))
+  refine (dite_eq_right h).trans (congrArg (fun m ↦ Sum.inr (Sigma.mk y.1 m)) (Fin.ext ?_))
   show (y.2 : ℕ) - 1 = (k : ℕ)
   omega
 
@@ -424,14 +428,14 @@ theorem segmentHeadVertex_of_last
     {y : Σ i : Fin source.p, Fin (data.segments i).length}
     (h : (y.2 : ℕ) + 1 = (data.segments y.1).length) :
     RefinementCore.segmentHeadVertex data y = Sum.inl (source.spec.core.head y.1) :=
-  dif_pos h
+  dite_eq_left h
 
 theorem segmentHeadVertex_of_not_last
     {y : Σ i : Fin source.p, Fin (data.segments i).length}
     (h : (y.2 : ℕ) + 1 ≠ (data.segments y.1).length)
     {k : Fin ((data.segments y.1).length - 1)} (hk : (k : ℕ) = (y.2 : ℕ)) :
     RefinementCore.segmentHeadVertex data y = Sum.inr ⟨y.1, k⟩ := by
-  refine (dif_neg h).trans (congrArg (fun m ↦ Sum.inr (Sigma.mk y.1 m)) (Fin.ext ?_))
+  refine (dite_eq_right h).trans (congrArg (fun m ↦ Sum.inr (Sigma.mk y.1 m)) (Fin.ext ?_))
   show (y.2 : ℕ) = (k : ℕ)
   omega
 
@@ -1338,7 +1342,7 @@ theorem coreVertex_of_handover {w : Fin n₀}
           (handoverPair hCond face h))
         (blockIndex (RetainedIndexProducer.retainedIndex hCond hN hL) topology rev hKept hTwo
           (handoverPair hCond face h)) :=
-  dif_pos h
+  dite_eq_left h
 
 theorem coreVertex_of_not_handover {w : Fin n₀}
     (h : ¬ IsHandover (RetainedIndexProducer.retainedIndex hCond hN hL) w) :
@@ -1347,7 +1351,7 @@ theorem coreVertex_of_not_handover {w : Fin n₀}
         (RefinementCore.keptClassIndex topology
           ⟨RetainedFibre.requestedClass dict topology (exists_fib_of_not_handover hCond h),
             keptClass_requestedClass dict hSpan topology _⟩) :=
-  dif_neg h
+  dite_eq_right h
 
 /-- **The fibre class of the tail of a first requested slot is the class the
 row is in before its first kept slot.** -/
@@ -1692,7 +1696,7 @@ theorem cut_tail_eq
     (rev (slotBlockEquiv iface face (RetainedIndexProducer.retainedIndex hCond hN hL) topology
       rev hKept hTwo x).1)).symm.elim (fun hb => ?_) (fun hb => ?_)
   · rw [show reversedSlot iface face (RetainedIndexProducer.retainedIndex hCond hN hL) topology
-        rev hKept hTwo x = false from hb, if_neg Bool.false_ne_true,
+        rev hKept hTwo x = false from hb, ite_eq_right Bool.false_ne_true,
       cutVertex_segmentTailVertex hCond dict hSpan topology rev hKept hTwo x,
       blockSlot_def, blockIndex_def,
       segmentTailVertex_cutPair_of_not_rev (RetainedIndexProducer.retainedIndex hCond hN hL)
@@ -1700,7 +1704,7 @@ theorem cut_tail_eq
       pieceIndex_of_not_rev iface face (RetainedIndexProducer.retainedIndex hCond hN hL)
         topology rev hKept _ _ hb]
   · rw [show reversedSlot iface face (RetainedIndexProducer.retainedIndex hCond hN hL) topology
-        rev hKept hTwo x = true from hb, if_pos rfl,
+        rev hKept hTwo x = true from hb, ite_eq_left rfl,
       cutVertex_segmentHeadVertex hCond dict hSpan topology rev hKept hTwo hF x,
       blockSlot_def, blockIndex_def,
       segmentTailVertex_cutPair_of_rev (RetainedIndexProducer.retainedIndex hCond hN hL)
@@ -1733,7 +1737,7 @@ theorem cut_head_eq
     (rev (slotBlockEquiv iface face (RetainedIndexProducer.retainedIndex hCond hN hL) topology
       rev hKept hTwo x).1)).symm.elim (fun hb => ?_) (fun hb => ?_)
   · rw [show reversedSlot iface face (RetainedIndexProducer.retainedIndex hCond hN hL) topology
-        rev hKept hTwo x = false from hb, if_neg Bool.false_ne_true,
+        rev hKept hTwo x = false from hb, ite_eq_right Bool.false_ne_true,
       cutVertex_segmentHeadVertex hCond dict hSpan topology rev hKept hTwo hF x,
       blockSlot_def, blockIndex_def,
       segmentHeadVertex_cutPair_of_not_rev (RetainedIndexProducer.retainedIndex hCond hN hL)
@@ -1741,7 +1745,7 @@ theorem cut_head_eq
       pieceIndex_of_not_rev iface face (RetainedIndexProducer.retainedIndex hCond hN hL)
         topology rev hKept _ _ hb]
   · rw [show reversedSlot iface face (RetainedIndexProducer.retainedIndex hCond hN hL) topology
-        rev hKept hTwo x = true from hb, if_pos rfl,
+        rev hKept hTwo x = true from hb, ite_eq_left rfl,
       cutVertex_segmentTailVertex hCond dict hSpan topology rev hKept hTwo x,
       blockSlot_def, blockIndex_def,
       segmentHeadVertex_cutPair_of_rev (RetainedIndexProducer.retainedIndex hCond hN hL)
@@ -2015,10 +2019,10 @@ theorem straddles_of_cutTail_inr {x : SlotIndex iface face} {t : ℕ}
   by_cases hc : Straddles iface face idx x ∧ t ≠ 0
   · refine ⟨hc.1, hc.2, ?_⟩
     have hs : cutTail idx topology rev hKept x t =
-        splitVertex idx topology rev hKept hc.1 := dif_pos hc
+        splitVertex idx topology rev hKept hc.1 := dite_eq_left hc
     have hz := Sum.inr.inj (hs.symm.trans h)
     exact (congrArg Sigma.fst hz).symm
-  · exact absurd ((dif_neg hc).symm.trans h) (by simp [cutLeft])
+  · exact absurd ((dite_eq_right hc).symm.trans h) (by simp [cutLeft])
 
 /-- and the same on the far side of the piece. -/
 theorem straddles_of_cutHead_inr {x : SlotIndex iface face} {t : ℕ}
@@ -2029,10 +2033,10 @@ theorem straddles_of_cutHead_inr {x : SlotIndex iface face} {t : ℕ}
   by_cases hc : Straddles iface face idx x ∧ t = 0
   · refine ⟨hc.1, hc.2, ?_⟩
     have hs : cutHead idx topology rev hKept x t =
-        splitVertex idx topology rev hKept hc.1 := dif_pos hc
+        splitVertex idx topology rev hKept hc.1 := dite_eq_left hc
     have hz := Sum.inr.inj (hs.symm.trans h)
     exact (congrArg Sigma.fst hz).symm
-  · exact absurd ((dif_neg hc).symm.trans h) (by simp [cutLeft])
+  · exact absurd ((dite_eq_right hc).symm.trans h) (by simp [cutLeft])
 
 end SplitInjectivity
 
@@ -2090,7 +2094,7 @@ theorem cutVertex_inr_eq_cutLeft
               (breakPair (RetainedIndexProducer.retainedIndex hCond hN hL) y)),
             keptClass_endClass topology _⟩) :=
   (cutVertex_inr hCond dict hSpan topology rev hKept hTwo y).trans
-    (dif_neg (not_straddles_blockSlot_breakPair hCond topology rev hKept hTwo y))
+    (dite_eq_right (not_straddles_blockSlot_breakPair hCond topology rev hKept hTwo y))
 
 /-- **The new split vertices are hit at most once.**  Only a straddling marker
 lands on one, the split vertex records the kept slot the marker cut, and the

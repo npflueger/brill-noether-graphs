@@ -1,4 +1,8 @@
-import Bananas.Theta.ThetaGenusTwoCornerSum
+module
+
+public import Bananas.Theta.ThetaGenusTwoCornerSum
+
+@[expose] public section
 
 /-!
 # Degree-two divisors on a connected genus-two graph

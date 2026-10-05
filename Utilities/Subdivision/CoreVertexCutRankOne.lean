@@ -1,5 +1,9 @@
-import Utilities.Gluing.GenusThreeCycleWedge
-import Utilities.Subdivision.CoreVertexCutTwoRegular
+module
+
+public import Utilities.Gluing.GenusThreeCycleWedge
+public import Utilities.Subdivision.CoreVertexCutTwoRegular
+
+@[expose] public section
 
 /-!
 # Rank one across a checked genus-three/genus-one core cut

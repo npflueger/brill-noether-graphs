@@ -1,7 +1,11 @@
-import Tricycle.Degree5
-import Tricycle.UpperBounds
-import Tricycle.RegularSubdivisionBridge
-import Mathlib.Tactic
+module
+
+public import Tricycle.Degree5
+public import Tricycle.UpperBounds
+public import Tricycle.RegularSubdivisionBridge
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # Theorem 3.9 and the tricycle gap

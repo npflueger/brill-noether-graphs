@@ -1,4 +1,8 @@
-import DraismaVargasCount.StepSupplyReduction
+module
+
+public import DraismaVargasCount.StepSupplyReduction
+
+@[expose] public section
 
 /-!
 # The cross-core member transport

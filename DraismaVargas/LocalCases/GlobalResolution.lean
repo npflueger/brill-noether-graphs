@@ -1,7 +1,11 @@
-import DraismaVargas.Infrastructure.Change
-import DraismaVargas.Infrastructure.TargetExpansion
-import DraismaVargas.LocalCases.ResolutionM11
-import Utilities.Iso.GraphContractionTopology
+module
+
+public import DraismaVargas.Infrastructure.Change
+public import DraismaVargas.Infrastructure.TargetExpansion
+public import DraismaVargas.LocalCases.ResolutionM11
+public import Utilities.Iso.GraphContractionTopology
+
+@[expose] public section
 
 /-!
 # Installing a local resolution in a global gluing datum
@@ -214,7 +218,7 @@ theorem sourceVertexMap_surjective (data : GluingDatum target degree)
       ⟨(oldVertex target wall, sheet), by
         change ((datum data wall right resolution hCompatible).vertexPartition
           (oldVertex target wall)).repr sheet = sheet
-        simp only [datum, expandedVertexPartition, oldVertex, if_pos]
+        simp only [datum, expandedVertexPartition, oldVertex, ite_eq_left]
         exact resolution.left.repr_idem old.1.2⟩
     refine ⟨expandedVertex, ?_⟩
     change data.sourceEndpoint wall sheet = old
@@ -228,7 +232,7 @@ theorem sourceVertexMap_surjective (data : GluingDatum target degree)
       ⟨(oldVertex target old.1.1, old.1.2), by
         change ((datum data wall right resolution hCompatible).vertexPartition
           (oldVertex target old.1.1)).repr old.1.2 = old.1.2
-        simp only [datum, expandedVertexPartition, oldVertex, if_neg hVertex]
+        simp only [datum, expandedVertexPartition, oldVertex, ite_eq_right hVertex]
         exact old.2⟩
     refine ⟨expandedVertex, ?_⟩
     change data.sourceEndpoint old.1.1 old.1.2 = old
@@ -631,10 +635,10 @@ theorem sourceVertex_mem_iff_of_sourceVertexMap_eq_of_new_edges
               hCompatible hContracts cut hBridge hWallRel
           · have hFirstFixed := first.2
             rw [hFirstTarget] at hFirstFixed
-            simp only [datum, expandedVertexPartition, if_neg hWallTarget] at hFirstFixed
+            simp only [datum, expandedVertexPartition, ite_eq_right hWallTarget] at hFirstFixed
             have hSecondFixed := second.2
             rw [hSecondTarget] at hSecondFixed
-            simp only [datum, expandedVertexPartition, if_neg hWallTarget] at hSecondFixed
+            simp only [datum, expandedVertexPartition, ite_eq_right hWallTarget] at hSecondFixed
             have hRepresentatives :
                 (data.vertexPartition firstTarget).repr first.1.2 =
                   (data.vertexPartition firstTarget).repr second.1.2 := by

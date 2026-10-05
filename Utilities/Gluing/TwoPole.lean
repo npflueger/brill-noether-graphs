@@ -1,6 +1,10 @@
-import Utilities.Foundations.EdgeAddition
-import Utilities.Foundations.RankOne
-import Utilities.Gluing.BridgeGraph
+module
+
+public import Utilities.Foundations.EdgeAddition
+public import Utilities.Foundations.RankOne
+public import Utilities.Gluing.BridgeGraph
+
+@[expose] public section
 
 /-!
 # Two-pole joins
@@ -168,7 +172,7 @@ theorem vertex_degree_bridge_inl
   simp_rw [num_edges_bridgeGraph_inl, num_edges_bridgeGraph_inl_inr]
   by_cases ha : a = p.first
   · subst a
-    simp only [if_pos, true_and, Nat.cast_ite, Nat.cast_one, Nat.cast_zero]
+    simp only [ite_eq_left, true_and, Nat.cast_ite, Nat.cast_one, Nat.cast_zero]
     rw [Finset.sum_ite_eq' Finset.univ q.first]
     simp
   · simp [ha]
@@ -188,7 +192,7 @@ theorem vertex_degree_bridge_inr
     num_edges_bridgeGraph_inr]
   by_cases hb : b = q.first
   · subst b
-    simp only [if_pos, and_true, Nat.cast_ite, Nat.cast_one, Nat.cast_zero]
+    simp only [ite_eq_left, and_true, Nat.cast_ite, Nat.cast_one, Nat.cast_zero]
     rw [Finset.sum_ite_eq' Finset.univ p.first]
     simp only [Finset.mem_univ, ite_true]
     abel
@@ -213,9 +217,9 @@ theorem canonical_divisor_bridge
         simp [one_chip]
         ring
       · simp only [one_chip]
-        rw [if_neg (fun h => ha (Sum.inl.inj h)), if_neg Sum.inl_ne_inr]
+        rw [ite_eq_right (fun h => ha (Sum.inl.inj h)), ite_eq_right Sum.inl_ne_inr]
         simp only [Sum.elim_inl]
-        rw [if_neg ha]
+        rw [ite_eq_right ha]
         ring
   | inr b =>
       rw [vertex_degree_bridge_inr]
@@ -224,9 +228,9 @@ theorem canonical_divisor_bridge
         simp [one_chip]
         ring
       · simp only [one_chip]
-        rw [if_neg Sum.inr_ne_inl, if_neg (fun h => hb (Sum.inr.inj h))]
+        rw [ite_eq_right Sum.inr_ne_inl, ite_eq_right (fun h => hb (Sum.inr.inj h))]
         simp only [Sum.elim_inr]
-        rw [if_neg hb]
+        rw [ite_eq_right hb]
         ring
 
 /-- The four pole chips, regarded as a divisor on the two-pole join. -/

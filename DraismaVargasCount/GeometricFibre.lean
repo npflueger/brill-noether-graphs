@@ -1,5 +1,9 @@
-import DraismaVargasCount.GeometricMultiplicity
-import DraismaVargasCount.FibreNormalForm
+module
+
+public import DraismaVargasCount.GeometricMultiplicity
+public import DraismaVargasCount.FibreNormalForm
+
+@[expose] public section
 
 /-!
 # The orientation-independent labelled fibre

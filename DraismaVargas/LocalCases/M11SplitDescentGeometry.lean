@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.M11SplitStableLift
-import DraismaVargas.LocalCases.M11SplitColumn
-import DraismaVargas.LocalCases.M11JoinedDescentGeometry
+module
+
+public import DraismaVargas.LocalCases.M11SplitStableLift
+public import DraismaVargas.LocalCases.M11SplitColumn
+public import DraismaVargas.LocalCases.M11JoinedDescentGeometry
+
+@[expose] public section
 
 /-!
 # Reverse local row checks for the first M11 split

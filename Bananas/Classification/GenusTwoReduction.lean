@@ -1,8 +1,12 @@
-import Bananas.Transmission.RankZeroWitness
-import Bananas.Transmission.RankDeltaDuality
-import Bananas.Basics.BananaGeometry
-import Bananas.SameStrand.EndpointInversions
-import Utilities.Foundations.RankOne
+module
+
+public import Bananas.Transmission.RankZeroWitness
+public import Bananas.Transmission.RankDeltaDuality
+public import Bananas.Basics.BananaGeometry
+public import Bananas.SameStrand.EndpointInversions
+public import Utilities.Foundations.RankOne
+
+@[expose] public section
 
 /-!
 # The genus-two rank reduction

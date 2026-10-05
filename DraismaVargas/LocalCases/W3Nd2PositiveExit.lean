@@ -1,8 +1,12 @@
-import DraismaVargas.LocalCases.W3Nd2CoarseStableGraph
-import DraismaVargas.LocalCases.W3Nd2FineStableGraph
-import DraismaVargas.LocalCases.W3Nd2CommonBalance
-import DraismaVargas.LocalCases.StableGraphFullDimensional
-import DraismaVargas.LocalCases.FiniteAtlasMarch
+module
+
+public import DraismaVargas.LocalCases.W3Nd2CoarseStableGraph
+public import DraismaVargas.LocalCases.W3Nd2FineStableGraph
+public import DraismaVargas.LocalCases.W3Nd2CommonBalance
+public import DraismaVargas.LocalCases.StableGraphFullDimensional
+public import DraismaVargas.LocalCases.FiniteAtlasMarch
+
+@[expose] public section
 
 /-!
 # A positive continuation through the actual Figure 31 pair

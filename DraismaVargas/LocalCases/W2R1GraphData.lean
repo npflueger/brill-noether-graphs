@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W2R1LimitMatrix
-import DraismaVargas.LocalCases.StableGraphFullDimensional
+module
+
+public import DraismaVargas.LocalCases.W2R1LimitMatrix
+public import DraismaVargas.LocalCases.StableGraphFullDimensional
+
+@[expose] public section
 
 /-!
 # Figures 37 and 38's stable incidence dictionaries, at **both** blocks
@@ -166,29 +170,29 @@ noncomputable def flag (anchor : Fin degree) (edge : data.SourceEdge) :
 
 theorem flag_retained (hPosition : member.position = member.double) (anchor : Fin degree)
     (edge : data.SourceEdge) : flag member anchor edge = retainedFlag member anchor edge :=
-  if_pos hPosition
+  ite_eq_left hPosition
 
 theorem flag_resolved (hPosition : member.position ≠ member.double) (anchor : Fin degree)
     (edge : data.SourceEdge) : flag member anchor edge = resolvedFlag member edge :=
-  if_neg hPosition
+  ite_eq_right hPosition
 
 theorem retainedFlag_single (anchor : Fin degree) {edge : data.SourceEdge}
     (hTarget : edge.1.1 = star.edge member.profile.singleLabel) :
-    retainedFlag member anchor edge = member.candidate.newSourceEdge anchor := if_pos hTarget
+    retainedFlag member anchor edge = member.candidate.newSourceEdge anchor := ite_eq_left hTarget
 
 theorem retainedFlag_double (anchor : Fin degree) {edge : data.SourceEdge}
     (hTarget : edge.1.1 = star.edge member.profile.doubleLabel) :
     retainedFlag member anchor edge = member.candidate.oldSourceEdge edge :=
-  if_neg (fun h ↦ member.profile.labels_ne (star.edge_injective (hTarget.symm.trans h)))
+  ite_eq_right (fun h ↦ member.profile.labels_ne (star.edge_injective (hTarget.symm.trans h)))
 
 theorem resolvedFlag_double {edge : data.SourceEdge}
     (hTarget : edge.1.1 = star.edge member.profile.doubleLabel) :
-    resolvedFlag member edge = member.candidate.newSourceEdge edge.1.2 := if_pos hTarget
+    resolvedFlag member edge = member.candidate.newSourceEdge edge.1.2 := ite_eq_left hTarget
 
 theorem resolvedFlag_single {edge : data.SourceEdge}
     (hTarget : edge.1.1 = star.edge member.profile.singleLabel) :
     resolvedFlag member edge = member.candidate.oldSourceEdge edge :=
-  if_neg (fun h ↦ member.profile.labels_ne (star.edge_injective (hTarget.symm.trans h)).symm)
+  ite_eq_right (fun h ↦ member.profile.labels_ne (star.edge_injective (hTarget.symm.trans h)).symm)
 
 /-- The member's branch vertex above the block, at any of its sheets. -/
 theorem branch_vertex_retained (hPosition : member.position = member.double)
@@ -513,10 +517,10 @@ noncomputable def selectedSide (position : Fin 2) (anchor : Fin degree) : Bool :
   else side (other position)
 
 @[simp] theorem selectedSide_first (position : Fin 2) :
-    selectedSide pair position pair.first.1 = side position := if_pos rfl
+    selectedSide pair position pair.first.1 = side position := ite_eq_left rfl
 
 @[simp] theorem selectedSide_second (position : Fin 2) :
-    selectedSide pair position pair.second.1 = side (other position) := if_neg pair.separate
+    selectedSide pair position pair.second.1 = side (other position) := ite_eq_right pair.separate
 
 /-- **The flag dictionary at each of the two branch vertices.** -/
 noncomputable def selectedFlag (position : Fin 2) (anchor : Fin degree)
@@ -528,12 +532,12 @@ noncomputable def selectedFlag (position : Fin 2) (anchor : Fin degree)
 @[simp] theorem selectedFlag_first (position : Fin 2) (edge : data.SourceEdge) :
     selectedFlag pair hValid position pair.first.1 edge =
       flag (firstMember pair hValid position) pair.first.1 edge :=
-  if_pos rfl
+  ite_eq_left rfl
 
 @[simp] theorem selectedFlag_second (position : Fin 2) (edge : data.SourceEdge) :
     selectedFlag pair hValid position pair.second.1 edge =
       flag (secondMember pair hValid position) pair.second.1 edge :=
-  if_neg pair.separate
+  ite_eq_right pair.separate
 
 /-- The anchors name distinct wall blocks. -/
 theorem anchors_sep : ∀ first ∈ anchors pair, ∀ second ∈ anchors pair,

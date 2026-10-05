@@ -1,4 +1,8 @@
-import DraismaVargasCount.TargetNormalForm
+module
+
+public import DraismaVargasCount.TargetNormalForm
+
+@[expose] public section
 
 /-!
 # A walk and cycle calculus for the target graph
@@ -487,7 +491,7 @@ noncomputable def up (vertex : G.V) : G.V :=
 theorem up_high (edge : G.edges) : A.up (A.high edge) = A.low edge := by
   have hex : ∃ other : G.edges, A.high other = A.high edge := ⟨edge, rfl⟩
   unfold up
-  rw [dif_pos hex]
+  rw [dite_eq_left hex]
   exact congrArg A.low (A.high_injective hex.choose_spec)
 
 theorem rank_up_le (vertex : G.V) : A.rank (A.up vertex) ≤ A.rank vertex := by
@@ -871,7 +875,7 @@ theorem dartOf_head {edge : G.edges} {leave : G.V}
   unfold dartOf Dart.head
   by_cases hfst : (edge : G.V × G.V).1 = leave
   · simp [hfst]
-  · simp only [hfst, decide_false, Bool.false_eq_true, if_false]
+  · simp only [hfst, decide_false, Bool.false_eq_true, ite_false]
     rcases h with h | h
     · exact absurd h hfst
     · exact h
@@ -1060,7 +1064,7 @@ theorem isEnd_dart_iff (dart : Dart G) (vertex : G.V) :
     IsEnd dart.edge vertex ↔ (vertex = dart.tail ∨ vertex = dart.head) := by
   unfold IsEnd Dart.tail Dart.head
   cases dart.reversed
-  · simp only [Bool.false_eq_true, if_false]
+  · simp only [Bool.false_eq_true, ite_false]
     constructor
     · rintro (h | h)
       · exact Or.inl h.symm
@@ -1068,7 +1072,7 @@ theorem isEnd_dart_iff (dart : Dart G) (vertex : G.V) :
     · rintro (h | h)
       · exact Or.inl h.symm
       · exact Or.inr h.symm
-  · simp only [if_true]
+  · simp only [ite_true]
     constructor
     · rintro (h | h)
       · exact Or.inr h.symm

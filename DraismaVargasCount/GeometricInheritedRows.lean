@@ -1,5 +1,9 @@
-import DraismaVargasCount.GeometricLimitTransport
-import DraismaVargasCount.InheritedLimitRows
+module
+
+public import DraismaVargasCount.GeometricLimitTransport
+public import DraismaVargasCount.InheritedLimitRows
+
+@[expose] public section
 
 /-!
 # Naturality of inherited row labels

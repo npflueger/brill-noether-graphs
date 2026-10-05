@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyFourRows
-import DraismaVargas.LocalCases.NonTrivalentUniqueFourValent
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyFourRows
+public import DraismaVargas.LocalCases.NonTrivalentUniqueFourValent
+
+@[expose] public section
 
 /-!
 # The row dictionary of the `K = 0` candidate above a four-valent wall
@@ -233,7 +237,7 @@ theorem endpointForSide_rel_survivorSheet (hConnected : graph_connected target)
       (survivorSheet source pairing hNoGlue hRamification label) := by
   unfold endpointForSide
   by_cases hSmall : sideValue = smallerSide source pairing
-  · rw [if_pos hSmall]
+  · rw [ite_eq_left hSmall]
     refine ((finePartition source pairing hNoGlue hRamification).mem_block_iff
       _ _).mp ?_
     rw [finePartition_selected_block source pairing hNoGlue hRamification]
@@ -243,7 +247,7 @@ theorem endpointForSide_rel_survivorSheet (hConnected : graph_connected target)
         hRamification hConnected hGenus
     · exact survivorSheet_mem_selectedSheets_second source pairing hNoGlue
         hRamification
-  · rw [if_neg hSmall]
+  · rw [ite_eq_right hSmall]
     exact Eq.trans
       (((gauged_rel_iff source pairing hNoGlue hRamification _ _).mpr
         (source.sheet_wall_rel (firstLabel pairing (smallerSide source pairing)))).symm)
@@ -529,7 +533,7 @@ theorem bridgeEdge_survives :
 theorem endpointForSide_smaller :
     endpointForSide source pairing hNoGlue hRamification
         (smallerSide source pairing) =
-      finePartition source pairing hNoGlue hRamification := if_pos rfl
+      finePartition source pairing hNoGlue hRamification := ite_eq_left rfl
 
 theorem nonDanglingIncident_singleton_subset {u : Fin degree}
     (hWall : ((gauged).vertexPartition wall).Rel anchor.1 u)

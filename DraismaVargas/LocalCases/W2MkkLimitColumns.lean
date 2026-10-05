@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.W2MkkLimitMatrix
-import DraismaVargas.LocalCases.W2MkkCommonBalance
-import DraismaVargas.LocalCases.W2MkkTransport
+module
+
+public import DraismaVargas.LocalCases.W2MkkLimitMatrix
+public import DraismaVargas.LocalCases.W2MkkCommonBalance
+public import DraismaVargas.LocalCases.W2MkkTransport
+
+@[expose] public section
 
 /-!
 # Figure 34's limit columns, inhabited: Equation (8) unconditionally
@@ -313,7 +317,7 @@ theorem limitColumns_eq_firstOrientation (input : W2SourceInput data star)
     (hPin : (endpointPartition profile).Rel (firstSheet profile) (pinSheet profile)) :
     limitColumns input shape detach distinguished hTargetConnected hGenus =
       firstOrientation input shape ⟨detach, hPin⟩ distinguished hTargetConnected hGenus :=
-  dif_pos hPin
+  dite_eq_left hPin
 
 theorem limitColumns_eq_secondOrientation (input : W2SourceInput data star)
     (shape : Shape profile) (detach : DetachData profile) (distinguished : Fin degree)
@@ -322,7 +326,7 @@ theorem limitColumns_eq_secondOrientation (input : W2SourceInput data star)
     (hSecond : (endpointPartition profile).Rel (secondSheet profile) (pinSheet profile)) :
     limitColumns input shape detach distinguished hTargetConnected hGenus =
       secondOrientation input shape ⟨detach, hSecond⟩ distinguished hTargetConnected hGenus :=
-  dif_neg hPin
+  dite_eq_right hPin
 
 /-- **The member the incoming datum carries sits in its own Figure 34 slot,
 over the incoming datum.**  Base II.2.1.M. -/

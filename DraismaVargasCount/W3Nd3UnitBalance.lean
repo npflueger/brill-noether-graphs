@@ -1,5 +1,9 @@
-import DraismaVargasCount.UnitWeightBalance
-import DraismaVargas.LocalCases.W3Nd3CommonBalance
+module
+
+public import DraismaVargasCount.UnitWeightBalance
+public import DraismaVargas.LocalCases.W3Nd3CommonBalance
+
+@[expose] public section
 
 /-!
 # `prop-signed-mult`(1) for Equation (4): the case `{w3-r1-nd3-t3}`

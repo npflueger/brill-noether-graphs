@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.W2MkkSourceCandidates
-import DraismaVargas.LocalCases.M11JoinedSurvival
-import DraismaVargas.LocalCases.LimitChainCore
+module
+
+public import DraismaVargas.LocalCases.W2MkkSourceCandidates
+public import DraismaVargas.LocalCases.M11JoinedSurvival
+public import DraismaVargas.LocalCases.LimitChainCore
+
+@[expose] public section
 
 /-!
 # Survival and the endpoint census for Figure 34's three members

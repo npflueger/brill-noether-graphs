@@ -1,6 +1,10 @@
-import Utilities.Subdivision.CoreVertexCutTwoRegular
-import Utilities.Pseudocore.PseudocorePresentation
-import Utilities.Subdivision.CorePairMultiplicity
+module
+
+public import Utilities.Subdivision.CoreVertexCutTwoRegular
+public import Utilities.Pseudocore.PseudocorePresentation
+public import Utilities.Subdivision.CorePairMultiplicity
+
+@[expose] public section
 
 /-!
 # Marker-loop cuts of compatible pseudocore splits

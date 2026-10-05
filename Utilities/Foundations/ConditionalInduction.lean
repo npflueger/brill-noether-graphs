@@ -1,5 +1,9 @@
-import Utilities.Foundations.EdgeAddition
-import Utilities.Foundations.Parameters
+module
+
+public import Utilities.Foundations.EdgeAddition
+public import Utilities.Foundations.Parameters
+
+@[expose] public section
 
 /-!
 # Conditional edge induction

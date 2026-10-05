@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.M11CommonBalance
+module
+
+public import DraismaVargas.LocalCases.M11CommonBalance
+
+@[expose] public section
 
 /-!
 # Figure 32 as a `BalancedGlobal.GaugeFamily`

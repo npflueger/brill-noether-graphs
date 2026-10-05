@@ -1,5 +1,9 @@
-import DraismaVargasCount.W3FourStarCensusProof
-import DraismaVargasCount.W3Nd3StarExhaustionProof
+module
+
+public import DraismaVargasCount.W3FourStarCensusProof
+public import DraismaVargasCount.W3Nd3StarExhaustionProof
+
+@[expose] public section
 
 /-!
 # W3Four star exhaustion: the `w3Four` clause with no hypothesis
@@ -196,10 +200,10 @@ theorem nonempty_transportFree_grow (right : target₁.edges → Bool)
   · intro edge hInc s
     have hInc' := (incident_iff iso hWall edge).mp hInc
     by_cases hr : right edge = true
-    · rw [if_pos hr, if_pos hr]
+    · rw [ite_eq_left hr, ite_eq_left hr]
       have hAg := agree_symm_apply iso τ _ hτ (edgePerm_agree iso hWall edge hInc') s
       exact (hRight _ _).mpr ⟨hAg, fun _ ↦ hAg, fun _ ↦ hAg⟩
-    · rw [if_neg hr, if_neg hr]
+    · rw [ite_eq_right hr, ite_eq_right hr]
       have hEq : iso.targetEdge edge = G :=
         rightOf_eq_false (by rw [hSide edge]; simpa using hr)
       have hEdge : edge = iso.targetEdge.symm G := (Equiv.eq_symm_apply _).mpr hEq
@@ -297,7 +301,7 @@ theorem nonempty_transportFree_reversed (right : target₁.edges → Bool)
   · intro edge hInc s
     have hInc' := (incident_iff iso hWall edge).mp hInc
     by_cases hr : right edge = true
-    · rw [if_pos hr, if_pos hr]
+    · rw [ite_eq_left hr, ite_eq_left hr]
       have hNotG : edge ≠ iso.targetEdge.symm G := by
         rintro rfl
         rw [← hSide, Equiv.apply_symm_apply] at hr
@@ -316,7 +320,7 @@ theorem nonempty_transportFree_reversed (right : target₁.edges → Bool)
           exact hCoh s hs
         · exact hRight.rel_of_off (SheetPartition.Refines.refl _)
             (fun h ↦ hs (h.trans hAg)) hAg
-    · rw [if_neg hr, if_neg hr]
+    · rw [ite_eq_right hr, ite_eq_right hr]
       have hEq : iso.targetEdge edge = G :=
         rightOf_eq_false (by rw [hSide edge]; simpa using hr)
       have hEdge : edge = iso.targetEdge.symm G := (Equiv.eq_symm_apply _).mpr hEq
@@ -1362,7 +1366,7 @@ theorem receiptOne (ψ₀ : GeometricStar.LimitIso hy other w) (x : Fin degree)
         (iso.targetEdge (iso.targetEdge.symm t₂))) π₂ (ρ₂ s))) = _
     rw [Equiv.apply_symm_apply, edgeMoved_self hInc₂, hm23]
     unfold branchPerm
-    rw [if_pos rfl, if_neg Bool.false_ne_true]
+    rw [ite_eq_left rfl, ite_eq_right Bool.false_ne_true]
     exact swap_edgePerm_fixed S.relTwo S.root S.hRoot S.permTwo S.fixTwo rfl t₂ S.hGrowFixed _
   have hτ : ∀ s, τ s = S.permTwo (π₃ (ρ₃ s)) := by
     intro s
@@ -1373,7 +1377,7 @@ theorem receiptOne (ψ₀ : GeometricStar.LimitIso hy other w) (x : Fin degree)
         (iso.targetEdge (iso.targetEdge.symm t₃))) π₂ (ρ₃ s))) = _
     rw [Equiv.apply_symm_apply, edgeMoved_self hInc₃, hm32]
     unfold branchPerm
-    rw [if_pos rfl, if_neg Bool.false_ne_true]
+    rw [ite_eq_left rfl, ite_eq_right Bool.false_ne_true]
     exact swap_edgePerm_moved S.relTwo S.root S.hRoot S.permTwo S.fixTwo rfl t₃ S.hOtherMoved _
   have hσx : σ x = x₁ := by rw [hσ]; exact Equiv.swap_apply_left _ _
   have hτx : τ x = x₁ := by

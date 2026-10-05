@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.InteriorGraphTracking
-import DraismaVargas.LocalCases.W3FourClosureFinal
+module
+
+public import DraismaVargas.LocalCases.InteriorGraphTracking
+public import DraismaVargas.LocalCases.W3FourClosureFinal
+
+@[expose] public section
 
 /-!
 # Recovering W3 row tracking before the final existential packaging

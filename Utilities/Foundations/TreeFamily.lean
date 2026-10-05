@@ -1,5 +1,9 @@
-import ChipFiringWithLean.Basic
-import Mathlib.Tactic
+module
+
+public import ChipFiringWithLean.Basic
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # A parametric family of trees

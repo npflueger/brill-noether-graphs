@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.NonTrivalentWallSetup
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentWallSetup
+
+@[expose] public section
 
 /-!
 # Interior row positivity on the actual reachable march

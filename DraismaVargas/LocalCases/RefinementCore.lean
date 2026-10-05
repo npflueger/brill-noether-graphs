@@ -1,6 +1,10 @@
-import Utilities.Subdivision.SlotRefinement
-import Utilities.Subdivision.SubdivisionIso
-import DraismaVargas.LocalCases.InputRefinementData
+module
+
+public import Utilities.Subdivision.SlotRefinement
+public import Utilities.Subdivision.SubdivisionIso
+public import DraismaVargas.LocalCases.InputRefinementData
+
+@[expose] public section
 
 /-!
 # A core API for `refineAllSlots`, and what the relabeling needs
@@ -193,7 +197,7 @@ theorem valid_core_transport {chain : CanonicalSplitChain source target}
       · obtain ⟨hLength, hTail, hHead⟩ :=
           ihOld i.castSucc j (hne i) (by simpa using hval)
         refine ⟨?_, ?_, ?_⟩
-        · rw [hLength, splitPacked_length_old, if_neg hi]
+        · rw [hLength, splitPacked_length_old, ite_eq_right hi]
         · rw [hTail, splitPacked_tail_old]
         · rw [hHead, splitPacked_head_old _ _ _ _ _ _ i hi]
       · rcases Nat.eq_zero_or_pos k with rfl | hkpos
@@ -202,7 +206,7 @@ theorem valid_core_transport {chain : CanonicalSplitChain source target}
           obtain ⟨hLength, hTail, hHead⟩ :=
             ihOld sl.castSucc j (hne sl) (by simpa using hval.symm)
           refine ⟨?_, ?_, ?_⟩
-          · rw [hLength, splitPacked_length_old, if_pos rfl]
+          · rw [hLength, splitPacked_length_old, ite_eq_left rfl]
             simp
           · rw [hTail, splitPacked_tail_old]
             simp [segmentTail]
@@ -211,7 +215,7 @@ theorem valid_core_transport {chain : CanonicalSplitChain source target}
               simp only [List.length_cons]
               omega
             unfold segmentHead
-            rw [if_neg hne0]
+            rw [ite_eq_right hne0]
             omega
         · -- the remaining segments were appended by the tail split
           obtain ⟨k, rfl⟩ : ∃ k', k = k' + 1 := ⟨k - 1, by omega⟩
@@ -226,10 +230,10 @@ theorem valid_core_transport {chain : CanonicalSplitChain source target}
             unfold segmentSlot
             by_cases hzero : k = 0
             · subst hzero
-              simp only [if_neg (by omega : ¬ (0 + 1 = 0))]
+              simp only [ite_eq_right (by omega : ¬ (0 + 1 = 0))]
               show src.p + (0 + 1) - 1 = ((Fin.last src.p : Fin (src.p + 1)) : ℕ)
               simp
-            · rw [if_neg hzero, if_neg (by omega : ¬ (k + 1 = 0))]
+            · rw [ite_eq_right hzero, ite_eq_right (by omega : ¬ (k + 1 = 0))]
               show src.p + (k + 1) - 1 = src.p + 1 + k - 1
               omega
           obtain ⟨hLength, hTail, hHead⟩ := ihSeg k j hk' hidx
@@ -239,18 +243,18 @@ theorem valid_core_transport {chain : CanonicalSplitChain source target}
             unfold segmentTail
             by_cases hzero : k = 0
             · subst hzero
-              rw [if_pos rfl, if_neg (by omega : ¬ (0 + 1 = 0))]
+              rw [ite_eq_left rfl, ite_eq_right (by omega : ¬ (0 + 1 = 0))]
               rw [splitPacked_tail_last]
               omega
-            · rw [if_neg hzero, if_neg (by omega : ¬ (k + 1 = 0))]
+            · rw [ite_eq_right hzero, ite_eq_right (by omega : ¬ (k + 1 = 0))]
               show src.n + 1 + k - 1 = src.n + (k + 1) - 1
               omega
           · rw [hHead]
             unfold segmentHead
             by_cases hlast : k + 1 = rest.length
-            · rw [if_pos hlast, if_pos (by simp only [List.length_cons]; omega)]
+            · rw [ite_eq_left hlast, ite_eq_left (by simp only [List.length_cons]; omega)]
               rw [splitPacked_head_last]
-            · rw [if_neg hlast, if_neg (by simp only [List.length_cons]; omega)]
+            · rw [ite_eq_right hlast, ite_eq_right (by simp only [List.length_cons]; omega)]
               show src.n + 1 + k = src.n + (k + 1)
               omega
 
@@ -284,9 +288,9 @@ theorem slotCount_eq_add (data : SegmentData source) (k : ℕ) :
     intro i
     have hpos := length_segments_pos data i
     by_cases hlt : (i : ℕ) < k
-    · rw [if_pos hlt, if_pos hlt]
+    · rw [ite_eq_left hlt, ite_eq_left hlt]
       omega
-    · rw [if_neg hlt, if_neg hlt]
+    · rw [ite_eq_right hlt, ite_eq_right hlt]
   unfold slotCount addedCore
   rw [Finset.sum_congr rfl fun i _ ↦ hterm i, Finset.sum_add_distrib]
   simp
@@ -301,12 +305,12 @@ theorem slotCount_mono (data : SegmentData source) {k l : ℕ} (hkl : k ≤ l) :
   refine Finset.sum_le_sum fun i _ ↦ ?_
   have hpos := length_segments_pos data i
   by_cases hk : (i : ℕ) < k
-  · rw [if_pos hk, if_pos (lt_of_lt_of_le hk hkl)]
-  · rw [if_neg hk]
+  · rw [ite_eq_left hk, ite_eq_left (lt_of_lt_of_le hk hkl)]
+  · rw [ite_eq_right hk]
     by_cases hl : (i : ℕ) < l
-    · rw [if_pos hl]
+    · rw [ite_eq_left hl]
       omega
-    · rw [if_neg hl]
+    · rw [ite_eq_right hl]
 
 theorem slotCount_succ (data : SegmentData source) {k : ℕ} (hk : k < source.p) :
     slotCount data (k + 1) + 1 =
@@ -322,11 +326,11 @@ theorem slotCount_succ (data : SegmentData source) {k : ℕ} (hk : k < source.p)
     refine Finset.sum_congr rfl fun x hx ↦ ?_
     have hxk : (x : ℕ) ≠ k := fun hEq ↦ (Finset.mem_erase.mp hx).1 (Fin.ext hEq)
     by_cases hlt : (x : ℕ) < k
-    · rw [if_pos hlt, if_pos (Nat.lt_succ_of_lt hlt)]
-    · rw [if_neg hlt, if_neg (by omega : ¬ (x : ℕ) < k + 1)]
+    · rw [ite_eq_left hlt, ite_eq_left (Nat.lt_succ_of_lt hlt)]
+    · rw [ite_eq_right hlt, ite_eq_right (by omega : ¬ (x : ℕ) < k + 1)]
   unfold slotCount
   rw [← Finset.sum_erase_add _ _ hmem, ← Finset.sum_erase_add _ _ hmem, hcongr]
-  rw [if_pos (Nat.lt_succ_self k), if_neg (Nat.lt_irrefl k)]
+  rw [ite_eq_left (Nat.lt_succ_self k), ite_eq_right (Nat.lt_irrefl k)]
   omega
 
 /-! ### The names -/
@@ -425,22 +429,22 @@ theorem described_step {data : SegmentData source} {k : ℕ}
         rw [hval]
         unfold refinedSlot segmentSlot
         by_cases hm0 : m = 0
-        · rw [if_pos hm0, if_pos hm0]
-        · rw [if_neg hm0, if_neg hm0, hp, hslot]
+        · rw [ite_eq_left hm0, ite_eq_left hm0]
+        · rw [ite_eq_right hm0, ite_eq_right hm0, hp, hslot]
       obtain ⟨l1, t1, h1⟩ := tSeg m j hm hidx
       obtain ⟨_, t2, h2⟩ := hOld slot ⟨(slot : ℕ), lt_of_lt_of_le slot.isLt prev.le⟩
         (le_of_eq hslot.symm) rfl
       refine ⟨l1, t1.trans ?_, h1.trans ?_⟩
       · unfold segmentTail refinedTail
         by_cases hm0 : m = 0
-        · rw [if_pos hm0, if_pos hm0]
+        · rw [ite_eq_left hm0, ite_eq_left hm0]
           exact t2
-        · rw [if_neg hm0, if_neg hm0, hn, hslot]
+        · rw [ite_eq_right hm0, ite_eq_right hm0, hn, hslot]
       · unfold segmentHead refinedHead
         by_cases hlast : m + 1 = (data.segments slot).length
-        · rw [if_pos hlast, if_pos hlast]
+        · rw [ite_eq_left hlast, ite_eq_left hlast]
           exact h2
-        · rw [if_neg hlast, if_neg hlast, hn, hslot]
+        · rw [ite_eq_right hlast, ite_eq_right hlast, hn, hslot]
     · have hlt : (i : ℕ) < k := by omega
       have hsucc : slotCount data ((i : ℕ) + 1) + 1 =
           slotCount data (i : ℕ) + (data.segments i).length :=
@@ -449,9 +453,9 @@ theorem described_step {data : SegmentData source} {k : ℕ}
         rw [hp]
         unfold refinedSlot
         by_cases hm0 : m = 0
-        · rw [if_pos hm0]
+        · rw [ite_eq_left hm0]
           exact lt_of_lt_of_le i.isLt (p_le_slotCount data k)
-        · rw [if_neg hm0]
+        · rw [ite_eq_right hm0]
           have hmono := slotCount_mono data (show (i : ℕ) + 1 ≤ k by omega)
           omega
       have hne : (⟨refinedSlot data i m, hbound⟩ : Fin prev.target.p) ≠
@@ -461,9 +465,9 @@ theorem described_step {data : SegmentData source} {k : ℕ}
         have hvals : refinedSlot data i m = (slot : ℕ) := hEqq
         unfold refinedSlot at hvals
         by_cases hm0 : m = 0
-        · rw [if_pos hm0] at hvals
+        · rw [ite_eq_left hm0] at hvals
           omega
-        · rw [if_neg hm0] at hvals
+        · rw [ite_eq_right hm0] at hvals
           have hple := p_le_slotCount data (i : ℕ)
           omega
       obtain ⟨l1, t1, h1⟩ := tOld ⟨refinedSlot data i m, hbound⟩ j hne hval.symm
@@ -498,18 +502,18 @@ theorem refineAllSlots_core (data : SegmentData source) (i : Fin source.p) (m : 
 theorem refineAllSlots_p_eq_slotCount (data : SegmentData source) :
     (refineAllSlots data).p = slotCount data source.p := by
   rw [refineAllSlots_p]
-  exact (Finset.sum_congr rfl fun i _ ↦ by rw [if_pos i.isLt]).symm
+  exact (Finset.sum_congr rfl fun i _ ↦ by rw [ite_eq_left i.isLt]).symm
 
 theorem addedCore_mono (data : SegmentData source) {k l : ℕ} (hkl : k ≤ l) :
     addedCore data k ≤ addedCore data l := by
   refine Finset.sum_le_sum fun i _ ↦ ?_
   by_cases hk : (i : ℕ) < k
-  · rw [if_pos hk, if_pos (lt_of_lt_of_le hk hkl)]
-  · rw [if_neg hk]
+  · rw [ite_eq_left hk, ite_eq_left (lt_of_lt_of_le hk hkl)]
+  · rw [ite_eq_right hk]
     by_cases hl : (i : ℕ) < l
-    · rw [if_pos hl]
+    · rw [ite_eq_left hl]
       omega
-    · rw [if_neg hl]
+    · rw [ite_eq_right hl]
 
 theorem addedCore_succ (data : SegmentData source) {k : ℕ} (hk : k < source.p) :
     addedCore data (k + 1) =
@@ -538,13 +542,13 @@ theorem refinedSlot_block (data : SegmentData source) (i : Fin source.p) (m : �
       (m ≠ 0 ∧ slotCount data (i : ℕ) ≤ refinedSlot data i m ∧
         refinedSlot data i m < slotCount data ((i : ℕ) + 1)) := by
   by_cases hm0 : m = 0
-  · exact Or.inl ⟨hm0, by unfold refinedSlot; rw [if_pos hm0]⟩
+  · exact Or.inl ⟨hm0, by unfold refinedSlot; rw [ite_eq_left hm0]⟩
   · refine Or.inr ⟨hm0, ?_, ?_⟩
     · unfold refinedSlot
-      rw [if_neg hm0]
+      rw [ite_eq_right hm0]
       omega
     · unfold refinedSlot
-      rw [if_neg hm0]
+      rw [ite_eq_right hm0]
       have hsucc : slotCount data ((i : ℕ) + 1) + 1 =
           slotCount data (i : ℕ) + (data.segments i).length :=
         slotCount_succ data i.isLt
@@ -583,12 +587,12 @@ theorem refinedSlot_injective (data : SegmentData source) :
   by_cases hm0 : (m : ℕ) = 0
   · by_cases hm0' : (m' : ℕ) = 0
     · omega
-    · rw [if_pos hm0, if_neg hm0'] at hEq
+    · rw [ite_eq_left hm0, ite_eq_right hm0'] at hEq
       omega
   · by_cases hm0' : (m' : ℕ) = 0
-    · rw [if_neg hm0, if_pos hm0'] at hEq
+    · rw [ite_eq_right hm0, ite_eq_left hm0'] at hEq
       omega
-    · rw [if_neg hm0, if_neg hm0'] at hEq
+    · rw [ite_eq_right hm0, ite_eq_right hm0'] at hEq
       omega
 
 /-- **The refined slots are named.**  Stable slot `i` and segment index `m`
@@ -676,7 +680,7 @@ theorem card_refinedVertex (data : SegmentData source) :
   rw [refineAllSlots_n_eq, Fintype.card_sum, Fintype.card_fin, Fintype.card_sigma]
   refine congrArg (fun total ↦ source.n + total) ?_
   unfold addedCore
-  exact Finset.sum_congr rfl fun i _ ↦ by rw [if_pos i.isLt, Fintype.card_fin]
+  exact Finset.sum_congr rfl fun i _ ↦ by rw [ite_eq_left i.isLt, Fintype.card_fin]
 
 /-- **The refined core vertices are named.** -/
 noncomputable def vertexIndexEquiv (data : SegmentData source) :
@@ -711,9 +715,9 @@ theorem refinedVertex_segmentTailVertex (data : SegmentData source)
     refinedVertex data (segmentTailVertex data x) = refinedTail data x.1 (x.2 : ℕ) := by
   unfold segmentTailVertex refinedTail
   by_cases h : (x.2 : ℕ) = 0
-  · rw [dif_pos h, if_pos h]
+  · rw [dite_eq_left h, ite_eq_left h]
     rfl
-  · rw [dif_neg h, if_neg h]
+  · rw [dite_eq_right h, ite_eq_right h]
     simp only [refinedVertex]
     omega
 
@@ -722,9 +726,9 @@ theorem refinedVertex_segmentHeadVertex (data : SegmentData source)
     refinedVertex data (segmentHeadVertex data x) = refinedHead data x.1 (x.2 : ℕ) := by
   unfold segmentHeadVertex refinedHead
   by_cases h : (x.2 : ℕ) + 1 = (data.segments x.1).length
-  · rw [dif_pos h, if_pos h]
+  · rw [dite_eq_left h, ite_eq_left h]
     rfl
-  · rw [dif_neg h, if_neg h]
+  · rw [dite_eq_right h, ite_eq_right h]
     rfl
 
 /-! ### The core API, assembled -/
@@ -809,7 +813,7 @@ noncomputable def relabeling (model : CoreModel data target) :
     show target.core.tail (model.slotModel ((slotIndexEquiv data).symm edge)) = _
     rw [model.tail_eq, hTail, hHead]
     by_cases hrev : model.reversed ((slotIndexEquiv data).symm edge) = true
-    · simp only [hrev, if_true]
+    · simp only [hrev, ite_true]
       show _ = ((vertexIndexEquiv data).symm.trans model.vertexModel)
         (vertexIndexEquiv data (segmentHeadVertex data _))
       rw [Equiv.trans_apply, Equiv.symm_apply_apply]
@@ -827,7 +831,7 @@ noncomputable def relabeling (model : CoreModel data target) :
     show target.core.head (model.slotModel ((slotIndexEquiv data).symm edge)) = _
     rw [model.head_eq, hTail, hHead]
     by_cases hrev : model.reversed ((slotIndexEquiv data).symm edge) = true
-    · simp only [hrev, if_true]
+    · simp only [hrev, ite_true]
       show _ = ((vertexIndexEquiv data).symm.trans model.vertexModel)
         (vertexIndexEquiv data (segmentTailVertex data _))
       rw [Equiv.trans_apply, Equiv.symm_apply_apply]

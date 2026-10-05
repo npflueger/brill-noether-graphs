@@ -1,5 +1,9 @@
-import DraismaVargas.Infrastructure.GraphContraction
-import DraismaVargas.Infrastructure.SheetJoin
+module
+
+public import DraismaVargas.Infrastructure.GraphContraction
+public import DraismaVargas.Infrastructure.SheetJoin
+
+@[expose] public section
 
 /-!
 # Contracting a gluing datum along one target edge
@@ -86,14 +90,14 @@ theorem count_add_count_le_card {α : Type*} [DecidableEq α] (s : Multiset α) 
     rw [Multiset.count_add, Multiset.count_replicate, Multiset.count_replicate]
     by_cases hzx : x = z
     · subst hzx
-      rw [if_pos rfl, if_neg (fun h => hxy h.symm)]
+      rw [ite_eq_left rfl, ite_eq_right (fun h => hxy h.symm)]
       omega
-    · rw [if_neg hzx]
+    · rw [ite_eq_right hzx]
       by_cases hzy : y = z
       · subst hzy
-        rw [if_pos rfl]
+        rw [ite_eq_left rfl]
         omega
-      · rw [if_neg hzy]
+      · rw [ite_eq_right hzy]
         omega
   have hcard := Multiset.card_le_card hle
   rwa [Multiset.card_add, Multiset.card_replicate, Multiset.card_replicate] at hcard
@@ -289,20 +293,20 @@ theorem foldIndex_left_cancel (a b : target.V) (q : target.V × target.V) {m n :
 theorem foldIndex_of_fst (a b : target.V) (q : target.V × target.V) (n : ℕ) (h : q.1 = b) :
     foldIndex a b q n = Multiset.count ((a, q.2) : target.V × target.V) target.edges + n := by
   simp only [foldIndex]
-  rw [if_pos h]
+  rw [ite_eq_left h]
 
 /-- Value of `foldIndex` at a pair ending at the folded vertex. -/
 theorem foldIndex_of_snd (a b : target.V) (q : target.V × target.V) (n : ℕ)
     (h1 : q.1 ≠ b) (h2 : q.2 = b) :
     foldIndex a b q n = Multiset.count ((q.1, a) : target.V × target.V) target.edges + n := by
   simp only [foldIndex]
-  rw [if_neg h1, if_pos h2]
+  rw [ite_eq_right h1, ite_eq_left h2]
 
 /-- Value of `foldIndex` away from the folded vertex. -/
 theorem foldIndex_of_ne (a b : target.V) (q : target.V × target.V) (n : ℕ)
     (h1 : q.1 ≠ b) (h2 : q.2 ≠ b) : foldIndex a b q n = n := by
   simp only [foldIndex]
-  rw [if_neg h1, if_neg h2]
+  rw [ite_eq_right h1, ite_eq_right h2]
 
 /-- Two kept pairs with the same image and the same offset index are equal. -/
 theorem pair_eq_of_fold_eq (hab : a ≠ b) {u₁ v₁ u₂ v₂ : target.V} {m₁ m₂ : ℕ}
@@ -470,12 +474,12 @@ theorem contractVertexPartition_merge (data : GluingDatum target degree) (a b : 
     (hab : a ≠ b) :
     contractVertexPartition data a b ⟨a, hab⟩
       = SheetPartition.join (data.vertexPartition a) (data.vertexPartition b) :=
-  if_pos rfl
+  ite_eq_left rfl
 
 theorem contractVertexPartition_of_ne (data : GluingDatum target degree) (a b : target.V)
     {y : GraphContraction.Vertex target b} (h : (y : target.V) ≠ a) :
     contractVertexPartition data a b y = data.vertexPartition (y : target.V) :=
-  if_neg h
+  ite_eq_right h
 
 /-- Every old vertex partition refines the vertex partition sitting above its
 image.  Away from the merged vertex this is an equality; at the merged vertex
@@ -492,7 +496,7 @@ theorem vertexPartition_refines (data : GluingDatum target degree) (hab : a ≠ 
   · rw [GraphContraction.fold_of_ne target hab hvb]
     by_cases hva : v = a
     · have h2 : contractVertexPartition data a b ⟨v, hvb⟩
-          = SheetPartition.join (data.vertexPartition a) (data.vertexPartition b) := if_pos hva
+          = SheetPartition.join (data.vertexPartition a) (data.vertexPartition b) := ite_eq_left hva
       rw [h2, hva]
       exact SheetPartition.left_refines_join _ _
     · rw [contractVertexPartition_of_ne data a b (y := ⟨v, hvb⟩) hva]

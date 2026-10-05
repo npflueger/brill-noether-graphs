@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W2R1StableGraph
-import DraismaVargas.LocalCases.LimitChainTwoBlock
+module
+
+public import DraismaVargas.LocalCases.W2R1StableGraph
+public import DraismaVargas.LocalCases.LimitChainTwoBlock
+
+@[expose] public section
 
 /-!
 # Figures 37 and 38's induced stable-row map, at **both** blocks

@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoSplitRowDictionary
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoSplitRowDictionary
+
+@[expose] public section
 
 /-!
 # The valency-two Base II **split** exit: the outgoing presentation and the link
@@ -1058,7 +1062,7 @@ theorem thickEdge_of_two_le {star : TwoStar target wall}
   rw [Prescribed.thickEdge_eq]
   congr 1
   unfold Prescribed.thickDirection
-  rw [if_pos h]
+  rw [ite_eq_left h]
 
 /-- `thickEdge` is the label-`1` occurrence when the label-`0` direction carries
 at most one survivor. -/
@@ -1068,7 +1072,7 @@ theorem thickEdge_of_le_one {star : TwoStar target wall}
   rw [Prescribed.thickEdge_eq]
   congr 1
   unfold Prescribed.thickDirection
-  rw [if_neg (by omega)]
+  rw [ite_eq_right (by omega)]
 
 /-- **In Configuration B the relabelling fixes the thick occurrence.**  So the
 mirror trick of this section is specific to Configuration A, where both direction

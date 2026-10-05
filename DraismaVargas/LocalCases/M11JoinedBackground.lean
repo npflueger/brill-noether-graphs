@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.M11JoinedSurvival
+module
+
+public import DraismaVargas.LocalCases.M11JoinedSurvival
+
+@[expose] public section
 
 /-!
 # The joined M11 background is a subdivision, not a family of leaves

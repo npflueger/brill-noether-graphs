@@ -1,5 +1,9 @@
-import Bananas.Transmission.RankZeroWitness
-import Utilities.Foundations.RankChipStep
+module
+
+public import Bananas.Transmission.RankZeroWitness
+public import Utilities.Foundations.RankChipStep
+
+@[expose] public section
 
 /-!
 # Support complexes of rank-zero divisors

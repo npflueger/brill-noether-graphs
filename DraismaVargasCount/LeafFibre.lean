@@ -1,5 +1,9 @@
-import DraismaVargasCount.Multiplicity
-import DraismaVargas.LocalCases.StableLocalProperties
+module
+
+public import DraismaVargasCount.Multiplicity
+public import DraismaVargas.LocalCases.StableLocalProperties
+
+@[expose] public section
 
 /-!
 # Leaf fibres of a full-dimensional tropical morphism, and the leaf columns
@@ -175,10 +179,10 @@ theorem matrix_eq_sum_fibre (labelling : StableLengthMatrixLabelling data coordi
         apply Finset.sum_congr rfl
         intro edge _
         by_cases hCase : edge.1.1 = item
-        · rw [if_pos hCase]
+        · rw [ite_eq_left hCase]
           simp [GluingDatum.LengthMatrixPresentation.coefficient,
             StableLengthMatrixLabelling.presentation, hCase]
-        · rw [if_neg hCase]
+        · rw [ite_eq_right hCase]
           apply GluingDatum.LengthMatrixPresentation.coefficient_eq_zero_of_target_ne
           simp only [StableLengthMatrixLabelling.presentation,
             Equiv.apply_symm_apply]
@@ -538,14 +542,14 @@ theorem rowFibre_leafEdge (sourceRow : coordinate) :
   ext edge
   rw [mem_rowFibre]
   by_cases hCase : sourceRow = leafRow fd hLeaf
-  · rw [if_pos hCase]
+  · rw [ite_eq_left hCase]
     constructor
     · rintro ⟨⟨hSurvives, _⟩, hTarget⟩
       exact (mem_leafSurvivors hLeaf).mpr ⟨hSurvives, hTarget⟩
     · intro hMem
       obtain ⟨hSurvives, hTarget⟩ := (mem_leafSurvivors hLeaf).mp hMem
       exact ⟨⟨hSurvives, by rw [row_eq_leafRow fd hLeaf hMem hSurvives, hCase]⟩, hTarget⟩
-  · rw [if_neg hCase]
+  · rw [ite_eq_right hCase]
     simp only [Finset.notMem_empty, iff_false]
     rintro ⟨⟨hSurvives, hRow⟩, hTarget⟩
     exact hCase (hRow.symm.trans
@@ -559,7 +563,7 @@ theorem matrix_leafEdge_column (sourceRow : coordinate) :
   classical
   rw [matrix_eq_sum_fibre, rowFibre_leafEdge fd hLeaf]
   by_cases hCase : sourceRow = leafRow fd hLeaf
-  · rw [if_pos hCase, if_pos hCase]
+  · rw [ite_eq_left hCase, ite_eq_left hCase]
     have hOnes : ∀ edge ∈ leafSurvivors (data := data) hLeaf,
         (1 : ℚ) / data.sourceEdgeIndex edge = 1 := by
       intro edge hEdge
@@ -569,7 +573,7 @@ theorem matrix_leafEdge_column (sourceRow : coordinate) :
     rw [Finset.sum_congr rfl hOnes, Finset.sum_const, nsmul_eq_mul, mul_one,
       leafSurvivors_card fd hLeaf]
     norm_num
-  · rw [if_neg hCase, if_neg hCase, Finset.sum_empty]
+  · rw [ite_eq_right hCase, ite_eq_right hCase, Finset.sum_empty]
 
 
 /-- **`A_v` has valency two in the source graph.** -/

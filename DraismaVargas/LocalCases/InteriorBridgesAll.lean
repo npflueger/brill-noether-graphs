@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.InteriorBridgesTrivalent
-import DraismaVargas.LocalCases.InteriorBridgesDivalent
+module
+
+public import DraismaVargas.LocalCases.InteriorBridgesTrivalent
+public import DraismaVargas.LocalCases.InteriorBridgesDivalent
+
+@[expose] public section
 
 /-!
 # All ten interior tag bridges, composed

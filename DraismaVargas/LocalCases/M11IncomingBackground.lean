@@ -1,7 +1,11 @@
-import DraismaVargas.LocalCases.M11IncomingPartitions
-import DraismaVargas.LocalCases.StablePathContraction
-import DraismaVargas.LocalCases.W2RankObstructions
-import DraismaVargas.LocalCases.FullDimensionalSource
+module
+
+public import DraismaVargas.LocalCases.M11IncomingPartitions
+public import DraismaVargas.LocalCases.StablePathContraction
+public import DraismaVargas.LocalCases.W2RankObstructions
+public import DraismaVargas.LocalCases.FullDimensionalSource
+
+@[expose] public section
 
 /-!
 # Incoming M11 background blocks at an asymmetric target split

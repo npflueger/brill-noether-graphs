@@ -1,5 +1,9 @@
-import DraismaVargasCount.W2M1kStarCensusProof
-import DraismaVargasCount.W2PStarExhaustionProof
+module
+
+public import DraismaVargasCount.W2M1kStarCensusProof
+public import DraismaVargasCount.W2PStarExhaustionProof
+
+@[expose] public section
 
 /-!
 # M-1k star exhaustion: the `w2M1k` clause with no hypothesis
@@ -124,32 +128,32 @@ theorem pairBlock_rel_iff (W : SheetPartition d) (p q : Fin d) (hne : p ≠ q)
     intro z hz
     by_cases hzq : z = q
     · subst hzq
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       exact W.pairBlock_repr_second p z hne hpq
-    · rw [if_neg hzq]
+    · rw [ite_eq_right hzq]
       exact W.pairBlock_repr_of_rel_of_ne_second p q z hne hz hzq
   rw [SheetPartition.rel_iff]
   by_cases hy : W.Rel p y
   · rw [hr x hx, hr y hy]
     unfold PairRel
     by_cases hxq : x = q <;> by_cases hyq : y = q
-    · rw [if_pos hxq, if_pos hyq]
+    · rw [ite_eq_left hxq, ite_eq_left hyq]
       exact ⟨fun _ ↦ Or.inl (hxq.trans hyq.symm), fun _ ↦ rfl⟩
-    · rw [if_pos hxq, if_neg hyq]
+    · rw [ite_eq_left hxq, ite_eq_right hyq]
       constructor
       · intro h; exact Or.inr (Or.inr ⟨hxq, h.symm⟩)
       · rintro (h | ⟨-, h⟩ | ⟨-, h⟩)
         · exact absurd (h.symm.trans hxq) hyq
         · exact absurd h hyq
         · exact h.symm
-    · rw [if_neg hxq, if_pos hyq]
+    · rw [ite_eq_right hxq, ite_eq_left hyq]
       constructor
       · intro h; exact Or.inr (Or.inl ⟨h, hyq⟩)
       · rintro (h | ⟨h, -⟩ | ⟨h, -⟩)
         · exact absurd (h.trans hyq) hxq
         · exact h
         · exact absurd h hxq
-    · rw [if_neg hxq, if_neg hyq]
+    · rw [ite_eq_right hxq, ite_eq_right hyq]
       constructor
       · intro h; exact Or.inl h
       · rintro (h | ⟨-, h⟩ | ⟨h, -⟩)
@@ -481,11 +485,11 @@ theorem transport_divided (res res' : LocalResolution degree) (p p' : Fin 2 → 
   · intro edge hInc s
     rcases eq_edge_of_incident star₁ edge hInc with rfl | rfl
     · rw [TwoStar.right_edge_zero]
-      simp only [Bool.false_eq_true, if_false]
+      simp only [Bool.false_eq_true, ite_false]
       rw [Equiv.symm_apply_apply, hL]
       exact detach_refl _ _ _
     · rw [TwoStar.right_edge_one]
-      simp only [if_true]
+      simp only [ite_true]
       rw [Equiv.symm_apply_apply, hR]
       exact detach_refl _ _ _
 
@@ -544,7 +548,7 @@ theorem transport_leaf (res res' : LocalResolution degree) (p q p' q' : Fin degr
     refine detach_of (rel_of_agree iso hτO hE0 s) ?_
     rw [Equiv.symm_apply_eq, hPin 0, ← hOp, τO.injective.eq_iff]
   · intro edge hInc s
-    rw [if_pos rfl, if_pos rfl, hR]
+    rw [ite_eq_left rfl, ite_eq_left rfl, hR]
     rcases eq_edge_of_incident star₁ edge hInc with rfl | rfl
     · refine detach_of (rel_of_agree iso (agree_edge iso star₁ 0) hE0 s) ?_
       rw [Equiv.symm_apply_eq, hPin 0, ← hPin 0, E0.injective.eq_iff]
@@ -600,9 +604,9 @@ theorem pin_map (iso : GeometricDatumIso first second)
       (pinnedOccurrence profile label).1 := by
     unfold pinnedOccurrence
     by_cases h : label = profile.doubleLabel
-    · rw [if_pos (h.trans hDouble.symm), if_pos h]
+    · rw [ite_eq_left (h.trans hDouble.symm), ite_eq_left h]
       exact hFirst
-    · rw [if_neg (fun h' ↦ h (h'.trans hDouble)), if_neg h]
+    · rw [ite_eq_right (fun h' ↦ h (h'.trans hDouble)), ite_eq_right h]
       exact hDeleted
   rw [← pinnedOccurrence_target shape₁ label]
   exact congrArg (fun e : second.SourceEdge ↦ e.1.2) hOcc
@@ -780,10 +784,10 @@ theorem pinSheet_swapProfile {target : CFGraph} {degree : ℕ} {wall : target.V}
   rw [← pinnedOccurrence_target shape label]
   unfold pinSheet pinnedOccurrence
   by_cases h : label = profile.doubleLabel
-  · rw [if_pos h, if_pos (show label = (swapProfile profile hConnected other hOther).doubleLabel
+  · rw [ite_eq_left h, ite_eq_left (show label = (swapProfile profile hConnected other hOther).doubleLabel
       from h)]
     rfl
-  · rw [if_neg h, if_neg (show ¬ label = (swapProfile profile hConnected other hOther).doubleLabel
+  · rw [ite_eq_right h, ite_eq_right (show ¬ label = (swapProfile profile hConnected other hOther).doubleLabel
       from h)]
     rfl
 
@@ -956,7 +960,7 @@ theorem limitAnchor_aligned_iff (hAligned : pinSheet profile 0 = pinSheet profil
     F _ (limitAnchor input shape j) ↔
       F _ (alignedAnchor input shape (exists_leafPair shape hAligned).some j) := by
   unfold limitAnchor
-  rw [dif_pos hAligned]
+  rw [dite_eq_left hAligned]
   exact anchorOf_iff shape _ _ j F
 
 /-- At a separated wall, a statement about a position's anchor is one about the separated
@@ -966,7 +970,7 @@ theorem limitAnchor_separated_iff (hSeparated : ¬ pinSheet profile 0 = pinSheet
     F _ (limitAnchor input shape j) ↔
       F _ (separatedAnchor input shape (exists_dividedData shape hSeparated).some j) := by
   unfold limitAnchor
-  rw [dif_neg hSeparated]
+  rw [dite_eq_right hSeparated]
   exact anchorOf_iff shape _ _ j F
 
 /-- **Every star member presents a transport onto the position of its own kind.** -/

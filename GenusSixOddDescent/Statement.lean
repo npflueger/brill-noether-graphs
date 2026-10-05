@@ -1,5 +1,9 @@
-import Utilities.Subdivision.OddSubdivisionDescent
-import Utilities.Subdivision.SquareRootDescent
+module
+
+public import Utilities.Subdivision.OddSubdivisionDescent
+public import Utilities.Subdivision.SquareRootDescent
+
+@[expose] public section
 
 /-!
 # Statements for genus-six odd-subdivision descent

@@ -1,5 +1,9 @@
-import Utilities.Gluing.VertexWedge
-import Utilities.Iso.GraphIso
+module
+
+public import Utilities.Gluing.VertexWedge
+public import Utilities.Iso.GraphIso
+
+@[expose] public section
 
 /-!
 # Presentations of a vertex wedge

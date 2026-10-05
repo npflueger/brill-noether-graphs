@@ -1,5 +1,9 @@
-import Bananas.Sections.SectionSixChainConclusion
-import Utilities.Gluing.BridgeContraction
+module
+
+public import Bananas.Sections.SectionSixChainConclusion
+public import Utilities.Gluing.BridgeContraction
+
+@[expose] public section
 
 open Utilities
 
@@ -128,7 +132,7 @@ noncomputable def bridgeWedgeAssocIso (M N K : MarkedGraph.{u}) :
           by_cases h : a = N.right
           · subst a
             simp
-          · rw [if_neg h, if_neg (fun he => h (Sum.inr.inj he))]
+          · rw [ite_eq_right h, ite_eq_right (fun he => h (Sum.inr.inj he))]
         · change num_edges (bridgeGraph M.graph
               (vertexWedge N.graph K.graph N.right K.left) M.right
                 (Sum.inl N.left))
@@ -152,7 +156,7 @@ noncomputable def bridgeWedgeAssocIso (M N K : MarkedGraph.{u}) :
           by_cases h : b = N.right
           · subst b
             simp
-          · rw [if_neg h, if_neg (fun he => h (Sum.inr.inj he))]
+          · rw [ite_eq_right h, ite_eq_right (fun he => h (Sum.inr.inj he))]
         · change num_edges (bridgeGraph M.graph
               (vertexWedge N.graph K.graph N.right K.left) M.right
                 (Sum.inl N.left))
@@ -176,10 +180,10 @@ noncomputable def bridgeWedgeAssocIso (M N K : MarkedGraph.{u}) :
     Sum.inr (wedgeRightVertex N.graph K.graph N.right K.left K.right)
   unfold bridgeWedgeAssocIso
   by_cases h : K.right = K.left
-  · simp only [wedgeRightVertex, dif_pos h]
+  · simp only [wedgeRightVertex, dite_eq_left h]
     change Sum.inr (Sum.inl N.right) = Sum.inr (Sum.inl N.right)
     rfl
-  · simp only [wedgeRightVertex, dif_neg h]
+  · simp only [wedgeRightVertex, dite_eq_right h]
     change Sum.inr (Sum.inr
         (⟨K.right, h⟩ : {b : K.graph.V // b ≠ K.left})) =
       Sum.inr (Sum.inr
@@ -284,7 +288,7 @@ noncomputable def trans {M N K : MarkedGraph.{u}}
 end LeftRankTransport
 
 set_option backward.isDefEq.respectTransparency false in
-private theorem bridgePushforward_one_chip_left (M N : MarkedGraph.{u}) :
+theorem bridgePushforward_one_chip_left (M N : MarkedGraph.{u}) :
     bridgePushforward M.graph N.graph M.right N.left
         (one_chip (Sum.inl M.left)) =
       one_chip (Sum.inl M.left : (M.wedge N).graph.V) := by
@@ -297,8 +301,8 @@ private theorem bridgePushforward_one_chip_left (M N : MarkedGraph.{u}) :
     · simp only [MarkedGraphs.liftLeftDivisor_inl, one_chip]
       by_cases h : a = M.left
       · subst a
-        rw [if_pos rfl, if_pos rfl]
-      · rw [if_neg (fun e => h (Sum.inl.inj e)), if_neg h]
+        rw [ite_eq_left rfl, ite_eq_left rfl]
+      · rw [ite_eq_right (fun e => h (Sum.inl.inj e)), ite_eq_right h]
     · simp [one_chip]
   rw [hSource, bridgePushforward_liftLeftDivisor]
   funext z
@@ -306,8 +310,8 @@ private theorem bridgePushforward_one_chip_left (M N : MarkedGraph.{u}) :
   · simp only [wedgeLiftLeftDivisor_left, one_chip]
     by_cases h : a = M.left
     · subst a
-      rw [if_pos rfl, if_pos rfl]
-    · rw [if_neg h, if_neg (fun e => h (Sum.inl.inj e))]
+      rw [ite_eq_left rfl, ite_eq_left rfl]
+    · rw [ite_eq_right h, ite_eq_right (fun e => h (Sum.inl.inj e))]
   · simp [one_chip]
 
 /-- Contract the bridge between two marked factors. -/

@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.InteriorBridgesAll
-import DraismaVargas.LocalCases.ReachableMarch
+module
+
+public import DraismaVargas.LocalCases.InteriorBridgesAll
+public import DraismaVargas.LocalCases.ReachableMarch
+
+@[expose] public section
 
 /-!
 # The outer walk's `interior` hypothesis, restated at the march's own metric

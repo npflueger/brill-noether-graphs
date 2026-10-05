@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W4OutgoingLimitMatrix
-import Utilities.IntegralGeometry.WallColumnDeterminant
+module
+
+public import DraismaVargas.LocalCases.W4OutgoingLimitMatrix
+public import Utilities.IntegralGeometry.WallColumnDeterminant
+
+@[expose] public section
 
 /-!
 # W4 common cofactors, the sigma sum, and Equation (1)

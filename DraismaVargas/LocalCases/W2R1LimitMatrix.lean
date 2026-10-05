@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W2R1CommonBalance
+module
+
+public import DraismaVargas.LocalCases.W2R1CommonBalance
+
+@[expose] public section
 
 /-!
 # Figures 37 and 38's limit matrices, and an inhabitant of `LimitColumns`

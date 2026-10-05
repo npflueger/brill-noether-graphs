@@ -1,5 +1,9 @@
-import DraismaVargasCount.OpenOddRung
-import DraismaVargasCount.SwitchingParity
+module
+
+public import DraismaVargasCount.OpenOddRung
+public import DraismaVargasCount.SwitchingParity
+
+@[expose] public section
 
 /-!
 # A parity form of the count link across a type change

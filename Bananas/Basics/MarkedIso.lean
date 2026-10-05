@@ -1,5 +1,9 @@
-import Bananas.Transmission.TorsionIso
-import Utilities.Iso.GraphIso
+module
+
+public import Bananas.Transmission.TorsionIso
+public import Utilities.Iso.GraphIso
+
+@[expose] public section
 
 /-!
 # Second rank differences under marked graph isomorphism

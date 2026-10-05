@@ -1,5 +1,9 @@
-import Utilities.Subdivision.DegenerateSlopeScript
-import Utilities.Subdivision.SplitRampArithmetic
+module
+
+public import Utilities.Subdivision.DegenerateSlopeScript
+public import Utilities.Subdivision.SplitRampArithmetic
+
+@[expose] public section
 
 /-!
 # Firing scripts with a marked point inside each slot

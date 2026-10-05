@@ -1,5 +1,9 @@
-import DraismaVargasCount.DegenerateFibreCover
-import Utilities.Harmonic.Basic
+module
+
+public import DraismaVargasCount.DegenerateFibreCover
+public import Utilities.Harmonic.Basic
+
+@[expose] public section
 
 /-!
 # Rank at the degenerate request, transport half: a counting refutation of the covering half, and the shape that survives

@@ -1,12 +1,16 @@
-import DraismaVargas.LocalCases.InteriorBridgesAll
-import DraismaVargasCount.W4WallExhaustion
-import DraismaVargasCount.SimpleWallSupply
-import DraismaVargasCount.InheritedLimitBranches
-import DraismaVargasCount.W3Nd3UnitBalance
-import DraismaVargasCount.W3Nd2UnitBalance
-import DraismaVargasCount.W2R1UnitBalance
-import DraismaVargasCount.W2PMultiplicityBalance
-import DraismaVargasCount.W4FullDimensionalBalance
+module
+
+public import DraismaVargas.LocalCases.InteriorBridgesAll
+public import DraismaVargasCount.W4WallExhaustion
+public import DraismaVargasCount.SimpleWallSupply
+public import DraismaVargasCount.InheritedLimitBranches
+public import DraismaVargasCount.W3Nd3UnitBalance
+public import DraismaVargasCount.W3Nd2UnitBalance
+public import DraismaVargasCount.W2R1UnitBalance
+public import DraismaVargasCount.W2PMultiplicityBalance
+public import DraismaVargasCount.W4FullDimensionalBalance
+
+@[expose] public section
 
 /-!
 # From a `Regrowth` to Part I's wall objects

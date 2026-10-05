@@ -1,6 +1,10 @@
-import Bananas.Theta.ThetaNonrecurrence
-import Bananas.CrossOneOff.AffineInversionFinite
-import Bananas.Transmission.ExactTorsionAPI
+module
+
+public import Bananas.Theta.ThetaNonrecurrence
+public import Bananas.CrossOneOff.AffineInversionFinite
+public import Bananas.Transmission.ExactTorsionAPI
+
+@[expose] public section
 
 /-!
 # Genus-two transmission inversions

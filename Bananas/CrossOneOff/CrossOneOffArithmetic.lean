@@ -1,4 +1,8 @@
-import Bananas.Basics.Definitions
+module
+
+public import Bananas.Basics.Definitions
+
+@[expose] public section
 
 /-!
 # Arithmetic ranges for the cross one-off transmission block

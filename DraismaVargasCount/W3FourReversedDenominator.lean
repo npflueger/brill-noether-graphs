@@ -1,5 +1,9 @@
-import DraismaVargasCount.W2MkkIncomingDenominator
-import DraismaVargas.LocalCases.W3FourRowDescent
+module
+
+public import DraismaVargasCount.W2MkkIncomingDenominator
+public import DraismaVargas.LocalCases.W3FourRowDescent
+
+@[expose] public section
 
 /-!
 # Incoming row denominators for Figure 28's reversed members

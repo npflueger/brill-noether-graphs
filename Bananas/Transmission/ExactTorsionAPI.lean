@@ -1,5 +1,9 @@
-import Bananas.Theta.ThetaNonrecurrence
-import Bananas.CrossOneOff.AffineInversionFinite
+module
+
+public import Bananas.Theta.ThetaNonrecurrence
+public import Bananas.CrossOneOff.AffineInversionFinite
+
+@[expose] public section
 
 /-!
 # Exact torsion period API

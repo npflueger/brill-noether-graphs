@@ -1,9 +1,13 @@
-import Utilities.Pseudocore.PseudocorePresentation
-import Utilities.Pseudocore.PseudocoreMarkerWedge
-import Utilities.Subdivision.GraphIsoLaplacianEquiv
-import Utilities.Gluing.OneVertexCutFactors
-import Bananas.Classification.BridgelessGenusTwoTopology
-import Bananas.Basics.GraphIsoCuts
+module
+
+public import Utilities.Pseudocore.PseudocorePresentation
+public import Utilities.Pseudocore.PseudocoreMarkerWedge
+public import Utilities.Subdivision.GraphIsoLaplacianEquiv
+public import Utilities.Gluing.OneVertexCutFactors
+public import Bananas.Classification.BridgelessGenusTwoTopology
+public import Bananas.Basics.GraphIsoCuts
+
+@[expose] public section
 
 /-!
 # Pseudocore presentation in bridgeless genus two

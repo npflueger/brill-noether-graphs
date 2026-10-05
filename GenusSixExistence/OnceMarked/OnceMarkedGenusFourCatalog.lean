@@ -1,7 +1,11 @@
+module
+
 /- Generated data, not written by hand: one route for each partition of size at most four,
    in the grammar of `OnceMarkedCatalog`. `OnceMarkedLowGenus` checks what each route means. -/
 
-import GenusSixExistence.OnceMarked.OnceMarkedCatalog
+public import GenusSixExistence.OnceMarked.OnceMarkedCatalog
+
+@[expose] public section
 
 namespace MarkedGraphs.Generated.OnceMarkedGenusFourCatalog
 

@@ -1,5 +1,9 @@
-import DraismaVargasCount.GeometricCount
-import DraismaVargasCount.GeometricSegmentWalls
+module
+
+public import DraismaVargasCount.GeometricCount
+public import DraismaVargasCount.GeometricSegmentWalls
+
+@[expose] public section
 
 /-!
 # Counting the open odd geometric fibre through an indexed family of members

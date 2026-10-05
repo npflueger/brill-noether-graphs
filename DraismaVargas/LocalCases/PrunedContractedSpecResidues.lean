@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.PrunedContractedSpec
-import DraismaVargas.LocalCases.PrunedRealizationResidues
+module
+
+public import DraismaVargas.LocalCases.PrunedContractedSpec
+public import DraismaVargas.LocalCases.PrunedRealizationResidues
+
+@[expose] public section
 
 /-!
 # The two named facts of the pruned contracted spec, proved

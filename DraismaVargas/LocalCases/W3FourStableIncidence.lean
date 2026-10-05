@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W3FourHonestBalance
-import DraismaVargas.LocalCases.StableGraphFullDimensional
+module
+
+public import DraismaVargas.LocalCases.W3FourHonestBalance
+public import DraismaVargas.LocalCases.StableGraphFullDimensional
+
+@[expose] public section
 
 /-!
 # Figure 28's certified exit, one member at a time

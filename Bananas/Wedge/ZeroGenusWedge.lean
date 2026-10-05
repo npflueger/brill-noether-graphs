@@ -1,6 +1,10 @@
-import Bananas.Basics.Definitions
-import Utilities.Transmission.MarkedRankProfile
-import Utilities.Transmission.TransmissionSpecial
+module
+
+public import Bananas.Basics.Definitions
+public import Utilities.Transmission.MarkedRankProfile
+public import Utilities.Transmission.TransmissionSpecial
+
+@[expose] public section
 
 /-!
 # Removing genus-zero factors from a vertex wedge
@@ -42,9 +46,9 @@ theorem rank_eq_degree_or_neg_one_of_connected_genus_zero
     (hGenus : genus H = 0) (E : CFDiv H) :
     rank H E = if deg E < 0 then -1 else deg E := by
   by_cases hDegree : deg E < 0
-  · rw [if_pos hDegree]
+  · rw [ite_eq_left hDegree]
     exact rank_neg_one_of_deg_neg H E hDegree
-  · rw [if_neg hDegree]
+  · rw [ite_eq_right hDegree]
     exact rank_eq_degree_of_connected_genus_zero H hConnected hGenus E
       (le_of_not_gt hDegree)
 
@@ -104,7 +108,7 @@ theorem rank_vertexWedge_genus_zero_right
       H hConnected hGenus]
     rw [deg_add_zsmul_one_chip]
     by_cases hNegative : deg E + ell < 0
-    · rw [if_pos hNegative]
+    · rw [ite_eq_left hNegative]
       have hGap : 0 ≤ -(ell + 1) - deg E := by omega
       let t : ℕ := (-(ell + 1) - deg E).toNat
       have ht : (t : ℤ) = -(ell + 1) - deg E := by
@@ -114,7 +118,7 @@ theorem rank_vertexWedge_genus_zero_right
       rw [hShift] at hMono
       dsimp [r]
       simpa using hMono
-    · rw [if_neg hNegative]
+    · rw [ite_eq_right hNegative]
       have hGap : 0 ≤ deg E + ell + 1 := by omega
       let t : ℕ := (deg E + ell + 1).toNat
       have ht : (t : ℤ) = deg E + ell + 1 := by
@@ -129,7 +133,7 @@ theorem rank_vertexWedge_genus_zero_right
       H hConnected hGenus]
     rw [deg_add_zsmul_one_chip]
     have hDegree : deg E + (-deg E - 1) < 0 := by omega
-    rw [if_pos hDegree]
+    rw [ite_eq_left hDegree]
     dsimp [r]
     have hLeftDivisor :
         D - (-deg E - 1 + 1) • one_chip x =

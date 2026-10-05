@@ -1,4 +1,8 @@
-import DraismaVargas.Infrastructure.GraphContraction
+module
+
+public import DraismaVargas.Infrastructure.GraphContraction
+
+@[expose] public section
 
 /-!
 # Gluing sheets: joining blocks, and the degree raise that survives it

@@ -1,6 +1,10 @@
-import DraismaVargasCount.RowGeodesic
-import DraismaVargasCount.RowRegrowth
-import DraismaVargas.LocalCases.A04FourTags
+module
+
+public import DraismaVargasCount.RowGeodesic
+public import DraismaVargasCount.RowRegrowth
+public import DraismaVargas.LocalCases.A04FourTags
+
+@[expose] public section
 
 /-!
 # The outgoing member's row calculus, once, on the outgoing-candidate interface
@@ -377,7 +381,7 @@ open DraismaVargas.Count.Caterpillar
 theorem sourceEdgeIndex_main_pairEdge (m : ℕ) {i : Fin (6 * m + 3)}
     (hPair : IsPairEdge m i.val) :
     (caterpillarDatum m).sourceEdgeIndex ((caterpillarDatum m).sourceEdge (occ m i) 0) = 2 := by
-  rw [CaterpillarStable.sourceEdgeIndex_caterpillar, if_pos ⟨hPair, Or.inl rfl⟩]
+  rw [CaterpillarStable.sourceEdgeIndex_caterpillar, ite_eq_left ⟨hPair, Or.inl rfl⟩]
 
 /-- **The hypotheses of §1--§2 are inhabited.**  A pair-edge row of `T^CL_g`
 avoids leaves, by its own index and nothing else. -/

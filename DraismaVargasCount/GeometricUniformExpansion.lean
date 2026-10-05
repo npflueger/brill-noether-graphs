@@ -1,6 +1,10 @@
-import DraismaVargasCount.GeometricTransport
-import DraismaVargas.LocalCases.GlobalResolution
-import DraismaVargas.LocalCases.W4TargetPairings
+module
+
+public import DraismaVargasCount.GeometricTransport
+public import DraismaVargas.LocalCases.GlobalResolution
+public import DraismaVargas.LocalCases.W4TargetPairings
+
+@[expose] public section
 
 /-!
 # Geometric base change of a uniform partition expansion
@@ -20,7 +24,7 @@ open TargetExpansion ResolutionM11
 
 variable {target otherTarget : CFGraph} {degree : ℕ}
 
-private theorem oldCompatible (data : GluingDatum target degree) (wall : target.V)
+theorem oldCompatible (data : GluingDatum target degree) (wall : target.V)
     (right : target.edges → Bool) :
     GlobalResolution.OldCompatible data wall right (joinedResolutionAt (data.vertexPartition wall)) := by
   apply GlobalResolution.oldCompatible_of_wall

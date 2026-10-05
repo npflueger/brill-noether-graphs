@@ -1,4 +1,8 @@
-import DraismaVargasCount.W2M1kStarCensusProof
+module
+
+public import DraismaVargasCount.W2M1kStarCensusProof
+
+@[expose] public section
 
 /-!
 # The M-kk star census, Stages 1 and 3, and Stage 2 reduced to transports
@@ -381,7 +385,7 @@ theorem firstRow_eq_of_new_eq (shape : Shape profile)
   have h1 := h (W2MkkCommonBalance.firstRow profile)
   have ha := one_lt_first_cast shape
   simp only [W2MkkCommonBalance.firstNewColumn, W2MkkCommonBalance.secondNewColumn,
-    ite_true, if_neg hNe, zero_div, add_zero] at h1
+    ite_true, ite_eq_right hNe, zero_div, add_zero] at h1
   set a : ℚ := (data.sourceEdgeIndex profile.first.1 : ℚ)
   have hlt : 1 / a < 1 / (a - 1) := one_div_lt_one_div_of_lt (by linarith) (by linarith)
   linarith

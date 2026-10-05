@@ -1,4 +1,8 @@
-import DraismaVargasCount.BallotStemCensus
+module
+
+public import DraismaVargasCount.BallotStemCensus
+
+@[expose] public section
 
 /-!
 # The spine census of the ballot caterpillar, at a general slope sequence

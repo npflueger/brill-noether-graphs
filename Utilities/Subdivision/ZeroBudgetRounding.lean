@@ -1,5 +1,9 @@
-import Utilities.Subdivision.ScaleComposition
-import Utilities.Subdivision.InteriorFiring
+module
+
+public import Utilities.Subdivision.ScaleComposition
+public import Utilities.Subdivision.InteriorFiring
+
+@[expose] public section
 
 /-!
 # Zero-budget rounding onto the coarse grid

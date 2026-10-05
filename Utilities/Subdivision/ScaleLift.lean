@@ -1,5 +1,9 @@
-import Utilities.Subdivision.OneEdgeSplitRefinement
-import Utilities.Subdivision.SubdivisionChipDescent
+module
+
+public import Utilities.Subdivision.OneEdgeSplitRefinement
+public import Utilities.Subdivision.SubdivisionChipDescent
+
+@[expose] public section
 
 /-!
 # Lifting a Laplacian equivalence to every uniform refinement
@@ -56,7 +60,7 @@ theorem pv_interior (e : Fin p) (a : ℕ) (h0 : 0 < a) (hL : a < s.length e) :
     pv s e a = s.interiorVertex e ⟨a - 1, by omega⟩ := by
   unfold pv Spec.pathVertex
   have hmin : min a (s.length e) = a := min_eq_left hL.le
-  rw [dif_neg (by simp only [hmin]; omega), dif_neg (by simp only [hmin]; omega)]
+  rw [dite_eq_right (by simp only [hmin]; omega), dite_eq_right (by simp only [hmin]; omega)]
   simp only [hmin]
 
 theorem stepLeft_eq_pv (e : Fin p) (o : Fin (s.length e)) :
@@ -136,10 +140,10 @@ def symm (M : StepMatch s t) : StepMatch t s where
     rw [Equiv.apply_symm_apply] at hl hr
     cases hf : M.flip (M.step.symm τ)
     · rw [hf] at hl
-      simp only [Bool.false_eq_true, if_false] at hl ⊢
+      simp only [Bool.false_eq_true, ite_false] at hl ⊢
       rw [hl, Equiv.symm_apply_apply]
     · rw [hf] at hr
-      simp only [if_true] at hr ⊢
+      simp only [ite_true] at hr ⊢
       rw [hr, Equiv.symm_apply_apply]
   right := by
     intro τ
@@ -148,10 +152,10 @@ def symm (M : StepMatch s t) : StepMatch t s where
     rw [Equiv.apply_symm_apply] at hl hr
     cases hf : M.flip (M.step.symm τ)
     · rw [hf] at hr
-      simp only [Bool.false_eq_true, if_false] at hr ⊢
+      simp only [Bool.false_eq_true, ite_false] at hr ⊢
       rw [hr, Equiv.symm_apply_apply]
     · rw [hf] at hl
-      simp only [if_true] at hl ⊢
+      simp only [ite_true] at hl ⊢
       rw [hl, Equiv.symm_apply_apply]
 
 theorem symm_symm_flip (M : StepMatch s t) : M.symm.symm.flip = M.flip := by
@@ -225,20 +229,20 @@ theorem exists_stepMatch (φ : LaplacianEquiv s.graph t.graph) :
       fun σ ↦ decide (pv t (τ σ).1 (τ σ).2.val ≠ φ.toEquiv (pv s σ.1 σ.2.val)), ?_, ?_⟩, rfl⟩
   · intro σ
     by_cases hl : pv t (τ σ).1 (τ σ).2.val = φ.toEquiv (pv s σ.1 σ.2.val)
-    · simp only [hl, ne_eq, not_true_eq_false, decide_false, Bool.false_eq_true, if_false]
-    · simp only [ne_eq, hl, not_false_eq_true, decide_true, if_true]
+    · simp only [hl, ne_eq, not_true_eq_false, decide_false, Bool.false_eq_true, ite_false]
+    · simp only [ne_eq, hl, not_false_eq_true, decide_true, ite_true]
       rcases hpair σ with h | h
       · exact absurd h.1 hl
       · exact h.1
   · intro σ
     by_cases hl : pv t (τ σ).1 (τ σ).2.val = φ.toEquiv (pv s σ.1 σ.2.val)
-    · simp only [hl, ne_eq, not_true_eq_false, decide_false, Bool.false_eq_true, if_false]
+    · simp only [hl, ne_eq, not_true_eq_false, decide_false, Bool.false_eq_true, ite_false]
       rcases hpair σ with h | h
       · exact h.2
       · exfalso
         apply pv_ne_pv_succ s σ
         exact φ.toEquiv.injective (h.1.symm.trans hl).symm
-    · simp only [ne_eq, hl, not_false_eq_true, decide_true, if_true]
+    · simp only [ne_eq, hl, not_false_eq_true, decide_true, ite_true]
       rcases hpair σ with h | h
       · exact absurd h.1 hl
       · exact h.2
@@ -309,7 +313,7 @@ theorem liftV_fineOf (x : s.Vertex) :
     have ha : k * (j.val + 1) - 1 + 1 = k * (j.val + 1) := by omega
     show M.liftV k hk (Sum.inr ⟨e, ⟨k * (j.val + 1) - 1, _⟩⟩) = _
     simp only [liftV]
-    rw [if_pos (by rw [ha]; exact Nat.mul_mod_right k _), ha,
+    rw [ite_eq_left (by rw [ha]; exact Nat.mul_mod_right k _), ha,
       Nat.mul_div_cancel_left _ hk, pv_interiorVertex]
     rfl
 
@@ -325,9 +329,9 @@ theorem liftV_pv (σ : s.Step) (r : ℕ) (hr : r ≤ k) :
   · rw [Nat.add_zero, ← fineOf_pv s k hk σ.1 _ hi.le, liftV_fineOf]
     unfold img
     cases hf : M.flip σ
-    · simp only [hf, Bool.false_eq_true, if_false] at hl ⊢
+    · simp only [hf, Bool.false_eq_true, ite_false] at hl ⊢
       rw [← hl, fineOf_pv t k hk _ _ hi'.le, Nat.add_zero]
-    · simp only [hf, if_true] at hrt ⊢
+    · simp only [hf, ite_true] at hrt ⊢
       rw [← hrt, fineOf_pv t k hk _ _ hi', Nat.sub_zero, Nat.mul_succ]
   · rcases Nat.lt_or_ge r k with hrk | hrk
     · have hlt : k * σ.2.val + r < k * s.length σ.1 := mul_add_lt hi hrk
@@ -336,7 +340,7 @@ theorem liftV_pv (σ : s.Step) (r : ℕ) (hr : r ≤ k) :
       simp only [liftV]
       have ha : k * σ.2.val + r - 1 + 1 = k * σ.2.val + r := by omega
       have hmod : (k * σ.2.val + r - 1 + 1) % k = r := by rw [ha]; exact mod_eq_of_lt' hrk
-      rw [if_neg (by rw [hmod]; omega)]
+      rw [ite_eq_right (by rw [hmod]; omega)]
       have hc : ∀ h, coarseStep s k hk σ.1 (k * σ.2.val + r - 1 + 1) h = σ := by
         intro h
         exact step_ext rfl (by simp only [coarseStep]; rw [ha]; exact div_eq_of_lt' hk hrk)
@@ -346,9 +350,9 @@ theorem liftV_pv (σ : s.Step) (r : ℕ) (hr : r ≤ k) :
         ← fineOf_pv s k hk σ.1 _ hi, liftV_fineOf]
       unfold img
       cases hf : M.flip σ
-      · simp only [hf, Bool.false_eq_true, if_false] at hrt ⊢
+      · simp only [hf, Bool.false_eq_true, ite_false] at hrt ⊢
         rw [← hrt, fineOf_pv t k hk _ _ hi', Nat.mul_succ]
-      · simp only [hf, if_true] at hl ⊢
+      · simp only [hf, ite_true] at hl ⊢
         rw [← hl, fineOf_pv t k hk _ _ hi'.le, Nat.sub_self, Nat.add_zero]
 
 /-- Every fine vertex is over a coarse vertex or strictly inside a coarse step. -/
@@ -444,9 +448,9 @@ theorem liftS_unitEdge (φ : (s.scale k hk).Step) :
   unfold img
   cases M.flip σ
   · left
-    simp only [Bool.false_eq_true, if_false, Nat.add_assoc]
+    simp only [Bool.false_eq_true, ite_false, Nat.add_assoc]
   · right
-    simp only [if_true, Prod.mk.injEq]
+    simp only [ite_true, Prod.mk.injEq]
     constructor <;> congr 1 <;> omega
 
 theorem liftS_congr (M₁ M₂ : StepMatch s t) (h1 : M₁.vtx = M₂.vtx) (h2 : M₁.step = M₂.step)
@@ -499,7 +503,7 @@ theorem liftS_symm_liftS (φ : (s.scale k hk).Step) :
   rw [hval]
   have hdm := Nat.div_add_mod φ.2.val k
   cases hb : M.flip (coarseStep s k hk φ.1 φ.2.val φ.2.isLt) <;>
-    simp only [Bool.false_eq_true, if_false, if_true] <;> omega
+    simp only [Bool.false_eq_true, ite_false, ite_true] <;> omega
 
 theorem liftS_liftS_symm (φ : (t.scale k hk).Step) :
     M.liftS k hk (M.symm.liftS k hk φ) = φ := by
@@ -551,7 +555,7 @@ theorem mapDiv_embed {s : Spec n p} {t : Spec m q} (φ : LaplacianEquiv s.graph 
       rw [← h]
       exact (Equiv.symm_apply_apply _ _).symm
   by_cases h : s.fineOf k hk x = ψ.toEquiv.symm y
-  · rw [if_pos h, if_pos (h1.mp h), Equiv.symm_apply_apply]
-  · rw [if_neg h, if_neg (fun h' ↦ h (h1.mpr h'))]
+  · rw [ite_eq_left h, ite_eq_left (h1.mp h), Equiv.symm_apply_apply]
+  · rw [ite_eq_right h, ite_eq_right (fun h' ↦ h (h1.mpr h'))]
 
 end Utilities.Subdivision.ScaleLift

@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.StableModelPackaging
+module
+
+public import DraismaVargas.LocalCases.StableModelPackaging
+
+@[expose] public section
 
 /-!
 # The requested metric on the expanded cubic model, with zero expansion rows
@@ -178,12 +182,12 @@ carries its own requested length. -/
 theorem expandedLength_of_not_mem (spec : Spec n p) (F : Finset (Fin p))
     (slot : Fin p ≃ coordinate) {row : coordinate} (hrow : slot.symm row ∉ F) :
     expandedLength spec F slot row = spec.length (slot.symm row) :=
-  if_neg hrow
+  ite_eq_right hrow
 
 theorem expandedLength_of_mem (spec : Spec n p) (F : Finset (Fin p))
     (slot : Fin p ≃ coordinate) {row : coordinate} (hrow : slot.symm row ∈ F) :
     expandedLength spec F slot row = 0 :=
-  if_pos hrow
+  ite_eq_left hrow
 
 /-- **(ii) The zero set is the expansion forest, on the nose.** -/
 theorem expandedLength_eq_zero_iff (spec : Spec n p) (F : Finset (Fin p))
@@ -383,7 +387,7 @@ theorem inputInterface_pos_of_not_mem
     (hrow : iface.slot.symm row ∉ F) :
     0 < (GluingDatum.LengthMatrixPresentation.matrix presentation).mulVec
       coordinates row := by
-  rw [congrFun iface.matrixMap row, if_neg hrow]
+  rw [congrFun iface.matrixMap row, ite_eq_right hrow]
   exact_mod_cast spec.length_pos (iface.slot.symm row)
 
 /-- and zero exactly on the forest. -/
@@ -392,7 +396,7 @@ theorem inputInterface_eq_zero_of_mem
     (hrow : iface.slot.symm row ∈ F) :
     (GluingDatum.LengthMatrixPresentation.matrix presentation).mulVec
       coordinates row = 0 := by
-  rw [congrFun iface.matrixMap row, if_pos hrow]
+  rw [congrFun iface.matrixMap row, ite_eq_left hrow]
 
 /-- **Consequently an interface at the empty forest pins the forest down.** -/
 theorem eq_empty_of_inputInterface

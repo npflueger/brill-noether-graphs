@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.M11SplitSurvival
-import DraismaVargas.LocalCases.StableSourceMatrix
+module
+
+public import DraismaVargas.LocalCases.M11SplitSurvival
+public import DraismaVargas.LocalCases.StableSourceMatrix
+
+@[expose] public section
 
 /-!
 # The first M11 split's literal new length column
@@ -69,7 +73,7 @@ theorem firstSplit_new_occurrences (input : W2SourceInput data star)
     have hPath : (firstSplit_retainedDouble input profile hCard).stablePath = path :=
       (firstSplit_new_stablePath_eq_retained input profile hCard edge.1.2 hRel).symm.trans
         ((congrArg NonDanglingEdge.stablePath hTyped).symm.trans hRow)
-    rw [if_pos hPath.symm]
+    rw [ite_eq_left hPath.symm]
     exact Finset.mem_image.mpr ⟨edge.1.2, ((data.vertexPartition wall).mem_block_iff _ _).mpr hRel, hEqual.symm⟩
   · intro hEdge
     split_ifs at hEdge with hPath

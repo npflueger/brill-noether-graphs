@@ -1,5 +1,9 @@
-import DraismaVargasCount.GeneralKTracksBlock
-import DraismaVargasCount.GeneralKRowGauge
+module
+
+public import DraismaVargasCount.GeneralKTracksBlock
+public import DraismaVargasCount.GeneralKRowGauge
+
+@[expose] public section
 
 /-!
 # The branch vertices of the general-`K` candidate at a four-valent wall
@@ -274,11 +278,11 @@ theorem endpoint_rel_of_mem (b : Bool) {s : Fin degree} (hs : s ∈ sideSheets p
   rw [endpoint_eq]
   unfold sideSheets at hs ⊢
   split_ifs with h
-  · rw [if_pos h] at hs
+  · rw [ite_eq_left h] at hs
     have hb := (position.split.left_rel_bridge_iff s).mpr hs
     rw [← position.split.left_rel_bridge_iff]
     exact ⟨fun h' ↦ hb.trans h', fun h' ↦ hb.symm.trans h'⟩
-  · rw [if_neg h] at hs
+  · rw [ite_eq_right h] at hs
     have hb := (position.split.right_rel_bridge_iff s).mpr hs
     rw [← position.split.right_rel_bridge_iff]
     exact ⟨fun h' ↦ hb.trans h', fun h' ↦ hb.symm.trans h'⟩
@@ -290,9 +294,9 @@ theorem endpoint_rel_of_not_mem (b : Bool) {s : Fin degree}
   rw [endpoint_eq, ← SheetPartition.mem_block_iff]
   unfold sideSheets at hs
   split_ifs with h
-  · rw [if_pos h] at hs
+  · rw [ite_eq_left h] at hs
     rw [position.split.left_block_of_not_mem hs hsA, Finset.mem_singleton]
-  · rw [if_neg h] at hs
+  · rw [ite_eq_right h] at hs
     rw [position.split.right_block_of_not_mem hs hsA, Finset.mem_singleton]
 
 theorem newEdge_rel_of_mem {s : Fin degree} (hs : s ∈ position.split.bridgeSheets)
@@ -647,10 +651,10 @@ theorem card_filter_bridge (b : Bool) {κ : Type*} [DecidableEq κ]
     (secondLabel pairing b)
   have hne12 := survND_ne position hConnected hGenus hNoGlue geometry hValid b
   by_cases h : lab (bridgeND position hConnected hGenus hNoGlue geometry hB3).stablePath = c
-  · rw [if_pos h, Finset.card_insert_of_notMem (by simp [Finset.mem_filter, hne1, hne2]),
-      NonTrivalentValencyThreeStarCount.card_filter_pair _ _ hne12, if_pos h]
+  · rw [ite_eq_left h, Finset.card_insert_of_notMem (by simp [Finset.mem_filter, hne1, hne2]),
+      NonTrivalentValencyThreeStarCount.card_filter_pair _ _ hne12, ite_eq_left h]
     omega
-  · rw [if_neg h, NonTrivalentValencyThreeStarCount.card_filter_pair _ _ hne12, if_neg h]
+  · rw [ite_eq_right h, NonTrivalentValencyThreeStarCount.card_filter_pair _ _ hne12, ite_eq_right h]
     omega
 
 /-! ### Non-anchor blocks of the gauged datum -/

@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyThreeTracks
-import DraismaVargas.LocalCases.WallSplitIncidenceOrdinary
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyThreeTracks
+public import DraismaVargas.LocalCases.WallSplitIncidenceOrdinary
+
+@[expose] public section
 
 /-!
 # The valency-three Type III star count, and the link under (H-III)
@@ -177,11 +181,11 @@ theorem trivEndEdge_survives {x : Fin degree}
   classical
   unfold trivEndEdge
   by_cases hs : Prescribed.rightAssignment source e.1.1.1 = true
-  · rw [if_pos hs]
+  · rw [ite_eq_left hs]
     exact ResolutionSurvival.not_isDangling_oldSourceEdge (cand) hValid.1 e.1 e.2
   · have hs' : Prescribed.rightAssignment source e.1.1.1 = false := by
       simpa using hs
-    rw [if_neg hs]
+    rw [ite_eq_right hs]
     exact newSourceEdge_survives_of_mem_ordinaryStar source hNoGlue hValid hX
       ((mem_ordinaryStar source e.1).mpr ⟨⟨e.2, hInc⟩, hs'⟩)
 
@@ -203,7 +207,7 @@ theorem stablePath_trivEnd {x : Fin degree}
   · refine congrArg NonDanglingEdge.stablePath (Subtype.ext ?_)
     show trivEndEdge source hNoGlue hValid e = (cand).oldSourceEdge e.1
     unfold trivEndEdge
-    rw [if_pos hs]
+    rw [ite_eq_left hs]
   · have hs' : Prescribed.rightAssignment source e.1.1.1 = false := by
       simpa using hs
     have hOld : e.1 ∈ ordinaryStar source x false :=
@@ -212,7 +216,7 @@ theorem stablePath_trivEnd {x : Fin degree}
     refine congrArg NonDanglingEdge.stablePath (Subtype.ext ?_)
     show trivEndEdge source hNoGlue hValid e = (cand).newSourceEdge e.1.1.2
     unfold trivEndEdge
-    rw [if_neg hs]
+    rw [ite_eq_right hs]
 
 theorem incident_trivEnd {x : Fin degree}
     (hX : ¬ (data.vertexPartition wall).Rel anchor.1 x) (e : NonDanglingEdge data)
@@ -226,7 +230,7 @@ theorem incident_trivEnd {x : Fin degree}
     have hVal : (trivEnd source hNoGlue hValid hX e hInc).1 = (cand).oldSourceEdge e.1 := by
       show trivEndEdge source hNoGlue hValid e = _
       unfold trivEndEdge
-      rw [if_pos hs]
+      rw [ite_eq_left hs]
     rw [hVal]
     exact (incident_oldSourceEdge_endpointVertex_iff source hNoGlue hValid true hX e.1).mpr
       ⟨⟨mem_incidentEdges_of_mem_ordinaryStar source hOld,
@@ -238,7 +242,7 @@ theorem incident_trivEnd {x : Fin degree}
     have hVal : (trivEnd source hNoGlue hValid hX e hInc).1 = (cand).newSourceEdge e.1.1.2 := by
       show trivEndEdge source hNoGlue hValid e = _
       unfold trivEndEdge
-      rw [if_neg hs]
+      rw [ite_eq_right hs]
     rw [hVal]
     exact incident_newSourceEdge_endpointVertex_true source hNoGlue hValid hX hOld
 
@@ -266,14 +270,14 @@ theorem incidenceCount_endpointVertex_true_ordinary {x : Fin degree}
     unfold trivEndEdge at hVal
     by_cases hs₁ : Prescribed.rightAssignment source e₁.1.1.1 = true <;>
       by_cases hs₂ : Prescribed.rightAssignment source e₂.1.1.1 = true
-    · rw [if_pos hs₁, if_pos hs₂] at hVal
+    · rw [ite_eq_left hs₁, ite_eq_left hs₂] at hVal
       exact Subtype.ext (ResolutionCut.oldSourceEdge_injective (cand) hVal)
-    · rw [if_pos hs₁, if_neg hs₂] at hVal
+    · rw [ite_eq_left hs₁, ite_eq_right hs₂] at hVal
       exact absurd hVal.symm
         (newSourceEdge_ne_oldSourceEdge source hNoGlue hValid e₂.1.1.2 e₁.1)
-    · rw [if_neg hs₁, if_pos hs₂] at hVal
+    · rw [ite_eq_right hs₁, ite_eq_left hs₂] at hVal
       exact absurd hVal (newSourceEdge_ne_oldSourceEdge source hNoGlue hValid e₁.1.1.2 e₂.1)
-    · rw [if_neg hs₁, if_neg hs₂] at hVal
+    · rw [ite_eq_right hs₁, ite_eq_right hs₂] at hVal
       have hs₁' : Prescribed.rightAssignment source e₁.1.1.1 = false := by simpa using hs₁
       have hs₂' : Prescribed.rightAssignment source e₂.1.1.1 = false := by simpa using hs₂
       have hOld₁ : e₁.1 ∈ ordinaryStar source x false :=
@@ -300,12 +304,12 @@ theorem incidenceCount_endpointVertex_true_ordinary {x : Fin degree}
         refine Eq.trans (congrArg NonDanglingEdge.stablePath (Subtype.ext ?_)) hRow
         show trivEndEdge source hNoGlue hValid ⟨old, hSurv⟩ = f.1
         unfold trivEndEdge
-        rw [if_pos hSide]
+        rw [ite_eq_left hSide]
         exact hEq
       · refine Subtype.ext ?_
         show trivEndEdge source hNoGlue hValid ⟨old, hSurv⟩ = f.1
         unfold trivEndEdge
-        rw [if_pos hSide]
+        rw [ite_eq_left hSide]
         exact hEq
     · obtain ⟨⟨hSurv, hIncOld⟩, hSide⟩ := (mem_ordinaryStar source old).mp hOld
       have hSide' : ¬ (Prescribed.rightAssignment source old.1.1 = true) := by
@@ -318,12 +322,12 @@ theorem incidenceCount_endpointVertex_true_ordinary {x : Fin degree}
         refine Eq.trans (congrArg NonDanglingEdge.stablePath (Subtype.ext ?_)) hRow
         show trivEndEdge source hNoGlue hValid ⟨old, hSurv⟩ = f.1
         unfold trivEndEdge
-        rw [if_neg hSide']
+        rw [ite_eq_right hSide']
         exact hEq
       · refine Subtype.ext ?_
         show trivEndEdge source hNoGlue hValid ⟨old, hSurv⟩ = f.1
         unfold trivEndEdge
-        rw [if_neg hSide']
+        rw [ite_eq_right hSide']
         exact hEq
 
 end Ordinary
@@ -975,7 +979,7 @@ theorem incidence_inr_false_retained
     rw [stablePath_bridgeND m wd src hNoGlue hValid]
     exact fun h ↦ retainedRow_ne_bridgeRow src hNoGlue hValid r₀ h.symm
   rw [hRHS, filter_moved_base m wd first second hStar, Finset.filter_insert,
-    if_neg (Ne.symm (labelling_row_incomingRow_ne_base m wd r₀)),
+    ite_eq_right (Ne.symm (labelling_row_incomingRow_ne_base m wd r₀)),
     card_filter_pair _ _ (dart_ne m wd first second hStar)]
   show incidenceCount (Prescribed.validCandidate src hNoGlue hValid).datum
     (NonTrivalentValencyThreeRows.endpointVertex src hNoGlue hValid false
@@ -983,7 +987,7 @@ theorem incidence_inr_false_retained
     (NonTrivalentValencyThreeDescent.retainedRow src hNoGlue hValid r₀) = _
   unfold incidenceCount
   rw [incidentEdges_endpointVertex_false m wd src hNoGlue hValid, Finset.filter_insert,
-    if_neg hBridgeRow,
+    ite_eq_right hBridgeRow,
     card_filter_pair _ _ (doubledRetained_ne m wd src hNoGlue hValid)]
   have hcond : ∀ side : Bool, ((doubledRetained m wd src hNoGlue hValid side).stablePath =
       NonTrivalentValencyThreeDescent.retainedRow src hNoGlue hValid r₀) ↔
@@ -1034,7 +1038,7 @@ theorem incidence_inr_false_bridge
     · exact label_dart_doubled_ne_base m wd wallStar src second true hSecond
   have hR : ((Finset.univ.filter fun d : D ↦ graph.vert (m.perm d) = graph.vert m.base).filter
       fun d ↦ label d = label m.base).card = 1 := by
-    rw [filter_moved_base m wd first second hStar, Finset.filter_insert, if_pos rfl, hEmptyD]
+    rw [filter_moved_base m wd first second hStar, Finset.filter_insert, ite_eq_left rfl, hEmptyD]
     simp
   rw [hRHS, hR]
   show incidenceCount (Prescribed.validCandidate src hNoGlue hValid).datum
@@ -1056,7 +1060,7 @@ theorem incidence_inr_false_bridge
       exact retainedRow_ne_bridgeRow src hNoGlue hValid _
   unfold incidenceCount
   rw [incidentEdges_endpointVertex_false m wd src hNoGlue hValid, Finset.filter_insert,
-    if_pos (stablePath_bridgeND m wd src hNoGlue hValid), hEmptyC]
+    ite_eq_left (stablePath_bridgeND m wd src hNoGlue hValid), hEmptyC]
   simp
 
 /-! ## 7.  The leftover equation at `A_v`, and the link -/

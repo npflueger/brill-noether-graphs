@@ -1,5 +1,9 @@
-import DraismaVargasCount.EvenGenusParity
-import GenusSixExistence.BrillNoetherRank.Tripod.Gadget
+module
+
+public import DraismaVargasCount.EvenGenusParity
+public import GenusSixExistence.BrillNoetherRank.Tripod.Gadget
+
+@[expose] public section
 
 /-!
 # The claw and glued predicates over the tripod gadget

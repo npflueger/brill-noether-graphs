@@ -1,7 +1,11 @@
-import Utilities.Pseudocore.PseudocoreMarkerCut
-import Utilities.Subdivision.GraphIsoLaplacianEquiv
-import Utilities.Subdivision.NestedOneVertexCut
-import Utilities.Subdivision.PointedGenusOneRigidTransport
+module
+
+public import Utilities.Pseudocore.PseudocoreMarkerCut
+public import Utilities.Subdivision.GraphIsoLaplacianEquiv
+public import Utilities.Subdivision.NestedOneVertexCut
+public import Utilities.Subdivision.PointedGenusOneRigidTransport
+
+@[expose] public section
 
 /-!
 # Wedge packages extracted from pseudocore loop markers

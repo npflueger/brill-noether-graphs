@@ -1,4 +1,8 @@
-import Bananas.SameStrand.EndpointInversions
+module
+
+public import Bananas.SameStrand.EndpointInversions
+
+@[expose] public section
 
 /-!
 # The explicit endpoint transmission block

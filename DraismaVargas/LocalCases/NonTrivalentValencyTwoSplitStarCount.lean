@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoSplitTracks
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoStarCountAll
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoSplitTracks
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoStarCountAll
+
+@[expose] public section
 
 /-!
 # The valency-two Base II **split** star count, and the split link at an actual wall
@@ -261,9 +265,9 @@ theorem branchEndEdge_survives {x : Fin degree}
   classical
   unfold branchEndEdge
   by_cases hs : rightAssignment data star anchor e.1.1.1 = !ordSide data star anchor x
-  · rw [if_pos hs]
+  · rw [ite_eq_left hs]
     exact ResolutionSurvival.not_isDangling_oldSourceEdge (cand) hValid.1 e.1 e.2
-  · rw [if_neg hs]
+  · rw [ite_eq_right hs]
     have hs' : rightAssignment data star anchor e.1.1.1 = ordSide data star anchor x := by
       revert hs
       cases ordSide data star anchor x <;>
@@ -289,7 +293,7 @@ theorem stablePath_branchEnd {x : Fin degree}
   · refine congrArg NonDanglingEdge.stablePath (Subtype.ext ?_)
     show branchEndEdge ra x e = (cand).oldSourceEdge e.1
     unfold branchEndEdge
-    rw [if_pos hs]
+    rw [ite_eq_left hs]
   · have hs' : rightAssignment data star anchor e.1.1.1 = ordSide data star anchor x := by
       revert hs
       cases ordSide data star anchor x <;>
@@ -307,7 +311,7 @@ theorem stablePath_branchEnd {x : Fin degree}
     refine congrArg NonDanglingEdge.stablePath (Subtype.ext ?_)
     show branchEndEdge ra x e = newEdgeAt ra x
     unfold branchEndEdge
-    rw [if_neg hs]
+    rw [ite_eq_right hs]
 
 theorem incident_branchEnd {x : Fin degree}
     (hX : ¬ (data.vertexPartition wall).Rel anchor.1 x) (e : NonDanglingEdge data)
@@ -319,13 +323,13 @@ theorem incident_branchEnd {x : Fin degree}
   · have hVal : (branchEnd ra hValid hX e hInc).1 = (cand).oldSourceEdge e.1 := by
       show branchEndEdge ra x e = _
       unfold branchEndEdge
-      rw [if_pos hs]
+      rw [ite_eq_left hs]
     rw [hVal]
     exact (incident_oldSourceEdge_endpointVertex_iff ra _ hX e.1).mpr ⟨hInc, hs⟩
   · have hVal : (branchEnd ra hValid hX e hInc).1 = newEdgeAt ra x := by
       show branchEndEdge ra x e = _
       unfold branchEndEdge
-      rw [if_neg hs]
+      rw [ite_eq_right hs]
     rw [hVal]
     exact newEdgeAt_incident ra _ x
 
@@ -359,11 +363,11 @@ theorem incidenceCount_endpointVertex_branchSide_ordinary {x : Fin degree}
     unfold branchEndEdge at hVal
     by_cases hs₁ : rightAssignment data star anchor e₁.1.1.1 = !ordSide data star anchor x <;>
       by_cases hs₂ : rightAssignment data star anchor e₂.1.1.1 = !ordSide data star anchor x
-    · rw [if_pos hs₁, if_pos hs₂] at hVal
+    · rw [ite_eq_left hs₁, ite_eq_left hs₂] at hVal
       exact Subtype.ext (ResolutionCut.oldSourceEdge_injective (cand) hVal)
-    · rw [if_pos hs₁, if_neg hs₂] at hVal
+    · rw [ite_eq_left hs₁, ite_eq_right hs₂] at hVal
       exact absurd hVal.symm (newEdgeAt_ne_oldSourceEdge ra x e₁.1)
-    · rw [if_neg hs₁, if_pos hs₂] at hVal
+    · rw [ite_eq_right hs₁, ite_eq_left hs₂] at hVal
       exact absurd hVal (newEdgeAt_ne_oldSourceEdge ra x e₂.1)
     · have hs₁' : rightAssignment data star anchor e₁.1.1.1 = ordSide data star anchor x := by
         revert hs₁
@@ -390,7 +394,7 @@ theorem incidenceCount_endpointVertex_branchSide_ordinary {x : Fin degree}
     · obtain ⟨⟨hSurvOld, hIncOld⟩, hSide⟩ := (mem_ordinaryStar old).mp hOld
       have hValEq : branchEndEdge ra x ⟨old, hSurvOld⟩ = f.1 := by
         unfold branchEndEdge
-        rw [if_pos hSide]
+        rw [ite_eq_left hSide]
         exact hEq.symm
       refine ⟨⟨old, hSurvOld⟩, ?_, Subtype.ext hValEq⟩
       refine Finset.mem_filter.mpr ⟨(mem_incidentEdges _ _ _).mpr hIncOld, ?_⟩
@@ -411,7 +415,7 @@ theorem incidenceCount_endpointVertex_branchSide_ordinary {x : Fin degree}
         cases ordSide data star anchor x <;> simp
       have hValEq : branchEndEdge ra x ⟨old, hSurvOld⟩ = f.1 := by
         unfold branchEndEdge
-        rw [if_neg hSideNe]
+        rw [ite_eq_right hSideNe]
         exact hEq.symm
       refine ⟨⟨old, hSurvOld⟩, ?_, Subtype.ext hValEq⟩
       refine Finset.mem_filter.mpr ⟨(mem_incidentEdges _ _ _).mpr hIncOld, ?_⟩
@@ -1001,7 +1005,7 @@ theorem incidence_inr_false_retained (hEnds : AnchorEnds m wd anchorBlk p q)
     exact fun h ↦ retainedRowFree_ne_bridgeRow ra hGauged hOrdGauged _ h.symm
   rw [hRHS, NonTrivalentValencyThreeStarCount.filter_moved_base m wd first second hStar,
     Finset.filter_insert,
-    if_neg (Ne.symm
+    ite_eq_right (Ne.symm
       (NonTrivalentValencyThreeStarCount.labelling_row_incomingRow_ne_base m wd r₀)),
     NonTrivalentValencyThreeStarCount.card_filter_pair _ _
       (NonTrivalentValencyThreeStarCount.dart_ne m wd first second hStar)]
@@ -1011,7 +1015,7 @@ theorem incidence_inr_false_retained (hEnds : AnchorEnds m wd anchorBlk p q)
         thickSheet thinSheet (NonTrivalentValencyTwoTracks.wallValid m wd).1 r₀)) = _
   unfold incidenceCount
   rw [incidentEdges_anchorBranchVertex_ordered ra hGauged false, Finset.filter_insert,
-    if_neg hBridgeRow,
+    ite_eq_right hBridgeRow,
     NonTrivalentValencyThreeStarCount.card_filter_pair _ _
       (directRetained_ne_throughND ra hGauged false),
     show (directRetained ra hGauged false).stablePath =
@@ -1065,7 +1069,7 @@ theorem incidence_inr_false_bridge (hEnds : AnchorEnds m wd anchorBlk p q)
   have hR : ((Finset.univ.filter fun d : D ↦ graph.vert (m.perm d) = graph.vert m.base).filter
       fun d ↦ label d = label m.base).card = 1 := by
     rw [NonTrivalentValencyThreeStarCount.filter_moved_base m wd first second hStar,
-      Finset.filter_insert, if_pos rfl, hEmptyD]
+      Finset.filter_insert, ite_eq_left rfl, hEmptyD]
     simp
   rw [hRHS, hR]
   show incidenceCount (validCandidate ra.setup).datum (anchorBranchVertex ra false)
@@ -1083,7 +1087,7 @@ theorem incidence_inr_false_bridge (hEnds : AnchorEnds m wd anchorBlk p q)
       exact retainedRowFree_ne_bridgeRow ra hGauged hOrdGauged _
   unfold incidenceCount
   rw [incidentEdges_anchorBranchVertex_ordered ra hGauged false, Finset.filter_insert,
-    if_pos (stablePath_bridgeND ra hGauged), hEmptyC]
+    ite_eq_left (stablePath_bridgeND ra hGauged), hEmptyC]
   simp
 
 include hOrd src in

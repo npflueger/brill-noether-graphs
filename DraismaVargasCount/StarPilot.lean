@@ -1,4 +1,8 @@
-import DraismaVargasCount.Star
+module
+
+public import DraismaVargasCount.Star
+
+@[expose] public section
 
 /-!
 # Positive requests on a target facet, and metric compatibility of limits

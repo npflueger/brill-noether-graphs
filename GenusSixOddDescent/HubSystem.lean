@@ -1,4 +1,8 @@
-import GenusSixOddDescent.Swap
+module
+
+public import GenusSixOddDescent.Swap
+
+@[expose] public section
 
 /-!
 # Hub systems, visibility along firing chains and confinement
@@ -116,13 +120,13 @@ private theorem typeI_slots_eq {D : CFDiv (spec.scale N hN).graph} {v v' : Fin n
   constructor
   · intro he
     by_contra he'
-    rw [if_pos he] at h
-    rw [if_neg he'] at h'
+    rw [ite_eq_left he] at h
+    rw [ite_eq_right he'] at h'
     omega
   · intro he'
     by_contra he
-    rw [if_neg he] at h
-    rw [if_pos he'] at h'
+    rw [ite_eq_right he] at h
+    rw [ite_eq_left he'] at h'
     omega
 
 /-- The hub vertex of a `TypeI` divisor is determined by the divisor: it is the
@@ -132,10 +136,10 @@ private theorem typeI_vertex_eq {D : CFDiv (spec.scale N hN).graph} {v v' : Fin 
     (hD' : spec.TypeI N hN D v' E') : v = v' := by
   have h := hD.2.2.1 v'
   have h' : D ((spec.scale N hN).coreVertex v') = 1 := by
-    rw [hD'.2.2.1 v', if_pos rfl]
+    rw [hD'.2.2.1 v', ite_eq_left rfl]
   rw [h'] at h
   by_contra hne
-  rw [if_neg fun hc : v' = v => hne hc.symm] at h
+  rw [ite_eq_right fun hc : v' = v => hne hc.symm] at h
   omega
 
 /-- A `TypeI` divisor carries a chip at its hub vertex. -/
@@ -143,7 +147,7 @@ private theorem typeI_pos {D : CFDiv (spec.scale N hN).graph} {v : Fin n}
     {E : Finset (Fin p)} (hD : spec.TypeI N hN D v E) :
     0 < D ((spec.scale N hN).coreVertex v) := by
   have h := hD.2.2.1 v
-  rw [if_pos rfl] at h
+  rw [ite_eq_left rfl] at h
   omega
 
 /-- **Existence of the state at `v`.**  Under `(¬S)` and `rank A ≥ 1` every core
@@ -168,7 +172,7 @@ private theorem exists_state (hunit : spec.IsUnit) (hcore : spec.core.Connected)
   · have hchip := hI.2.2.1 v
     have hvu : v = u := by
       by_contra hne
-      rw [if_neg hne] at hchip
+      rw [ite_eq_right hne] at hchip
       omega
     exact ⟨D, E, by rw [hvu]; exact hI, hconnE, hDlin⟩
   · exact absurd (hnon v) (by omega)
@@ -379,12 +383,12 @@ private theorem sum_slotPoint_indicator (hunit : spec.IsUnit) (g : Fin p) {c : �
       = if 0 < c ∧ c < N then 1 else 0 := by
   classical
   by_cases hcin : 0 < c ∧ c < N
-  · rw [if_pos hcin, Finset.sum_eq_single_of_mem c (Finset.mem_Ioo.mpr hcin)
-      (fun i hi hne => if_neg (spec.slotPoint_ne N hN hunit g
+  · rw [ite_eq_left hcin, Finset.sum_eq_single_of_mem c (Finset.mem_Ioo.mpr hcin)
+      (fun i hi hne => ite_eq_right (spec.slotPoint_ne N hN hunit g
         (le_of_lt (Finset.mem_Ioo.mp hi).2) hc hne))]
-    exact if_pos rfl
-  · rw [if_neg hcin]
-    refine Finset.sum_eq_zero fun i hi => if_neg ?_
+    exact ite_eq_left rfl
+  · rw [ite_eq_right hcin]
+    refine Finset.sum_eq_zero fun i hi => ite_eq_right ?_
     obtain ⟨hi0, hiN⟩ := Finset.mem_Ioo.mp hi
     exact spec.slotPoint_ne N hN hunit g (le_of_lt hiN) hc (by omega)
 
@@ -501,7 +505,7 @@ private theorem holeRest_props (hunit : spec.IsUnit)
       have hne2 : x ≠ spec.slotPoint N hN f (t - (j + 1)) := by
         rw [h1]; exact spec.slotPoint_ne N hN hunit f (by omega) (by omega) (by omega)
       have h := hnext x
-      rw [hNx x, if_neg hne1, if_neg hne2]
+      rw [hNx x, ite_eq_right hne1, ite_eq_right hne2]
       omega
     · by_cases h2 : x = spec.slotPoint N hN f (t - j)
       · have hne1 : x ≠ spec.slotPoint N hN f (j + 1) := by
@@ -509,10 +513,10 @@ private theorem holeRest_props (hunit : spec.IsUnit)
         have hne2 : x ≠ spec.slotPoint N hN f (t - (j + 1)) := by
           rw [h2]; exact spec.slotPoint_ne N hN hunit f (by omega) (by omega) (by omega)
         have h := hnext x
-        rw [hNx x, if_neg hne1, if_neg hne2]
+        rw [hNx x, ite_eq_right hne1, ite_eq_right hne2]
         omega
       · have h := hDu.1 x
-        rw [hDx x, if_neg h1, if_neg h2]
+        rw [hDx x, ite_eq_right h1, ite_eq_right h2]
         omega
   have hRle : ∀ x : (spec.scale N hN).graph.V, R x ≤ Du x := by
     intro x
@@ -530,7 +534,7 @@ private theorem holeRest_props (hunit : spec.IsUnit)
           - (if 0 < t - j ∧ t - j < N then (1 : ℤ) else 0) := by
     have hEC : (∑ i ∈ Finset.Ioo 0 N, Du (spec.slotPoint N hN f i)) = 1 := by
       rw [← spec.edgeChipCount_eq_sum_slotPoint N hN hunit Du f, hDu.2.2.2.2 f,
-        if_pos hfE]
+        ite_eq_left hfE]
     rw [Finset.sum_congr rfl (fun i _ => hDx (spec.slotPoint N hN f i))]
     simp only [Finset.sum_sub_distrib]
     rw [hEC, spec.sum_slotPoint_indicator N hN hunit f (show j ≤ N by omega),
@@ -540,7 +544,7 @@ private theorem holeRest_props (hunit : spec.IsUnit)
   -- The hole pair is not two interior points …
   have hnotboth : ¬ (0 < j ∧ t - j < N) := by
     rintro ⟨hj0, hBN⟩
-    rw [if_pos ⟨hj0, by omega⟩, if_pos ⟨by omega, hBN⟩] at hfsum
+    rw [ite_eq_left ⟨hj0, by omega⟩, ite_eq_left ⟨by omega, hBN⟩] at hfsum
     omega
   -- … nor two core vertices.
   have hnotcore : ¬ (j = 0 ∧ t - j = N) := by
@@ -551,8 +555,8 @@ private theorem holeRest_props (hunit : spec.IsUnit)
       exact spec.slotPoint_ne N hN hunit f (by omega) (by omega) (by omega)
     have e1 := hDx ((spec.scale N hN).coreVertex (spec.core.tail f))
     have e2 := hDx ((spec.scale N hN).coreVertex (spec.core.head f))
-    rw [hBN, hj0, hcore0, hcoreN, if_pos rfl, if_neg hne] at e1
-    rw [hBN, hj0, hcore0, hcoreN, if_neg (Ne.symm hne), if_pos rfl] at e2
+    rw [hBN, hj0, hcore0, hcoreN, ite_eq_left rfl, ite_eq_right hne] at e1
+    rw [hBN, hj0, hcore0, hcoreN, ite_eq_right (Ne.symm hne), ite_eq_left rfl] at e2
     have h1 := hDu.2.2.1 (spec.core.tail f)
     have h2 := hDu.2.2.1 (spec.core.head f)
     have n1 := hReff ((spec.scale N hN).coreVertex (spec.core.tail f))
@@ -560,11 +564,11 @@ private theorem holeRest_props (hunit : spec.IsUnit)
     have htu : spec.core.tail f = u := by
       by_cases hc : spec.core.tail f = u
       · exact hc
-      · rw [if_neg hc] at h1; omega
+      · rw [ite_eq_right hc] at h1; omega
     have hhu : spec.core.head f = u := by
       by_cases hc : spec.core.head f = u
       · exact hc
-      · rw [if_neg hc] at h2; omega
+      · rw [ite_eq_right hc] at h2; omega
     exact hne (by rw [htu, hhu])
   -- **Core-freeness**, from whichever end of the slot carries the core chip.
   have hgen : ∀ (c : Fin n) (o : ℕ), 0 < o → o < N →
@@ -578,24 +582,24 @@ private theorem holeRest_props (hunit : spec.IsUnit)
       fun y => spec.coreVertex_ne_slotPoint N hN hunit y f ho0 hoN
     have hcu : c = u ∧ R ((spec.scale N hN).coreVertex c) = 0 := by
       have h := hR ((spec.scale N hN).coreVertex c)
-      rw [if_neg (hcw c), if_pos rfl] at h
+      rw [ite_eq_right (hcw c), ite_eq_left rfl] at h
       have hd := hDu.2.2.1 c
       have hnn := hReff ((spec.scale N hN).coreVertex c)
       by_cases hcu : c = u
-      · rw [if_pos hcu] at hd
+      · rw [ite_eq_left hcu] at hd
         exact ⟨hcu, by omega⟩
-      · exfalso; rw [if_neg hcu] at hd; omega
+      · exfalso; rw [ite_eq_right hcu] at hd; omega
     intro w
     have h := hR ((spec.scale N hN).coreVertex w)
-    rw [if_neg (hcw w)] at h
+    rw [ite_eq_right (hcw w)] at h
     by_cases hwc : (spec.scale N hN).coreVertex w = (spec.scale N hN).coreVertex c
     · rw [hwc]; exact hcu.2
-    · rw [if_neg hwc] at h
+    · rw [ite_eq_right hwc] at h
       have hd := hDu.2.2.1 w
       by_cases hwu : w = u
       · exact absurd (by rw [hwu, hcu.1] : (spec.scale N hN).coreVertex w
           = (spec.scale N hN).coreVertex c) hwc
-      · rw [if_neg hwu] at hd; omega
+      · rw [ite_eq_right hwu] at hd; omega
   have hmain : (∀ w : Fin n, R ((spec.scale N hN).coreVertex w) = 0)
       ∧ (∑ i ∈ Finset.Ioo 0 N, R (spec.slotPoint N hN f i)) = 0 := by
     rcases Nat.eq_zero_or_pos j with hj0 | hjpos
@@ -610,8 +614,8 @@ private theorem holeRest_props (hunit : spec.IsUnit)
           rw [hj0]; exact hcore0
         intro x; rw [hDx x, hswap]
       refine ⟨hgen (spec.core.tail f) (t - j) (by omega) hBN hR, ?_⟩
-      rw [if_neg (by omega : ¬ (0 < j ∧ j < N)),
-        if_pos (show 0 < t - j ∧ t - j < N from ⟨by omega, hBN⟩)] at hfsum
+      rw [ite_eq_right (by omega : ¬ (0 < j ∧ j < N)),
+        ite_eq_left (show 0 < t - j ∧ t - j < N from ⟨by omega, hBN⟩)] at hfsum
       omega
     · have hBN : t - j = N := by
         by_contra hc
@@ -624,8 +628,8 @@ private theorem holeRest_props (hunit : spec.IsUnit)
           rw [hBN]; exact hcoreN
         intro x; rw [hDx x, hswap]; ring
       refine ⟨hgen (spec.core.head f) j hjpos (by omega) hR, ?_⟩
-      rw [if_pos (show 0 < j ∧ j < N from ⟨hjpos, by omega⟩),
-        if_neg (by omega : ¬ (0 < t - j ∧ t - j < N))] at hfsum
+      rw [ite_eq_left (show 0 < j ∧ j < N from ⟨hjpos, by omega⟩),
+        ite_eq_right (by omega : ¬ (0 < t - j ∧ t - j < N))] at hfsum
       omega
   obtain ⟨hRcore, hsum0⟩ := hmain
   have hzero : ∀ i ∈ Finset.Ioo 0 N, R (spec.slotPoint N hN f i) = 0 :=
@@ -647,7 +651,7 @@ private theorem holeRest_props (hunit : spec.IsUnit)
   · intro g hgE i hi
     have h1 : Du (spec.slotPoint N hN g i) = 0 :=
       spec.slotPoint_eq_zero_of_edgeChipCount_zero N hN hunit hDu.1
-        (by rw [hDu.2.2.2.2 g, if_neg hgE]) i hi
+        (by rw [hDu.2.2.2.2 g, ite_eq_right hgE]) i hi
     have h2 := hRle (spec.slotPoint N hN g i)
     have h3 := hReff (spec.slotPoint N hN g i)
     omega
@@ -1428,7 +1432,7 @@ theorem two_le_scale (hunit : spec.IsUnit) : 2 ≤ N := by
   have hcard : (hs.edges v₀).card = 3 := (hs.typeI v₀).2.2.2.1
   obtain ⟨e, he⟩ : (hs.edges v₀).Nonempty := Finset.card_pos.mp (by omega)
   have hchip := (hs.typeI v₀).2.2.2.2 e
-  rw [if_pos he] at hchip
+  rw [ite_eq_left he] at hchip
   have hL : (spec.scale N hN).length e = N := spec.length_scale N hN hunit e
   have hzero : spec.edgeChipCount N hN (hs.divisor v₀) e = 0 := by
     show ∑ j : Fin ((spec.scale N hN).length e - 1),
@@ -1680,13 +1684,13 @@ theorem separation (hunit : spec.IsUnit) {K : Finset (Fin n)}
   -- The chip pattern of the two states at the two core vertices.
   have hDvv : hs.divisor v ((spec.scale N hN).coreVertex v) = 1 := by
     have h := hDv.2.2.1 v
-    rwa [if_pos rfl] at h
+    rwa [ite_eq_left rfl] at h
   have hDww : hs.divisor w ((spec.scale N hN).coreVertex w) = 1 := by
     have h := hDw.2.2.1 w
-    rwa [if_pos rfl] at h
+    rwa [ite_eq_left rfl] at h
   have hDvw : hs.divisor v ((spec.scale N hN).coreVertex w) = 0 := by
     have h := hDv.2.2.1 w
-    rwa [if_neg fun hEq => hvw hEq.symm] at h
+    rwa [ite_eq_right fun hEq => hvw hEq.symm] at h
   -- The script is not constant: it strictly drops from `v` to `w`.
   have hstrict : F ((spec.scale N hN).coreVertex w)
       < F ((spec.scale N hN).coreVertex v) := by
@@ -1738,14 +1742,14 @@ theorem separation (hunit : spec.IsUnit) {K : Finset (Fin n)}
       hs.divisor v ((spec.scale N hN).coreVertex u) = 0 := by
     intro u hu
     have h := hDv.2.2.1 u
-    rwa [if_neg hu] at h
+    rwa [ite_eq_right hu] at h
   have hzero_int : ∀ e : Fin p, e ∉ hs.flat →
       ∀ j : Fin ((spec.scale N hN).length e - 1),
         hs.divisor v ((spec.scale N hN).interiorVertex e j) = 0 := by
     intro e he j
     refine spec.interiorVertex_eq_zero N hN hDv.1 ?_ j
     have h := hDv.2.2.2.2 e
-    rwa [if_neg fun hmem => he (hs.edges_subset_flat v hmem)] at h
+    rwa [ite_eq_right fun hmem => he (hs.edges_subset_flat v hmem)] at h
   -- `S` is a proper non-empty subset of the component `K`, so `K` has at least
   -- two internal slots crossing it (`bridgelessOff_flat`).
   set S : Finset (Fin n) :=

@@ -1,4 +1,8 @@
-import DraismaVargasCount.FacetCensus
+module
+
+public import DraismaVargasCount.FacetCensus
+
+@[expose] public section
 
 /-!
 # The valency-two split, read off an arbitrary incoming cover

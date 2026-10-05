@@ -1,4 +1,8 @@
-import DraismaVargas.Infrastructure.BlockSplitCount
+module
+
+public import DraismaVargas.Infrastructure.BlockSplitCount
+
+@[expose] public section
 
 /-!
 # One marker cut, read occurrence by occurrence
@@ -99,8 +103,8 @@ theorem positiveSegments_idem (l : List ℕ) :
   | cons x rest ih =>
       rw [positiveSegments_cons]
       by_cases h : 0 < x
-      · rw [if_pos h, positiveSegments_cons, if_pos h, ih]
-      · rw [if_neg h, ih]
+      · rw [ite_eq_left h, positiveSegments_cons, ite_eq_left h, ih]
+      · rw [ite_eq_right h, ih]
 
 theorem positiveSegments_reverse (l : List ℕ) :
     OrderedPathSplit.positiveSegments l.reverse =
@@ -140,7 +144,7 @@ theorem positiveSegments_splitSum (l : List ℕ) (a : ℕ) :
   | nil => exact ⟨rfl, rfl⟩
   | cons x rest ih =>
       by_cases hx : 0 < x
-      · rw [positiveSegments_cons x rest, if_pos hx]
+      · rw [positiveSegments_cons x rest, ite_eq_left hx]
         by_cases h : x ≤ a
         · rw [splitSum_cons_of_le rest h,
             splitSum_cons_of_le (OrderedPathSplit.positiveSegments rest) h]
@@ -148,9 +152,9 @@ theorem positiveSegments_splitSum (l : List ℕ) (a : ℕ) :
           show OrderedPathSplit.positiveSegments (x :: (splitSum rest (a - x)).1) =
             OrderedPathSplit.positiveSegments
               (x :: (splitSum (OrderedPathSplit.positiveSegments rest) (a - x)).1)
-          rw [positiveSegments_cons x (splitSum rest (a - x)).1, if_pos hx,
+          rw [positiveSegments_cons x (splitSum rest (a - x)).1, ite_eq_left hx,
             positiveSegments_cons x
-              (splitSum (OrderedPathSplit.positiveSegments rest) (a - x)).1, if_pos hx,
+              (splitSum (OrderedPathSplit.positiveSegments rest) (a - x)).1, ite_eq_left hx,
             (ih (a - x)).1]
         · rw [splitSum_cons_of_gt rest h,
             splitSum_cons_of_gt (OrderedPathSplit.positiveSegments rest) h]
@@ -159,17 +163,17 @@ theorem positiveSegments_splitSum (l : List ℕ) (a : ℕ) :
           show OrderedPathSplit.positiveSegments ((x - a) :: rest) =
             OrderedPathSplit.positiveSegments
               ((x - a) :: OrderedPathSplit.positiveSegments rest)
-          rw [positiveSegments_cons (x - a) rest, if_pos hxa,
+          rw [positiveSegments_cons (x - a) rest, ite_eq_left hxa,
             positiveSegments_cons (x - a) (OrderedPathSplit.positiveSegments rest),
-            if_pos hxa, positiveSegments_idem]
+            ite_eq_left hxa, positiveSegments_idem]
       · have hx0 : x = 0 := by omega
         subst hx0
-        rw [positiveSegments_cons 0 rest, if_neg (lt_irrefl 0),
+        rw [positiveSegments_cons 0 rest, ite_eq_right (lt_irrefl 0),
           splitSum_cons_of_le rest (Nat.zero_le a), Nat.sub_zero]
         refine ⟨?_, (ih a).2⟩
         show OrderedPathSplit.positiveSegments (0 :: (splitSum rest a).1) =
           OrderedPathSplit.positiveSegments (splitSum (OrderedPathSplit.positiveSegments rest) a).1
-        rw [positiveSegments_cons 0 (splitSum rest a).1, if_neg (lt_irrefl 0)]
+        rw [positiveSegments_cons 0 (splitSum rest a).1, ite_eq_right (lt_irrefl 0)]
         exact (ih a).1
 
 theorem positiveSegments_splitSum_fst (l : List ℕ) (a : ℕ) :
@@ -214,11 +218,11 @@ def cutList : List ℕ → ℕ → List (List ℕ)
 
 theorem cutList_cons_of_le {x a : ℕ} (rest : List ℕ) (h : x ≤ a) :
     cutList (x :: rest) a = [x] :: cutList rest (a - x) := by
-  simp only [cutList, if_pos h]
+  simp only [cutList, ite_eq_left h]
 
 theorem cutList_cons_of_gt {x a : ℕ} (rest : List ℕ) (h : ¬ x ≤ a) :
     cutList (x :: rest) a = [a, x - a] :: rest.map fun y ↦ [y] := by
-  simp only [cutList, if_neg h]
+  simp only [cutList, ite_eq_right h]
 
 /-- One entry per occurrence. -/
 @[simp] theorem length_cutList (l : List ℕ) (a : ℕ) : (cutList l a).length = l.length := by
@@ -339,36 +343,36 @@ theorem positiveSegments_getD_cutList (l : List ℕ) (a k : ℕ) (hpos : 0 < l.g
         cases k with
         | zero =>
             simp only [List.getD_cons_zero, List.take_zero, List.sum_nil] at hpos ⊢
-            rw [if_neg (by omega), positiveSegments_cons, if_pos hpos]
+            rw [ite_eq_right (by omega), positiveSegments_cons, ite_eq_left hpos]
             rfl
         | succ k' =>
             simp only [List.getD_cons_succ, List.take_succ_cons, List.sum_cons] at hpos ⊢
             rw [ih (a - x) k' hpos]
             by_cases hc : (rest.take k').sum < a - x ∧ a - x < (rest.take k').sum + rest.getD k' 0
-            · rw [if_pos hc, if_pos (by omega)]
+            · rw [ite_eq_left hc, ite_eq_left (by omega)]
               congr 1
               · omega
               · congr 1
                 omega
-            · rw [if_neg hc, if_neg (by omega)]
+            · rw [ite_eq_right hc, ite_eq_right (by omega)]
       · rw [cutList_cons_of_gt rest h]
         cases k with
         | zero =>
             simp only [List.getD_cons_zero, List.take_zero, List.sum_nil] at hpos ⊢
             by_cases ha : 0 < a
-            · rw [if_pos ⟨ha, by omega⟩, positiveSegments_cons, if_pos ha,
-                positiveSegments_cons, if_pos (by omega), positiveSegments_nil]
+            · rw [ite_eq_left ⟨ha, by omega⟩, positiveSegments_cons, ite_eq_left ha,
+                positiveSegments_cons, ite_eq_left (by omega), positiveSegments_nil]
               simp
-            · rw [if_neg (by omega), positiveSegments_cons, if_neg (by omega),
-                positiveSegments_cons, if_pos (by omega), positiveSegments_nil]
+            · rw [ite_eq_right (by omega), positiveSegments_cons, ite_eq_right (by omega),
+                positiveSegments_cons, ite_eq_left (by omega), positiveSegments_nil]
               congr 1
               omega
         | succ k' =>
             simp only [List.getD_cons_succ, List.take_succ_cons, List.sum_cons] at hpos ⊢
-            rw [if_neg (by omega)]
+            rw [ite_eq_right (by omega)]
             by_cases hk : k' < rest.length
             · rw [List.getD_eq_getElem _ _ (by simpa using hk), List.getElem_map,
-                List.getD_eq_getElem _ _ hk, positiveSegments_cons, if_pos (by
+                List.getD_eq_getElem _ _ hk, positiveSegments_cons, ite_eq_left (by
                   rwa [List.getD_eq_getElem _ _ hk] at hpos)]
               rfl
             · rw [List.getD_eq_default _ _ (Nat.le_of_not_lt hk)] at hpos

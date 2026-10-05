@@ -1,5 +1,9 @@
-import Utilities.Transmission.TransmissionWedgeDemazure
-import Utilities.Grassmannian.OnceMarked
+module
+
+public import Utilities.Transmission.TransmissionWedgeDemazure
+public import Utilities.Grassmannian.OnceMarked
+
+@[expose] public section
 
 /-!
 # Iterated vertex gluing and the chain transmission theorem

@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyFourDispatcher
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoStarCountAll
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoBaseOneTracks
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyFourDispatcher
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoStarCountAll
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoBaseOneTracks
+
+@[expose] public section
 
 /-!
 # The valency-two move-to-family dispatcher: merges closed, cross pairs isolated
@@ -706,12 +710,12 @@ theorem rows_ne_facetRow :
   have hBase := incidenceCount_baseEnd_eq m wd hEnds (NonTrivalentValencyTwoTracks.facetRow m wd)
   have hOp := incidenceCount_opEnd_eq m wd hEnds (NonTrivalentValencyTwoTracks.facetRow m wd)
   have hLe := incidenceCount_ends_le m wd hEnds (NonTrivalentValencyTwoTracks.facetRow m wd)
-  rw [if_pos rfl] at hBase hOp
+  rw [ite_eq_left rfl] at hBase hOp
   refine ⟨fun hBad ↦ ?_, fun hBad ↦ ?_, fun hBad ↦ ?_, fun hBad ↦ ?_⟩
-  · rw [if_pos hBad] at hBase; omega
-  · rw [if_pos hBad] at hBase; omega
-  · rw [if_pos hBad] at hOp; omega
-  · rw [if_pos hBad] at hOp; omega
+  · rw [ite_eq_left hBad] at hBase; omega
+  · rw [ite_eq_left hBad] at hBase; omega
+  · rw [ite_eq_left hBad] at hOp; omega
+  · rw [ite_eq_left hBad] at hOp; omega
 
 /-! ## 6.  The census as a fibrewise count of the four rows -/
 
@@ -747,8 +751,8 @@ theorem incidenceCount_facetRow_ends :
   obtain ⟨hL, hT, hR, hS⟩ := rows_ne_facetRow m wd hEnds
   have hBase := incidenceCount_baseEnd_eq m wd hEnds (NonTrivalentValencyTwoTracks.facetRow m wd)
   have hOp := incidenceCount_opEnd_eq m wd hEnds (NonTrivalentValencyTwoTracks.facetRow m wd)
-  rw [if_pos rfl, if_neg hL, if_neg hT] at hBase
-  rw [if_pos rfl, if_neg hR, if_neg hS] at hOp
+  rw [ite_eq_left rfl, ite_eq_right hL, ite_eq_right hT] at hBase
+  rw [ite_eq_left rfl, ite_eq_right hR, ite_eq_right hS] at hOp
   omega
 
 include src hOrd hEnds in
@@ -817,7 +821,7 @@ theorem card_filter_anchor_eq (r : StablePath wd.cover) :
   obtain ⟨hL, hT, hR, hS⟩ := rows_ne_facetRow m wd hEnds
   by_cases hr : r = NonTrivalentValencyTwoTracks.facetRow m wd
   · subst hr
-    rw [if_neg hL, if_neg hT, if_neg hR, if_neg hS]
+    rw [ite_eq_right hL, ite_eq_right hT, ite_eq_right hR, ite_eq_right hS]
     refine Finset.card_eq_zero.mpr (Finset.filter_eq_empty_iff.mpr ?_)
     intro g _
     exact incomingRow_ne_facetRow m wd g.stablePath
@@ -825,7 +829,7 @@ theorem card_filter_anchor_eq (r : StablePath wd.cover) :
         ((if rowR m wd = r then 1 else 0) + (if rowS m wd = r then 1 else 0)) =
         incidenceCount wd.cover (baseEnd m wd) r + incidenceCount wd.cover (opEnd m wd) r := by
       rw [incidenceCount_baseEnd_eq m wd hEnds r, incidenceCount_opEnd_eq m wd hEnds r,
-        if_neg (show ¬(NonTrivalentValencyTwoTracks.facetRow m wd = r) from fun h ↦ hr h.symm)]
+        ite_eq_right (show ¬(NonTrivalentValencyTwoTracks.facetRow m wd = r) from fun h ↦ hr h.symm)]
       omega
     rw [hEq]
     by_cases hex : ∃ row : StablePath (contractDatum wd.cover wd.hc wd.hab wd.hOne),

@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.StableGraphIncidence
+module
+
+public import DraismaVargas.LocalCases.StableGraphIncidence
+
+@[expose] public section
 
 /-!
 # A sheet relabelling as a stable-incidence equivalence, with its genus receipt

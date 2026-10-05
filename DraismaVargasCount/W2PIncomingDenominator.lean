@@ -1,5 +1,9 @@
-import DraismaVargasCount.W2MkkIncomingDenominator
-import DraismaVargas.LocalCases.W2PGraphData
+module
+
+public import DraismaVargasCount.W2MkkIncomingDenominator
+public import DraismaVargas.LocalCases.W2PGraphData
+
+@[expose] public section
 
 /-!
 # Sharp incoming denominators from Figure 35's actual members

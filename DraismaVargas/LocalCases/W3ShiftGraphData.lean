@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W3ShiftLimitRows
-import DraismaVargas.LocalCases.LimitChainCore
+module
+
+public import DraismaVargas.LocalCases.W3ShiftLimitRows
+public import DraismaVargas.LocalCases.LimitChainCore
+
+@[expose] public section
 
 /-!
 # Figure 29's two members as `LimitChainCore` instances
@@ -781,10 +785,10 @@ noncomputable def flag (edge : data.SourceEdge) : m.candidate.datum.SourceEdge :
   else m.candidate.oldSourceEdge edge
 
 theorem flag_moving : c.flag shift.moving.1 = m.candidate.newSourceEdge c.main :=
-  if_pos rfl
+  ite_eq_left rfl
 
 theorem flag_of_ne {edge : data.SourceEdge} (hNe : edge.1.1 ≠ shift.movingTarget) :
-    c.flag edge = m.candidate.oldSourceEdge edge := if_neg hNe
+    c.flag edge = m.candidate.oldSourceEdge edge := ite_eq_right hNe
 
 theorem flag_first :
     c.flag shift.firstRest.1 = m.candidate.oldSourceEdge shift.firstRest.1 :=

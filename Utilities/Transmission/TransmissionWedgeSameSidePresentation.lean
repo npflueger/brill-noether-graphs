@@ -1,6 +1,10 @@
-import Utilities.Transmission.TransmissionIso
-import Utilities.Transmission.TransmissionWedgeSameSide
-import Utilities.Gluing.VertexWedgePresentation
+module
+
+public import Utilities.Transmission.TransmissionIso
+public import Utilities.Transmission.TransmissionWedgeSameSide
+public import Utilities.Gluing.VertexWedgePresentation
+
+@[expose] public section
 
 /-!
 # Same-side transmission through a presented vertex wedge

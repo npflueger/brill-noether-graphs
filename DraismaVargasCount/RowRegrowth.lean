@@ -1,5 +1,9 @@
-import DraismaVargasCount.RowWalk
-import DraismaVargasCount.IncomingSimpleColumn
+module
+
+public import DraismaVargasCount.RowWalk
+public import DraismaVargasCount.IncomingSimpleColumn
+
+@[expose] public section
 
 /-!
 # The regrown transition: where a stable row's index constancy actually comes from
@@ -241,7 +245,7 @@ theorem sourceEdgeIndex_eq_off_regrown
       have hbNe : b ≠ regrown := by
         rintro rfl
         exact hEq (hTerminal u hbI hu)
-      rw [if_neg haNe, if_neg hbNe]
+      rw [ite_eq_right haNe, ite_eq_right hbNe]
       exact sourceEdgeIndex_eq_of_localRamification_eq_zero_of_noGlue hNoGlue hu
         (localRamification_eq_zero_of_ne_transition hTame hOne hTransition hA haI hu hEq)
         hA.survives haI hB.survives hbI
@@ -254,7 +258,7 @@ theorem sourceEdgeIndex_eq_off_regrown
     (fun x hx ↦ (mem_orderedRow_iff hEnds path x).mp hx) (orderedRow_chain hEnds path)
     ((mem_orderedRow_iff hEnds path first).mpr hFirst)
     ((mem_orderedRow_iff hEnds path second).mpr hSecond)
-  simpa only [if_neg hFirstNe, if_neg hSecondNe] using hChain
+  simpa only [ite_eq_right hFirstNe, ite_eq_right hSecondNe] using hChain
 
 /-- The partner at the transition lies on the row. -/
 theorem onRow_partner {path : StablePath data} {partner : data.SourceEdge}

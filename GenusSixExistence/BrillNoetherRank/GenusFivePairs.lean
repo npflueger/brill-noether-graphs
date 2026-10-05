@@ -1,6 +1,10 @@
-import Utilities.Gluing.LongHandle
-import GenusSixExistence.BrillNoetherRank.Reduction
-import GenusSixExistence.OnceMarked
+module
+
+public import Utilities.Gluing.LongHandle
+public import GenusSixExistence.BrillNoetherRank.Reduction
+public import GenusSixExistence.OnceMarked
+
+@[expose] public section
 
 /-!
 # Pairs in genus five, from genus six
@@ -69,12 +73,12 @@ theorem markedRankOneCompletion_genus_five (G : CFGraph.{u}) (hG : graph_connect
       simp only [one_chip]
       by_cases hvx : v = x
       · have hvy : ¬ v = y := fun h => hxy (hvx.symm.trans h)
-        rw [if_pos hvx, if_neg hvy, hvx]
+        rw [ite_eq_left hvx, ite_eq_right hvy, hvx]
         omega
       · by_cases hvy : v = y
-        · rw [if_neg hvx, if_pos hvy, hvy]
+        · rw [ite_eq_right hvx, ite_eq_left hvy, hvy]
           omega
-        · rw [if_neg hvx, if_neg hvy]
+        · rw [ite_eq_right hvx, ite_eq_right hvy]
           omega
     · rw [deg.map_sub, deg.map_sub, deg_one_chip, deg_one_chip, hFdeg]
       norm_num

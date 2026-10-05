@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W3Nd2SourceCandidates
+module
+
+public import DraismaVargas.LocalCases.W3Nd2SourceCandidates
+
+@[expose] public section
 
 /-!
 # Source-derived W3 nd3-t3 candidates: Equation (4), Figure 30
@@ -363,7 +367,7 @@ noncomputable def background (input : W3SourceInput data star)
       exact SheetPartition.Refines.refl fine
     · have hRight : rightOf profile.first.1.1.1 edge = true := by
         simp [rightOf, hEq]
-      rw [hRight, if_pos rfl]
+      rw [hRight, ite_eq_left rfl]
       change (data.edgePartition edge).Refines (data.vertexPartition wall)
       exact refines_of_mem_incidentEdges data hAt
   · rw [wallEdgesAssigned_false orientation]
@@ -597,10 +601,10 @@ theorem thirdTarget_mem (input : W3SourceInput data star)
     thirdTarget input profile ∈ GluingDatum.incidentEdges wall := by
   by_cases hLargest : largestTarget input profile =
       (orientedStar input profile).rightFirst
-  · simp only [thirdTarget, if_pos hLargest]
+  · simp only [thirdTarget, ite_eq_left hLargest]
     rw [(orientedStar input profile).incidentEdges_eq]
     simp
-  · simp only [thirdTarget, if_neg hLargest]
+  · simp only [thirdTarget, ite_eq_right hLargest]
     rw [(orientedStar input profile).incidentEdges_eq]
     simp
 
@@ -609,9 +613,9 @@ theorem thirdTarget_ne_shared (input : W3SourceInput data star)
     thirdTarget input profile ≠ profile.first.1.1.1 := by
   by_cases hLargest : largestTarget input profile =
       (orientedStar input profile).rightFirst
-  · simpa only [thirdTarget, if_pos hLargest] using
+  · simpa only [thirdTarget, ite_eq_left hLargest] using
       (orientedStar input profile).rightSecond_ne_left
-  · simpa only [thirdTarget, if_neg hLargest] using
+  · simpa only [thirdTarget, ite_eq_right hLargest] using
       (orientedStar input profile).rightFirst_ne_left
 
 theorem thirdTarget_ne_largest (input : W3SourceInput data star)
@@ -619,11 +623,11 @@ theorem thirdTarget_ne_largest (input : W3SourceInput data star)
     thirdTarget input profile ≠ largestTarget input profile := by
   by_cases hLargest : largestTarget input profile =
       (orientedStar input profile).rightFirst
-  · simp only [thirdTarget, if_pos hLargest]
+  · simp only [thirdTarget, ite_eq_left hLargest]
     intro hEq
     apply (orientedStar input profile).right_ne
     exact hLargest.symm.trans hEq.symm
-  · simp only [thirdTarget, if_neg hLargest]
+  · simp only [thirdTarget, ite_eq_right hLargest]
     intro hEq
     exact hLargest hEq.symm
 
@@ -635,13 +639,13 @@ theorem incidentEdges_eq (input : W3SourceInput data star)
   by_cases hLargest : largestTarget input profile =
       (orientedStar input profile).rightFirst
   · rw [(orientedStar input profile).incidentEdges_eq]
-    simp only [thirdTarget, if_pos hLargest]
+    simp only [thirdTarget, ite_eq_left hLargest]
     rw [hLargest]
   · rcases largest_eq_rightFirst_or_rightSecond input profile with
       hFirst | hSecond
     · exact (hLargest hFirst).elim
     · rw [(orientedStar input profile).incidentEdges_eq]
-      simp only [thirdTarget, if_neg hLargest]
+      simp only [thirdTarget, ite_eq_right hLargest]
       rw [hSecond, Finset.pair_comm]
 
 /-- The canonical source occurrence in the third direction through a selected
@@ -806,7 +810,7 @@ theorem selectedFine_rel_iff_of_selected (input : W3SourceInput data star)
   have hRepresentative : (data.vertexPartition wall).Rel
       input.distinguishedBlock.1 ((data.vertexPartition wall).repr first) :=
     hFirst.trans ((data.vertexPartition wall).rel_repr_right first)
-  rw [if_pos hRepresentative]
+  rw [ite_eq_left hRepresentative]
 
 theorem selectedFine_rel_iff_of_background (input : W3SourceInput data star)
     (profile : Nd3Profile data input.distinguishedBlock)
@@ -820,7 +824,7 @@ theorem selectedFine_rel_iff_of_background (input : W3SourceInput data star)
       input.distinguishedBlock.1 ((data.vertexPartition wall).repr first) := by
     intro hRel
     exact hFirst (hRel.trans ((data.vertexPartition wall).rel_repr_left first))
-  rw [if_neg hRepresentative]
+  rw [ite_eq_right hRepresentative]
 
 theorem selectedFine_block_eq_fine (input : W3SourceInput data star)
     (profile : Nd3Profile data input.distinguishedBlock) (sheet : Fin degree)
@@ -937,7 +941,7 @@ noncomputable def fineBackground (input : W3SourceInput data star)
       exact SheetPartition.Refines.refl fine
     · have hRight : rightOf (largestTarget input profile) edge = true := by
         simp [rightOf, hEq]
-      rw [hRight, if_pos rfl]
+      rw [hRight, ite_eq_left rfl]
       change (data.edgePartition edge).Refines (data.vertexPartition wall)
       exact refines_of_mem_incidentEdges data hAt
   · rw [wallEdgesAssigned_false orientation]
@@ -993,7 +997,7 @@ noncomputable def fineBackground (input : W3SourceInput data star)
       simpa [fine, largestPartition, Nat.add_comm] using hTotalNat'
     exact hTotalNat.ge
 
-private theorem shared_blockCountWithin_selectedFine
+theorem shared_blockCountWithin_selectedFine
     (input : W3SourceInput data star)
     (profile : Nd3Profile data input.distinguishedBlock) (sheet : Fin degree)
     (hSheet : (data.vertexPartition wall).Rel input.distinguishedBlock.1 sheet) :
@@ -1003,7 +1007,7 @@ private theorem shared_blockCountWithin_selectedFine
   rw [selectedFine_block_eq_fine input profile sheet hSheet]
   exact SheetPartition.blockCountWithin_self (finePartition input profile) sheet
 
-private theorem third_blockCountWithin_selectedFine
+theorem third_blockCountWithin_selectedFine
     (input : W3SourceInput data star)
     (profile : Nd3Profile data input.distinguishedBlock)
     (hSame : profile.first.1.1.1 = profile.second.1.1.1) (sheet : Fin degree)
@@ -1035,7 +1039,7 @@ noncomputable def fineCandidate (input : W3SourceInput data star)
       exact refines_of_mem_incidentEdges data hAt
     · have hRight : rightOf (largestTarget input profile) edge = true := by
         simp [rightOf, hLargest]
-      simp only [background, fineBackground, hRight, if_true, selected,
+      simp only [background, fineBackground, hRight, ite_true, selected,
         selectedResolution, LocalResolution.reverse_right, fineResolution]
       have hCases : edge = profile.first.1.1.1 ∨
           edge = thirdTarget input profile := by

@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.IncomingPairing
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoTracksLeaf
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoSplitExit
+module
+
+public import DraismaVargas.LocalCases.IncomingPairing
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoTracksLeaf
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoSplitExit
+
+@[expose] public section
 
 /-!
 # The vertex dictionary of the valency-two Base II **split** type change, and (H-split)
@@ -403,12 +407,12 @@ def candVertex (w : data.SourceVertex) : (cand).datum.SourceVertex :=
 theorem candVertex_wall (w : data.SourceVertex) (hw : w.1.1 = wall) :
     candVertex ra w = endpointVertex ra (!ordSide data star anchor w.1.2) w.1.2 := by
   unfold candVertex
-  rw [if_pos hw]
+  rw [ite_eq_left hw]
 
 theorem candVertex_away (w : data.SourceVertex) (hw : w.1.1 ≠ wall) :
     candVertex ra w = ResolutionAwayFromWall.retainedVertex (cand) w := by
   unfold candVertex
-  rw [if_neg hw]
+  rw [ite_eq_right hw]
 
 theorem endpointVertex_target (side : Bool) (y : Fin degree) :
     (endpointVertex ra side y).1.1 =

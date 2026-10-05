@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.M11IncomingTargetNormalization
+module
+
+public import DraismaVargas.LocalCases.M11IncomingTargetNormalization
+
+@[expose] public section
 
 /-!
 # Literal outer partitions after incoming M11 target normalization
@@ -90,29 +94,29 @@ theorem incomingIso_symm_endpoints :
     (IncomingTargetExpansion.vertexEquiv hab hOne).symm_apply_eq.mpr rfl
   by_cases hSupport : ∀ edge ∈ GluingDatum.incidentEdges (target := contract incoming hab hOne) ⟨a, hab⟩,
       IncomingTargetExpansion.right hc hab hOne edge = second edge
-  · rw [if_pos hSupport]
+  · rw [ite_eq_left hSupport]
     apply Prod.ext
     · apply (incomingIso hc hab hOne second hPlacement).vertexEquiv.symm_apply_eq.mpr
       rw [incomingIso_vertex, hA]
       unfold normalizationIso
-      rw [dif_pos hSupport]
+      rw [dite_eq_left hSupport]
       rfl
     · apply (incomingIso hc hab hOne second hPlacement).vertexEquiv.symm_apply_eq.mpr
       rw [incomingIso_vertex, hB]
       unfold normalizationIso
-      rw [dif_pos hSupport]
+      rw [dite_eq_left hSupport]
       rfl
-  · rw [if_neg hSupport]
+  · rw [ite_eq_right hSupport]
     apply Prod.ext
     · apply (incomingIso hc hab hOne second hPlacement).vertexEquiv.symm_apply_eq.mpr
       rw [incomingIso_vertex, hB]
       unfold normalizationIso
-      rw [dif_neg hSupport]
+      rw [dite_eq_right hSupport]
       exact swapVertices_fresh.symm
     · apply (incomingIso hc hab hOne second hPlacement).vertexEquiv.symm_apply_eq.mpr
       rw [incomingIso_vertex, hA]
       unfold normalizationIso
-      rw [dif_neg hSupport]
+      rw [dite_eq_right hSupport]
       exact swapVertices_old_wall.symm
 
 /-- Unchanged outer vertex partitions are literally the contracted datum's
@@ -174,9 +178,9 @@ theorem transported_endpointPartitions :
     (data.vertexPartition pair.1, data.vertexPartition pair.2))
     (incomingIso_symm_endpoints hc hab hOne second hPlacement)
   split_ifs with hSupport
-  · simp only [if_pos hSupport] at h
+  · simp only [ite_eq_left hSupport] at h
     exact h
-  · simp only [if_neg hSupport] at h
+  · simp only [ite_eq_right hSupport] at h
     exact h
 
 /-- The normalized split retains `a` as the leaf when `a` was the incoming leaf. -/
@@ -197,7 +201,7 @@ theorem split_endpointPartitions_of_leaf_left
     have hEdge : star.edge label = edge := congrArg Subtype.val hLabel
     rw [← hEdge]
     exact IncomingW2TargetPlacement.right_star_of_leaf_left hc hab hOne star hLeaf label
-  simp only [if_pos hSupport] at h
+  simp only [ite_eq_left hSupport] at h
   exact h
 
 /-- If `b` was the incoming leaf, normalization swaps the endpoint partitions. -/
@@ -217,7 +221,7 @@ theorem split_endpointPartitions_of_leaf_right
     have hTrue := hSupport (star.edge 0) (star.edge_mem_incidentEdges 0)
     rw [IncomingW2TargetPlacement.right_star_of_leaf_right hc hab hOne star hLeaf 0] at hTrue
     cases hTrue
-  simp only [if_neg hNotSupport] at h
+  simp only [ite_eq_right hNotSupport] at h
   exact h
 
 /-- For the actual joined orientation (label 1 at the fresh endpoint), the
@@ -244,16 +248,16 @@ theorem joined_endpointPartitions
       · have hFalse := hSwap (star.edge 1) (star.edge_mem_incidentEdges 1)
         rw [hSide, star.right_edge_one] at hFalse
         cases hFalse
-    rw [if_pos hSide]
-    simp only [if_pos hSupport] at h
+    rw [ite_eq_left hSide]
+    simp only [ite_eq_left hSupport] at h
     exact h
   · have hNotSupport : ¬∀ edge ∈ GluingDatum.incidentEdges (target := contract incoming hab hOne) ⟨a, hab⟩,
         IncomingTargetExpansion.right hc hab hOne edge = star.right edge := by
       intro hSupport
       have hTrue := hSupport (star.edge 1) (star.edge_mem_incidentEdges 1)
       exact hSide (hTrue.trans star.right_edge_one)
-    rw [if_neg hSide]
-    simp only [if_neg hNotSupport] at h
+    rw [ite_eq_right hSide]
+    simp only [ite_eq_right hNotSupport] at h
     exact h
 
 end Incoming

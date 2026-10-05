@@ -1,8 +1,12 @@
-import LowGenus.Generated.GenusFourClosedRows
-import LowGenus.GenusFourCubicCoverage
-import LowGenus.GenusFourRow095Closed
-import LowGenus.GenusFourRow097Closed
-import LowGenus.GenusFourRow098Closed
+module
+
+public import LowGenus.Generated.GenusFourClosedRows
+public import LowGenus.GenusFourCubicCoverage
+public import LowGenus.GenusFourRow095Closed
+public import LowGenus.GenusFourRow097Closed
+public import LowGenus.GenusFourRow098Closed
+
+@[expose] public section
 
 /-!
 # The six closed cubic genus-four rows

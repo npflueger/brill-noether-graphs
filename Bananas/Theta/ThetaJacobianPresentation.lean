@@ -1,5 +1,9 @@
-import Bananas.Jacobian.BananaJacobianProposition214
-import Bananas.Theta.ThetaLattice
+module
+
+public import Bananas.Jacobian.BananaJacobianProposition214
+public import Bananas.Theta.ThetaLattice
+
+@[expose] public section
 
 /-!
 # The two-coordinate theta Jacobian presentation

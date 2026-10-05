@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W2M1kSourceCandidates
-import DraismaVargas.LocalCases.M11SplitLeaves
+module
+
+public import DraismaVargas.LocalCases.W2M1kSourceCandidates
+public import DraismaVargas.LocalCases.M11SplitLeaves
+
+@[expose] public section
 
 /-!
 # The target leaf of Figure 33's first member, and the arms it prunes

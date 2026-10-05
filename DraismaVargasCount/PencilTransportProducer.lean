@@ -1,5 +1,9 @@
-import DraismaVargasCount.CorePencilCoverProducer
-import DraismaVargasCount.TreeMetricPotential
+module
+
+public import DraismaVargasCount.CorePencilCoverProducer
+public import DraismaVargasCount.TreeMetricPotential
+
+@[expose] public section
 
 /-!
 # The descent of the pencil: (T) `PencilTransport` and `DoubleRowInterior`
@@ -148,7 +152,7 @@ theorem sum_window (δ : ℕ → ℤ) (total start len : ℕ) (h : start + len �
       rw [Finset.sum_eq_zero]
       · simp
       · intro o _
-        rw [if_neg (by omega), zero_mul]
+        rw [ite_eq_right (by omega), zero_mul]
   | succ len ih =>
       have hSplit : ∀ o ∈ Finset.range total,
           (if start ≤ o ∧ o < start + (len + 1) then (1 : ℤ) else 0) * (δ o - δ (o + 1)) =
@@ -156,16 +160,16 @@ theorem sum_window (δ : ℕ → ℤ) (total start len : ℕ) (h : start + len �
               (if o = start + len then δ o - δ (o + 1) else 0) := by
         intro o _
         by_cases h1 : start ≤ o ∧ o < start + len
-        · rw [if_pos ⟨h1.1, by omega⟩, if_pos h1, if_neg (by omega)]
+        · rw [ite_eq_left ⟨h1.1, by omega⟩, ite_eq_left h1, ite_eq_right (by omega)]
           ring
         · by_cases h2 : o = start + len
-          · rw [if_pos (by omega), if_neg h1, if_pos h2]
+          · rw [ite_eq_left (by omega), ite_eq_right h1, ite_eq_left h2]
             ring
-          · rw [if_neg (by omega), if_neg h1, if_neg h2]
+          · rw [ite_eq_right (by omega), ite_eq_right h1, ite_eq_right h2]
             ring
       rw [Finset.sum_congr rfl hSplit, Finset.sum_add_distrib, ih (by omega),
         Finset.sum_ite_eq' (Finset.range total) (start + len)]
-      rw [if_pos (Finset.mem_range.mpr (by omega))]
+      rw [ite_eq_left (Finset.mem_range.mpr (by omega))]
       rw [show start + (len + 1) = start + len + 1 by omega]
       ring
 
@@ -316,9 +320,9 @@ theorem sum_fibre_sub {X : Type*} [DecidableEq X] (ρ : member.data.SourceVertex
                 edgeSlope member (chipSlope member root anchor) edge else 0)) else 0) := by
     intro raw
     by_cases hb : ρ raw = b
-    · simp only [if_pos hb]
+    · simp only [ite_eq_left hb]
       exact fibre_sub_eq member root anchor raw
-    · simp only [if_neg hb, Finset.sum_const_zero]
+    · simp only [ite_eq_right hb, Finset.sum_const_zero]
   rw [Finset.sum_congr rfl fun raw _ ↦ hStep raw, Finset.sum_comm]
   refine Finset.sum_congr rfl fun edge _ ↦ ?_
   have hSplit : ∀ raw : member.data.SourceVertex,
@@ -335,7 +339,7 @@ theorem sum_fibre_sub {X : Type*} [DecidableEq X] (ρ : member.data.SourceVertex
     split_ifs <;> ring
   rw [Finset.sum_congr rfl fun raw _ ↦ hSplit raw, Finset.sum_sub_distrib,
     Finset.sum_ite_eq, Finset.sum_ite_eq]
-  simp only [Finset.mem_univ, if_true]
+  simp only [Finset.mem_univ, ite_true]
   split_ifs <;> ring
 
 end Push
@@ -364,9 +368,9 @@ theorem sum_edges_eq_sum_rows (g : member.data.SourceEdge → ℤ)
     · rw [hDangling edge hD]
       simp
     · rw [Finset.sum_eq_single (NonDanglingEdge.stablePath (⟨edge, hD⟩ : NonDanglingEdge member.data))]
-      · rw [if_pos ⟨hD, rfl⟩]
+      · rw [ite_eq_left ⟨hD, rfl⟩]
       · intro path _ hne
-        rw [if_neg]
+        rw [ite_eq_right]
         rintro ⟨hS, hPath⟩
         exact hne hPath.symm
       · simp
@@ -463,8 +467,8 @@ theorem rowSlope_mul_sub (e : Fin p)
   by_cases h : (member.data.sourceEnds
       (orderedRow member.fullDim.pathEnds (member.ident.row.symm e))[i]).1 =
       rowVertex member.fullDim (member.ident.row.symm e) i
-  · rw [if_pos h, if_pos h, h]
-  · rw [if_neg h, if_neg h]
+  · rw [ite_eq_left h, ite_eq_left h, h]
+  · rw [ite_eq_right h, ite_eq_right h]
     have h2 : (member.data.sourceEnds
         (orderedRow member.fullDim.pathEnds (member.ident.row.symm e))[i]).2 =
         rowVertex member.fullDim (member.ident.row.symm e) i := by
@@ -496,8 +500,8 @@ theorem rowSlope_mul_rowLen (hRise : RiseCompatible member hClosed s P) (e : Fin
   by_cases h : (member.data.sourceEnds
       (orderedRow member.fullDim.pathEnds (member.ident.row.symm e))[i]).1 =
       rowVertex member.fullDim (member.ident.row.symm e) i
-  · rw [if_pos h, if_pos h, ← h, hRise]
-  · rw [if_neg h, if_neg h]
+  · rw [ite_eq_left h, ite_eq_left h, ← h, hRise]
+  · rw [ite_eq_right h, ite_eq_right h]
     have h2 : (member.data.sourceEnds
         (orderedRow member.fullDim.pathEnds (member.ident.row.symm e))[i]).2 =
         rowVertex member.fullDim (member.ident.row.symm e) i := by
@@ -610,9 +614,9 @@ theorem pushDivisor_sub_eq (root anchor : member.target.V) (b : (small.scale k h
         hScale raw = b then _ else 0) = _
   by_cases hb : CorePencilCoverProducer.realization D small hN hL k hk member hClosed hScale
       raw = b
-  · rw [if_pos hb, if_pos hb, if_pos hb]
+  · rw [ite_eq_left hb, ite_eq_left hb, ite_eq_left hb]
     rfl
-  · rw [if_neg hb, if_neg hb, if_neg hb]
+  · rw [ite_eq_right hb, ite_eq_right hb, ite_eq_right hb]
     ring
 
 /-- A dangling edge is collapsed by the realization. -/
@@ -666,9 +670,9 @@ theorem realization_branch_end (hCond : D.Conditions small.core) (e : Fin Q)
   refine h.trans ?_
   rw [hLabel]
   cases rev
-  · simp only [Bool.false_eq_true, if_false]
+  · simp only [Bool.false_eq_true, ite_false]
     exact (kindVertex_zero_eq D small hN hL k hk hCond e).symm
-  · simp only [if_true]
+  · simp only [ite_true]
     exact (kindVertex_length_eq D small hN hL k hk hCond e).symm
 
 /-- The prefix at `0` is `0`. -/
@@ -820,10 +824,10 @@ theorem compat (hRise : RiseCompatible member hClosed s P) :
     have hEnds := DegeneratePlacement.reverse_endpoints hL member e
     unfold slotValue slotPos
     cases hr : DegeneratePlacement.reverse member e
-    · simp only [hr, Bool.false_eq_true, if_false] at hEnds ⊢
+    · simp only [hr, Bool.false_eq_true, ite_false] at hEnds ⊢
       rw [rowValue_of_nonpos _ _ _ _ _ (by simp), ← hEnds.1, corePotential_ident]
       rfl
-    · simp only [hr, if_true] at hEnds ⊢
+    · simp only [hr, ite_true] at hEnds ⊢
       rw [rowValue_of_ge _ _ _ _ hRise _ (by have := hFull e; omega), ← hEnds.2,
         corePotential_ident]
       rfl
@@ -832,11 +836,11 @@ theorem compat (hRise : RiseCompatible member hClosed s P) :
     have hEnds := DegeneratePlacement.reverse_endpoints hL member e
     unfold slotValue slotPos
     cases hr : DegeneratePlacement.reverse member e
-    · simp only [hr, Bool.false_eq_true, if_false] at hEnds ⊢
+    · simp only [hr, Bool.false_eq_true, ite_false] at hEnds ⊢
       rw [rowValue_of_ge _ _ _ _ hRise _ (by have := hFull e; omega), ← hEnds.2,
         corePotential_ident]
       rfl
-    · simp only [hr, if_true] at hEnds ⊢
+    · simp only [hr, ite_true] at hEnds ⊢
       rw [rowValue_of_nonpos _ _ _ _ _ (by simp), ← hEnds.1, corePotential_ident]
       rfl
 
@@ -1037,15 +1041,15 @@ theorem pushDiv_prin_script (hCond : D.Conditions small.core)
             else 0)) := by
     intro x
     by_cases hx : (ExpansionData.certificate D (small.scale k hk) hN hL).vertexMap x = b
-    · rw [if_pos hx]
+    · rw [ite_eq_left hx]
       refine Finset.sum_congr rfl fun step _ ↦ ?_
       have hx' : ExpansionData.vertexMap D (small.scale k hk) hN hL x = b := hx
-      simp only [hx', if_true]
-    · rw [if_neg hx]
+      simp only [hx', ite_true]
+    · rw [ite_eq_right hx]
       have hx' : ¬ ExpansionData.vertexMap D (small.scale k hk) hN hL x = b := hx
-      simp only [hx', if_false, ite_self, add_zero, Finset.sum_const_zero]
+      simp only [hx', ite_false, ite_self, add_zero, Finset.sum_const_zero]
   rw [Finset.sum_congr rfl fun x _ ↦ hSwap x, Finset.sum_comm]
-  simp only [Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp only [Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   rw [← Finset.sum_add_distrib, Fintype.sum_sigma]
   refine Finset.sum_congr rfl fun e _ ↦ Finset.sum_congr rfl fun o _ ↦ ?_
   rw [ExpansionData.vertexMap_stepLeft hCond' e o, ExpansionData.vertexMap_stepRight hCond' e o]
@@ -1078,7 +1082,7 @@ theorem slot_sum (e : Fin Q) (δ : ℕ → ℤ) :
   simp only [offsetVal_eq]
   unfold slotValue slotPos
   cases hr : DegeneratePlacement.reverse member e
-  · simp only [Bool.false_eq_true, if_false]
+  · simp only [Bool.false_eq_true, ite_false]
     have hDiff : ∀ o : ℕ,
         rowValue member hClosed (chipSlope member root anchor) (chipPotential member hClosed root anchor) e ((o + 1 : ℕ) : ℤ) -
             rowValue member hClosed (chipSlope member root anchor) (chipPotential member hClosed root anchor) e (o : ℤ) =
@@ -1108,7 +1112,7 @@ theorem slot_sum (e : Fin Q) (δ : ℕ → ℤ) :
     show _ = rowSlope member (chipSlope member root anchor) e i *
       (δ (rowStart member hClosed e i) - δ (rowStart member hClosed e (i.val + 1)))
     rw [rowStart_succ]
-  · simp only [if_true]
+  · simp only [ite_true]
     have hDiff : ∀ o : ℕ, o < (D.bigSpec (small.scale k hk) hN hL).length e →
         rowValue member hClosed (chipSlope member root anchor) (chipPotential member hClosed root anchor) e
             (((D.bigSpec (small.scale k hk) hN hL).length e : ℤ) - ((o + 1 : ℕ) : ℤ)) -
@@ -1338,11 +1342,11 @@ theorem doubleRowInterior_of_loopDoubles (hCond : D.Conditions small.core)
       sourcePotential member P (rowVertex member.fullDim (member.ident.row.symm e) 0) := by
     unfold slotValue slotPos at hEq
     cases hr : DegeneratePlacement.reverse member e
-    · simp only [hr, Bool.false_eq_true, if_false, Nat.cast_zero] at hEq
+    · simp only [hr, Bool.false_eq_true, ite_false, Nat.cast_zero] at hEq
       rw [rowValue_of_nonpos _ _ _ _ _ le_rfl,
         rowValue_of_ge _ _ _ _ hRise _ (by rw [hFull])] at hEq
       exact hEq.symm
-    · simp only [hr, if_true, Nat.cast_zero, sub_zero, sub_self] at hEq
+    · simp only [hr, ite_true, Nat.cast_zero, sub_zero, sub_self] at hEq
       rw [rowValue_of_ge _ _ _ _ hRise _ (by rw [hFull]),
         rowValue_of_nonpos _ _ _ _ _ le_rfl] at hEq
       exact hEq
@@ -1352,7 +1356,7 @@ theorem doubleRowInterior_of_loopDoubles (hCond : D.Conditions small.core)
   have hSlope : rowSlope member s e i0 ≠ 0 := by
     have hidx := GluingDatum.sourceEdgeIndex_pos member.data
       (orderedRow member.fullDim.pathEnds (member.ident.row.symm e))[i0]
-    have hs : s t = 1 := if_pos rfl
+    have hs : s t = 1 := ite_eq_left rfl
     unfold rowSlope edgeSlope
     rw [← ht, hs]
     split_ifs <;> omega

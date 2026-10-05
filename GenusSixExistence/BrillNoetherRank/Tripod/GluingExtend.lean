@@ -1,4 +1,8 @@
-import GenusSixExistence.BrillNoetherRank.Tripod.GluingInjective
+module
+
+public import GenusSixExistence.BrillNoetherRank.Tripod.GluingInjective
+
+@[expose] public section
 
 /-!
 # Transporting a gluing along an isomorphism of members
@@ -78,8 +82,8 @@ theorem pair_relabel {d : ℕ} (a b : Fin d) (σ : Equiv.Perm (Fin d)) :
   funext x
   show σ (if σ.symm x = b then a else σ.symm x) = if x = σ b then σ a else x
   by_cases h : x = σ b
-  · rw [if_pos h, if_pos (by rw [h, Equiv.symm_apply_apply])]
-  · rw [if_neg h, if_neg (fun h' ↦ h (by rw [← h', Equiv.apply_symm_apply])),
+  · rw [ite_eq_left h, ite_eq_left (by rw [h, Equiv.symm_apply_apply])]
+  · rw [ite_eq_right h, ite_eq_right (fun h' ↦ h (by rw [← h', Equiv.apply_symm_apply])),
       Equiv.apply_symm_apply]
 
 /-- **Extend a permutation by the new sheet.** -/
@@ -128,7 +132,7 @@ def endOf (t : T.edges) (ε : (subdivTarget T t).edges) : T.V :=
 theorem pieceT_of_ne {t e : T.edges} (h : e ≠ t) (w : T.V) :
     pieceT t w e = subdivOcc T t (some e) := by
   unfold pieceT
-  rw [if_neg (fun h' ↦ h h'.1)]
+  rw [ite_eq_right (fun h' ↦ h h'.1)]
 
 theorem pieceT_endOf (ε : (subdivTarget T t).edges) :
     pieceT t (endOf t ε) (parentT t ε) = ε := by
@@ -137,12 +141,12 @@ theorem pieceT_endOf (ε : (subdivTarget T t).edges) :
   | none =>
     rw [parentT_none]
     unfold pieceT endOf
-    rw [Equiv.symm_apply_apply, if_pos ⟨rfl, rfl⟩]
+    rw [Equiv.symm_apply_apply, ite_eq_left ⟨rfl, rfl⟩]
   | some e =>
     rw [parentT_some]
     unfold pieceT endOf
     rw [Equiv.symm_apply_apply]
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro ⟨rfl, h⟩
     exact fst_ne_snd e h.symm
 
@@ -199,9 +203,9 @@ theorem refFwd_pieceT {w : T.V} {e : T.edges} (hw : e ∈ GluingDatum.incidentEd
     congr 2
     unfold pieceT endOf
     by_cases h2 : (e : T.V × T.V).2 = w
-    · rw [if_pos ⟨rfl, h2⟩, Equiv.symm_apply_apply]
+    · rw [ite_eq_left ⟨rfl, h2⟩, Equiv.symm_apply_apply]
       exact h2
-    · rw [if_neg (fun h ↦ h2 h.2), Equiv.symm_apply_apply]
+    · rw [ite_eq_right (fun h ↦ h2 h.2), Equiv.symm_apply_apply]
       exact hw.resolve_right h2
   · have hne : Θ.targetEdge e ≠ Θ.targetEdge t := Θ.targetEdge.injective.ne het
     rw [pieceT_of_ne hne, pieceT_of_ne hne]

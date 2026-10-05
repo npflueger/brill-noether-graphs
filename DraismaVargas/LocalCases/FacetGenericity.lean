@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.AtlasGenericStart
-import Utilities.IntegralGeometry.PositiveOrthantExit
+module
+
+public import DraismaVargas.LocalCases.AtlasGenericStart
+public import Utilities.IntegralGeometry.PositiveOrthantExit
+
+@[expose] public section
 
 /-!
 # Facet genericity for the finite matrix atlas
@@ -173,7 +177,7 @@ theorem eval_facetRowWall (matrix : Matrix coordinate coordinate ℚ)
     (facetRowWall matrix facet row).eval y = chartCoordinates matrix y row := by
   classical
   unfold facetRowWall
-  rw [if_neg hdegenerate]
+  rw [ite_eq_right hdegenerate]
   show (∑ k, (if k = facet then 0 else matrix⁻¹ row k) * y k) + 0 =
     chartCoordinates matrix y row
   rw [add_zero]

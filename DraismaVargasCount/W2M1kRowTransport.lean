@@ -1,5 +1,9 @@
-import DraismaVargasCount.RowRegrowth
-import DraismaVargas.LocalCases.W2M1kRowDescent
+module
+
+public import DraismaVargasCount.RowRegrowth
+public import DraismaVargas.LocalCases.W2M1kRowDescent
+
+@[expose] public section
 
 /-!
 # Retained occurrence transport for the two perturbed M-1k rows

@@ -1,5 +1,9 @@
-import Utilities.CubicGraphs.CubicDarts
-import Mathlib.Combinatorics.SimpleGraph.Acyclic
+module
+
+public import Utilities.CubicGraphs.CubicDarts
+public import Mathlib.Combinatorics.SimpleGraph.Acyclic
+
+@[expose] public section
 
 /-!
 # Creating a loop by genuine Whitehead moves
@@ -228,7 +232,7 @@ theorem cycle_of_simple_cycle (G : CubicDartGraph D V) {v : V}
   have hd : ∀ i, ∀ hi : i < c.length,
       G.vert (dart i) = c.getVert i ∧ G.vert (G.op (dart i)) = c.getVert (i + 1) := by
     intro i hi
-    simp only [dart, dif_pos hi]
+    simp only [dart, dite_eq_left hi]
     exact ⟨hSource i hi, hTarget i hi⟩
   refine ⟨c.length - 1, ⟨{
     dart := dart

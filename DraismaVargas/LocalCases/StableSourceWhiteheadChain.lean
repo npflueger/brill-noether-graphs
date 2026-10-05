@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.StableSourceDartsTransport
-import Utilities.CubicGraphs.CubicCoreDarts
+module
+
+public import DraismaVargas.LocalCases.StableSourceDartsTransport
+public import Utilities.CubicGraphs.CubicCoreDarts
+
+@[expose] public section
 
 /-!
 # A finite Whitehead chain from an actual source to a requested core

@@ -1,6 +1,10 @@
-import Bananas.Transmission.ChainTwoLoopsSameLeft
-import Bananas.Basics.MarkedIso
-import Bananas.Sections.SectionSixChainConclusion
+module
+
+public import Bananas.Transmission.ChainTwoLoopsSameLeft
+public import Bananas.Basics.MarkedIso
+public import Bananas.Sections.SectionSixChainConclusion
+
+@[expose] public section
 
 /-!
 # The right-loop branch of Proposition 3.7

@@ -1,6 +1,10 @@
-import Bananas.Theta.ThetaNonrecurrence
-import Bananas.Transmission.TransmissionAPI
-import Utilities.Transmission.Transmission
+module
+
+public import Bananas.Theta.ThetaNonrecurrence
+public import Bananas.Transmission.TransmissionAPI
+public import Utilities.Transmission.Transmission
+
+@[expose] public section
 
 /-!
 # Bridging the banana transmission vocabulary to `AspPerm`

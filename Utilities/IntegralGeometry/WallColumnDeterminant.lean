@@ -1,5 +1,9 @@
-import Utilities.IntegralGeometry.ConeWall
-import Mathlib.LinearAlgebra.Matrix.Adjugate
+module
+
+public import Utilities.IntegralGeometry.ConeWall
+public import Mathlib.LinearAlgebra.Matrix.Adjugate
+
+@[expose] public section
 
 /-!
 # Determinant contributions of a changing wall column

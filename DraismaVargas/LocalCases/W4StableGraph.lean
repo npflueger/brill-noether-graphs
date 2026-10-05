@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.W4StableSource
-import DraismaVargas.LocalCases.M11SourceGenus
-import DraismaVargas.LocalCases.ResolutionPruning
+module
+
+public import DraismaVargas.LocalCases.W4StableSource
+public import DraismaVargas.LocalCases.M11SourceGenus
+public import DraismaVargas.LocalCases.ResolutionPruning
+
+@[expose] public section
 
 /-!
 # Stable-source prerequisites for the actual W4 candidates
@@ -106,11 +110,11 @@ theorem blockwiseResolution_isStar
       by_cases hSame : W4TargetPairings.Pairing.labelRight pairing block.first =
           W4TargetPairings.Pairing.labelRight pairing block.second
       · unfold ResolutionW4.nd2Resolution
-        rw [dif_pos hSame]
+        rw [dite_eq_left hSame]
         cases hSide : W4TargetPairings.Pairing.labelRight pairing block.first <;>
           simp [splitResolutionAt, LocalResolution.reverse]
       · unfold ResolutionW4.nd2Resolution
-        rw [dif_neg hSame]
+        rw [dite_eq_right hSame]
         exact Or.inl ⟨rfl, rfl⟩
   | nd3 block =>
       unfold blockwiseResolution

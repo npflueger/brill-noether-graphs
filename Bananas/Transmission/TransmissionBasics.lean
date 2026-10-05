@@ -1,6 +1,10 @@
-import Bananas.Basics.Definitions
-import Utilities.Foundations.RankInvariance
-import Utilities.Foundations.RankChipStep
+module
+
+public import Bananas.Basics.Definitions
+public import Utilities.Foundations.RankInvariance
+public import Utilities.Foundations.RankChipStep
+
+@[expose] public section
 
 /-!
 # Basic periodicity lemmas for marked banana transmission

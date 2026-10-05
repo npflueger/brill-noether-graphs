@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.PrunedSource
+module
+
+public import DraismaVargas.LocalCases.PrunedSource
+
+@[expose] public section
 
 /-!
 # Dangling deletion preserves the first Betti number
@@ -123,7 +127,7 @@ private theorem two_le_num_edges_of_mem (G : CFGraph.{u}) (p : G.V × G.V)
       Multiset.card ((p ::ₘ t).filter fun e ↦ e = (p.1, p.2) ∨ e = (p.2, p.1))
         = Multiset.card (t.filter fun e ↦ e = (p.1, p.2) ∨ e = (p.2, p.1)) + 1 := by
     rw [Multiset.filter_cons,
-      if_pos (show p = (p.1, p.2) ∨ p = (p.2, p.1) from Or.inl rfl),
+      ite_eq_left (show p = (p.1, p.2) ∨ p = (p.2, p.1) from Or.inl rfl),
       Multiset.card_add, Multiset.card_singleton]
     omega
   have hMono :
@@ -153,11 +157,11 @@ theorem noCross_of_isCutOccurrence (G : CFGraph.{u}) (p : G.V × G.V)
     have hPos : 1 ≤ num_edges G q.1 q.2 := one_le_num_edges_of_mem G hqG
     by_cases hIf : q.1 = p.1 ∧ q.2 = p.2
     · have hqp : q = p := Prod.ext hIf.1 hIf.2
-      rw [if_pos hIf] at hOne
+      rw [ite_eq_left hIf] at hOne
       have hTwo := two_le_num_edges_of_mem G p t hLe hq (Or.inl hqp)
       rw [hqp] at hOne
       omega
-    · rw [if_neg hIf] at hOne
+    · rw [ite_eq_right hIf] at hOne
       omega
   · intro h2
     by_contra h1
@@ -168,11 +172,11 @@ theorem noCross_of_isCutOccurrence (G : CFGraph.{u}) (p : G.V × G.V)
       exact one_le_num_edges_of_mem G hqG
     by_cases hIf : q.2 = p.1 ∧ q.1 = p.2
     · have hqp : q = (p.2, p.1) := Prod.ext hIf.2 hIf.1
-      rw [if_pos hIf] at hOne
+      rw [ite_eq_left hIf] at hOne
       have hTwo := two_le_num_edges_of_mem G p t hLe hq (Or.inr hqp)
       rw [show p.1 = q.2 from hIf.1.symm, show p.2 = q.1 from hIf.2.symm] at hTwo
       omega
-    · rw [if_neg hIf] at hOne
+    · rw [ite_eq_right hIf] at hOne
       omega
 
 end Cut
@@ -419,8 +423,8 @@ theorem isCutOccurrence_of_isDangling (data : GluingDatum target degree)
         exact hb (Finset.mem_sdiff.2 ⟨Finset.mem_univ _, hbb⟩)
       rw [num_edges_symmetric, cut.cross_num_edges b a hb' ha']
       by_cases hCase : a = (data.sourceEnds edge).1 ∧ b = (data.sourceEnds edge).2
-      · rw [if_pos hCase, if_pos ⟨hCase.2, hCase.1⟩]
-      · rw [if_neg hCase, if_neg fun h ↦ hCase ⟨h.2, h.1⟩]
+      · rw [ite_eq_left hCase, ite_eq_left ⟨hCase.2, hCase.1⟩]
+      · rw [ite_eq_right hCase, ite_eq_right fun h ↦ hCase ⟨h.2, h.1⟩]
 
 end Dangling
 

@@ -1,5 +1,9 @@
-import DraismaVargasCount.M11StarCensusProof
-import DraismaVargasCount.W4StarParity
+module
+
+public import DraismaVargasCount.M11StarCensusProof
+public import DraismaVargasCount.W4StarParity
+
+@[expose] public section
 
 /-!
 # The W4 star census at every four-valent wall: Stages 1 and 3, and Stage 2 reduced to transports
@@ -169,7 +173,7 @@ theorem branchSquare (q : Fin 3) (v : BranchVertex w.limit) :
           (W4OutgoingSurvival.sideVertex (w.frame.limitTarget w.column) (mergeVertex w)
             (W4OutgoingStableRows.branchSide (W4StarParity.input w hy star) q
               (W4Assembly.WallBlock.ofSheet w.limit (mergeVertex w) v.1.1.2))) v.1.1.2 := by
-      rw [hImage, W4OutgoingStableRows.branchImage, if_pos hAt]
+      rw [hImage, W4OutgoingStableRows.branchImage, ite_eq_left hAt]
       rfl
     rw [hE, StarCensusEngine.sourceEndpoint_contract _ w.limit _ _
       (M11StarCensusProof.candidate_refines (member w hy star q) _),
@@ -178,7 +182,7 @@ theorem branchSquare (q : Fin 3) (v : BranchVertex w.limit) :
   · have hE : ((equiv w hy star q).vertex v).1 =
         (W4StarParity.datum w hy star q).sourceEndpoint
           (oldVertex (w.frame.limitTarget w.column) v.1.1.1) v.1.1.2 := by
-      rw [hImage, W4OutgoingStableRows.branchImage, if_neg hAt]
+      rw [hImage, W4OutgoingStableRows.branchImage, ite_eq_right hAt]
       rfl
     rw [hE, StarCensusEngine.sourceEndpoint_contract _ w.limit _ _
       (M11StarCensusProof.candidate_refines (member w hy star q) _)]

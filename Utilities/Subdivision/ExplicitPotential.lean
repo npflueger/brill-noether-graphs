@@ -1,5 +1,9 @@
-import Utilities.Subdivision.AffineCover
-import Utilities.Subdivision.SubdivisionArithmetic
+module
+
+public import Utilities.Subdivision.AffineCover
+public import Utilities.Subdivision.SubdivisionArithmetic
+
+@[expose] public section
 
 /-!
 # Explicit-potential local subdivision certificates

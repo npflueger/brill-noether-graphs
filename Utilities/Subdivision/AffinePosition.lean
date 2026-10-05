@@ -1,5 +1,9 @@
-import Utilities.Subdivision.ExplicitPotentialRankOne
-import Utilities.Subdivision.MovingPosition
+module
+
+public import Utilities.Subdivision.ExplicitPotentialRankOne
+public import Utilities.Subdivision.MovingPosition
+
+@[expose] public section
 
 /-!
 # Affine-described positions on a subdivided slot

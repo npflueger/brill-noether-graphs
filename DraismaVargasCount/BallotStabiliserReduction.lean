@@ -1,6 +1,10 @@
-import DraismaVargasCount.BallotOrbitStability
-import DraismaVargasCount.BallotEndSwapSheetIso
-import DraismaVargasCount.DiagonalClassificationGenusSix
+module
+
+public import DraismaVargasCount.BallotOrbitStability
+public import DraismaVargasCount.BallotEndSwapSheetIso
+public import DraismaVargasCount.DiagonalClassificationGenusSix
+
+@[expose] public section
 
 /-!
 # What the orbit dichotomy really pins: the `hStab` stabiliser, reduced
@@ -289,7 +293,7 @@ theorem stem_head_val (m j : ℕ) (e : Fin (6 * m + 3)) (hj : e.val = 3 * j + 2)
   have hleaf : ¬ IsLeafEdge m e := by unfold IsLeafEdge; omega
   rw [catCore_head_val]
   unfold catHeadVal
-  rw [if_neg hleaf]
+  rw [ite_eq_right hleaf]
   unfold branchIdx
   omega
 
@@ -329,7 +333,7 @@ theorem slot_one_ends (m : ℕ) (e : Fin (6 * m + 3)) (h : e.val = 1) :
   have hleaf : ¬ IsLeafEdge m e := by unfold IsLeafEdge; omega
   refine ⟨?_, ?_⟩
   · rw [catCore_tail_val]; unfold catTailVal branchIdx parentIndex; split_ifs <;> omega
-  · rw [catCore_head_val]; unfold catHeadVal; rw [if_neg hleaf]; unfold branchIdx; omega
+  · rw [catCore_head_val]; unfold catHeadVal; rw [ite_eq_right hleaf]; unfold branchIdx; omega
 
 /-- The far spine slot `6m+1` runs from the far spine vertex `4m-1` to the last
 loop vertex `4m+1`. -/
@@ -339,7 +343,7 @@ theorem last_spine_ends (m : ℕ) (hm : 1 ≤ m) (e : Fin (6 * m + 3)) (h : e.va
   have hleaf : ¬ IsLeafEdge m e := by unfold IsLeafEdge; omega
   refine ⟨?_, ?_⟩
   · rw [catCore_tail_val]; unfold catTailVal branchIdx parentIndex; split_ifs <;> omega
-  · rw [catCore_head_val]; unfold catHeadVal; rw [if_neg hleaf]; unfold branchIdx; omega
+  · rw [catCore_head_val]; unfold catHeadVal; rw [ite_eq_right hleaf]; unfold branchIdx; omega
 
 /-- The exceptional leaf slot `6m+2` is the loop at the last vertex `4m+1`. -/
 theorem last_leaf_tail_val (m : ℕ) (e : Fin (6 * m + 3)) (h : e.val = 6 * m + 2) :

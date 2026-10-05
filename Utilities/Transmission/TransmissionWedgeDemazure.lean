@@ -1,6 +1,10 @@
-import Utilities.Transmission.TransmissionExistence
-import Utilities.Transmission.TransmissionWedge
-import Demazure.Submodular
+module
+
+public import Utilities.Transmission.TransmissionExistence
+public import Utilities.Transmission.TransmissionWedge
+public import Demazure.Submodular
+
+@[expose] public section
 
 /-!
 # Demazure composition across a vertex wedge

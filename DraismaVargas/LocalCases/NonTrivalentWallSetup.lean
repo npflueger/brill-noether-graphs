@@ -1,7 +1,11 @@
-import DraismaVargas.LocalCases.FacetGenericity
-import DraismaVargas.LocalCases.MonovalentWall
-import DraismaVargas.LocalCases.ZeroForestBridge
-import DraismaVargas.LocalCases.WallDegeneration
+module
+
+public import DraismaVargas.LocalCases.FacetGenericity
+public import DraismaVargas.LocalCases.MonovalentWall
+public import DraismaVargas.LocalCases.ZeroForestBridge
+public import DraismaVargas.LocalCases.WallDegeneration
+
+@[expose] public section
 
 /-!
 # The setup shared by every non-trivalent wall

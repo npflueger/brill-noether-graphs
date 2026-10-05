@@ -1,7 +1,11 @@
-import LowGenus.GenusFiveConfigurations
-import LowGenus.GenusFiveCoreAtlas
-import Utilities.Subdivision.CoreSymmetry
-import Utilities.Subdivision.DegenerateSubdivisionIso
+module
+
+public import LowGenus.GenusFiveConfigurations
+public import LowGenus.GenusFiveCoreAtlas
+public import Utilities.Subdivision.CoreSymmetry
+public import Utilities.Subdivision.DegenerateSubdivisionIso
+
+@[expose] public section
 
 /-!
 # Core automorphisms on the closed genus-five orthant
@@ -293,7 +297,7 @@ noncomputable def relabeling (core_nonempty : 0 < n)
     length_eq := fun e => symmetry.reindexLength_compat length e
     tail_eq := fun e => by
       by_cases hr : symmetry.reversed e
-      · simp only [if_pos hr]
+      · simp only [ite_eq_left hr]
         rw [hclass]
         apply Subtype.ext
         have ht := symmetry.tail_eq e
@@ -302,7 +306,7 @@ noncomputable def relabeling (core_nonempty : 0 < n)
           target.rep (core.tail (symmetry.slotPerm e))
         rw [ht]
       · have hr' : symmetry.reversed e = false := Bool.eq_false_of_not_eq_true hr
-        simp only [if_neg hr]
+        simp only [ite_eq_right hr]
         rw [hclass]
         apply Subtype.ext
         have ht := symmetry.tail_eq e
@@ -312,7 +316,7 @@ noncomputable def relabeling (core_nonempty : 0 < n)
         rw [ht]
     head_eq := fun e => by
       by_cases hr : symmetry.reversed e
-      · simp only [if_pos hr]
+      · simp only [ite_eq_left hr]
         rw [hclass]
         apply Subtype.ext
         have hh := symmetry.head_eq e
@@ -321,7 +325,7 @@ noncomputable def relabeling (core_nonempty : 0 < n)
           target.rep (core.head (symmetry.slotPerm e))
         rw [hh]
       · have hr' : symmetry.reversed e = false := Bool.eq_false_of_not_eq_true hr
-        simp only [if_neg hr]
+        simp only [ite_eq_right hr]
         rw [hclass]
         apply Subtype.ext
         have hh := symmetry.head_eq e

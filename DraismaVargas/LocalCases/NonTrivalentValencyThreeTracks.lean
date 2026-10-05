@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyThreePathEnds
-import DraismaVargas.LocalCases.MovedIncidenceIso
-import DraismaVargas.LocalCases.WallSplitIncidence
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyThreePathEnds
+public import DraismaVargas.LocalCases.MovedIncidenceIso
+public import DraismaVargas.LocalCases.WallSplitIncidence
+
+@[expose] public section
 
 /-!
 # The vertex dictionary of the valency-three Type III type change, and (H-III)
@@ -792,14 +796,14 @@ theorem candVertex_wall (w : (contractDatum wd.cover wd.hc wd.hab wd.hOne).Sourc
     candVertex m wd src hNoGlue hValid w =
       NonTrivalentValencyThreeRows.endpointVertex src hNoGlue hValid true w.1.2 := by
   unfold candVertex
-  rw [if_pos hw]
+  rw [ite_eq_left hw]
 
 theorem candVertex_away (w : (contractDatum wd.cover wd.hc wd.hab wd.hOne).SourceVertex)
     (hw : w.1.1 ≠ (⟨wd.a, wd.hab⟩ : GraphContraction.Vertex wd.coverTarget wd.b)) :
     candVertex m wd src hNoGlue hValid w =
       ResolutionAwayFromWall.retainedVertex (Prescribed.validCandidate src hNoGlue hValid) w := by
   unfold candVertex
-  rw [if_neg hw]
+  rw [ite_eq_right hw]
 
 /-- **The surviving valency is unchanged.** -/
 theorem nonDanglingValency_candVertex

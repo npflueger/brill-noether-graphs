@@ -1,5 +1,9 @@
-import Bananas.CrossOneOff.CrossOneOffFiniteRows
-import Bananas.SameStrand.EndpointCardinality
+module
+
+public import Bananas.CrossOneOff.CrossOneOffFiniteRows
+public import Bananas.SameStrand.EndpointCardinality
+
+@[expose] public section
 
 /-!
 # Arithmetic count for the corrected cross-one-off block

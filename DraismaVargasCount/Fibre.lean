@@ -1,7 +1,11 @@
-import DraismaVargasCount.Multiplicity
-import DraismaVargasCount.Transport
-import DraismaVargas.LocalCases.StableGraphIncidence
-import Utilities.Subdivision.SubdivisionGraph
+module
+
+public import DraismaVargasCount.Multiplicity
+public import DraismaVargasCount.Transport
+public import DraismaVargas.LocalCases.StableGraphIncidence
+public import Utilities.Subdivision.SubdivisionGraph
+
+@[expose] public section
 
 /-!
 # The labelled fibre over a metric graph, its quotient, and the odd count

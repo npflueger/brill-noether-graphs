@@ -1,5 +1,9 @@
-import Utilities.Subdivision.AffinePosition
-import Utilities.Subdivision.DegenerateRankOne
+module
+
+public import Utilities.Subdivision.AffinePosition
+public import Utilities.Subdivision.DegenerateRankOne
+
+@[expose] public section
 
 /-!
 # Affine-described positions on the CLOSED length orthant

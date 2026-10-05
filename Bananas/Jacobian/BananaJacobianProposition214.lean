@@ -1,6 +1,10 @@
-import Bananas.Jacobian.BananaJacobianLeftJustification
-import Bananas.Jacobian.BananaJacobianReducedBridge
-import Bananas.Jacobian.BananaJacobianSurjectivity
+module
+
+public import Bananas.Jacobian.BananaJacobianLeftJustification
+public import Bananas.Jacobian.BananaJacobianReducedBridge
+public import Bananas.Jacobian.BananaJacobianSurjectivity
+
+@[expose] public section
 
 /-!
 # The banana Jacobian presentation

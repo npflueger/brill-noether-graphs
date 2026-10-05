@@ -1,6 +1,10 @@
-import DraismaVargas.Infrastructure.TargetTreePotential
-import DraismaVargas.Infrastructure.TargetBranchRegion
-import DraismaVargas.LocalCases.BalancingValencyTwo
+module
+
+public import DraismaVargas.Infrastructure.TargetTreePotential
+public import DraismaVargas.Infrastructure.TargetBranchRegion
+public import DraismaVargas.LocalCases.BalancingValencyTwo
+
+@[expose] public section
 
 /-!
 # The local sheet partitions in case `w2-r2-nd3-M-11`
@@ -118,14 +122,14 @@ def onBlock (wall : SheetPartition d) (distinguished : Fin d)
     (background : Fin d → LocalResolution d) (anchor : Fin d)
     (hRel : wall.Rel distinguished anchor) :
     onBlock wall distinguished selected background anchor = selected := by
-  rw [onBlock, if_pos hRel]
+  rw [onBlock, ite_eq_left hRel]
 
 theorem onBlock_of_not_rel (wall : SheetPartition d)
     (distinguished : Fin d) (selected : LocalResolution d)
     (background : Fin d → LocalResolution d) (anchor : Fin d)
     (hRel : ¬wall.Rel distinguished anchor) :
     onBlock wall distinguished selected background anchor = background anchor := by
-  rw [onBlock, if_neg hRel]
+  rw [onBlock, ite_eq_right hRel]
 
 /-- Common contraction is preserved when one wall block replaces the
 background resolution. -/
@@ -138,9 +142,9 @@ theorem onBlock_contracts (wall : SheetPartition d)
       (onBlock wall distinguished selected background anchor).ContractsTo wall := by
   intro anchor
   by_cases hRel : wall.Rel distinguished anchor
-  · rw [onBlock, if_pos hRel]
+  · rw [onBlock, ite_eq_left hRel]
     exact hSelected
-  · rw [onBlock, if_neg hRel]
+  · rw [onBlock, ite_eq_right hRel]
     exact hBackground anchor
 
 end LocalResolution
@@ -392,7 +396,7 @@ theorem wallRegionSwap_preserves_valid
       edgeMoved edge ≠ vertexMoved (edge : target.V × target.V).2 →
         data.vertexPartition (edge : target.V × target.V).2 =
           SheetPartition.indiscrete 2) :
-    (GluingDatum.SheetRelabeling.ofRegion vertexMoved edgeMoved
+    (GluingDatum.SheetRelabeling.ofRegion (data := data) vertexMoved edgeMoved
       (Equiv.swap (0 : Fin 2) 1)
       (fun edge hDifferent sheet ↦ by
         rw [hBoundaryLeft edge hDifferent]

@@ -1,5 +1,9 @@
-import Utilities.Subdivision.ClosedContraction
-import Utilities.Subdivision.ReorientContraction
+module
+
+public import Utilities.Subdivision.ClosedContraction
+public import Utilities.Subdivision.ReorientContraction
+
+@[expose] public section
 
 /-!
 # Dispatching one exact closed face to its contracted core

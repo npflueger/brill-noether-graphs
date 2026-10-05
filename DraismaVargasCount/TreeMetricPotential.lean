@@ -1,6 +1,10 @@
-import DraismaVargas.Infrastructure.TargetSeparation
-import DraismaVargas.Infrastructure.RationalRealization
-import DraismaVargas.Infrastructure.TargetTreePotential
+module
+
+public import DraismaVargas.Infrastructure.TargetSeparation
+public import DraismaVargas.Infrastructure.RationalRealization
+public import DraismaVargas.Infrastructure.TargetTreePotential
+
+@[expose] public section
 
 /-! Integrating arbitrary integral edge rises on a tree, including zero lengths. -/
 namespace DraismaVargas.Count.TreeMetricPotential
@@ -18,12 +22,12 @@ noncomputable def cutValue (edge : target.edges) (v : target.V) : ℤ := by
 theorem cutValue_tail (edge : target.edges) :
     cutValue edge (edge : target.V × target.V).1 = 0 := by
   classical
-  exact if_pos (SimpleGraph.Reachable.refl _)
+  exact ite_eq_left (SimpleGraph.Reachable.refl _)
 
 theorem cutValue_head (hConnected : graph_connected target) (hGenus : genus target = 0)
     (edge : target.edges) : cutValue edge (edge : target.V × target.V).2 = 1 := by
   classical
-  exact if_neg (not_reachable_eraseOccurrence hConnected hGenus Multiset.coe_mem)
+  exact ite_eq_right (not_reachable_eraseOccurrence hConnected hGenus Multiset.coe_mem)
 
 theorem cutValue_other (hConnected : graph_connected target) (hGenus : genus target = 0)
     (edge other : target.edges) (hNe : edge ≠ other) :

@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.StablePathFacetContraction
+module
+
+public import DraismaVargas.LocalCases.StablePathFacetContraction
+
+@[expose] public section
 
 /-!
 # No contracted return off the facet row, at a leaf endpoint
@@ -465,14 +469,14 @@ include hNoReturn hRows hZeroCoord hPosCoord hFacetZero in
 @[simp] theorem wallRow'_facet :
     wallRow' data fd hc hab hOne hCompat hForest coordinates facet hNoReturn hRows
       hZeroCoord hPosCoord hFacetZero (fd.labelling.row.symm facet) = none :=
-  dif_pos rfl
+  dite_eq_left rfl
 
 include hNoReturn hRows hZeroCoord hPosCoord hFacetZero in
 @[simp] theorem wallRow'_incomingRow (row : StablePath (contractDatum data hc hab hOne)) :
     wallRow' data fd hc hab hOne hCompat hForest coordinates facet hNoReturn hRows
         hZeroCoord hPosCoord hFacetZero
         (incomingRow data fd hc hab hOne hCompat hForest row) = some row := by
-  rw [wallRow', dif_neg (incomingRow_ne_facet data fd hc hab hOne hCompat hForest
+  rw [wallRow', dite_eq_right (incomingRow_ne_facet data fd hc hab hOne hCompat hForest
     coordinates facet hZeroCoord hPosCoord hFacetZero row)]
   exact congrArg some (((rowEquiv' data fd hc hab hOne hCompat hForest coordinates
     facet hNoReturn hRows hZeroCoord hPosCoord hFacetZero).symm_apply_eq).mpr

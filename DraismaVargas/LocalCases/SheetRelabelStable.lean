@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.SheetRelabelPruning
-import DraismaVargas.LocalCases.StableSourceMatrix
+module
+
+public import DraismaVargas.LocalCases.SheetRelabelPruning
+public import DraismaVargas.LocalCases.StableSourceMatrix
+
+@[expose] public section
 
 /-!
 # Actual stable-row and matrix transport under sheet relabelling

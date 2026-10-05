@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoSplitGauge
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoRows
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoBaseOneRows
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoSplitGauge
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoRows
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoBaseOneRows
+
+@[expose] public section
 
 /-!
 # Stable rows of the Base II **split** candidate above a two-valent wall

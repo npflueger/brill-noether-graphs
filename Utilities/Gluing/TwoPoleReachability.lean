@@ -1,5 +1,9 @@
-import Utilities.Gluing.TwoPole
-import Utilities.Foundations.ScriptClamping
+module
+
+public import Utilities.Gluing.TwoPole
+public import Utilities.Foundations.ScriptClamping
+
+@[expose] public section
 
 /-!
 # Reaching an attachment vertex through two connector paths
@@ -108,12 +112,12 @@ theorem winnable_sub_left_first_of_scripts
       by_cases hzB : ∃ b, z = J.right b
       · obtain ⟨b, rfl⟩ := hzB
         have hChip : one_chip (J.left p.first) (J.right b) = 0 := by
-          simp only [one_chip, if_neg (J.disjoint p.first b).symm]
+          simp only [one_chip, ite_eq_right (J.disjoint p.first b).symm]
         simpa only [Pi.add_apply, Pi.sub_apply, hDB, hChip, sub_zero, hσB, add_assoc]
           using hRight b
       · have hnB : ∀ b, z ≠ J.right b := by simpa only [not_exists] using hzB
         have hChip : one_chip (J.left p.first) z = 0 := by
-          simp only [one_chip, if_neg (hnA p.first)]
+          simp only [one_chip, ite_eq_right (hnA p.first)]
         simp only [Pi.add_apply, Pi.sub_apply, hChip, sub_zero]
         exact add_nonneg (hOutside z hnA hnB) (hσOutside z hnA hnB)
   refine ⟨D - one_chip (J.left p.first) + prin G σ, hEff, ?_⟩

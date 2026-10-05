@@ -1,5 +1,9 @@
-import Bananas.Wedge.SameFactorWedgeSubmodularity
-import Bananas.Classification.BridgelessGenusOneTopology
+module
+
+public import Bananas.Wedge.SameFactorWedgeSubmodularity
+public import Bananas.Classification.BridgelessGenusOneTopology
+
+@[expose] public section
 
 /-!
 # The exact order of a two-vertex bridgeless genus-one factor

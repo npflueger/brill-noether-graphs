@@ -1,6 +1,10 @@
-import Utilities.Foundations.PendantDeletion
-import DraismaVargas.LocalCases.TerminalContraction
-import DraismaVargas.LocalCases.NonDanglingValency
+module
+
+public import Utilities.Foundations.PendantDeletion
+public import DraismaVargas.LocalCases.TerminalContraction
+public import DraismaVargas.LocalCases.NonDanglingValency
+
+@[expose] public section
 
 /-!
 # The pruned contracted spec of a nonnegative integral realization

@@ -1,5 +1,9 @@
-import Utilities.Subdivision.ZeroBudgetRounding
-import Utilities.Gonality.SubdivisionPencil
+module
+
+public import Utilities.Subdivision.ZeroBudgetRounding
+public import Utilities.Gonality.SubdivisionPencil
+
+@[expose] public section
 
 /-!
 # A subdivision pencil with divisible slot moments descends to the odd part of its scale

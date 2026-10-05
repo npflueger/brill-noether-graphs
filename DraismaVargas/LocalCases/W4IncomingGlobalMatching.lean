@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.W4IncomingBlockPictures
-import DraismaVargas.LocalCases.W4RetainedBlockRelations
-import DraismaVargas.LocalCases.W4StableGraph
+module
+
+public import DraismaVargas.LocalCases.W4IncomingBlockPictures
+public import DraismaVargas.LocalCases.W4RetainedBlockRelations
+public import DraismaVargas.LocalCases.W4StableGraph
+
+@[expose] public section
 
 /-!
 # Complete incoming W4 partition identification
@@ -106,29 +110,29 @@ theorem canonical_ordering (block : Nd3Block)
   rcases block.singletonLabel_isSingleton_actual star pairing with
     ⟨hLabel, hNe, hSame⟩ | ⟨hLabel, hNe, hSame⟩ | ⟨hLabel, hNe, hSame⟩
   · have hFirst : pairFirst block pairing = block.second := by
-      simp only [pairFirst, if_pos hLabel]
+      simp only [pairFirst, ite_eq_left hLabel]
     have hSecond : pairSecond block pairing = block.third := by
-      refine if_neg ?_
+      refine ite_eq_right ?_
       rw [hLabel]
       exact block.first_ne_third
     rw [hFirst, hSecond, hLabel]
     exact ⟨by simp, by simp, block.second_ne_third, hNe, hSame⟩
   · have hFirst : pairFirst block pairing = block.first := by
-      refine if_neg ?_
+      refine ite_eq_right ?_
       rw [hLabel]
       exact fun h ↦ block.first_ne_second h.symm
     have hSecond : pairSecond block pairing = block.third := by
-      refine if_neg ?_
+      refine ite_eq_right ?_
       rw [hLabel]
       exact block.second_ne_third
     rw [hFirst, hSecond, hLabel]
     exact ⟨by simp, by simp, block.first_ne_third, hNe, hSame⟩
   · have hFirst : pairFirst block pairing = block.first := by
-      refine if_neg ?_
+      refine ite_eq_right ?_
       rw [hLabel]
       exact fun h ↦ block.first_ne_third h.symm
     have hSecond : pairSecond block pairing = block.second := by
-      simp only [pairSecond, if_pos hLabel]
+      simp only [pairSecond, ite_eq_left hLabel]
     rw [hFirst, hSecond, hLabel]
     exact ⟨by simp, by simp, block.first_ne_second, hNe, hSame⟩
 
@@ -186,7 +190,7 @@ theorem block_eq_ite_of_restricted_rel (P : SheetPartition degree)
     P.block sheet = if sheet ∈ S then S else {sheet} := by
   classical
   by_cases hMem : sheet ∈ S
-  · rw [if_pos hMem]
+  · rw [ite_eq_left hMem]
     ext other
     rw [SheetPartition.mem_block_iff, hRel sheet other hSheet]
     constructor
@@ -195,7 +199,7 @@ theorem block_eq_ite_of_restricted_rel (P : SheetPartition degree)
       · exact hOther
     · intro hOther
       exact Or.inr ⟨hMem, hOther⟩
-  · rw [if_neg hMem]
+  · rw [ite_eq_right hMem]
     ext other
     rw [SheetPartition.mem_block_iff, hRel sheet other hSheet, Finset.mem_singleton]
     constructor
@@ -645,8 +649,8 @@ theorem endpoint_fst_eq_pairingSide (edge : (M₀).SourceEdge)
   unfold pairingSide
   by_cases hSupport : ∀ e ∈ GluingDatum.incidentEdges (target := contract target hab hOne) ⟨a, hab⟩,
       IncomingTargetExpansion.right hc hab hOne e = star.right q e
-  · rw [if_pos hSupport, hSupport _ hAt]
-  · rw [if_neg hSupport,
+  · rw [ite_eq_left hSupport, hSupport _ hAt]
+  · rw [ite_eq_right hSupport,
       (W4IncomingTargetNormalization.pairing_placement data fd hc hab hOne star).resolve_left
         hSupport _ hAt]
     cases star.right q edge.1.1 <;> simp
@@ -710,7 +714,7 @@ theorem nd2_local_match {model : Nd2Block}
     cases hBit : star.right q (star.edge model.first) with
     | false =>
         rw [hBit] at hFlagAt hActiveEnd hOtherEnd hNew
-        simp only [Bool.false_eq_true, if_false] at hActiveEnd hOtherEnd
+        simp only [Bool.false_eq_true, ite_false] at hActiveEnd hOtherEnd
         refine ⟨?_, ?_, ?_⟩
         · rw [hActiveEnd, hWallSheet]
           exact hFlagAt
@@ -722,7 +726,7 @@ theorem nd2_local_match {model : Nd2Block}
           exact hEdgeAt
     | true =>
         rw [hBit] at hFlagAt hActiveEnd hOtherEnd hNew
-        simp only [if_true] at hActiveEnd hOtherEnd
+        simp only [ite_true] at hActiveEnd hOtherEnd
         refine ⟨?_, ?_, ?_⟩
         · rw [hOtherEnd, hSplitSheet]
           refine hOther _ (pairingSide_cases data fd hc hab hOne star false) ?_ sheet hSheet
@@ -786,7 +790,7 @@ theorem nd3_local_match {model : Nd3Block}
   cases hBit : star.right q (star.edge (model.singletonLabel q)) with
   | false =>
       rw [hBit] at hSmallAt hEndpoints hNew
-      simp only [Bool.false_eq_true, if_false] at hEndpoints
+      simp only [Bool.false_eq_true, ite_false] at hEndpoints
       obtain ⟨hFine, hWall⟩ := hEndpoints
       refine ⟨?_, ?_, ?_⟩
       · rw [hFine]
@@ -799,7 +803,7 @@ theorem nd3_local_match {model : Nd3Block}
         exact hEdgeAt
   | true =>
       rw [hBit] at hSmallAt hEndpoints hNew
-      simp only [if_true] at hEndpoints
+      simp only [ite_true] at hEndpoints
       obtain ⟨hFine, hWall⟩ := hEndpoints
       refine ⟨?_, ?_, ?_⟩
       · rw [hWall, hWallSheet]

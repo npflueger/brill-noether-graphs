@@ -1,5 +1,9 @@
-import Utilities.Gluing.HandleGraph
-import Utilities.Foundations.RankOne
+module
+
+public import Utilities.Gluing.HandleGraph
+public import Utilities.Foundations.RankOne
+
+@[expose] public section
 
 /-!
 # Restricting a pencil from a long handle
@@ -55,13 +59,13 @@ theorem handleSlope_lower (t : ℕ → ℤ) (n b : ℕ)
     constructor
     · intro hib
       have h1 := ih1 (by omega)
-      rw [if_neg (by omega)] at h
+      rw [ite_eq_right (by omega)] at h
       omega
     · by_cases hb : i + 1 = b
-      · rw [if_pos hb] at h
+      · rw [ite_eq_left hb] at h
         have h1 := ih1 (by omega)
         omega
-      · rw [if_neg hb] at h
+      · rw [ite_eq_right hb] at h
         omega
 
 /-- **The first slope.** If `n + 1` slopes that drop by at most one, after index `b`, have sum at
@@ -145,11 +149,11 @@ theorem handleSlope_tail_ge (t : ℕ → ℤ) (n b : ℕ) (B : ℤ) (hB : 2 * B 
     have he2 : n - (j + 1) = n - j - 1 := by omega
     simp only [ht', he2]
     by_cases hc : n - j = b
-    · rw [if_pos hc] at h
-      rw [if_pos (by omega)]
+    · rw [ite_eq_left hc] at h
+      rw [ite_eq_left (by omega)]
       omega
-    · rw [if_neg hc] at h
-      rw [if_neg (by omega)]
+    · rw [ite_eq_right hc] at h
+      rw [ite_eq_right (by omega)]
       omega
   obtain ⟨h1, h2⟩ := handleSlope_head_le t' n (n + 1 - b) B hB hsum' hstep'
   simp only [ht', Nat.sub_zero] at h1 h2
@@ -376,8 +380,8 @@ theorem rank_handleRestrict_ge_one_of_single_chip (hG : graph_connected G)
     intro i
     by_cases hi : i = i₀
     · subst hi
-      rw [hOne, if_pos rfl]
-    · rw [hOther i hi, if_neg (fun h => hi (Fin.ext (by omega)))]
+      rw [hOne, ite_eq_left rfl]
+    · rw [hOther i hi, ite_eq_right (fun h => hi (Fin.ext (by omega)))]
   refine ⟨fun hb => ?_, fun hb => ?_, fun hb => ?_⟩
   · -- The chip is in the first half: add a chip at `x`.
     rw [rank_ge_one_iff_winnable_sub_one_chip]

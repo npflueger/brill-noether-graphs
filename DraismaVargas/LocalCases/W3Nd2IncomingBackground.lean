@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.W3Nd2IncomingSheetClasses
-import DraismaVargas.LocalCases.StablePathContraction
-import DraismaVargas.LocalCases.W4IncomingCensus
+module
+
+public import DraismaVargas.LocalCases.W3Nd2IncomingSheetClasses
+public import DraismaVargas.LocalCases.StablePathContraction
+public import DraismaVargas.LocalCases.W4IncomingCensus
+
+@[expose] public section
 
 /-!
 # Every r0 background block at the selected incoming nd2 wall of Case {w3}

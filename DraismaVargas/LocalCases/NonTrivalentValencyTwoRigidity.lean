@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.NonTrivalentWallSetup
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoAnchor
-import DraismaVargas.LocalCases.W4IncomingPrunedFibre
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentWallSetup
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoAnchor
+public import DraismaVargas.LocalCases.W4IncomingPrunedFibre
+
+@[expose] public section
 
 /-!
 # Ramification of the actual four-valent anchor at a valency-two wall

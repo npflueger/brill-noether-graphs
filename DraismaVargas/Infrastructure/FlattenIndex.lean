@@ -1,4 +1,8 @@
-import DraismaVargas.Infrastructure.OccurrenceCut
+module
+
+public import DraismaVargas.Infrastructure.OccurrenceCut
+
+@[expose] public section
 
 /-!
 # Indexing a flattened list of blocks

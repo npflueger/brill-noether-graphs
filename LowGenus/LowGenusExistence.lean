@@ -1,5 +1,9 @@
-import Utilities.Foundations.ElementaryExistence
-import ChipFiringWithLean.RiemannRoch
+module
+
+public import Utilities.Foundations.ElementaryExistence
+public import ChipFiringWithLean.RiemannRoch
+
+@[expose] public section
 
 /-!
 # Brill--Noether existence through genus five from the two critical pencils

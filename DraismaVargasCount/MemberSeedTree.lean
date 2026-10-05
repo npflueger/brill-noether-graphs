@@ -1,6 +1,10 @@
-import DraismaVargasCount.MemberCertifiedPencil
-import DraismaVargas.Infrastructure.IteratedContraction
-import DraismaVargas.LocalCases.ZeroForestBridge
+module
+
+public import DraismaVargasCount.MemberCertifiedPencil
+public import DraismaVargas.Infrastructure.IteratedContraction
+public import DraismaVargas.LocalCases.ZeroForestBridge
+
+@[expose] public section
 
 /-!
 # Reducing the member-seed receipt to its one real clause

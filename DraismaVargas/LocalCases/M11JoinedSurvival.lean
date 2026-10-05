@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.M11JoinedGeometry
+module
+
+public import DraismaVargas.LocalCases.M11JoinedGeometry
+
+@[expose] public section
 
 /-!
 # The joined M11 edge survives on the retained single-direction row

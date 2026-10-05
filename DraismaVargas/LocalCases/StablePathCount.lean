@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.Trivalence
+module
+
+public import DraismaVargas.LocalCases.Trivalence
+
+@[expose] public section
 
 /-!
 # The stable-path count
@@ -186,7 +190,7 @@ theorem sum_incidenceCount_path (data : GluingDatum target degree)
         = if edge.stablePath = path then 2 else 0 := by
     intro edge
     by_cases hPath : edge.stablePath = path
-    · simp only [hPath, and_true, if_true]
+    · simp only [hPath, and_true, ite_true]
       rw [← Finset.card_filter]
       exact card_filter_incident data edge.1
     · simp [hPath]
@@ -434,14 +438,14 @@ section JunctionGraph
 
 variable (data : GluingDatum target degree)
 
-private theorem nonDanglingIncident_nonempty {vertex : data.SourceVertex}
+theorem nonDanglingIncident_nonempty {vertex : data.SourceVertex}
     (hValency : nonDanglingValency data vertex = 2) :
     (nonDanglingIncident data vertex).Nonempty := by
   rw [← Finset.card_pos, card_nonDanglingIncident, hValency]
   norm_num
 
 /-- A chosen surviving occurrence at a valency-two vertex. -/
-private noncomputable def anchor {vertex : data.SourceVertex}
+noncomputable def anchor {vertex : data.SourceVertex}
     (hValency : nonDanglingValency data vertex = 2) : data.SourceEdge :=
   (nonDanglingIncident_nonempty data hValency).choose
 
@@ -450,7 +454,7 @@ private theorem anchor_mem {vertex : data.SourceVertex}
     anchor data hValency ∈ nonDanglingIncident data vertex :=
   (nonDanglingIncident_nonempty data hValency).choose_spec
 
-private theorem anchor_not_dangling {vertex : data.SourceVertex}
+theorem anchor_not_dangling {vertex : data.SourceVertex}
     (hValency : nonDanglingValency data vertex = 2) :
     ¬ IsDangling data (anchor data hValency) :=
   ((mem_nonDanglingIncident data vertex _).mp (anchor_mem data hValency)).1
@@ -461,14 +465,14 @@ private theorem anchor_incident {vertex : data.SourceVertex}
   ((mem_nonDanglingIncident data vertex _).mp (anchor_mem data hValency)).2
 
 /-- The two surviving occurrences that meet at a valency-two vertex. -/
-private noncomputable def junctionPair {vertex : data.SourceVertex}
+noncomputable def junctionPair {vertex : data.SourceVertex}
     (hValency : nonDanglingValency data vertex = 2) :
     NonDanglingEdge data × NonDanglingEdge data :=
   (⟨anchor data hValency, anchor_not_dangling data hValency⟩,
     ⟨stepEdge data hValency (anchor data hValency),
       stepEdge_not_dangling data hValency (anchor data hValency)⟩)
 
-private theorem junctionPair_ne {vertex : data.SourceVertex}
+theorem junctionPair_ne {vertex : data.SourceVertex}
     (hValency : nonDanglingValency data vertex = 2) :
     (junctionPair data hValency).1 ≠ (junctionPair data hValency).2 := by
   intro hEq

@@ -1,7 +1,11 @@
-import DraismaVargas.OddGenusRetraction
-import Utilities.Pseudocore.PseudocorePresentation
-import Utilities.Subdivision.CoreVertexCut
-import Utilities.Subdivision.SubdivisionConnectivity
+module
+
+public import DraismaVargas.OddGenusRetraction
+public import Utilities.Pseudocore.PseudocorePresentation
+public import Utilities.Subdivision.CoreVertexCut
+public import Utilities.Subdivision.SubdivisionConnectivity
+
+@[expose] public section
 
 /-!
 # A concrete genus-one pendant extension

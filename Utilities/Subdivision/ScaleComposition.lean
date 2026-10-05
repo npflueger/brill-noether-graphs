@@ -1,4 +1,8 @@
-import Utilities.Subdivision.SlotGrid
+module
+
+public import Utilities.Subdivision.SlotGrid
+
+@[expose] public section
 
 /-!
 # Composing two scalings of a subdivision specification
@@ -87,7 +91,7 @@ theorem scaleScale_interiorEquiv_val (spec : Spec n p) (u v : ℕ)
     (o : Fin (((spec.scale u hu).scale v hv).length e - 1)) :
     ((Spec.interiorEquiv _ _ (scaleScaleRelabeling spec u v hu hv) e) o).val = o.val := by
   unfold Spec.interiorEquiv
-  simp only [scaleScaleRelabeling, Bool.false_eq_true, if_false]
+  simp only [scaleScaleRelabeling, Bool.false_eq_true, ite_false]
   rfl
 
 /-- Its vertex equivalence is the relabelling's. -/

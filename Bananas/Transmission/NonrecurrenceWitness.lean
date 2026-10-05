@@ -1,4 +1,8 @@
-import Bananas.Theta.ThetaNonrecurrence
+module
+
+public import Bananas.Theta.ThetaNonrecurrence
+
+@[expose] public section
 
 /-!
 # Explicit witnesses of recurrence

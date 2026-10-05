@@ -1,5 +1,9 @@
-import Utilities.Subdivision.ContractionForestCensusGeneral
-import Utilities.Subdivision.DegenerateSeparator
+module
+
+public import Utilities.Subdivision.ContractionForestCensusGeneral
+public import Utilities.Subdivision.DegenerateSeparator
+
+@[expose] public section
 
 /-!
 # The `DegSpec` face datum, emitted by the contraction census

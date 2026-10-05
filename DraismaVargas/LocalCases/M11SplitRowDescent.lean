@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.M11SplitDescentGeometry
+module
+
+public import DraismaVargas.LocalCases.M11SplitDescentGeometry
+
+@[expose] public section
 
 /-!
 # The first M11 split's actual stable-row bijection
@@ -48,7 +52,7 @@ theorem rowOfEdge_retained (old : NonDanglingEdge data) :
   have hOld : ∃ other : NonDanglingEdge data,
       retainedEdge (firstSplitPattern input profile hCard).candidate input.valid.1 other =
         retainedEdge (firstSplitPattern input profile hCard).candidate input.valid.1 old := ⟨old, rfl⟩
-  rw [rowOfEdge, dif_pos hOld]
+  rw [rowOfEdge, dite_eq_left hOld]
   exact congrArg NonDanglingEdge.stablePath
     (retainedEdge_injective _ input.valid.1 (Classical.choose_spec hOld))
 
@@ -65,7 +69,7 @@ theorem rowOfEdge_new (sheet : Fin degree)
     have hLabels := (occurrenceEquiv target wall candidate.right).injective
       (congrArg (fun occurrence : NonDanglingEdge candidate.datum ↦ occurrence.1.1.1) hEqual)
     cases hLabels
-  exact dif_neg hNot
+  exact dite_eq_right hNot
 
 /-- Only new target occurrences meet the left leaf endpoint. -/
 theorem rowOfEdge_incident_left (sheet : Fin degree)

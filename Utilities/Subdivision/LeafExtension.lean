@@ -1,5 +1,9 @@
-import Utilities.Gonality.DivisorialGonality
-import Utilities.Subdivision.RankOne
+module
+
+public import Utilities.Gonality.DivisorialGonality
+public import Utilities.Subdivision.RankOne
+
+@[expose] public section
 
 /-!
 # Divisor rank under adjoining a leaf
@@ -25,7 +29,7 @@ namespace LeafExtension
 
 variable (H : CFGraph.{u}) (root : H.V)
 
-private def liftEdge (edge : H.V × H.V) : Option H.V × Option H.V :=
+def liftEdge (edge : H.V × H.V) : Option H.V × Option H.V :=
   (some edge.1, some edge.2)
 
 /-- Adjoin a new leaf `none` to the old vertex `some root`. -/
@@ -70,9 +74,9 @@ private theorem filter_map_liftEdge_some_some
       rw [Multiset.map_cons, Multiset.filter_cons,
         Multiset.filter_cons, Multiset.map_add, ih]
       by_cases h : (a, b) = (x, y) ∨ (a, b) = (y, x)
-      · rw [if_pos h, if_pos (hiff.mpr h)]
+      · rw [ite_eq_left h, ite_eq_left (hiff.mpr h)]
         simp
-      · rw [if_neg h, if_neg (mt hiff.mp h)]
+      · rw [ite_eq_right h, ite_eq_right (mt hiff.mp h)]
         simp
 
 private theorem filter_map_liftEdge_none_some
@@ -99,7 +103,7 @@ private theorem filter_map_liftEdge_none_some
   have hnew :
       ¬((none, some root) = (some x, some y) ∨
         (none, some root) = (some y, some x)) := by simp
-  rw [if_neg hnew]
+  rw [ite_eq_right hnew]
   rw [filter_map_liftEdge_some_some]
   simp
 
@@ -237,7 +241,7 @@ set_option backward.isDefEq.respectTransparency false in
           exact fun h => hy (Option.some.inj h)
         change (if y = x then 1 else 0) =
           if (some y : Option H.V) = some x then 1 else 0
-        rw [if_neg hy, if_neg hSome]
+        rw [ite_eq_right hy, ite_eq_right hSome]
 
 /-- Extending by zero preserves effectivity. -/
 theorem effective_extendDiv {D : CFDiv H} (hD : effective D) :
@@ -350,7 +354,7 @@ theorem prin_leafMoveScript :
         change (if x = root then 1 else 0) =
           (if (some x : Option H.V) = some root then 1 else 0) -
             (if (some x : Option H.V) = none then 1 else 0)
-        rw [if_neg hx, if_neg hSome, if_neg (by simp)]
+        rw [ite_eq_right hx, ite_eq_right hSome, ite_eq_right (by simp)]
         norm_num
 
 /-- Removing a chip at the old root or at the new leaf gives linearly
@@ -440,7 +444,7 @@ theorem retractDiv_prin (script : firing_script (addLeaf H root)) :
   funext x
   by_cases hx : x = root
   · subst x
-    simp only [retractDiv_apply, if_pos]
+    simp only [retractDiv_apply, ite_eq_left]
     change
       (∑ neighbor : Option H.V,
         (script neighbor - script (some root)) *
@@ -454,7 +458,7 @@ theorem retractDiv_prin (script : firing_script (addLeaf H root)) :
     rw [Fintype.sum_option, Fintype.sum_option]
     simp
     ring
-  · simp only [retractDiv_apply, if_neg hx]
+  · simp only [retractDiv_apply, ite_eq_right hx]
     simp only [add_zero]
     change
       (∑ neighbor : Option H.V,
@@ -525,7 +529,7 @@ theorem linearEquiv_retractDiv_extendDiv (E : CFDiv (addLeaf H root)) :
         simp [extendDiv, retractDiv, one_chip]
       · simp only [Pi.sub_apply, Pi.smul_apply, smul_eq_mul,
           extendDiv_some, retractDiv_apply, one_chip]
-        simp only [if_neg hx]
+        simp only [ite_eq_right hx]
         have hSome : (some x : (addLeaf H root).V) ≠ some root := by
           intro h
           exact hx (Option.some.inj h)

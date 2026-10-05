@@ -1,4 +1,8 @@
-import Bananas
+module
+
+public import Bananas
+
+@[expose] public section
 
 /-!
 # Easy-access reference: *Twice-Marked Banana Graphs*
@@ -248,12 +252,12 @@ def vertexWedge (G : CFGraph.{u}) (H : CFGraph.{v})
         by_cases ha : a = y
         · by_cases hb : b = y
           · exact ha.trans hb.symm
-          · rw [dif_pos ha, dif_neg hb] at hmap
+          · rw [dite_eq_left ha, dite_eq_right hb] at hmap
             exact absurd hmap Sum.inl_ne_inr
         · by_cases hb : b = y
-          · rw [dif_neg ha, dif_pos hb] at hmap
+          · rw [dite_eq_right ha, dite_eq_left hb] at hmap
             exact absurd hmap Sum.inr_ne_inl
-          · rw [dif_neg ha, dif_neg hb] at hmap
+          · rw [dite_eq_right ha, dite_eq_right hb] at hmap
             exact congrArg Subtype.val (Sum.inr.inj hmap)
       subst hab'
       exact H.loopless _ hab
@@ -344,12 +348,13 @@ def interiorVertex (α : Fin (g + 1)) (offset : Fin (B.length α - 1)) :
 /-- The left endpoint of a unit step. -/
 def stepLeft (α : Fin (g + 1)) (offset : Fin (B.length α)) : B.Vertex :=
   if hzero : offset.val = 0 then B.coreVertex (B.tail α)
-  else B.interiorVertex α ⟨offset.val - 1, by have := offset.isLt; omega⟩
+  else B.interiorVertex α ⟨offset.val - 1, Nat.sub_lt_sub_right (Nat.pos_of_ne_zero hzero) offset.isLt⟩
 
 /-- The right endpoint of a unit step. -/
 def stepRight (α : Fin (g + 1)) (offset : Fin (B.length α)) : B.Vertex :=
   if hlast : offset.val + 1 = B.length α then B.coreVertex (B.head α)
-  else B.interiorVertex α ⟨offset.val, by have := offset.isLt; omega⟩
+  else B.interiorVertex α ⟨offset.val, Nat.lt_sub_of_add_lt
+    (lt_of_le_of_ne (Nat.succ_le_of_lt offset.isLt) hlast)⟩
 
 /-- The ordered pair emitted by one unit step. -/
 def unitEdge (step : B.Step) : B.Vertex × B.Vertex :=
@@ -359,22 +364,22 @@ theorem stepLeft_ne_stepRight (α : Fin (g + 1)) (offset : Fin (B.length α)) :
     B.stepLeft α offset ≠ B.stepRight α offset := by
   unfold stepLeft stepRight
   by_cases hzero : offset.val = 0
-  · rw [dif_pos hzero]
+  · rw [dite_eq_left hzero]
     by_cases hlast : offset.val + 1 = B.length α
-    · rw [dif_pos hlast]
+    · rw [dite_eq_left hlast]
       intro heq
       exact B.core_loopless α (Sum.inl.inj heq)
-    · rw [dif_neg hlast]
+    · rw [dite_eq_right hlast]
       exact Sum.inl_ne_inr
-  · rw [dif_neg hzero]
+  · rw [dite_eq_right hzero]
     by_cases hlast : offset.val + 1 = B.length α
-    · rw [dif_pos hlast]
+    · rw [dite_eq_left hlast]
       exact Sum.inr_ne_inl
-    · rw [dif_neg hlast]
+    · rw [dite_eq_right hlast]
       intro heq
       have h : offset.val - 1 = offset.val :=
         congrArg (fun z : B.Interior => z.2.val) (Sum.inr.inj heq)
-      omega
+      exact (Nat.ne_of_lt (Nat.sub_lt (Nat.pos_of_ne_zero hzero) Nat.zero_lt_one)) h
 
 /-- Replace every labelled strand by a path of its specified length. -/
 def graph : CFGraph where
@@ -393,7 +398,8 @@ strand's tail. -/
 def pathVertex (α : Fin (g + 1)) (i : B.PathPosition α) : B.Vertex :=
   if hzero : i.val = 0 then B.coreVertex (B.tail α)
   else if hlast : i.val = B.length α then B.coreVertex (B.head α)
-  else B.interiorVertex α ⟨i.val - 1, by have := i.isLt; omega⟩
+  else B.interiorVertex α ⟨i.val - 1, Nat.sub_lt_sub_right
+    (Nat.pos_of_ne_zero hzero) (lt_of_le_of_ne (Nat.le_of_lt_succ i.isLt) hlast)⟩
 
 /-- Interior positions exclude the two shared endpoints. -/
 def IsInteriorPosition (α : Fin (g + 1)) (i : B.PathPosition α) : Prop :=
@@ -418,12 +424,12 @@ def strandVertex {g : ℕ} (B : Banana g) (α : Fin (g + 1))
     (i : B.PathPosition α) : B.graph.V :=
   B.pathVertex α
     (if B.tail α = 0 then i else
-      ⟨B.length α - i.val, by have := i.isLt; omega⟩)
+      ⟨B.length α - i.val, Nat.lt_succ_of_le (Nat.sub_le _ _)⟩)
 
 /-- Reflection of a strand coordinate. -/
 def strandMirror {g : ℕ} (B : Banana g) (α : Fin (g + 1))
     (i : B.PathPosition α) : B.PathPosition α :=
-  ⟨B.length α - i.val, by have := i.isLt; omega⟩
+  ⟨B.length α - i.val, Nat.lt_succ_of_le (Nat.sub_le _ _)⟩
 
 /-- The two multivalent vertices. -/
 def leftEndpoint {g : ℕ} (B : Banana g) : B.graph.V := B.coreVertex 0
@@ -984,7 +990,7 @@ theorem rank_toLib (G : CFGraph) (D : CFDiv G) :
   have h2 : ¬ _root_.rank (toLib G) D ≥ Classical.choose h + 1 := fun hh =>
     hc.2 ((_root_.rank_geq_iff (toLib G) D (Classical.choose h + 1)).mpr hh)
   unfold rank
-  rw [dif_pos h]
+  rw [dite_eq_left h]
   omega
 
 theorem bnExists_toLib (G : CFGraph) (r d : ℤ) :
@@ -1902,11 +1908,11 @@ theorem _root_.Bananas.TwiceMarkedBananas.s2_cor2_25b
     (hLength : 1 < B.length alpha) :
     rankDelta
       (mark B.graph (leftEndpoint B)
-        (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩))
+        (strandVertex B alpha ⟨B.length alpha - 1, Nat.lt_succ_of_le (Nat.sub_le _ _)⟩))
       ((a : ℤ) • one_chip (leftEndpoint B) +
         (b : ℤ) • one_chip (rightEndpoint B) +
         one_chip (strandVertex B alpha
-          ⟨B.length alpha - 1, by omega⟩)) =
+          ⟨B.length alpha - 1, Nat.lt_succ_of_le (Nat.sub_le _ _)⟩)) =
       if a = g then 1 else 0 := by
   rw [rankDelta_toLib]
   exact Bananas.rankDelta_oneOff_terminal_family (toLibBanana B) alpha a b hba hag hLength
@@ -1926,8 +1932,8 @@ theorem _root_.Bananas.TwiceMarkedBananas.s2_cor2_25c
     (hc : c ≤ g - 2) :
     rankDelta
       (mark B.graph
-        (strandVertex B α ⟨1, by have := B.length_pos α; omega⟩)
-        (strandVertex B β ⟨B.length β - 1, by omega⟩))
+        (strandVertex B α ⟨1, Nat.succ_lt_succ (B.length_pos α)⟩)
+        (strandVertex B β ⟨B.length β - 1, Nat.lt_succ_of_le (Nat.sub_le _ _)⟩))
       ((c : ℤ) •
           (one_chip (leftEndpoint B) + one_chip (rightEndpoint B)) +
         one_chip (strandVertex B α p) + one_chip (strandVertex B β q)) = 1 := by
@@ -2524,11 +2530,11 @@ theorem _root_.Bananas.TwiceMarkedBananas.s4_thm4_18_oneOff
     {g k : ℕ} (B : Banana g) (alpha : Fin (g + 1))
     (hg : 2 ≤ g) (hLength : 1 < B.length alpha)
     (hSub : AllSubmodular (mark B.graph (leftEndpoint B)
-      (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩)))
+      (strandVertex B alpha ⟨B.length alpha - 1, Nat.lt_succ_of_le (Nat.sub_le _ _)⟩)))
     (hTO : IsTorsionOrder (mark B.graph (leftEndpoint B)
-      (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩)) k) :
+      (strandVertex B alpha ⟨B.length alpha - 1, Nat.lt_succ_of_le (Nat.sub_le _ _)⟩)) k) :
     HasInversionLowerBound (mark B.graph (leftEndpoint B)
-      (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩)) k
+      (strandVertex B alpha ⟨B.length alpha - 1, Nat.lt_succ_of_le (Nat.sub_le _ _)⟩)) k
       (Nat.choose g 2 + g / (B.length alpha - 1)) := by
   exact (hasInversionLowerBound_toLib _ _ _).mpr
     (Bananas.oneOff_has_quadratic_inversion_lower_bound (toLibBanana B) alpha hg hLength
@@ -2553,14 +2559,14 @@ theorem _root_.Bananas.TwiceMarkedBananas.s4_thm4_18_crossOneOff
     (hLong : CrossOneOffLongEnough
       g (B.length alpha) (B.length beta))
     (hSub : AllSubmodular (mark B.graph
-      (strandVertex B alpha ⟨1, by omega⟩)
-      (strandVertex B beta ⟨B.length beta - 1, by omega⟩)))
+      (strandVertex B alpha ⟨1, Nat.succ_lt_succ (B.length_pos alpha)⟩)
+      (strandVertex B beta ⟨B.length beta - 1, Nat.lt_succ_of_le (Nat.sub_le _ _)⟩)))
     (hTO : IsTorsionOrder (mark B.graph
-      (strandVertex B alpha ⟨1, by omega⟩)
-      (strandVertex B beta ⟨B.length beta - 1, by omega⟩)) k) :
+      (strandVertex B alpha ⟨1, Nat.succ_lt_succ (B.length_pos alpha)⟩)
+      (strandVertex B beta ⟨B.length beta - 1, Nat.lt_succ_of_le (Nat.sub_le _ _)⟩)) k) :
     HasInversionLowerBound (mark B.graph
-      (strandVertex B alpha ⟨1, by omega⟩)
-      (strandVertex B beta ⟨B.length beta - 1, by omega⟩)) k
+      (strandVertex B alpha ⟨1, Nat.succ_lt_succ (B.length_pos alpha)⟩)
+      (strandVertex B beta ⟨B.length beta - 1, Nat.lt_succ_of_le (Nat.sub_le _ _)⟩)) k
       (correctedCrossOneOffForcedCount g (B.length beta)) := by
   exact (hasInversionLowerBound_toLib _ _ _).mpr
     (Bananas.crossOneOff_has_quadratic_inversion_lower_bound_of_not_both_two (toLibBanana B) alpha beta
@@ -2653,7 +2659,7 @@ theorem _root_.Bananas.TwiceMarkedBananas.s4_lem4_23
     (_hbLo : 1 ≤ b) (hbHi : b ≤ crossOneOffCutoff g (B.length alpha))
     (hTau : IsTransmissionPermutation
       (mark B.graph (leftEndpoint B)
-        (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩))
+        (strandVertex B alpha ⟨B.length alpha - 1, Nat.lt_succ_of_le (Nat.sub_le _ _)⟩))
       (g • one_chip (rightEndpoint B)) tau) :
     tau (b : ℤ) = (oneOffRow g (B.length alpha) b : ℕ) := by
   exact Bananas.transmission_oneOff_block (toLibBanana B) alpha b tau hg hLength _hbLo hbHi
@@ -2682,14 +2688,14 @@ theorem _root_.Bananas.TwiceMarkedBananas.s4_prop4_25
     (hg : 2 ≤ g) (hLength : 1 < B.length alpha)
     (hSub : AllSubmodular
       (mark B.graph (leftEndpoint B)
-        (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩)))
+        (strandVertex B alpha ⟨B.length alpha - 1, Nat.lt_succ_of_le (Nat.sub_le _ _)⟩)))
     (hTO : IsTorsionOrder
       (mark B.graph (leftEndpoint B)
-        (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩)) k) :
+        (strandVertex B alpha ⟨B.length alpha - 1, Nat.lt_succ_of_le (Nat.sub_le _ _)⟩)) k) :
     ∃ tau : ℤ → ℤ,
       IsTransmissionPermutation
         (mark B.graph (leftEndpoint B)
-          (strandVertex B alpha ⟨B.length alpha - 1, by omega⟩))
+          (strandVertex B alpha ⟨B.length alpha - 1, Nat.lt_succ_of_le (Nat.sub_le _ _)⟩))
         (g • one_chip (rightEndpoint B)) tau ∧
       IsKAffine k tau ∧
       Nat.choose g 2 + g / (B.length alpha - 1) ≤ kInversionCount k tau := by
@@ -2743,8 +2749,8 @@ theorem _root_.Bananas.TwiceMarkedBananas.s4_lem4_28
     (hLong : CrossOneOffLongEnough g (B.length alpha) (B.length beta))
     (hTau : IsTransmissionPermutation
       (mark B.graph
-        (strandVertex B alpha ⟨1, by omega⟩)
-        (strandVertex B beta ⟨B.length beta - 1, by omega⟩))
+        (strandVertex B alpha ⟨1, Nat.succ_lt_succ (B.length_pos alpha)⟩)
+        (strandVertex B beta ⟨B.length beta - 1, Nat.lt_succ_of_le (Nat.sub_le _ _)⟩))
       (g • one_chip (rightEndpoint B)) tau) :
     ∀ i : ℕ, i ≤ g - 3 → tau (2 + i : ℕ) = (g - i : ℕ) := by
   exact Bananas.transmission_crossOneOff_simple_block (toLibBanana B) alpha beta tau hg hab hAlpha
@@ -2767,8 +2773,8 @@ theorem _root_.Bananas.TwiceMarkedBananas.s4_cor4_29
     (hLong : CrossOneOffLongEnough g (B.length alpha) (B.length beta))
     (hTau : IsTransmissionPermutation
       (mark B.graph
-        (strandVertex B alpha ⟨1, by omega⟩)
-        (strandVertex B beta ⟨B.length beta - 1, by omega⟩))
+        (strandVertex B alpha ⟨1, Nat.succ_lt_succ (B.length_pos alpha)⟩)
+        (strandVertex B beta ⟨B.length beta - 1, Nat.lt_succ_of_le (Nat.sub_le _ _)⟩))
       (g • one_chip (rightEndpoint B)) tau)
     (hSeparate : g ≤ k)
     (hfinite : (kInversions k tau).Finite) :
@@ -2796,8 +2802,8 @@ theorem _root_.Bananas.TwiceMarkedBananas.s4_lem4_30
     (hbLo : 2 ≤ b) (hbHi : b ≤ crossOneOffCutoff g (B.length beta))
     (hTau : IsTransmissionPermutation
       (mark B.graph
-        (strandVertex B alpha ⟨1, by omega⟩)
-        (strandVertex B beta ⟨B.length beta - 1, by omega⟩))
+        (strandVertex B alpha ⟨1, Nat.succ_lt_succ (B.length_pos alpha)⟩)
+        (strandVertex B beta ⟨B.length beta - 1, Nat.lt_succ_of_le (Nat.sub_le _ _)⟩))
       (g • one_chip (rightEndpoint B)) tau) :
     tau (b : ℤ) = (crossOneOffRow g (B.length beta) b : ℕ) := by
   exact Bananas.transmission_crossOneOff_block (toLibBanana B) alpha beta b tau hg hab hAlpha hBeta
@@ -2830,13 +2836,13 @@ theorem _root_.Bananas.TwiceMarkedBananas.s4_cor4_31
       g (B.length alpha) (B.length beta))
     (hTau : IsTransmissionPermutation
       (mark B.graph
-        (strandVertex B alpha ⟨1, by omega⟩)
-        (strandVertex B beta ⟨B.length beta - 1, by omega⟩))
+        (strandVertex B alpha ⟨1, Nat.succ_lt_succ (B.length_pos alpha)⟩)
+        (strandVertex B beta ⟨B.length beta - 1, Nat.lt_succ_of_le (Nat.sub_le _ _)⟩))
       (g • one_chip (rightEndpoint B)) tau)
     (hTO : IsTorsionOrder
       (mark B.graph
-        (strandVertex B alpha ⟨1, by omega⟩)
-        (strandVertex B beta ⟨B.length beta - 1, by omega⟩)) k)
+        (strandVertex B alpha ⟨1, Nat.succ_lt_succ (B.length_pos alpha)⟩)
+        (strandVertex B beta ⟨B.length beta - 1, Nat.lt_succ_of_le (Nat.sub_le _ _)⟩)) k)
     (hfinite : (kInversions k tau).Finite) :
     correctedCrossOneOffForcedCount g (B.length beta) ≤
       kInversionCount k tau := by

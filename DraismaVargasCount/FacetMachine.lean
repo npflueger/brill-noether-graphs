@@ -1,6 +1,10 @@
-import DraismaVargasCount.TypeChangePositiveProbe
-import DraismaVargasCount.OpenAtPositivity
-import DraismaVargasCount.GeometricLimitTransport
+module
+
+public import DraismaVargasCount.TypeChangePositiveProbe
+public import DraismaVargasCount.OpenAtPositivity
+public import DraismaVargasCount.GeometricLimitTransport
+
+@[expose] public section
 
 /-!
 # The facet machine: a type-change step from the per-limit parity
@@ -311,7 +315,7 @@ theorem eval_facetWall {core : Core n p} (k : Frame core degree) (e₀ col : Fin
   by_cases hs : s = e₀
   · subst hs
     simp
-  · rw [if_neg hs, Function.update_of_ne hs]
+  · rw [ite_eq_right hs, Function.update_of_ne hs]
 
 /-- **Every frame coordinate is a normal-form coordinate, as a functional.**  The
 match is a strict frame isomorphism, so it holds at every request at once -- which
@@ -443,7 +447,7 @@ theorem exists_facetStable (core : Core n p) (degree : ℕ) {e₀ : Fin p} {y₀
       exact ⟨ha, fun _ ↦ Iff.rfl⟩
     · have hab : bound (r, col') = |k.coordsAt y₀ col| / |k.coordsAt (slotUnit e₀) col| := by
         simp only [bound, hr]
-        rw [if_pos ⟨ha, hb0⟩]
+        rw [ite_eq_left ⟨ha, hb0⟩]
       rw [hab] at hb
       have hbpos : 0 < |k.coordsAt (slotUnit e₀) col| := abs_pos.mpr hb0
       have hlt : ε < |k.coordsAt y₀ col| / |k.coordsAt (slotUnit e₀) col| := by

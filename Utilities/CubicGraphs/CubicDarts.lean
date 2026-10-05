@@ -1,5 +1,9 @@
-import Mathlib.Tactic
-import Mathlib.Data.ZMod.Basic
+module
+
+public import Mathlib.Tactic
+public import Mathlib.Data.ZMod.Basic
+
+@[expose] public section
 
 /-!
 # Trivalent genus-`g` types as dart graphs, and the Whitehead move
@@ -620,15 +624,15 @@ lemma plantOp_inl (G : CubicDartGraph D V) (d x : D) :
       if x = d then Sum.inr 0 else if x = G.op d then Sum.inr 1 else Sum.inl (G.op x) := rfl
 
 @[simp] lemma plantOp_inl_self (G : CubicDartGraph D V) (d : D) :
-    plantOp G d (Sum.inl d) = Sum.inr 0 := by rw [plantOp_inl, if_pos rfl]
+    plantOp G d (Sum.inl d) = Sum.inr 0 := by rw [plantOp_inl, ite_eq_left rfl]
 
 @[simp] lemma plantOp_inl_op (G : CubicDartGraph D V) (d : D) :
     plantOp G d (Sum.inl (G.op d)) = Sum.inr 1 := by
-  rw [plantOp_inl, if_neg (G.op_ne d), if_pos rfl]
+  rw [plantOp_inl, ite_eq_right (G.op_ne d), ite_eq_left rfl]
 
 lemma plantOp_inl_of_ne (G : CubicDartGraph D V) (d : D) {x : D} (h1 : x ≠ d)
     (h2 : x ≠ G.op d) : plantOp G d (Sum.inl x) = Sum.inl (G.op x) := by
-  rw [plantOp_inl, if_neg h1, if_neg h2]
+  rw [plantOp_inl, ite_eq_right h1, ite_eq_right h2]
 
 @[simp] lemma plantOpInr_zero (G : CubicDartGraph D V) (d : D) :
     plantOpInr G d 0 = Sum.inl d := rfl

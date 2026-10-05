@@ -1,6 +1,10 @@
-import Utilities.Subdivision.GraphIsoLaplacianEquiv
-import Utilities.Subdivision.SubdivisionGraph
-import Mathlib.Tactic
+module
+
+public import Utilities.Subdivision.GraphIsoLaplacianEquiv
+public import Utilities.Subdivision.SubdivisionGraph
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # Every finite multigraph as a unit subdivision

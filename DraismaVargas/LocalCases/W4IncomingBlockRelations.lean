@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W4IncomingClassUnion
-import DraismaVargas.LocalCases.W4IncomingSideCensus
+module
+
+public import DraismaVargas.LocalCases.W4IncomingClassUnion
+public import DraismaVargas.LocalCases.W4IncomingSideCensus
+
+@[expose] public section
 
 /-!
 # Incoming W4 endpoint relations from the literal active fibre

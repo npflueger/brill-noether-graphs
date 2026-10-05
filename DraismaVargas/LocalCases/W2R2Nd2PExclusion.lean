@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W2R2Nd2PLeaf
+module
+
+public import DraismaVargas.LocalCases.W2R2Nd2PLeaf
+
+@[expose] public section
 
 /-!
 # Excluding all concentrated nd2 profiles via the Figure 36 cofactor argument

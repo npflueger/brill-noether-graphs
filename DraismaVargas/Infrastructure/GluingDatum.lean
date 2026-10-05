@@ -1,6 +1,10 @@
-import Mathlib.Data.Multiset.Fintype
-import Utilities.Harmonic.Basic
-import DraismaVargas.Infrastructure.SheetPartition
+module
+
+public import Mathlib.Data.Multiset.Fintype
+public import Utilities.Harmonic.Basic
+public import DraismaVargas.Infrastructure.SheetPartition
+
+@[expose] public section
 
 /-!
 # Finite sheet-partition gluing data
@@ -168,7 +172,7 @@ theorem sum_sourceVertex_localDegree_over (data : GluingDatum target degree)
     apply Finset.sum_eq_zero
     intro sheet _
     simp [summand, hne]
-  · simp only [summand, if_pos]
+  · simp only [summand, ite_eq_left]
     exact (data.vertexPartition root).sum_blockCard_representatives_eq_degree
       data.degree_pos
 
@@ -511,7 +515,7 @@ theorem sourceEdgeIncidence_eq_localDegree_mul_targetEdgeIncidence
           targetSlope edge
       else 0 := by
     by_cases hTail : (edge : target.V × target.V).1 = vertex.1.1
-    · rw [if_pos hTail]
+    · rw [ite_eq_left hTail]
       calc
         (∑ representative : Fin degree,
           if (data.edgePartition edge).repr representative = representative then
@@ -543,11 +547,11 @@ theorem sourceEdgeIncidence_eq_localDegree_mul_targetEdgeIncidence
             by_cases hRel :
                 (data.vertexPartition (edge : target.V × target.V).1).Rel
                   vertex.1.2 representative
-            · rw [if_pos hRepresentative, if_pos (hEndpoint.mpr hRel),
-                if_pos ⟨hRepresentative, hRel⟩]
-            · rw [if_pos hRepresentative,
-                if_neg (fun h ↦ hRel (hEndpoint.mp h)),
-                if_neg (fun h ↦ hRel h.2)]
+            · rw [ite_eq_left hRepresentative, ite_eq_left (hEndpoint.mpr hRel),
+                ite_eq_left ⟨hRepresentative, hRel⟩]
+            · rw [ite_eq_left hRepresentative,
+                ite_eq_right (fun h ↦ hRel (hEndpoint.mp h)),
+                ite_eq_right (fun h ↦ hRel h.2)]
           · simp [hRepresentative]
         _ = ((data.vertexPartition (edge : target.V × target.V).1).blockCard
               vertex.1.2 : ℤ) * targetSlope edge :=
@@ -557,7 +561,7 @@ theorem sourceEdgeIncidence_eq_localDegree_mul_targetEdgeIncidence
             (data.refines_left edge) vertex.1.2 (targetSlope edge)
         _ = ((data.vertexPartition vertex.1.1).blockCard vertex.1.2 : ℤ) *
               targetSlope edge := by rw [hTail]
-    · rw [if_neg hTail]
+    · rw [ite_eq_right hTail]
       apply Finset.sum_eq_zero
       intro representative _
       simp [sourceEndpoint_eq_iff, hTail]
@@ -575,7 +579,7 @@ theorem sourceEdgeIncidence_eq_localDegree_mul_targetEdgeIncidence
           (-targetSlope edge)
       else 0 := by
     by_cases hHead : (edge : target.V × target.V).2 = vertex.1.1
-    · rw [if_pos hHead]
+    · rw [ite_eq_left hHead]
       calc
         (∑ representative : Fin degree,
           if (data.edgePartition edge).repr representative = representative then
@@ -607,11 +611,11 @@ theorem sourceEdgeIncidence_eq_localDegree_mul_targetEdgeIncidence
             by_cases hRel :
                 (data.vertexPartition (edge : target.V × target.V).2).Rel
                   vertex.1.2 representative
-            · rw [if_pos hRepresentative, if_pos (hEndpoint.mpr hRel),
-                if_pos ⟨hRepresentative, hRel⟩]
-            · rw [if_pos hRepresentative,
-                if_neg (fun h ↦ hRel (hEndpoint.mp h)),
-                if_neg (fun h ↦ hRel h.2)]
+            · rw [ite_eq_left hRepresentative, ite_eq_left (hEndpoint.mpr hRel),
+                ite_eq_left ⟨hRepresentative, hRel⟩]
+            · rw [ite_eq_left hRepresentative,
+                ite_eq_right (fun h ↦ hRel (hEndpoint.mp h)),
+                ite_eq_right (fun h ↦ hRel h.2)]
           · simp [hRepresentative]
         _ = ((data.vertexPartition (edge : target.V × target.V).2).blockCard
               vertex.1.2 : ℤ) * (-targetSlope edge) :=
@@ -621,7 +625,7 @@ theorem sourceEdgeIncidence_eq_localDegree_mul_targetEdgeIncidence
             (data.refines_right edge) vertex.1.2 (-targetSlope edge)
         _ = ((data.vertexPartition vertex.1.1).blockCard vertex.1.2 : ℤ) *
               (-targetSlope edge) := by rw [hHead]
-    · rw [if_neg hHead]
+    · rw [ite_eq_right hHead]
       apply Finset.sum_eq_zero
       intro representative _
       simp [sourceEndpoint_eq_iff, hHead]

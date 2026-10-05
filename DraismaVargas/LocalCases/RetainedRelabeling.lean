@@ -1,5 +1,9 @@
-import DraismaVargas.Infrastructure.BlockSplitCount
-import DraismaVargas.LocalCases.StatementFromLink
+module
+
+public import DraismaVargas.Infrastructure.BlockSplitCount
+public import DraismaVargas.LocalCases.StatementFromLink
+
+@[expose] public section
 
 /-!
 # The retained relabeling at a nonempty expansion forest: the shape it needs
@@ -467,7 +471,7 @@ theorem card_keptSlots_lt_sum_segments
       [face.scale * small.length j₁, face.scale * small.length j₂] := by
     rw [Retained.blockTotals, hcar]; rfl
   rw [htot, cutCount_cons_cons,
-    if_neg (by simpa only [alignedB_iff] using hAl), cutCount_singleton]
+    ite_eq_right (by simpa only [alignedB_iff] using hAl), cutCount_singleton]
   omega
 
 /-! ## 3.  The `CoreModel` shape fails at a straddled marker -/
@@ -695,13 +699,13 @@ kept slot. -/
 theorem countPos_lt_cut_three_one_two :
     countPos [3] < ((blocks [3] [1, 2]).map countPos).sum := by
   rw [sum_countPos_blocks [3] [1, 2] (by norm_num),
-    cutCount_cons_cons, if_neg (by simpa only [alignedB_iff] using not_aligned_three_one),
+    cutCount_cons_cons, ite_eq_right (by simpa only [alignedB_iff] using not_aligned_three_one),
     cutCount_singleton]
   omega
 
 /-- and the count of §2 reads it off: exactly one occurrence is straddled. -/
 theorem cutCount_three_one_two : cutCount [3] [1, 2] = 1 := by
-  rw [cutCount_cons_cons, if_neg (by simpa only [alignedB_iff] using not_aligned_three_one),
+  rw [cutCount_cons_cons, ite_eq_right (by simpa only [alignedB_iff] using not_aligned_three_one),
     cutCount_singleton]
 
 end

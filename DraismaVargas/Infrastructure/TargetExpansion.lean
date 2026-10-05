@@ -1,4 +1,8 @@
-import DraismaVargas.Infrastructure.GluingDatum
+module
+
+public import DraismaVargas.Infrastructure.GluingDatum
+
+@[expose] public section
 
 /-!
 # Occurrence-safe target vertex expansion
@@ -105,7 +109,7 @@ def expandedEdges (right : target.edges → Bool) :
   newEnds target wall ::ₘ
     (enumeratedEdges target).map (oldEnds target wall right)
 
-private theorem oldEnds_ne (right : target.edges → Bool)
+theorem oldEnds_ne (right : target.edges → Bool)
     (edge : target.edges) :
     (oldEnds target wall right edge).1 ≠ (oldEnds target wall right edge).2 := by
   intro h

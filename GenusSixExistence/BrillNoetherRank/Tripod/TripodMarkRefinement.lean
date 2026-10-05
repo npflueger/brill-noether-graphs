@@ -1,6 +1,10 @@
-import GenusSixExistence.BrillNoetherRank.Tripod.Gadget
-import Utilities.Subdivision.CoreExpansion
-import Utilities.Subdivision.OneEdgeSplitRefinement
+module
+
+public import GenusSixExistence.BrillNoetherRank.Tripod.Gadget
+public import Utilities.Subdivision.CoreExpansion
+public import Utilities.Subdivision.OneEdgeSplitRefinement
+
+@[expose] public section
 
 /-!
 # Refining an expansion datum at one mark
@@ -308,7 +312,7 @@ theorem refine_fibre_old (hD : D.Conditions C) (hι : Function.Injective ι)
     · rw [refine_kind_ne D e ι ιs μ κ₁ κ₂ owner' side' he, hk₀]
       rfl
     · simp [hf₀, haw]
-    · simp only [refine_bigCore, subdivide_tail_castSucc, subdivide_head_castSucc, if_neg he]
+    · simp only [refine_bigCore, subdivide_tail_castSucc, subdivide_head_castSucc, ite_eq_right he]
       simpa [hmem] using hcross
 
 /-- **`Conditions` for a refinement**, from facts about its two new pieces. -/
@@ -349,7 +353,7 @@ theorem refine_conditions (hD : D.Conditions C)
         rw [compat_iff]
         simpa [hD'] using hc₁
       · rw [compat_iff, hD', refine_kind_ne D e ι ιs μ κ₁ κ₂ owner' side' hie]
-        simp only [refine_bigCore, subdivide_tail_castSucc, subdivide_head_castSucc, if_neg hie,
+        simp only [refine_bigCore, subdivide_tail_castSucc, subdivide_head_castSucc, ite_eq_right hie,
           refine_fib_castSucc]
         have hc := (compat_iff D C i).mp (ExpansionData.compatible_of_conditions hD i)
         refine ⟨?_, ?_, ?_⟩
@@ -756,7 +760,7 @@ theorem caseC (hD : D.Conditions small.core) (j : Fin p) :
         (splitCore small j).head j₀.castSucc = (C.head j₀).castSucc := by
     intro j₀ hj₀
     have hne : j₀ ≠ j := by rintro rfl; exact hj₀ rfl
-    rw [sc_tail_cs, sc_head_cs, if_neg hne]
+    rw [sc_tail_cs, sc_head_cs, ite_eq_right hne]
     exact ⟨rfl, rfl⟩
   have hμold : ∀ i j₁ j₂, i ≠ e → D.kind i = .double j₁ j₂ →
       Fin.last n ≠ (C.head j₁).castSucc := fun _ _ _ _ _ h ↦ castSucc_ne_last _ h.symm
@@ -776,7 +780,7 @@ theorem caseC (hD : D.Conditions small.core) (j : Fin p) :
       · rw [hmk.2 j₀ (Fin.castSucc_injective n h)]
   have hinc : ∀ w', ∃ j', (splitCore small j).tail j' = w' ∨ (splitCore small j).head j' = w' := by
     intro w'
-    refine Fin.lastCases ⟨j.castSucc, Or.inr (by rw [sc_head_cs, if_pos rfl])⟩
+    refine Fin.lastCases ⟨j.castSucc, Or.inr (by rw [sc_head_cs, ite_eq_left rfl])⟩
       (fun w ↦ ?_) w'
     obtain ⟨j₀, hj₀⟩ := ExpansionData.incident_of_conditions hD w
     by_cases hjj : j₀ = j
@@ -786,7 +790,7 @@ theorem caseC (hD : D.Conditions small.core) (j : Fin p) :
       · exact ⟨Fin.last p, Or.inr (by rw [sc_head_last, h])⟩
     · rcases hj₀ with h | h
       · exact ⟨j₀.castSucc, Or.inl (by rw [sc_tail_cs, h])⟩
-      · exact ⟨j₀.castSucc, Or.inr (by rw [sc_head_cs, if_neg hjj, h])⟩
+      · exact ⟨j₀.castSucc, Or.inr (by rw [sc_head_cs, ite_eq_right hjj, h])⟩
   have hnc : D.kind e ≠ .contracted := (ExpansionData.claimed_of_conditions hD j).1
   have hμ : ∀ v, (D.fib v).castSucc ≠ Fin.last n := fun v ↦ castSucc_ne_last _
   have hce := (compat_iff D C e).mp (ExpansionData.compatible_of_conditions hD e)
@@ -804,7 +808,7 @@ theorem caseC (hD : D.Conditions small.core) (j : Fin p) :
       refine refine_conditions hD hι hmor (fun j₀ _ ↦ ⟨by simp, by simp⟩) ?_ ?_ ?_ ?_ ?_ hμold
         hhead marker_single marker_single hinc (fun h ↦ absurd h hnc)
         (fun v hv ↦ absurd hv (hμ v))
-      · exact compat_single (by rw [sc_tail_cs, h1]) (by rw [sc_head_cs, if_pos rfl])
+      · exact compat_single (by rw [sc_tail_cs, h1]) (by rw [sc_head_cs, ite_eq_left rfl])
       · exact compat_single (by rw [sc_tail_last]) (by rw [sc_head_last, h2])
       · exact indexed_single (by simp [he]) (by simpa using hs)
       · exact indexed_single (by simp) (by simp)
@@ -832,9 +836,9 @@ theorem caseC (hD : D.Conditions small.core) (j : Fin p) :
       · intro j₀ hj₀
         have : j₀ ≠ j₂ := by rintro rfl; exact hj₀ ho2
         exact ⟨by simp [this], by simp⟩
-      · exact compat_single (by rw [sc_tail_cs, h1]) (by rw [sc_head_cs, if_pos rfl])
+      · exact compat_single (by rw [sc_tail_cs, h1]) (by rw [sc_head_cs, ite_eq_left rfl])
       · exact compat_double (by rw [sc_tail_last]) (by rw [sc_head_last, sc_tail_cs, h2])
-          (by rw [sc_head_cs, if_neg hne.symm, h3])
+          (by rw [sc_head_cs, ite_eq_right hne.symm, h3])
       · exact indexed_single (by simp [he, hne]) (by simpa using hs)
       · exact indexed_double (by simp) (by simp) (by simp) (by simpa using hs2)
       · intro j'
@@ -874,8 +878,8 @@ theorem caseC (hD : D.Conditions small.core) (j : Fin p) :
         (Fin.lastCases false D.side)).Conditions (splitCore small j) := by
       refine refine_conditions hD hι hmor (fun j₀ _ ↦ ⟨by simp, by simp⟩) ?_ ?_ ?_ ?_ ?_ hμold
         hhead ?_ marker_single hinc (fun h ↦ absurd h hnc) (fun v hv ↦ absurd hv (hμ v))
-      · exact compat_double (by rw [sc_tail_cs, h1]) (by rw [sc_head_cs, if_neg hne, sc_tail_cs, h2])
-          (by rw [sc_head_cs, if_pos rfl])
+      · exact compat_double (by rw [sc_tail_cs, h1]) (by rw [sc_head_cs, ite_eq_right hne, sc_tail_cs, h2])
+          (by rw [sc_head_cs, ite_eq_left rfl])
       · exact compat_single (by rw [sc_tail_last]) (by rw [sc_head_last, h3])
       · exact indexed_double (by simp [ho1, he]) (by simpa using hs1) (by simp [he])
           (by simpa using hs)
@@ -895,14 +899,14 @@ theorem caseC (hD : D.Conditions small.core) (j : Fin p) :
           · exact Or.inl ⟨by simp [ho1, he], claims_double₁ (by simpa using hs1)⟩
           · exact Or.inl ⟨by simp [he], claims_double₂ (by simpa using hs)⟩
       · refine marker_double (fun v h ↦ ?_) (fun h ↦ ?_) (fun j' ↦ ?_)
-        · rw [sc_head_cs, if_neg hne] at h
+        · rw [sc_head_cs, ite_eq_right hne] at h
           exact hmk.1 v (Fin.castSucc_injective n h)
-        · rw [sc_head_cs, if_neg hne] at h
+        · rw [sc_head_cs, ite_eq_right hne] at h
           exact castSucc_ne_last _ h.symm
         · refine Fin.lastCases (fun h ↦ ?_) (fun j₀ h ↦ ?_) j'
-          · rw [sc_head_last, sc_head_cs, if_neg hne] at h
+          · rw [sc_head_last, sc_head_cs, ite_eq_right hne] at h
             exact absurd (hmk.2 j (Fin.castSucc_injective n h)).symm hne
-          · rw [sc_head_cs, sc_head_cs, if_neg hne] at h
+          · rw [sc_head_cs, sc_head_cs, ite_eq_right hne] at h
             split_ifs at h with hj₀
             · exact absurd h (castSucc_ne_last _).symm
             · rw [hmk.2 j₀ (Fin.castSucc_injective n h)]

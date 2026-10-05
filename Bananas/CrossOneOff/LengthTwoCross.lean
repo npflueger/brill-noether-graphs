@@ -1,4 +1,8 @@
-import Bananas.SameStrand.Semibreak
+module
+
+public import Bananas.SameStrand.Semibreak
+
+@[expose] public section
 
 /-!
   Components of the length-two cross-exception argument.

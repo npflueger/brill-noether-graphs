@@ -1,5 +1,9 @@
-import Utilities.Gluing.TwoPole
-import Utilities.Segments.SeamCalculus
+module
+
+public import Utilities.Gluing.TwoPole
+public import Utilities.Segments.SeamCalculus
+
+@[expose] public section
 
 /-!
 # Response profiles for a two-pole join

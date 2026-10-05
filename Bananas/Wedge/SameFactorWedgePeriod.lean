@@ -1,6 +1,10 @@
-import Bananas.Wedge.SameFactorWedgeRight
-import Bananas.Transmission.TorsionOrderExact
-import Bananas.Wedge.WedgeTorsionRestriction
+module
+
+public import Bananas.Wedge.SameFactorWedgeRight
+public import Bananas.Transmission.TorsionOrderExact
+public import Bananas.Wedge.WedgeTorsionRestriction
+
+@[expose] public section
 
 /-!
 # The period in the same-factor wedge exception

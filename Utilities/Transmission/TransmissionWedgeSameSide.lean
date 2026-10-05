@@ -1,4 +1,8 @@
-import Utilities.Transmission.TransmissionWedge
+module
+
+public import Utilities.Transmission.TransmissionWedge
+
+@[expose] public section
 
 /-!
 # Transmission with both marks on one side of a vertex wedge

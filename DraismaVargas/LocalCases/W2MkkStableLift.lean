@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W2MkkStableGraph
+module
+
+public import DraismaVargas.LocalCases.W2MkkStableGraph
+
+@[expose] public section
 
 /-!
 # Figure 34's induced stable-row map

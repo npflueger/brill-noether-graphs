@@ -1,4 +1,9 @@
-import Utilities.Combinatorics.Slopes
+module
+
+public import Utilities.Combinatorics.Slopes
+public import Mathlib.Order.Interval.Finset.Nat
+
+@[expose] public section
 
 /-!
 # The stack of a slope sequence: which sheets are glued along which spine edge
@@ -253,14 +258,14 @@ theorem balance (s : Slopes g) (i : ℕ) : s.slope i + s.dn i = 1 + s.cum i := b
   | succ i ih =>
     rw [cum_succ, dn_succ]
     rcases slope_trichotomy s i with h | h | h
-    · rw [if_pos h,
-        if_neg (show ¬ (s.slope i = s.slope (i + 1) + 1) by omega)]
+    · rw [ite_eq_left h,
+        ite_eq_right (show ¬ (s.slope i = s.slope (i + 1) + 1) by omega)]
       omega
-    · rw [if_neg (show ¬ (s.slope (i + 1) = s.slope i + 1) by omega),
-        if_pos h]
+    · rw [ite_eq_right (show ¬ (s.slope (i + 1) = s.slope i + 1) by omega),
+        ite_eq_left h]
       omega
-    · rw [if_neg (show ¬ (s.slope (i + 1) = s.slope i + 1) by omega),
-        if_neg (show ¬ (s.slope i = s.slope (i + 1) + 1) by omega)]
+    · rw [ite_eq_right (show ¬ (s.slope (i + 1) = s.slope i + 1) by omega),
+        ite_eq_right (show ¬ (s.slope i = s.slope (i + 1) + 1) by omega)]
       omega
 
 /-- Every slope is at most one more than the newest label. -/
@@ -274,14 +279,14 @@ theorem cum_add_dn_le (s : Slopes g) (i : ℕ) : s.cum i + s.dn i ≤ 1 + i := b
   | succ i ih =>
     rw [cum_succ, dn_succ]
     rcases slope_trichotomy s i with h | h | h
-    · rw [if_pos h,
-        if_neg (show ¬ (s.slope i = s.slope (i + 1) + 1) by omega)]
+    · rw [ite_eq_left h,
+        ite_eq_right (show ¬ (s.slope i = s.slope (i + 1) + 1) by omega)]
       omega
-    · rw [if_neg (show ¬ (s.slope (i + 1) = s.slope i + 1) by omega),
-        if_pos h]
+    · rw [ite_eq_right (show ¬ (s.slope (i + 1) = s.slope i + 1) by omega),
+        ite_eq_left h]
       omega
-    · rw [if_neg (show ¬ (s.slope (i + 1) = s.slope i + 1) by omega),
-        if_neg (show ¬ (s.slope i = s.slope (i + 1) + 1) by omega)]
+    · rw [ite_eq_right (show ¬ (s.slope (i + 1) = s.slope i + 1) by omega),
+        ite_eq_right (show ¬ (s.slope i = s.slope (i + 1) + 1) by omega)]
       omega
 
 /-- In the range where the chain condition applies, each index contributes
@@ -297,18 +302,18 @@ theorem le_cum_add_dn (s : Slopes g) : ∀ i : ℕ, i + 1 ≤ g - 1 →
     have hstep := slope_rel s (i := i + 1) (by omega) (by omega)
     rw [cum_succ, dn_succ]
     rcases hstep with h | h
-    · rw [if_pos h,
-        if_neg (show ¬ (s.slope (i + 1) = s.slope (i + 1 + 1) + 1) by omega)]
+    · rw [ite_eq_left h,
+        ite_eq_right (show ¬ (s.slope (i + 1) = s.slope (i + 1 + 1) + 1) by omega)]
       omega
-    · rw [if_neg (show ¬ (s.slope (i + 1 + 1) = s.slope (i + 1) + 1) by omega),
-        if_pos h]
+    · rw [ite_eq_right (show ¬ (s.slope (i + 1 + 1) = s.slope (i + 1) + 1) by omega),
+        ite_eq_left h]
       omega
 
 /-- Past the last spine edge the up-step counter is constant. -/
 theorem cum_of_ge (s : Slopes g) {i : ℕ} (hi : g - 1 ≤ i) :
     s.cum (i + 1) = s.cum i := by
   rw [cum_succ,
-    if_neg (show ¬ (s.slope (i + 1) = s.slope i + 1) by
+    ite_eq_right (show ¬ (s.slope (i + 1) = s.slope i + 1) by
       rw [slope_of_ge s hi, slope_of_ge s (show g - 1 ≤ i + 1 by omega)]; omega),
     Nat.add_zero]
 
@@ -360,9 +365,9 @@ theorem exists_cum_eq (s : Slopes g) : ∀ (n c : ℕ), 1 ≤ c → c ≤ s.cum 
     rcases Nat.lt_or_ge (s.cum n) c with hlt | hge
     · have hup : s.slope (n + 1) = s.slope n + 1 := by
         by_contra hno
-        rw [cum_succ, if_neg hno] at h2
+        rw [cum_succ, ite_eq_right hno] at h2
         omega
-      have hcs : s.cum (n + 1) = s.cum n + 1 := by rw [cum_succ, if_pos hup]
+      have hcs : s.cum (n + 1) = s.cum n + 1 := by rw [cum_succ, ite_eq_left hup]
       refine ⟨n + 1, le_refl _, by omega, ?_⟩
       have := one_le_slope s n
       omega
@@ -428,7 +433,7 @@ above a spine vertex is literally the larger of its two neighbours. -/
 theorem spineMem_mono_up (s : Slopes g) {i k : ℕ}
     (hup : s.slope (i + 1) = s.slope i + 1) (h : s.SpineMem i k) :
     s.SpineMem (i + 1) k := by
-  have hc : s.cum (i + 1) = s.cum i + 1 := by rw [cum_succ, if_pos hup]
+  have hc : s.cum (i + 1) = s.cum i + 1 := by rw [cum_succ, ite_eq_left hup]
   rcases h with rfl | ⟨h1, h2⟩
   · exact Or.inl rfl
   · exact Or.inr ⟨by omega, by omega⟩
@@ -437,7 +442,7 @@ theorem spineMem_mono_down (s : Slopes g) {i k : ℕ}
     (hdown : s.slope i = s.slope (i + 1) + 1) (h : s.SpineMem (i + 1) k) :
     s.SpineMem i k := by
   have hc : s.cum (i + 1) = s.cum i := by
-    rw [cum_succ, if_neg (show ¬ (s.slope (i + 1) = s.slope i + 1) by omega),
+    rw [cum_succ, ite_eq_right (show ¬ (s.slope (i + 1) = s.slope i + 1) by omega),
       Nat.add_zero]
   rcases h with rfl | ⟨h1, h2⟩
   · exact Or.inl rfl
@@ -447,7 +452,7 @@ theorem spineMem_congr_flat (s : Slopes g) {i : ℕ}
     (hflat : s.slope (i + 1) = s.slope i) (k : ℕ) :
     s.SpineMem (i + 1) k ↔ s.SpineMem i k := by
   have hc : s.cum (i + 1) = s.cum i := by
-    rw [cum_succ, if_neg (show ¬ (s.slope (i + 1) = s.slope i + 1) by omega),
+    rw [cum_succ, ite_eq_right (show ¬ (s.slope (i + 1) = s.slope i + 1) by omega),
       Nat.add_zero]
   unfold SpineMem
   rw [hc, hflat]
@@ -491,7 +496,7 @@ theorem cum_one (s : Slopes g) : s.cum 1 = 1 := by
     show ¬ (s.slope 1 = s.slope 0 + 1)
     rw [slope_zero]
     omega
-  rw [cum_succ, if_neg h, cum_zero, Nat.add_zero]
+  rw [cum_succ, ite_eq_right h, cum_zero, Nat.add_zero]
 
 /-- At the first lollipop the spine block and the bridge pair coincide: both
 are `{0, 1}`, because `s_1 = 2` and no label has yet been introduced.  This is
@@ -527,7 +532,7 @@ theorem vertMem_of_pairMem (s : Slopes g) {i k : ℕ} (h : s.PairMem i k) :
         · obtain ⟨j, rfl⟩ : ∃ j, i = j + 1 := ⟨i - 1, by omega⟩
           have hj : (j + 1) - 1 = j := by omega
           rw [hj, cum_succ,
-            if_neg (show ¬ (s.slope (j + 1) = s.slope j + 1) by
+            ite_eq_right (show ¬ (s.slope (j + 1) = s.slope j + 1) by
               have := one_le_slope s j; omega), Nat.add_zero]
       exact Or.inl (Or.inr ⟨by omega, by omega⟩)
 

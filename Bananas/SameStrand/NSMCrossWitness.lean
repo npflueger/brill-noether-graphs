@@ -1,5 +1,9 @@
-import Bananas.CrossOneOff.CrossOneOffDelta
-import Bananas.Transmission.FarMarkNegativeAPI
+module
+
+public import Bananas.CrossOneOff.CrossOneOffDelta
+public import Bananas.Transmission.FarMarkNegativeAPI
+
+@[expose] public section
 
 /-!
 # Rank-zero part of the cross-strand witness in Theorem 3.9

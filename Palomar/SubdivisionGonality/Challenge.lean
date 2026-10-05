@@ -1,4 +1,8 @@
-import Mathlib
+module
+
+public import Mathlib
+
+@[expose] public section
 
 /-!
 # A rank-one divisor of degree `⌈g/2⌉ + 1` on a subdivision (Draisma--Vargas)

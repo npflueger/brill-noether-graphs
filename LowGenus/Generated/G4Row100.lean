@@ -1,5 +1,9 @@
-import Utilities.Subdivision.ClosedRowProof.Tree
-import LowGenus.GenusFourCubicAtlas
+module
+
+public import Utilities.Subdivision.ClosedRowProof.Tree
+public import LowGenus.GenusFourCubicAtlas
+
+@[expose] public section
 
 /-!
 # Generated proof data for `g4row100`
@@ -40,7 +44,7 @@ One `def` per `LEAF` witness and per `REDUCE CUTVERTEX` node of the `.rpf`, in
 depth-first order.  They are split out rather than inlined into `tree` because
 `maxHeartbeats` is charged per declaration..
 -/
-private def rw0 : RichWitness :=
+def rw0 : RichWitness :=
   { divisorCore := [0, 0, 0, 1, 1, 0]
     chips := [(2, [0, 0, 0, 1, 0, 0, 0, -1], 1)]
     anchors := [
@@ -101,7 +105,7 @@ private def rw0 : RichWitness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def rw1 : RichWitness :=
+def rw1 : RichWitness :=
   { divisorCore := [0, 0, 0, 1, 1, 0]
     chips := [(2, [0, 0, 0, 1, 0, 0, 0, -1], 1)]
     anchors := [
@@ -162,7 +166,7 @@ private def rw1 : RichWitness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def rw2 : RichWitness :=
+def rw2 : RichWitness :=
   { divisorCore := [0, 0, 0, 1, 1, 0]
     chips := [(2, [0, 0, 0, 1, 0, 0, 0, -1], 1)]
     anchors := [
@@ -223,7 +227,7 @@ private def rw2 : RichWitness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def rw3 : RichWitness :=
+def rw3 : RichWitness :=
   { divisorCore := [0, 0, 0, 1, 1, 0]
     chips := [(2, [0, 0, 0, 1, 0, 0, 0, -1], 1)]
     anchors := [
@@ -284,7 +288,7 @@ private def rw3 : RichWitness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def rw4 : RichWitness :=
+def rw4 : RichWitness :=
   { divisorCore := [0, 0, 0, 1, 1, 0]
     chips := [(2, [0, 0, 0, 1, 0, 0, 0, -1], 1)]
     anchors := [
@@ -345,7 +349,7 @@ private def rw4 : RichWitness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def rw5 : RichWitness :=
+def rw5 : RichWitness :=
   { divisorCore := [0, 0, 0, 1, 1, 0]
     chips := [(2, [0, 0, 0, 1, 0, 0, 0, -1], 1)]
     anchors := [
@@ -406,7 +410,7 @@ private def rw5 : RichWitness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def rw6 : RichWitness :=
+def rw6 : RichWitness :=
   { divisorCore := [0, 0, 0, 1, 1, 0]
     chips := [(2, [0, 0, 0, 1, 0, 0, 0, -1], 1)]
     anchors := [
@@ -467,7 +471,7 @@ private def rw6 : RichWitness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def rw7 : RichWitness :=
+def rw7 : RichWitness :=
   { divisorCore := [0, 0, 0, 1, 1, 0]
     chips := [(2, [0, 0, 0, 1, 0, 0, 0, -1], 1)]
     anchors := [
@@ -528,7 +532,7 @@ private def rw7 : RichWitness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def rw8 : RichWitness :=
+def rw8 : RichWitness :=
   { divisorCore := [0, 0, 0, 1, 1, 0]
     chips := [(2, [0, 0, 0, 1, 0, 0, 0, -1], 1)]
     anchors := [
@@ -589,7 +593,7 @@ private def rw8 : RichWitness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w9 : Witness :=
+def w9 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
@@ -638,7 +642,7 @@ private def w9 : Witness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w10 : Witness :=
+def w10 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
@@ -687,7 +691,7 @@ private def w10 : Witness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w11 : Witness :=
+def w11 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
@@ -736,7 +740,7 @@ private def w11 : Witness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w12 : Witness :=
+def w12 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
@@ -785,7 +789,7 @@ private def w12 : Witness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w13 : Witness :=
+def w13 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
@@ -834,7 +838,7 @@ private def w13 : Witness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w14 : Witness :=
+def w14 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
@@ -883,7 +887,7 @@ private def w14 : Witness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w15 : Witness :=
+def w15 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
@@ -932,7 +936,7 @@ private def w15 : Witness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w16 : Witness :=
+def w16 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
@@ -981,7 +985,7 @@ private def w16 : Witness :=
     ]
     slotCert := [⟨1, [(0, 1)], [], 0⟩, ⟨1, [(1, 1)], [], 0⟩, ⟨1, [(2, 1)], [], 0⟩, ⟨1, [(3, 1)], [], 0⟩, ⟨1, [(4, 1)], [], 0⟩, ⟨1, [(5, 1)], [], 0⟩, ⟨1, [(6, 1)], [], 0⟩, ⟨1, [(7, 1)], [], 0⟩, ⟨1, [(8, 1)], [], 0⟩] }
 
-private def w17 : Witness :=
+def w17 : Witness :=
   { divisorCore := [0, 0, 0, 1, 1, 1]
     chips := []
     anchors := [
@@ -1038,61 +1042,61 @@ in the closed root domain extended by its entry forms; the `use` citations in
 listed alongside the body in `proof.subs` below.
 -/
 
-private def sub0 : PTree :=
+def sub0 : PTree :=
   .richLeaf rw0
 
-private def sub1 : PTree :=
+def sub1 : PTree :=
   .richLeaf rw1
 
-private def sub2 : PTree :=
+def sub2 : PTree :=
   .richLeaf rw2
 
-private def sub3 : PTree :=
+def sub3 : PTree :=
   .richLeaf rw3
 
-private def sub4 : PTree :=
+def sub4 : PTree :=
   .richLeaf rw4
 
-private def sub5 : PTree :=
+def sub5 : PTree :=
   .richLeaf rw5
 
-private def sub6 : PTree :=
+def sub6 : PTree :=
   .richLeaf rw6
 
-private def sub7 : PTree :=
+def sub7 : PTree :=
   .richLeaf rw7
 
-private def sub8 : PTree :=
+def sub8 : PTree :=
   .richLeaf rw8
 
-private def sub9 : PTree :=
+def sub9 : PTree :=
   .leaf w9
 
-private def sub10 : PTree :=
+def sub10 : PTree :=
   .leaf w10
 
-private def sub11 : PTree :=
+def sub11 : PTree :=
   .leaf w11
 
-private def sub12 : PTree :=
+def sub12 : PTree :=
   .leaf w12
 
-private def sub13 : PTree :=
+def sub13 : PTree :=
   .leaf w13
 
-private def sub14 : PTree :=
+def sub14 : PTree :=
   .leaf w14
 
-private def sub15 : PTree :=
+def sub15 : PTree :=
   .leaf w15
 
-private def sub16 : PTree :=
+def sub16 : PTree :=
   .leaf w16
 
-private def sub17 : PTree :=
+def sub17 : PTree :=
   .leaf w17
 
-private def sub18 : PTree :=
+def sub18 : PTree :=
   .split [0, 1, 0, -1, 0, 0, 0, 1]
     (.split [0, 0, 1, -1, 0, 0, 0, 1]
       (.split [0, 0, 0, 0, 1, -1, 0, 1]
@@ -1125,7 +1129,7 @@ private def sub18 : PTree :=
           (.use 7 [⟨1, [(9, 1)], [], 0⟩, ⟨1, [(10, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 1⟩, ⟨1, [(12, 1), (13, 1)], [], 2⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [(14, 1)], [], 1⟩, ⟨1, [(11, 1)], [], 0⟩])
           (.use 8 [⟨1, [(9, 1)], [], 0⟩, ⟨1, [(10, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 1⟩, ⟨1, [(12, 1), (13, 1)], [], 2⟩, ⟨1, [(15, 1)], [], 1⟩, ⟨1, [(14, 1), (15, 1)], [], 2⟩, ⟨1, [(11, 1)], [], 0⟩]))))
 
-private def sub19 : PTree :=
+def sub19 : PTree :=
   .split [0, 1, 0, -1, 0, 0, 0, 1]
     (.split [0, 0, 1, -1, 0, 0, 0, 1]
       (.split [0, 0, 0, 0, 1, -1, 0, 1]
@@ -1158,7 +1162,7 @@ private def sub19 : PTree :=
           (.use 16 [⟨1, [(9, 1)], [], 0⟩, ⟨1, [(10, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 1⟩, ⟨1, [(12, 1), (13, 1)], [], 2⟩, ⟨1, [(15, 1)], [], 0⟩, ⟨1, [(14, 1)], [], 1⟩, ⟨1, [(11, 1)], [], 0⟩])
           (.use 17 [⟨1, [(9, 1)], [], 0⟩, ⟨1, [(10, 1)], [], 0⟩, ⟨1, [(13, 1)], [], 1⟩, ⟨1, [(12, 1), (13, 1)], [], 2⟩, ⟨1, [(15, 1)], [], 1⟩, ⟨1, [(14, 1), (15, 1)], [], 2⟩, ⟨1, [(11, 1)], [], 0⟩]))))
 
-private def sub20 : PTree :=
+def sub20 : PTree :=
   .split [-1, 0, 0, 0, 0, 0, 0, 1]
     (.use 18 [⟨1, [(9, 1)], [], 0⟩, ⟨1, [(10, 1)], [], 0⟩, ⟨1, [(11, 1)], [], 0⟩])
     (.use 19 [⟨1, [(9, 1)], [], 0⟩, ⟨1, [(10, 1)], [], 0⟩, ⟨1, [(11, 1)], [], 0⟩])

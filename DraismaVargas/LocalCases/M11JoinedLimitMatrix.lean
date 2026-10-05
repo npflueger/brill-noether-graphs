@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.M11JoinedRowDescent
-import DraismaVargas.LocalCases.M11JoinedColumn
+module
+
+public import DraismaVargas.LocalCases.M11JoinedRowDescent
+public import DraismaVargas.LocalCases.M11JoinedColumn
+
+@[expose] public section
 
 /-!
 # The joined M11 matrix has the literal common-wall retained columns

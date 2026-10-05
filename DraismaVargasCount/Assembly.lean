@@ -1,10 +1,14 @@
-import DraismaVargasCount.CaterpillarAllMembers
-import DraismaVargasCount.StarSupplyAssembly
-import DraismaVargasCount.CensusAssembly
-import DraismaVargasCount.ValencyTwoPairing
-import DraismaVargasCount.ValencyFourRealisation
-import DraismaVargasCount.SimpleWallSupply
-import DraismaVargasCount.PencilTransportProducer
+module
+
+public import DraismaVargasCount.CaterpillarAllMembers
+public import DraismaVargasCount.StarSupplyAssembly
+public import DraismaVargasCount.CensusAssembly
+public import DraismaVargasCount.ValencyTwoPairing
+public import DraismaVargasCount.ValencyFourRealisation
+public import DraismaVargasCount.SimpleWallSupply
+public import DraismaVargasCount.PencilTransportProducer
+
+@[expose] public section
 
 /-!
 # The genus-six odd-subdivision witness, assembled

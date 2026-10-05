@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W3FourIncomingCensus
+module
+
+public import DraismaVargas.LocalCases.W3FourIncomingCensus
+
+@[expose] public section
 
 /-!
 # Matching an incoming `w3Four` datum to a named Figure 28 member

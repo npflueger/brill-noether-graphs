@@ -1,4 +1,8 @@
-import Bananas.CrossOneOff.CrossOneOffDelta
+module
+
+public import Bananas.CrossOneOff.CrossOneOffDelta
+
+@[expose] public section
 
 /-!
 # The endpoint residue cases for the cross-one-off marking

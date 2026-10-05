@@ -1,4 +1,8 @@
-import DraismaVargas.Infrastructure.GluingContraction
+module
+
+public import DraismaVargas.Infrastructure.GluingContraction
+
+@[expose] public section
 
 /-!
 # Fibres of the source vertex map of a contracted gluing datum

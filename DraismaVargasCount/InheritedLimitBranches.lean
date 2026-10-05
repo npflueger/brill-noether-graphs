@@ -1,4 +1,8 @@
-import DraismaVargasCount.InheritedLimitRows
+module
+
+public import DraismaVargasCount.InheritedLimitRows
+
+@[expose] public section
 
 /-!
 # Inherited branch labels at positive-request limits

@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.IncomingW2TargetPlacement
-import DraismaVargas.LocalCases.W3Nd2FineCandidates
-import DraismaVargas.LocalCases.FullDimensionalSource
+module
+
+public import DraismaVargas.LocalCases.IncomingW2TargetPlacement
+public import DraismaVargas.LocalCases.W3Nd2FineCandidates
+public import DraismaVargas.LocalCases.FullDimensionalSource
+
+@[expose] public section
 
 /-!
 # Incoming target placement for the W3 nd2 wall

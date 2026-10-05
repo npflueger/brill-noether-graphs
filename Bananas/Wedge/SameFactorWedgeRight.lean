@@ -1,5 +1,9 @@
-import Bananas.Wedge.SameFactorWedgeKGeneral
-import Bananas.Transmission.ChainTwoLoopsSameRight
+module
+
+public import Bananas.Wedge.SameFactorWedgeKGeneral
+public import Bananas.Transmission.ChainTwoLoopsSameRight
+
+@[expose] public section
 
 /-!
 # Right-factor form of the same-factor wedge exception

@@ -1,4 +1,8 @@
-import DraismaVargasCount.GeometricCountFamily
+module
+
+public import DraismaVargasCount.GeometricCountFamily
+
+@[expose] public section
 
 /-!
 # The coordinate vector read on core slots, and the separation it gives

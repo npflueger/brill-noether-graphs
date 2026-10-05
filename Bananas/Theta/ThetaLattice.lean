@@ -1,4 +1,8 @@
-import Bananas.Theta.ThetaJacobian
+module
+
+public import Bananas.Theta.ThetaJacobian
+
+@[expose] public section
 
 namespace Bananas
 

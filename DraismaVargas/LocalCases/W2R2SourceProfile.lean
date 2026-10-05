@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W2R1SourceProfile
+module
+
+public import DraismaVargas.LocalCases.W2R1SourceProfile
+
+@[expose] public section
 
 /-!
 # Actual ramification-two, nd3 occurrence profiles at a divalent wall

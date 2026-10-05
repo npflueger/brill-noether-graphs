@@ -1,4 +1,8 @@
-import DraismaVargasCount.W3ShiftSixMemberBalance
+module
+
+public import DraismaVargasCount.W3ShiftSixMemberBalance
+
+@[expose] public section
 
 /-!
 # Honest matrices for all six Equation (3) members

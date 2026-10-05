@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W3Nd2StableLift
+module
+
+public import DraismaVargas.LocalCases.W3Nd2StableLift
+
+@[expose] public section
 
 /-!
 # Reverse row transport for the true Figure 31 fine resolution
@@ -45,7 +49,7 @@ theorem fineBackgroundReplace_of_large
     (old : data.SourceEdge) (hTarget : old.1.1 = largeTarget input profile) :
     fineBackgroundReplace input profile old =
       (fineCandidate input profile).newSourceEdge old.1.2 := by
-  rw [fineBackgroundReplace, if_pos hTarget]
+  rw [fineBackgroundReplace, ite_eq_left hTarget]
 
 theorem fineBackgroundReplace_of_ne_large
     (input : W3SourceInput data star)
@@ -53,7 +57,7 @@ theorem fineBackgroundReplace_of_ne_large
     (old : data.SourceEdge) (hTarget : old.1.1 ≠ largeTarget input profile) :
     fineBackgroundReplace input profile old =
       (fineCandidate input profile).oldSourceEdge old := by
-  rw [fineBackgroundReplace, if_neg hTarget]
+  rw [fineBackgroundReplace, ite_eq_right hTarget]
 
 /-- Replacement preserves and reflects survival and incidence at an
 unramified background source vertex. -/
@@ -363,9 +367,9 @@ theorem fineNewOldSourceEdge_survives
   classical
   by_cases hSelected : (data.vertexPartition wall).Rel
       input.distinguishedBlock.1 sheet
-  · rw [fineNewOldSourceEdge, if_pos hSelected]
+  · rw [fineNewOldSourceEdge, ite_eq_left hSelected]
     exact profile.large_survives
-  · rw [fineNewOldSourceEdge, if_neg hSelected]
+  · rw [fineNewOldSourceEdge, ite_eq_right hSelected]
     exact (fine_background_new_survives_iff_oldLarge input profile sheet hSelected).mp
       hSurvives
 
@@ -449,7 +453,7 @@ noncomputable def fineRowOfEdge
   have hOld : ∃ other : NonDanglingEdge data,
       retainedEdge (fineCandidate input profile) input.valid.1 other =
         retainedEdge (fineCandidate input profile) input.valid.1 old := ⟨old, rfl⟩
-  rw [fineRowOfEdge, dif_pos hOld]
+  rw [fineRowOfEdge, dite_eq_left hOld]
   exact congrArg NonDanglingEdge.stablePath
     (retainedEdge_injective _ input.valid.1 (Classical.choose_spec hOld))
 
@@ -463,7 +467,7 @@ theorem fineRowOfEdge_not_retained
       (fineNewOldEdge input profile (fineNewSheet input profile edge hNotOld)
         (fineNewSheet_survives input profile edge hNotOld)).stablePath := by
   classical
-  exact dif_neg hNotOld
+  exact dite_eq_right hNotOld
 
 theorem fineNewOldEdge_of_selected
     (input : W3SourceInput data star)
@@ -476,7 +480,7 @@ theorem fineNewOldEdge_of_selected
       ⟨profile.large.1, profile.large_survives⟩ := by
   apply Subtype.ext
   change fineNewOldSourceEdge input profile sheet = profile.large.1
-  rw [fineNewOldSourceEdge, if_pos hSelected]
+  rw [fineNewOldSourceEdge, ite_eq_left hSelected]
 
 theorem fineNewOldEdge_of_background
     (input : W3SourceInput data star)
@@ -489,7 +493,7 @@ theorem fineNewOldEdge_of_background
       data.sourceEdge (largeTarget input profile) sheet := by
   change fineNewOldSourceEdge input profile sheet =
     data.sourceEdge (largeTarget input profile) sheet
-  rw [fineNewOldSourceEdge, if_neg hBackground]
+  rw [fineNewOldSourceEdge, ite_eq_right hBackground]
 
 /-- At a background fresh endpoint, every assigned reverse row has an actual
 old surviving occurrence incident at the original wall vertex, and that old
@@ -522,7 +526,7 @@ theorem fineRowOfEdge_incident_background
     refine ⟨old, hOldIncident, ?_, ?_⟩
     · rw [fineBackgroundReplace_of_ne_large input profile old.1 hTarget]
       exact congrArg Subtype.val hEq
-    · rw [fineRowOfEdge, dif_pos hOld]
+    · rw [fineRowOfEdge, dite_eq_left hOld]
   · let newSheet := fineNewSheet input profile edge hOld
     let hNewSurvives := fineNewSheet_survives input profile edge hOld
     have hEdge := fineNewSheet_spec input profile edge hOld

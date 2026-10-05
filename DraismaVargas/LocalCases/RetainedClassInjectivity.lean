@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.ClassInjectivity
-import DraismaVargas.LocalCases.RetainedVertexModel
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoBaseOneLink
+module
+
+public import DraismaVargas.LocalCases.ClassInjectivity
+public import DraismaVargas.LocalCases.RetainedVertexModel
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoBaseOneLink
+
+@[expose] public section
 
 /-!
 # The class half of the injectivity of the retained vertex map
@@ -956,12 +960,12 @@ theorem clsSource_handover {w : Fin n₀} (h : IsHandover (ridx hCond hN hL) w) 
         (blockSlot (ridx hCond hN hL) topology rev hKept hTwo (handoverPair hCond face h)).1
         (RetainedTraversal.slotPosition (blockSlot (ridx hCond hN hL) topology rev hKept hTwo
           (handoverPair hCond face h))) :=
-  dif_pos h
+  dite_eq_left h
 
 theorem clsSource_not_handover {w : Fin n₀} (h : ¬ IsHandover (ridx hCond hN hL) w) :
     clsSource hCond dict topology rev hKept hTwo (Sum.inl w) =
       dict.vertexAt (exists_fib_of_not_handover hCond h).choose :=
-  dif_neg h
+  dite_eq_right h
 
 theorem clsSource_break (y : Σ j : Fin p₀, Fin (((Retained.segmentData iface face
     (ridx hCond hN hL)).segments j).length - 1)) :
@@ -1064,7 +1068,7 @@ theorem cutVertex_eq_cutLeft
             (handoverPair hCond face h)), keptClass_startClass topology
             (blockSlot (ridx hCond hN hL) topology rev hKept hTwo
             (handoverPair hCond face h))⟩) :=
-            dif_neg hs
+            dite_eq_right hs
           refine hcv.trans (hd.trans (congrArg (fun z ↦ cutLeft (ridx hCond hN hL) topology
             rev hKept (RefinementCore.keptClassIndex topology z)) (Subtype.ext ?_)))
           exact (classOf_clsSource_handover hCond dict topology rev hKept hTwo h).symm

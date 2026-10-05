@@ -1,7 +1,11 @@
-import DraismaVargasCount.StarCensusEngine
-import DraismaVargasCount.M11LoopWall
-import DraismaVargas.LocalCases.NonTrivalentValencyThreeStarCount
-import DraismaVargasCount.PassOnceLollipopWitness
+module
+
+public import DraismaVargasCount.StarCensusEngine
+public import DraismaVargasCount.M11LoopWall
+public import DraismaVargas.LocalCases.NonTrivalentValencyThreeStarCount
+public import DraismaVargasCount.PassOnceLollipopWitness
+
+@[expose] public section
 
 /-!
 # The M-11 star census, Stages 1 and 3, and loop walls
@@ -589,8 +593,8 @@ theorem not_rel_01 (hNoLoop : ¬ M11StarParityFree.SameDoubleRow profile hCard) 
     (M11SplitRowDescent.newOldEdge profile hCard).stablePath
   change StableSourceMatrix.matrix _ (M11RemoteLimitMatrix.stablePathEquiv input profile hCard _) _ =
     StableSourceMatrix.matrix _ (M11SplitRowDescent.stablePathEquiv input profile hCard _) _ at h
-  rw [h0, h1, if_pos rfl,
-    if_neg (show ¬ (M11SplitRowDescent.newOldEdge profile hCard).stablePath =
+  rw [h0, h1, ite_eq_left rfl,
+    ite_eq_right (show ¬ (M11SplitRowDescent.newOldEdge profile hCard).stablePath =
       (M11BranchSeparation.oppositeDouble profile hCard).stablePath from hNoLoop)] at h
   norm_num at h
 
@@ -739,7 +743,7 @@ theorem split_false (hRow : M11StarParityFree.SameDoubleRow profile hCard)
     (M11SplitRowDescent.newOldEdge profile hCard).stablePath with hR
   have hNew := M11SplitLimitMatrix.matrix_new input profile hCard
     (M11SplitRowDescent.newOldEdge profile hCard).stablePath
-  rw [if_pos rfl] at hNew
+  rw [ite_eq_left rfl] at hNew
   obtain ⟨z, hzSurv, hzRow, hzTarget⟩ := exists_occurrence_of_matrix_ne_zero
     (hNew.trans_ne two_ne_zero)
   let x := ResolutionAwayFromWall.retainedEdge c input.valid.1
@@ -788,7 +792,7 @@ theorem remote_false (hConnected : graph_connected target) (hGenus : genus targe
     (M11SplitRowDescent.newOldEdge profile hCard).stablePath with hR
   have hNew := M11RemoteLimitMatrix.matrix_new input profile hCard hConnected hGenus
     (M11SplitRowDescent.newOldEdge profile hCard).stablePath
-  rw [if_pos (show (M11SplitRowDescent.newOldEdge profile hCard).stablePath =
+  rw [ite_eq_left (show (M11SplitRowDescent.newOldEdge profile hCard).stablePath =
     (M11BranchSeparation.oppositeDouble profile hCard).stablePath from hRow)] at hNew
   obtain ⟨z, hzSurv, hzRow, hzTarget⟩ := exists_occurrence_of_matrix_ne_zero
     (hNew.trans_ne two_ne_zero)

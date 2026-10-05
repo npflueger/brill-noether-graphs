@@ -1,10 +1,14 @@
-import DraismaVargas.LocalCases.TrackedWallProgress
-import DraismaVargas.LocalCases.FacetGenericity
-import DraismaVargas.LocalCases.NonTrivalentLinkMatrix
-import DraismaVargas.LocalCases.NonTrivalentUniqueFourValent
-import DraismaVargas.LocalCases.NonTrivalentAnchorValency
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoCandidate
-import DraismaVargas.LocalCases.CertifiedPencil
+module
+
+public import DraismaVargas.LocalCases.TrackedWallProgress
+public import DraismaVargas.LocalCases.FacetGenericity
+public import DraismaVargas.LocalCases.NonTrivalentLinkMatrix
+public import DraismaVargas.LocalCases.NonTrivalentUniqueFourValent
+public import DraismaVargas.LocalCases.NonTrivalentAnchorValency
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoCandidate
+public import DraismaVargas.LocalCases.CertifiedPencil
+
+@[expose] public section
 
 /-!
 # The outer walk: cone marches strung along the Whitehead chain

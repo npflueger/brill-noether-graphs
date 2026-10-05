@@ -1,16 +1,20 @@
-import LowGenus.GenusFiveConfigurations
-import LowGenus.GenusFiveCoreAtlas
-import LowGenus.GenusFiveTwoPoleClosed
-import LowGenus.GenusFiveRow05
-import LowGenus.GenusFiveRow06
-import LowGenus.GenusFiveRow08
-import LowGenus.GenusFiveRow09
-import LowGenus.GenusFiveRow10
-import LowGenus.GenusFiveRow11
-import LowGenus.GenusFiveRow12Guarding
-import LowGenus.GenusFiveRow14
-import LowGenus.GenusFiveRow15
-import LowGenus.GenusFiveRow16
+module
+
+public import LowGenus.GenusFiveConfigurations
+public import LowGenus.GenusFiveCoreAtlas
+public import LowGenus.GenusFiveTwoPoleClosed
+public import LowGenus.GenusFiveRow05
+public import LowGenus.GenusFiveRow06
+public import LowGenus.GenusFiveRow08
+public import LowGenus.GenusFiveRow09
+public import LowGenus.GenusFiveRow10
+public import LowGenus.GenusFiveRow11
+public import LowGenus.GenusFiveRow12Guarding
+public import LowGenus.GenusFiveRow14
+public import LowGenus.GenusFiveRow15
+public import LowGenus.GenusFiveRow16
+
+@[expose] public section
 
 /-!
 # The sixteen Atanasov--Ranganathan genus-five constructions

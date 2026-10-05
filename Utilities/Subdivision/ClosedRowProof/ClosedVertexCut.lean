@@ -1,6 +1,10 @@
-import Utilities.Subdivision.DegenerateCoreVertexCut
-import Utilities.Subdivision.ClosedFaceCensus
-import Utilities.Subdivision.SpanningTreeConnectivity
+module
+
+public import Utilities.Subdivision.DegenerateCoreVertexCut
+public import Utilities.Subdivision.ClosedFaceCensus
+public import Utilities.Subdivision.SpanningTreeConnectivity
+
+@[expose] public section
 
 /-!
 # Closed-face vertex-cut adapter for row certificates

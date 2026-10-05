@@ -1,4 +1,8 @@
-import DraismaVargasCount.GeneralKExitSetup
+module
+
+public import DraismaVargasCount.GeneralKExitSetup
+
+@[expose] public section
 
 /-!
 # The general-`K` background at a four-valent wall
@@ -503,11 +507,11 @@ noncomputable def localBackground (hValid : data.Valid) :
     else canonicalLocal position.datum star profile.pattern pairing block
   contracts := by
     intro block hBlock
-    simp only [hBlock, if_false]
+    simp only [hBlock, ite_false]
     exact localize_contracts _ _ _ _
   exterior := by
     intro edge hIncident block hBlock
-    simp only [hBlock, if_false]
+    simp only [hBlock, ite_false]
     have hBlock' : ¬(data.vertexPartition wall).Rel anchor.1 block := by
       rwa [position.datum_vertexPartition_wall] at hBlock
     have hLocal := (gauged_blockDangling position profile block hBlock').exterior pairing edge
@@ -523,7 +527,7 @@ noncomputable def localBackground (hValid : data.Valid) :
       exact refines_localize_right _ _ _ _ _ hFine hLocal
   left_riemannHurwitz := by
     intro block _hCanonical hBlock
-    simp only [hBlock, if_false]
+    simp only [hBlock, ite_false]
     have hBlock' : ¬(data.vertexPartition wall).Rel anchor.1 block := by
       rwa [position.datum_vertexPartition_wall] at hBlock
     apply localize_left_riemannHurwitz
@@ -549,7 +553,7 @@ noncomputable def localBackground (hValid : data.Valid) :
     omega
   right_riemannHurwitz := by
     intro block _hCanonical hBlock
-    simp only [hBlock, if_false]
+    simp only [hBlock, ite_false]
     have hBlock' : ¬(data.vertexPartition wall).Rel anchor.1 block := by
       rwa [position.datum_vertexPartition_wall] at hBlock
     apply localize_right_riemannHurwitz
@@ -585,7 +589,7 @@ theorem exists_pairingBackground (hValid : data.Valid) :
       ∀ block, ¬(position.datum.vertexPartition wall).Rel anchor.1 block →
         geometry.resolution block =
           canonicalLocal position.datum star profile.pattern pairing block :=
-  ⟨localBackground position profile hValid, fun _ hBlock ↦ if_neg hBlock⟩
+  ⟨localBackground position profile hValid, fun _ hBlock ↦ ite_eq_right hBlock⟩
 
 include hConnected hGenus hNoGlue in
 /-- **Source genus.**  Over the *localized* canonical background the

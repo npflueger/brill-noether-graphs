@@ -1,5 +1,9 @@
-import Utilities.Subdivision.SubdivisionGraph
-import Mathlib.Tactic
+module
+
+public import Utilities.Subdivision.SubdivisionGraph
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # Connectivity of positive subdivisions

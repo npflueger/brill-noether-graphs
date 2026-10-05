@@ -1,4 +1,8 @@
-import DraismaVargasCount.GeneralKRowStar
+module
+
+public import DraismaVargasCount.GeneralKRowStar
+
+@[expose] public section
 
 /-!
 # The row equivalence of a wall resolution with one non-star block
@@ -90,7 +94,7 @@ theorem rowOfEdge_retE (o : G.SourceEdge) (h : ¬ IsDangling G o) :
     rowOfEdge S (retE S o h) = some (NonDanglingEdge.stablePath ⟨o, h⟩) := by
   classical
   have hOld : ∃ o' : NonDanglingEdge G, retE S o'.1 o'.2 = retE S o h := ⟨⟨o, h⟩, rfl⟩
-  rw [rowOfEdge, dif_pos hOld]
+  rw [rowOfEdge, dite_eq_left hOld]
   have hEq : Classical.choose hOld = ⟨o, h⟩ :=
     ResolutionAwayFromWall.retainedEdge_injective C S.valid.1 (Classical.choose_spec hOld)
   rw [hEq]
@@ -104,24 +108,24 @@ theorem rowOfEdge_new_anchor {s : Fin degree} (hs : ¬ IsDangling C.datum (C.new
     (hA : (G.vertexPartition wall).Rel a s) : rowOfEdge S ⟨C.newSourceEdge s, hs⟩ = none := by
   classical
   unfold rowOfEdge
-  rw [dif_neg (not_retained_new S hs)]
+  rw [dite_eq_right (not_retained_new S hs)]
   have hRel : (G.vertexPartition wall).Rel a (C.newSourceEdge s).1.2 := by
     rw [BalancedGlobal.Candidate.newSourceEdge_sheet]
     exact hA.trans ((newPart_refines C).rel (SheetPartition.rel_repr_right _ s))
-  rw [if_pos hRel]
+  rw [ite_eq_left hRel]
 
 theorem rowOfEdge_new {s : Fin degree} (hs : ¬ IsDangling C.datum (C.newSourceEdge s))
     (hA : ¬ (G.vertexPartition wall).Rel a s) :
     rowOfEdge S ⟨C.newSourceEdge s, hs⟩ = newRow C s := by
   classical
   unfold rowOfEdge
-  rw [dif_neg (not_retained_new S hs)]
+  rw [dite_eq_right (not_retained_new S hs)]
   have hNw : (pasted C).newEdge.Rel s (C.newSourceEdge s).1.2 := by
     rw [BalancedGlobal.Candidate.newSourceEdge_sheet]
     exact SheetPartition.rel_repr_right _ s
   have hRel : ¬ (G.vertexPartition wall).Rel a (C.newSourceEdge s).1.2 :=
     fun h ↦ hA (h.trans ((newPart_refines C).rel hNw).symm)
-  rw [if_neg hRel]
+  rw [ite_eq_right hRel]
   exact (newRow_congr hNw).symm
 
 /-- Every surviving occurrence is retained or new. -/

@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.StableSourceDarts
-import DraismaVargas.LocalCases.DanglingBetti
-import DraismaVargas.LocalCases.SingleRowForest
+module
+
+public import DraismaVargas.LocalCases.StableSourceDarts
+public import DraismaVargas.LocalCases.DanglingBetti
+public import DraismaVargas.LocalCases.SingleRowForest
+
+@[expose] public section
 
 /-!
 # Incidence and genus consumers of the actual stable-source darts

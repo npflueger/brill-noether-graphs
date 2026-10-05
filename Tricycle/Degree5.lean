@@ -1,6 +1,10 @@
-import Tricycle.HelperLemma
-import Utilities.Gonality.GonalityTransport
-import Mathlib.Tactic
+module
+
+public import Tricycle.HelperLemma
+public import Utilities.Gonality.GonalityTransport
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # Lemma 3.6 and Corollary 3.7
@@ -295,12 +299,12 @@ theorem burnedInd_le_one (spec : Spec 7 15) (D : CFDiv spec.graph) (w : spec.Ver
 
 theorem burnedInd_of_mem {v : Fin 7} (h : spec.coreVertex v ∈ burned spec.graph D w) :
     burnedInd spec D w v = 1 := by
-  unfold burnedInd; rw [if_pos h]
+  unfold burnedInd; rw [ite_eq_left h]
 
 theorem burnedInd_of_not_mem {v : Fin 7}
     (h : spec.coreVertex v ∉ burned spec.graph D w) :
     burnedInd spec D w v = 0 := by
-  unfold burnedInd; rw [if_neg h]
+  unfold burnedInd; rw [ite_eq_right h]
 
 /-! ## Lemma 3.5(b) in slot coordinates -/
 

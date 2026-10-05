@@ -1,6 +1,10 @@
-import DraismaVargasCount.M11StarCensusProof
-import DraismaVargasCount.W3Nd2UnitBalance
-import DraismaVargas.LocalCases.W3Nd2GraphTracking
+module
+
+public import DraismaVargasCount.M11StarCensusProof
+public import DraismaVargasCount.W3Nd2UnitBalance
+public import DraismaVargas.LocalCases.W3Nd2GraphTracking
+
+@[expose] public section
 
 /-!
 # The W3 nd2 star census, Stages 1 and 3, and Stage 2 reduced to transports

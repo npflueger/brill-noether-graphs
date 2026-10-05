@@ -1,5 +1,9 @@
-import Utilities.IntegralGeometry.FiniteStrictMarch
-import DraismaVargas.LocalCases.MarchContinuation
+module
+
+public import Utilities.IntegralGeometry.FiniteStrictMarch
+public import DraismaVargas.LocalCases.MarchContinuation
+
+@[expose] public section
 
 /-!
 # Finite event times for a rational Draisma--Vargas cone atlas

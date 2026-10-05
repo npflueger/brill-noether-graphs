@@ -1,8 +1,12 @@
-import DraismaVargas.LocalCases.IncomingMatchingCore
-import DraismaVargas.LocalCases.W2M1kStableIncidence
-import DraismaVargas.LocalCases.W2M1kLeaves
-import DraismaVargas.LocalCases.W3Nd2IncomingMemberMatching
-import DraismaVargas.LocalCases.IncomingSourceCases
+module
+
+public import DraismaVargas.LocalCases.IncomingMatchingCore
+public import DraismaVargas.LocalCases.W2M1kStableIncidence
+public import DraismaVargas.LocalCases.W2M1kLeaves
+public import DraismaVargas.LocalCases.W3Nd2IncomingMemberMatching
+public import DraismaVargas.LocalCases.IncomingSourceCases
+
+@[expose] public section
 
 /-!
 # The incoming census at a `w2M1k`-classified wall
@@ -428,22 +432,22 @@ noncomputable def oneEnd : target.V :=
 @[simp] theorem zeroEnd_of_false
     (hFalse : IncomingTargetExpansion.right hc hab hOne (star.edge 0) = false) :
     zeroEnd hc hab hOne star = a := by
-  simp only [zeroEnd, hFalse, Bool.false_eq_true, if_false]
+  simp only [zeroEnd, hFalse, Bool.false_eq_true, ite_false]
 
 @[simp] theorem oneEnd_of_false
     (hFalse : IncomingTargetExpansion.right hc hab hOne (star.edge 0) = false) :
     oneEnd hc hab hOne star = b := by
-  simp only [oneEnd, hFalse, Bool.false_eq_true, if_false]
+  simp only [oneEnd, hFalse, Bool.false_eq_true, ite_false]
 
 @[simp] theorem zeroEnd_of_true
     (hTrue : IncomingTargetExpansion.right hc hab hOne (star.edge 0) = true) :
     zeroEnd hc hab hOne star = b := by
-  simp only [zeroEnd, hTrue, if_true]
+  simp only [zeroEnd, hTrue, ite_true]
 
 @[simp] theorem oneEnd_of_true
     (hTrue : IncomingTargetExpansion.right hc hab hOne (star.edge 0) = true) :
     oneEnd hc hab hOne star = a := by
-  simp only [oneEnd, hTrue, if_true]
+  simp only [oneEnd, hTrue, ite_true]
 
 /-- `zeroEnd` and `oneEnd` are the two restored endpoints, in one order or the
 other.  Both orders occur. -/
@@ -501,7 +505,7 @@ theorem transported_endpoints
       (target := contract target hab hOne) ⟨a, hab⟩,
       IncomingTargetExpansion.right hc hab hOne edge = star.right edge
   · have hFalse := (support_iff hc hab hOne star hLeft hRight).mp hSupport
-    rw [if_pos hSupport] at hPair
+    rw [ite_eq_left hSupport] at hPair
     rw [zeroEnd_of_false hc hab hOne star hFalse, oneEnd_of_false hc hab hOne star hFalse]
     exact ⟨congrArg Prod.fst hPair, congrArg Prod.snd hPair⟩
   · have hTrue : IncomingTargetExpansion.right hc hab hOne (star.edge 0) = true := by
@@ -509,7 +513,7 @@ theorem transported_endpoints
         (IncomingTargetExpansion.right hc hab hOne (star.edge 0)) with h | h
       · exact h
       · exact absurd ((support_iff hc hab hOne star hLeft hRight).mpr h) hSupport
-    rw [if_neg hSupport] at hPair
+    rw [ite_eq_right hSupport] at hPair
     rw [zeroEnd_of_true hc hab hOne star hTrue, oneEnd_of_true hc hab hOne star hTrue]
     exact ⟨congrArg Prod.fst hPair, congrArg Prod.snd hPair⟩
 
@@ -573,21 +577,21 @@ noncomputable def branchEnd : target.V :=
 
 @[simp] theorem leafEnd_of_true
     (hTrue : IncomingTargetExpansion.right hc hab hOne (star.edge 0) = true) :
-    leafEnd hc hab hOne star = a := by simp only [leafEnd, hTrue, if_true]
+    leafEnd hc hab hOne star = a := by simp only [leafEnd, hTrue, ite_true]
 
 @[simp] theorem branchEnd_of_true
     (hTrue : IncomingTargetExpansion.right hc hab hOne (star.edge 0) = true) :
-    branchEnd hc hab hOne star = b := by simp only [branchEnd, hTrue, if_true]
+    branchEnd hc hab hOne star = b := by simp only [branchEnd, hTrue, ite_true]
 
 @[simp] theorem leafEnd_of_false
     (hFalse : IncomingTargetExpansion.right hc hab hOne (star.edge 0) = false) :
     leafEnd hc hab hOne star = b := by
-  simp only [leafEnd, hFalse, Bool.false_eq_true, if_false]
+  simp only [leafEnd, hFalse, Bool.false_eq_true, ite_false]
 
 @[simp] theorem branchEnd_of_false
     (hFalse : IncomingTargetExpansion.right hc hab hOne (star.edge 0) = false) :
     branchEnd hc hab hOne star = a := by
-  simp only [branchEnd, hFalse, Bool.false_eq_true, if_false]
+  simp only [branchEnd, hFalse, Bool.false_eq_true, ite_false]
 
 theorem leaf_ends_cases :
     (leafEnd hc hab hOne star = a ∧ branchEnd hc hab hOne star = b) ∨
@@ -652,7 +656,7 @@ theorem leaf_transported_endpoints
       (target := contract target hab hOne) ⟨a, hab⟩,
       IncomingTargetExpansion.right hc hab hOne edge = true
   · have hTrue := (leaf_support_iff hc hab hOne star hLeaf).mp hSupport
-    rw [if_pos hSupport] at hPair
+    rw [ite_eq_left hSupport] at hPair
     rw [leafEnd_of_true hc hab hOne star hTrue, branchEnd_of_true hc hab hOne star hTrue]
     exact ⟨congrArg Prod.fst hPair, congrArg Prod.snd hPair⟩
   · have hFalse : IncomingTargetExpansion.right hc hab hOne (star.edge 0) = false := by
@@ -660,7 +664,7 @@ theorem leaf_transported_endpoints
         (IncomingTargetExpansion.right hc hab hOne (star.edge 0)) with h | h
       · exact absurd ((leaf_support_iff hc hab hOne star hLeaf).mpr h) hSupport
       · exact h
-    rw [if_neg hSupport] at hPair
+    rw [ite_eq_right hSupport] at hPair
     rw [leafEnd_of_false hc hab hOne star hFalse, branchEnd_of_false hc hab hOne star hFalse]
     exact ⟨congrArg Prod.fst hPair, congrArg Prod.snd hPair⟩
 

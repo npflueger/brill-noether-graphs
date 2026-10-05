@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W4IncomingCensus
-import DraismaVargas.LocalCases.PrunedFibreTree
+module
+
+public import DraismaVargas.LocalCases.W4IncomingCensus
+public import DraismaVargas.LocalCases.PrunedFibreTree
+
+@[expose] public section
 
 /-!
 # The literal one-vertex or one-edge incoming W4 pruned fibre

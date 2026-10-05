@@ -1,5 +1,9 @@
-import DraismaVargasCount.W3ShiftIncomingDenominator
-import DraismaVargas.LocalCases.W3ShiftStableIncidence
+module
+
+public import DraismaVargasCount.W3ShiftIncomingDenominator
+public import DraismaVargas.LocalCases.W3ShiftStableIncidence
+
+@[expose] public section
 
 /-!
 # Multiplicity balance for one Equation (3) shift pair
@@ -147,11 +151,11 @@ theorem denominatorProduct_eq_factor (position : Fin 2)
         (by change Nat.Coprime _ (incomingRowDenominator data _)
             rw [hSharp]
             exact factor_coprime position)
-    · simp only [if_neg hPath, add_zero, one_mul]
+    · simp only [ite_eq_right hPath, add_zero, one_mul]
       exact lcm_den_eq_right (den_dvd_incomingRowDenominator _ _)
   rw [Finset.prod_congr rfl fun path _ ↦ hTerm path, Finset.prod_mul_distrib,
     Finset.prod_ite_eq' Finset.univ (movingRow shift)
-      (fun _ ↦ factor (shift := shift) position), if_pos (Finset.mem_univ _)]
+      (fun _ ↦ factor (shift := shift) position), ite_eq_left (Finset.mem_univ _)]
   rfl
 
 /-- Every member datum in the pair keeps old wall edges on both sides. -/

@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.PrunedRealizationSpec
-import DraismaVargas.LocalCases.DanglingSideStructure
+module
+
+public import DraismaVargas.LocalCases.PrunedRealizationSpec
+public import DraismaVargas.LocalCases.DanglingSideStructure
+
+@[expose] public section
 
 /-!
 # The two residues of the pruned realization spec, discharged
@@ -355,7 +359,7 @@ theorem exists_dropped_of_not_keptClass (topology : SourceTopology data realizat
             by_contra hno
             have hVanish : num_edges data.sourceGraph a b = 0 := by
               rw [hCross]
-              exact if_neg hno
+              exact ite_eq_right hno
             omega
           rw [hPair.2]
           exact hy

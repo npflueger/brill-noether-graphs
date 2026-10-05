@@ -1,4 +1,8 @@
-import LowGenus.ConfigurationFive
+module
+
+public import LowGenus.ConfigurationFive
+
+@[expose] public section
 
 /-!
 # The chip-free three-chain, generic in the core
@@ -257,7 +261,7 @@ theorem third_nonneg (Sm : ChainLedger) {s t u b i : ℕ} (shift : ℤ)
     rw [hEq]
     omega
   by_cases hs : t = 0 ∧ u < s
-  · have hshift1 : shift = 1 := by rw [hshift, if_pos hs]
+  · have hshift1 : shift = 1 := by rw [hshift, ite_eq_left hs]
     have hib : i = b := by omega
     have hMidZero : Sm.head t i b = 0 := by
       rw [hib]
@@ -265,7 +269,7 @@ theorem third_nonneg (Sm : ChainLedger) {s t u b i : ℕ} (shift : ℤ)
     have hbu' : b = u := by omega
     have := hArmFull hbu'
     omega
-  · have hshift0 : shift = 0 := by rw [hshift, if_neg hs]
+  · have hshift0 : shift = 0 := by rw [hshift, ite_eq_right hs]
     rcases hfull with hEq | hEq
     · have hMidZero : Sm.head t i b = 0 := by
         rw [hEq]
@@ -354,7 +358,7 @@ theorem endCenter_second_nonneg (Sm : ChainLedger)
       omega
     by_cases ht : t = 0
     · by_cases hus : u < s
-      · have : shift = 1 := by rw [hshift, if_pos ⟨ht, hus⟩]
+      · have : shift = 1 := by rw [hshift, ite_eq_left ⟨ht, hus⟩]
         omega
       · have := hLeafFull (by omega)
         omega
@@ -470,7 +474,7 @@ theorem midCenter_second_nonneg (Sm : ChainLedger)
       omega
     by_cases ht : t = 0
     · by_cases hus : u < s
-      · have : shift = 1 := by rw [hshift, if_pos ⟨ht, hus⟩]
+      · have : shift = 1 := by rw [hshift, ite_eq_left ⟨ht, hus⟩]
         omega
       · have := hLeafFull (by omega)
         omega

@@ -1,7 +1,11 @@
-import Utilities.Subdivision.SlopeScript
-import Utilities.Gonality.GonalityTransport
-import Utilities.Foundations.CommonOffsetRounding
-import Mathlib.Tactic
+module
+
+public import Utilities.Subdivision.SlopeScript
+public import Utilities.Gonality.GonalityTransport
+public import Utilities.Foundations.CommonOffsetRounding
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # Descent of winnability and rank from a regular subdivision
@@ -135,15 +139,15 @@ theorem fineOf_pathVertex (edge : Fin p) (position : spec.PathPosition edge) :
   · have hNpos : (spec.scaledPosition N hN edge position).val = 0 := by
       simp [h0]
     unfold pathVertex
-    rw [dif_pos h0, dif_pos hNpos]
+    rw [dite_eq_left h0, dite_eq_left hNpos]
     rfl
   · by_cases hlen : position.val = spec.length edge
     · have hNlen : (spec.scaledPosition N hN edge position).val =
           (spec.scale N hN).length edge := by
         simp [hlen]
       unfold pathVertex
-      rw [dif_neg h0, dif_pos hlen, dif_neg (by rw [hNlen]; exact (Nat.mul_pos hN (spec.length_pos edge)).ne'),
-        dif_pos hNlen]
+      rw [dite_eq_right h0, dite_eq_left hlen, dite_eq_right (by rw [hNlen]; exact (Nat.mul_pos hN (spec.length_pos edge)).ne'),
+        dite_eq_left hNlen]
       rfl
     · have hpos0 : 0 < position.val := Nat.pos_of_ne_zero h0
       have hposlt : position.val < spec.length edge := lt_of_le_of_ne hle hlen
@@ -157,7 +161,7 @@ theorem fineOf_pathVertex (edge : Fin p) (position : spec.PathPosition edge) :
         have := Nat.eq_of_mul_eq_mul_left hN h
         omega
       unfold pathVertex
-      rw [dif_neg h0, dif_neg hlen, dif_neg hNpos0, dif_neg hNposlen]
+      rw [dite_eq_right h0, dite_eq_right hlen, dite_eq_right hNpos0, dite_eq_right hNposlen]
       simp only [interiorVertex, fineOf, scaledPosition_val, Sum.inr.injEq, Sigma.mk.injEq,
         heq_eq_eq, true_and]
       apply Fin.ext
@@ -178,7 +182,7 @@ theorem embed_apply_fineOf (D : CFDiv spec.graph) (x : spec.Vertex) :
   rw [Finset.sum_eq_single x]
   · simp
   · intro y _ hyx
-    rw [if_neg]
+    rw [ite_eq_right]
     intro h
     exact hyx (spec.fineOf_injective N hN h)
   · intro h
@@ -190,7 +194,7 @@ theorem embed_apply_of_not_mem_range (D : CFDiv spec.graph)
   unfold embed
   apply Finset.sum_eq_zero
   intro x _
-  rw [if_neg]
+  rw [ite_eq_right]
   intro h
   exact hy ⟨x, h⟩
 
@@ -312,8 +316,8 @@ theorem fineVertex_not_mem_range (c : spec.Chip N) :
         show N * c.step + c.offset - 1 < N * spec.length c.edge - 1
         omega⟩⟩ := by
     unfold fineVertex pathVertex
-    rw [dif_neg (by show ¬ N * c.step + c.offset = 0; omega),
-      dif_neg (by show ¬ N * c.step + c.offset = N * spec.length c.edge; omega)]
+    rw [dite_eq_right (by show ¬ N * c.step + c.offset = 0; omega),
+      dite_eq_right (by show ¬ N * c.step + c.offset = N * spec.length c.edge; omega)]
     rfl
   rcases x with v | ⟨e, j⟩
   · rw [hfv] at hx
@@ -359,7 +363,7 @@ theorem isStepSlope_fineSlope (σ : firing_script (spec.scale N hN).graph) :
   intro edge offset
   have hlt : offset.val < N * spec.length edge := offset.isLt
   unfold fineSlope fineValue
-  rw [dif_pos (by omega), dif_pos (by omega),
+  rw [dite_eq_left (by omega), dite_eq_left (by omega),
     ← (spec.scale N hN).pathVertex_stepRightPosition edge offset,
     ← (spec.scale N hN).pathVertex_stepLeftPosition edge offset]
   rfl
@@ -383,7 +387,7 @@ theorem isStepSlope_roundedSlope (κ : Fin N)
   intro edge offset
   have hk : offset.val < spec.length edge := offset.isLt
   unfold roundedScript roundedSlope fineValue
-  rw [dif_pos (Nat.mul_le_mul_left N hk), dif_pos (Nat.mul_le_mul_left N hk.le),
+  rw [dite_eq_left (Nat.mul_le_mul_left N hk), dite_eq_left (Nat.mul_le_mul_left N hk.le),
     ← spec.pathVertex_stepRightPosition edge offset,
     ← spec.pathVertex_stepLeftPosition edge offset,
     spec.fineOf_pathVertex, spec.fineOf_pathVertex]

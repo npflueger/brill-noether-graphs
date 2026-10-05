@@ -999,7 +999,7 @@ comes from the two counts of §3.2); realise it (§7).
   arXiv:1909.12924.
 * A. Vargas, *Catalan-many tropical morphisms to trees; Part II: A space and a count*,
   arXiv:2609.09109.
-* Y. Len, *The Brill–Noether rank of a metric graph*, J. Algebraic Combin. 40 (2014),
+* Y. Len, *The Brill–Noether rank of a tropical curve*, J. Algebraic Combin. 40 (2014),
   arXiv:1209.6309.
 * C. M. Lim, S. Payne and N. Potashnik, *A note on Brill–Noether theory and rank-determining sets
   for metric graphs*, Int. Math. Res. Not. IMRN 2012, arXiv:1106.5519.

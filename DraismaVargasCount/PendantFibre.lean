@@ -1,5 +1,9 @@
-import DraismaVargasCount.IndexPattern
-import DraismaVargas.LocalCases.DanglingSideStructure
+module
+
+public import DraismaVargasCount.IndexPattern
+public import DraismaVargas.LocalCases.DanglingSideStructure
+
+@[expose] public section
 
 /-!
 # The actual pullback fibre on a pendant side
@@ -109,7 +113,7 @@ theorem target_ne_outer_of_mem_side
   have hAdj : 0 < num_edges data.sourceGraph inner outer := by
     have hEq : num_edges data.sourceGraph inner outer = 1 :=
       (cut.cross_num_edges inner outer cut.left_mem cut.right_not_mem).trans
-        (if_pos ⟨rfl, rfl⟩)
+        (ite_eq_left ⟨rfl, rfl⟩)
     exact lt_of_lt_of_eq (by decide : 0 < 1) hEq.symm
   obtain ⟨edge, hEnds⟩ := exists_sourceEnds_of_num_edges_pos data hAdj
   have hInner : Incident data edge inner := by
@@ -144,21 +148,21 @@ theorem fibre_sum_eq_indicator
       if ∃ vertex ∈ cut.side, vertex.1.1 = root then 1 else 0 := by
   classical
   by_cases hExists : ∃ vertex ∈ cut.side, vertex.1.1 = root
-  · rw [if_pos hExists]
+  · rw [ite_eq_left hExists]
     obtain ⟨chosen, hChosen, hTarget⟩ := hExists
     rw [Finset.sum_eq_single chosen]
-    · rw [if_pos hTarget, (degree_one_of_nonDanglingValency_zero fd chosen
+    · rw [ite_eq_left hTarget, (degree_one_of_nonDanglingValency_zero fd chosen
         (nonDanglingValency_eq_zero_of_mem_side data cut hChosen)).1]
       rfl
     · intro vertex hVertex hNe
-      rw [if_neg]
+      rw [ite_eq_right]
       intro hEq
       exact hNe (target_injective_on_side fd cut hVertex hChosen (hEq.trans hTarget.symm))
     · exact fun h ↦ (h hChosen).elim
-  · rw [if_neg hExists]
+  · rw [ite_eq_right hExists]
     apply Finset.sum_eq_zero
     intro vertex hVertex
-    exact if_neg (fun h ↦ hExists ⟨vertex, hVertex, h⟩)
+    exact ite_eq_right (fun h ↦ hExists ⟨vertex, hVertex, h⟩)
 
 /-- No chips of the fibre over the attachment itself lie in its pendant side. -/
 theorem fibre_sum_at_attachment_eq_zero
@@ -168,7 +172,7 @@ theorem fibre_sum_at_attachment_eq_zero
       if vertex.1.1 = outer.1.1 then
         ((data.vertexPartition vertex.1.1).blockCard vertex.1.2 : ℤ) else 0) = 0 := by
   rw [fibre_sum_eq_indicator fd cut]
-  exact if_neg (by
+  exact ite_eq_right (by
     rintro ⟨vertex, hVertex, hEqual⟩
     exact target_ne_outer_of_mem_side fd cut hVertex hEqual)
 

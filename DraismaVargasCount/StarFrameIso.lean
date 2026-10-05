@@ -1,4 +1,8 @@
-import DraismaVargasCount.GeometricStar
+module
+
+public import DraismaVargasCount.GeometricStar
+
+@[expose] public section
 
 /-!
 # Lifting a limit isomorphism to a frame isomorphism over the core

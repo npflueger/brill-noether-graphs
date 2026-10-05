@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.W3InteriorGraphTracking
-import DraismaVargas.LocalCases.W3ShiftGraphTracking
-import DraismaVargas.LocalCases.W2PArbitraryIncomingExit
+module
+
+public import DraismaVargas.LocalCases.W3InteriorGraphTracking
+public import DraismaVargas.LocalCases.W3ShiftGraphTracking
+public import DraismaVargas.LocalCases.W2PArbitraryIncomingExit
+
+@[expose] public section
 
 /-!
 # Same-candidate graph and row tracking for Figure 35

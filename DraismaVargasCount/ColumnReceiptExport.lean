@@ -1,4 +1,8 @@
-import DraismaVargasCount.ValencyThreeGeneral
+module
+
+public import DraismaVargasCount.ValencyThreeGeneral
+
+@[expose] public section
 
 /-!
 # The column receipt of a type-change link, at every facet datum

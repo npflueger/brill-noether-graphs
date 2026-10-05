@@ -1,8 +1,12 @@
-import DraismaVargas.LocalCases.OuterWalk
-import DraismaVargas.LocalCases.TrackedWallProgressMore
-import DraismaVargas.LocalCases.WallAdmissibility
-import DraismaVargas.LocalCases.WallAdmissibilityStable
-import DraismaVargas.LocalCases.ReachableMarch
+module
+
+public import DraismaVargas.LocalCases.OuterWalk
+public import DraismaVargas.LocalCases.TrackedWallProgressMore
+public import DraismaVargas.LocalCases.WallAdmissibility
+public import DraismaVargas.LocalCases.WallAdmissibilityStable
+public import DraismaVargas.LocalCases.ReachableMarch
+
+@[expose] public section
 
 /-!
 # Interior progress: tracked progress at every nonterminal state of a cone

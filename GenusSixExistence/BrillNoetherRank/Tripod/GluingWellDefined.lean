@@ -1,5 +1,9 @@
-import GenusSixExistence.BrillNoetherRank.Tripod.GluingOntoOpen
-import GenusSixExistence.BrillNoetherRank.Tripod.GluingLayoutStages
+module
+
+public import GenusSixExistence.BrillNoetherRank.Tripod.GluingOntoOpen
+public import GenusSixExistence.BrillNoetherRank.Tripod.GluingLayoutStages
+
+@[expose] public section
 
 /-!
 # Well-definedness of the gluing: the placement is forced
@@ -73,22 +77,22 @@ theorem sameEnds_of_coreIncidence (C : Core m q) {j j' : Fin q}
     rw [a] at h2
     by_cases e : C.head j' = C.head j
     · exact e.symm
-    · rw [if_neg e] at h2
+    · rw [ite_eq_right e] at h2
       split_ifs at h2 <;> omega
   · right
-    rw [if_pos rfl, if_neg a] at h1
+    rw [ite_eq_left rfl, ite_eq_right a] at h1
     by_cases b : C.head j' = C.tail j
     · refine ⟨b.symm, ?_⟩
       have hne : C.head j ≠ C.tail j := by
         intro hh
-        rw [if_pos hh, if_pos b] at h1
+        rw [ite_eq_left hh, ite_eq_left b] at h1
         omega
-      rw [if_neg (Ne.symm hne), if_pos rfl, b, if_neg (Ne.symm hne)] at h2
+      rw [ite_eq_right (Ne.symm hne), ite_eq_left rfl, b, ite_eq_right (Ne.symm hne)] at h2
       by_cases c : C.tail j' = C.head j
       · exact c.symm
-      · rw [if_neg c] at h2
+      · rw [ite_eq_right c] at h2
         omega
-    · rw [if_neg b] at h1
+    · rw [ite_eq_right b] at h1
       split_ifs at h1 <;> omega
 
 /-- **One subdivision of a slot that is not a loop**: two slots of `subdivide C e` with the same
@@ -130,17 +134,17 @@ theorem sameEnds_subdivide {C : Core m q} (e : Fin q) (hC : C.tail e ≠ C.head 
       · by_cases ha' : a' = e
         · exact Or.inl (by rw [ha, ha'])
         · exfalso
-          rw [if_pos ha, if_neg ha'] at h
+          rw [ite_eq_left ha, ite_eq_right ha'] at h
           rcases h with ⟨-, h⟩ | ⟨-, h⟩
           · exact hcs _ h.symm
           · exact hcs _ h.symm
       · by_cases ha' : a' = e
         · exfalso
-          rw [if_neg ha, if_pos ha'] at h
+          rw [ite_eq_right ha, ite_eq_left ha'] at h
           rcases h with ⟨-, h⟩ | ⟨h, -⟩
           · exact hcs _ h
           · exact hcs _ h
-        · rw [if_neg ha, if_neg ha'] at h
+        · rw [ite_eq_right ha, ite_eq_right ha'] at h
           simp only [Fin.castSucc_inj] at h
           exact Or.inr ⟨a, a', rfl, rfl, h⟩
 
@@ -193,7 +197,7 @@ theorem piecesDetermined_of_loopless (h : ∀ i, core.tail i ≠ core.head i) :
 
 theorem mergeSlot_legSlot (k : Fin 3) : mergeSlot s (legSlot p k) = none := by
   unfold mergeSlot
-  rw [dif_neg (by simp only [legSlot, Fin.val_natAdd]; omega)]
+  rw [dite_eq_right (by simp only [legSlot, Fin.val_natAdd]; omega)]
 
 /-- Two G-slots of `Γ̃` with the same ends have the same ends in the marked core. -/
 theorem sameEnds_markedCore {i i' : Fin (p + 1 + 1 + 1)}

@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.M11SourceCandidates
+module
+
+public import DraismaVargas.LocalCases.M11SourceCandidates
+
+@[expose] public section
 
 /-!
 # The second M11 split, with the source's remote branch swap

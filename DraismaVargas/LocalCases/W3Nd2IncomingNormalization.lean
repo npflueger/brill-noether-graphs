@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W3Nd2IncomingBackground
-import DraismaVargas.LocalCases.TargetPartitionNormalization
+module
+
+public import DraismaVargas.LocalCases.W3Nd2IncomingBackground
+public import DraismaVargas.LocalCases.TargetPartitionNormalization
+
+@[expose] public section
 
 /-!
 # Whole-block census at the selected incoming W3 nd2 wall, and sheet normalization

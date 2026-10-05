@@ -1,5 +1,9 @@
-import Utilities.Subdivision.ConnectedCheckFast
-import Utilities.Subdivision.SubdivisionTwoEdgeCut
+module
+
+public import Utilities.Subdivision.ConnectedCheckFast
+public import Utilities.Subdivision.SubdivisionTwoEdgeCut
+
+@[expose] public section
 
 /-!
 # A union-find two-edge-connectivity check for ordered cores
@@ -62,7 +66,7 @@ namespace ExplicitPotential.Core
 variable {n p : ℕ}
 
 /-- The slot set that survives deleting `e`. -/
-private abbrev without (e : Fin p) : Finset (Fin p) := Finset.univ.erase e
+abbrev without (e : Fin p) : Finset (Fin p) := Finset.univ.erase e
 
 /-- A slot crosses `S` exactly when its two ends disagree about membership. -/
 private theorem crosses_iff {core : ExplicitPotential.Core n p}

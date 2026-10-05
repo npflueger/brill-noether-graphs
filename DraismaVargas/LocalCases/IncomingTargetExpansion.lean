@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.M11IncomingCoordinates
+module
+
+public import DraismaVargas.LocalCases.M11IncomingCoordinates
+
+@[expose] public section
 
 /-!
 # Re-expanding an actual contracted incoming target
@@ -42,13 +46,13 @@ noncomputable def vertexEquiv (hab : a ≠ b) (hOne : num_edges target a b = 1) 
     cases vertex with
     | inl vertex =>
       change (if h : vertex.1 = b then Sum.inr () else Sum.inl ⟨vertex.1, h⟩) = Sum.inl vertex
-      rw [dif_neg vertex.2]
+      rw [dite_eq_right vertex.2]
       rfl
     | inr fresh =>
       cases fresh
       change (if h : b = b then Sum.inr () else Sum.inl ⟨b, h⟩ :
         TargetExpansion.Vertex (contract target hab hOne)) = Sum.inr ()
-      rw [dif_pos rfl]
+      rw [dite_eq_left rfl]
   right_inv := by
     intro vertex
     dsimp only
@@ -75,14 +79,14 @@ private theorem restore_endpoint
   · subst first
     have hR : right hc hab hOne edge = true := by simp [hRight]
     simp only [TargetExpansion.expandedEndpoint, hR, ↓reduceIte, fold_self]
-    erw [if_pos rfl]
+    erw [ite_eq_left rfl]
     rfl
   · by_cases hSecond : second = b
     · have hNotWall : fold target hab first ≠ ⟨a, hab⟩ := by
         simpa only [hSecond, fold_self] using hApart
       have hR : right hc hab hOne edge = true := by simp [hRight, hSecond]
       simp only [TargetExpansion.expandedEndpoint, hR, ↓reduceIte]
-      erw [if_neg hNotWall]
+      erw [ite_eq_right hNotWall]
       change (fold target hab first).1 = first
       rw [fold_of_ne target hab hFirst]
     · have hR : right hc hab hOne edge = false := by simp [hRight, hFirst, hSecond]

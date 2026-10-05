@@ -1,7 +1,11 @@
-import Bananas.SameStrand.EndpointBlock
-import Bananas.CrossOneOff.AffineInversionFinite
-import Bananas.Theta.ThetaNonrecurrence
-import Bananas.Transmission.TorsionOrderExact
+module
+
+public import Bananas.SameStrand.EndpointBlock
+public import Bananas.CrossOneOff.AffineInversionFinite
+public import Bananas.Theta.ThetaNonrecurrence
+public import Bananas.Transmission.TorsionOrderExact
+
+@[expose] public section
 
 /-!
 # Counting the endpoint inversion block

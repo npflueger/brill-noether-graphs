@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W2R1SourceProfile
-import DraismaVargas.LocalCases.M11SourceGenus
+module
+
+public import DraismaVargas.LocalCases.W2R1SourceProfile
+public import DraismaVargas.LocalCases.M11SourceGenus
+
+@[expose] public section
 
 /-!
 # Source-derived two-block `w2-r1` geometry (Figures 37--38, Equation (10))
@@ -482,22 +486,22 @@ variable (data star)
 
 theorem sideFine_left_of_zero {label : Fin 2} (hLabel : label = 0) :
     (sideFine data star label).left = data.edgePartition (star.edge label) := by
-  rw [sideFine, if_pos hLabel]
+  rw [sideFine, ite_eq_left hLabel]
   rfl
 
 theorem sideFine_right_of_zero {label : Fin 2} (hLabel : label = 0) :
     (sideFine data star label).right = data.vertexPartition wall := by
-  rw [sideFine, if_pos hLabel]
+  rw [sideFine, ite_eq_left hLabel]
   rfl
 
 theorem sideFine_left_of_ne_zero {label : Fin 2} (hLabel : label ≠ 0) :
     (sideFine data star label).left = data.vertexPartition wall := by
-  rw [sideFine, if_neg hLabel]
+  rw [sideFine, ite_eq_right hLabel]
   rfl
 
 theorem sideFine_right_of_ne_zero {label : Fin 2} (hLabel : label ≠ 0) :
     (sideFine data star label).right = data.edgePartition (star.edge label) := by
-  rw [sideFine, if_neg hLabel]
+  rw [sideFine, ite_eq_right hLabel]
   rfl
 
 theorem sideFine_contracts (label : Fin 2) :
@@ -589,11 +593,11 @@ noncomputable def memberLocal (data : GluingDatum target degree)
 
 theorem memberLocal_of_eq {double position : Fin 2} (hPosition : position = double) :
     memberLocal data star double position = joinedResolutionAt (data.vertexPartition wall) := by
-  rw [memberLocal, if_pos hPosition]
+  rw [memberLocal, ite_eq_left hPosition]
 
 theorem memberLocal_of_ne {double position : Fin 2} (hPosition : position ≠ double) :
     memberLocal data star double position = sideFine data star double := by
-  rw [memberLocal, if_neg hPosition]
+  rw [memberLocal, ite_eq_right hPosition]
 
 theorem memberLocal_contracts (double position : Fin 2) :
     (memberLocal data star double position).ContractsTo (data.vertexPartition wall) := by
@@ -890,9 +894,9 @@ theorem memberLocal_newEdge_blockCountWithin (position : Fin 2) (anchor : Fin de
         (data.vertexPartition wall) anchor =
       if position = profile.doubleLabel then 1 else 2 := by
   by_cases hPosition : position = profile.doubleLabel
-  · rw [memberLocal_of_eq data star hPosition, if_pos hPosition]
+  · rw [memberLocal_of_eq data star hPosition, ite_eq_left hPosition]
     exact SheetPartition.blockCountWithin_self _ _
-  · rw [memberLocal_of_ne data star hPosition, if_neg hPosition, sideFine_newEdge]
+  · rw [memberLocal_of_ne data star hPosition, ite_eq_right hPosition, sideFine_newEdge]
     exact doublePartition_blockCountWithin profile anchor hAnchor
 
 /-- **Figure 37, first member** (`δ⁽ᵠ⁾(Ã)` at the doubled direction):
@@ -1090,9 +1094,9 @@ theorem resolution_ne_of_ne {first second : Fin 2} (hNe : first ≠ second)
   have hSplit := eq_iff_not_eq_of_ne (first := first) (second := second)
     (double := pair.firstProfile.doubleLabel) hNe
   by_cases hCase : first = pair.firstProfile.doubleLabel
-  · rw [if_pos hCase, if_neg (hSplit.mp hCase)] at hFirst
+  · rw [ite_eq_left hCase, ite_eq_right (hSplit.mp hCase)] at hFirst
     exact absurd hFirst (by decide)
-  · rw [if_neg hCase, if_pos (by
+  · rw [ite_eq_right hCase, ite_eq_left (by
       by_contra hContra
       exact hCase (hSplit.mpr hContra))] at hFirst
     exact absurd hFirst (by decide)
@@ -1211,7 +1215,7 @@ theorem pair_newEdge_blockCountWithin_eq_two (pair : Pair data star)
     (hAnchor : (data.vertexPartition wall).Rel pair.second.1 anchor) :
     (pair.resolution position anchor).newEdge.blockCountWithin
       (data.vertexPartition wall) anchor = 2 := by
-  rw [pair.second_newEdge_blockCountWithin position hAnchor, if_neg hPosition]
+  rw [pair.second_newEdge_blockCountWithin position hAnchor, ite_eq_right hPosition]
 
 /-- **No orientation of the two-star suffices.**  In the opposite
 configuration each of the two possible fine directions leaves one of the two

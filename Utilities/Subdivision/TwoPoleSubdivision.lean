@@ -1,5 +1,9 @@
-import Utilities.Subdivision.SlopeScript
-import Utilities.Subdivision.SubdivisionConnectivity
+module
+
+public import Utilities.Subdivision.SlopeScript
+public import Utilities.Subdivision.SubdivisionConnectivity
+
+@[expose] public section
 
 /-!
 # A subdivision split into two factors and two connector slots

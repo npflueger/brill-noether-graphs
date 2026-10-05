@@ -1,6 +1,10 @@
-import DraismaVargasCount.SegmentWalls
-import DraismaVargas.Infrastructure.IteratedContraction
-import DraismaVargas.Infrastructure.PartitionNormalization
+module
+
+public import DraismaVargasCount.SegmentWalls
+public import DraismaVargas.Infrastructure.IteratedContraction
+public import DraismaVargas.Infrastructure.PartitionNormalization
+
+@[expose] public section
 
 /-!
 # The star of a codimension-one limit, as a quotient
@@ -881,7 +885,7 @@ theorem contractVertexPartition_of_eq {target : CFGraph} {degree : ℕ}
     (data : GluingDatum target degree) (a b : target.V)
     {y : Vertex target b} (h : (y : target.V) = a) :
     contractVertexPartition data a b y
-      = join (data.vertexPartition a) (data.vertexPartition b) := if_pos h
+      = join (data.vertexPartition a) (data.vertexPartition b) := ite_eq_left h
 
 /-- The two endpoint sheet permutations of a `DatumIso` agree modulo the join
 of the endpoint partitions of the occurrence, downstairs. -/
@@ -931,12 +935,12 @@ noncomputable def contractVertexPerm (iso : DatumIso first second) (e₁ : targe
 theorem contractVertexPerm_merged (iso : DatumIso first second) (e₁ : target₁.edges)
     {x : Vertex target₁ ((e₁ : target₁.V × target₁.V)).2}
     (hx : (x : target₁.V) = ((e₁ : target₁.V × target₁.V)).1) :
-    contractVertexPerm iso e₁ x = mergedPerm iso e₁ := if_pos hx
+    contractVertexPerm iso e₁ x = mergedPerm iso e₁ := ite_eq_left hx
 
 theorem contractVertexPerm_of_ne (iso : DatumIso first second) (e₁ : target₁.edges)
     {x : Vertex target₁ ((e₁ : target₁.V × target₁.V)).2}
     (hx : (x : target₁.V) ≠ ((e₁ : target₁.V × target₁.V)).1) :
-    contractVertexPerm iso e₁ x = iso.vertexPerm (x : target₁.V) := if_neg hx
+    contractVertexPerm iso e₁ x = iso.vertexPerm (x : target₁.V) := ite_eq_right hx
 
 theorem contractDatumIso_vertexPartition (iso : DatumIso first second) (e₁ : target₁.edges)
     (x : Vertex target₁ ((e₁ : target₁.V × target₁.V)).2) :

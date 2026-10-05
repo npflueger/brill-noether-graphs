@@ -1,4 +1,8 @@
-import DraismaVargasCount.BallotSpineCensus
+module
+
+public import DraismaVargasCount.BallotSpineCensus
+
+@[expose] public section
 
 /-!
 # The pruned ballot source: valencies, stable rows and the full-dimensional presentation
@@ -88,11 +92,11 @@ def bSurvives (m : ℕ) (s : Slopes (2 * (m + 1))) (e k : ℕ) : Prop :=
 
 theorem bSurvives_spine (s : Slopes (2 * (m + 1))) {e : ℕ} (h : e % 3 = 1) (k : ℕ) :
     bSurvives m s e k ↔ s.SpineMem ((e + 2) / 3) k := by
-  unfold bSurvives; rw [if_pos h]
+  unfold bSurvives; rw [ite_eq_left h]
 
 theorem bSurvives_of_not_spine (s : Slopes (2 * (m + 1))) {e : ℕ} (h : e % 3 ≠ 1)
     (k : ℕ) : bSurvives m s e k ↔ s.PairMem (lolli (e + 1)) k := by
-  unfold bSurvives; rw [if_neg h]
+  unfold bSurvives; rw [ite_eq_right h]
 
 theorem bSurvives_zero (s : Slopes (2 * (m + 1))) (e : ℕ) : bSurvives m s e 0 := by
   unfold bSurvives
@@ -327,10 +331,10 @@ theorem bVisible_target (s : Slopes (2 * (m + 1))) {i : Fin (6 * m + 3)}
     edge.1.1 = occ m i := by
   classical
   by_cases hleaf : IsLeafEdge m i
-  · rw [bVisible, if_pos hleaf] at hEdge
+  · rw [bVisible, ite_eq_left hleaf] at hEdge
     simp only [Finset.mem_insert, Finset.mem_singleton] at hEdge
     rcases hEdge with rfl | rfl <;> rfl
-  · rw [bVisible, if_neg hleaf, Finset.mem_singleton] at hEdge
+  · rw [bVisible, ite_eq_right hleaf, Finset.mem_singleton] at hEdge
     rw [hEdge]
     rfl
 
@@ -338,9 +342,9 @@ theorem card_bVisible (s : Slopes (2 * (m + 1))) (i : Fin (6 * m + 3)) :
     (bVisible m s i).card = if IsLeafEdge m i then 2 else 1 := by
   classical
   by_cases hleaf : IsLeafEdge m i
-  · rw [bVisible, if_pos hleaf, if_pos hleaf]
+  · rw [bVisible, ite_eq_left hleaf, ite_eq_left hleaf]
     exact Finset.card_pair (bLoopFirst_ne_bLoopSecond s hleaf)
-  · rw [bVisible, if_neg hleaf, if_neg hleaf, Finset.card_singleton]
+  · rw [bVisible, ite_eq_right hleaf, ite_eq_right hleaf, Finset.card_singleton]
 
 theorem bVisible_pairwiseDisjoint (s : Slopes (2 * (m + 1)))
     (indices : Finset (Fin (6 * m + 3))) :
@@ -372,25 +376,25 @@ theorem bNonDanglingIncident_core_eq_visible (s : Slopes (2 * (m + 1)))
       exact hraw
     refine Finset.mem_biUnion.mpr ⟨i, (mem_incidentEdges_occ m v i).mp hiMem, ?_⟩
     rcases hiClass with ⟨hLeaf, hLoop⟩ | ⟨hNotLeaf, hMain⟩
-    · rw [bVisible, if_pos hLeaf]
+    · rw [bVisible, ite_eq_left hLeaf]
       rcases hLoop with h | h
       · rw [h]; exact Finset.mem_insert_self _ _
       · rw [h]; exact Finset.mem_insert_of_mem (Finset.mem_singleton_self _)
-    · rw [bVisible, if_neg hNotLeaf, Finset.mem_singleton]
+    · rw [bVisible, ite_eq_right hNotLeaf, Finset.mem_singleton]
       exact hMain
   · intro hEdge
     obtain ⟨i, hiIncident, hiVisible⟩ := Finset.mem_biUnion.mp hEdge
     have hIncident : occ m i ∈ GluingDatum.incidentEdges v :=
       (mem_incidentEdges_occ m v i).mpr hiIncident
     by_cases hLeaf : IsLeafEdge m i
-    · rw [bVisible, if_pos hLeaf] at hiVisible
+    · rw [bVisible, ite_eq_left hLeaf] at hiVisible
       simp only [Finset.mem_insert, Finset.mem_singleton] at hiVisible
       rcases hiVisible with rfl | rfl
       · exact (mem_nonDanglingIncident _ _ _).mpr
           ⟨bLoopFirst_survives s hLeaf, bMain_incident_core s hIncident⟩
       · exact (mem_nonDanglingIncident _ _ _).mpr
           ⟨bLoopSecond_survives s hLeaf, bLoopSecond_incident_core s hLeaf hIncident⟩
-    · rw [bVisible, if_neg hLeaf, Finset.mem_singleton] at hiVisible
+    · rw [bVisible, ite_eq_right hLeaf, Finset.mem_singleton] at hiVisible
       subst edge
       exact (mem_nonDanglingIncident _ _ _).mpr
         ⟨ballot_mainSurvives s (occ m i), bMain_incident_core s hIncident⟩

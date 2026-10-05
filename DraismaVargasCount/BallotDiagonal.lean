@@ -1,5 +1,9 @@
-import DraismaVargasCount.BallotValency
-import DraismaVargasCount.Multiplicity
+module
+
+public import DraismaVargasCount.BallotValency
+public import DraismaVargasCount.Multiplicity
+
+@[expose] public section
 
 /-!
 # The diagonal of the ballot length matrix, at every slope sequence
@@ -137,7 +141,7 @@ theorem bCoefficient (s : Slopes (2 * (m + 1))) (i : Fin (6 * m + 3))
       1 / ((ballotDatum m s).sourceEdgeIndex edge : ℚ) := by
   classical
   unfold coefficient
-  rw [if_pos]
+  rw [ite_eq_left]
   show i = (catEdgeEquiv m).symm edge.1.1
   rw [hTarget]
   exact ((catEdgeEquiv m).symm_apply_apply i).symm
@@ -306,14 +310,14 @@ theorem bMatrix_diag (s : Slopes (2 * (m + 1))) (i : Fin (6 * m + 3)) :
   classical
   rw [bMatrix_diag_eq_sum]
   by_cases hLeaf : IsLeafEdge m i
-  · rw [if_pos hLeaf, toFinset_bPath_leaf s hLeaf,
+  · rw [ite_eq_left hLeaf, toFinset_bPath_leaf s hLeaf,
       Finset.sum_pair (bLoopFirst_ne_bLoopSecond s hLeaf),
       bSourceEdgeIndex_bLoopFirst s hLeaf, bSourceEdgeIndex_bLoopSecond s hLeaf]
     norm_num
-  · rw [if_neg hLeaf, toFinset_bPath_notLeaf s hLeaf, Finset.sum_singleton]
+  · rw [ite_eq_right hLeaf, toFinset_bPath_notLeaf s hLeaf, Finset.sum_singleton]
     by_cases hspine : i.val % 3 = 1
-    · rw [if_pos hspine, bSourceEdgeIndex_main_spine s hspine]
-    · rw [if_neg hspine, bSourceEdgeIndex_main_stem s hLeaf hspine]
+    · rw [ite_eq_left hspine, bSourceEdgeIndex_main_spine s hspine]
+    · rw [ite_eq_right hspine, bSourceEdgeIndex_main_stem s hLeaf hspine]
       norm_num
 
 /-- **The numerator of a diagonal entry is `2` exactly on the leaf rows**, for
@@ -325,14 +329,14 @@ theorem bNum_matrix_diag (s : Slopes (2 * (m + 1))) (i : Fin (6 * m + 3)) :
       if IsLeafEdge m i then 2 else 1 := by
   rw [bMatrix_diag]
   by_cases hLeaf : IsLeafEdge m i
-  · rw [if_pos hLeaf, if_pos hLeaf]
+  · rw [ite_eq_left hLeaf, ite_eq_left hLeaf]
     norm_num
-  · rw [if_neg hLeaf, if_neg hLeaf]
+  · rw [ite_eq_right hLeaf, ite_eq_right hLeaf]
     by_cases hspine : i.val % 3 = 1
-    · rw [if_pos hspine, one_div,
+    · rw [ite_eq_left hspine, one_div,
         Rat.inv_natCast_num_of_pos (Slopes.one_le_slope s ((i.val + 2) / 3))]
       norm_num
-    · rw [if_neg hspine]
+    · rw [ite_eq_right hspine]
       norm_num
 
 /-- **The numerators of the ballot diagonal multiply to `2 ^ (2m+2)`**, which

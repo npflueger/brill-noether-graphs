@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.PrunedRealizationSpec
-import Utilities.Subdivision.SubdivisionConnectivity
-import Utilities.Subdivision.PathSplitRefinement
+module
+
+public import DraismaVargas.LocalCases.PrunedRealizationSpec
+public import Utilities.Subdivision.SubdivisionConnectivity
+public import Utilities.Subdivision.PathSplitRefinement
+
+@[expose] public section
 
 /-!
 # The pruned contracted spec

@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W2MkkIncomingCensus
+module
+
+public import DraismaVargas.LocalCases.W2MkkIncomingCensus
+
+@[expose] public section
 
 /-!
 # Identifying the incoming `w2Mkk` datum with a named Figure 34 member

@@ -1,5 +1,9 @@
-import DraismaVargasCount.EdgeDenominator
-import DraismaVargasCount.FibreCaterpillar
+module
+
+public import DraismaVargasCount.EdgeDenominator
+public import DraismaVargasCount.FibreCaterpillar
+
+@[expose] public section
 
 /-!
 # Integrality of the multiplicity, and the natural-number multiplicity
@@ -211,12 +215,12 @@ theorem clearedMatrix_leafColumn
       if sourceRow = leafRow fd hLeaf then 1 else 0 := by
   classical
   rw [clearedMatrix_apply, matrix_leafEdge_column fd hLeaf sourceRow,
-    columnScale, if_pos (leafEdge_column_mem_leafColumns fd hLeaf)]
+    columnScale, ite_eq_left (leafEdge_column_mem_leafColumns fd hLeaf)]
   by_cases hCase : sourceRow = leafRow fd hLeaf
-  · rw [if_pos hCase, if_pos hCase, hCase,
+  · rw [ite_eq_left hCase, ite_eq_left hCase, hCase,
       EdgeDenominator.rowDenominator_eq_one_of_leafRow fd hLeaf]
     norm_num
-  · rw [if_neg hCase, if_neg hCase]
+  · rw [ite_eq_right hCase, ite_eq_right hCase]
     ring
 
 /-! ## 3.  The cleared matrix is an integer matrix -/
@@ -233,9 +237,9 @@ theorem clearedMatrix_integral
   · obtain ⟨vertex, hLeaf, rfl⟩ := exists_leaf_of_mem_leafColumns fd hColumn
     rw [clearedMatrix_leafColumn fd hLeaf sourceRow]
     by_cases hCase : sourceRow = leafRow fd hLeaf
-    · exact ⟨1, by rw [if_pos hCase]; norm_num⟩
-    · exact ⟨0, by rw [if_neg hCase]; norm_num⟩
-  · rw [clearedMatrix_apply, columnScale, if_neg hColumn, mul_one]
+    · exact ⟨1, by rw [ite_eq_left hCase]; norm_num⟩
+    · exact ⟨0, by rw [ite_eq_right hCase]; norm_num⟩
+  · rw [clearedMatrix_apply, columnScale, ite_eq_right hColumn, mul_one]
     exact integral_commonDenominator_mul _ _ (Finset.mem_univ column)
 
 /-- `B'` as a matrix of integers. -/

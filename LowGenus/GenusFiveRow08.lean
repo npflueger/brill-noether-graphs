@@ -1,6 +1,10 @@
-import LowGenus.GenusFiveRow08ChamberOne
-import LowGenus.GenusFiveRow08ChamberTwo
-import LowGenus.GenusFiveRow08ChamberThree
+module
+
+public import LowGenus.GenusFiveRow08ChamberOne
+public import LowGenus.GenusFiveRow08ChamberTwo
+public import LowGenus.GenusFiveRow08ChamberThree
+
+@[expose] public section
 
 /-!
 # AR row 08, assembled

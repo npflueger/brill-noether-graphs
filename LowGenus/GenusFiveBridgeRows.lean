@@ -1,10 +1,14 @@
-import LowGenus.GenusFiveCubicAtlas
-import LowGenus.GenusFiveConfigurations
-import LowGenus.GenusFiveCubicCoverage
-import LowGenus.LowGenusExistence
-import Utilities.Gluing.GenusFiveVertexCut
-import Utilities.Subdivision.CoreVertexCutGenus
-import Utilities.Subdivision.DegenerateCoreVertexCut
+module
+
+public import LowGenus.GenusFiveCubicAtlas
+public import LowGenus.GenusFiveConfigurations
+public import LowGenus.GenusFiveCubicCoverage
+public import LowGenus.LowGenusExistence
+public import Utilities.Gluing.GenusFiveVertexCut
+public import Utilities.Subdivision.CoreVertexCutGenus
+public import Utilities.Subdivision.DegenerateCoreVertexCut
+
+@[expose] public section
 
 /-!
 # Articulation data for the four genus-five cubic bridge rows

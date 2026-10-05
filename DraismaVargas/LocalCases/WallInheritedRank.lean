@@ -1,7 +1,11 @@
-import DraismaVargas.LocalCases.PrunedFibreStablePath
-import DraismaVargas.LocalCases.StableSourceMatrix
-import DraismaVargas.LocalCases.FullDimensionalSource
-import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+module
+
+public import DraismaVargas.LocalCases.PrunedFibreStablePath
+public import DraismaVargas.LocalCases.StableSourceMatrix
+public import DraismaVargas.LocalCases.FullDimensionalSource
+public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+
+@[expose] public section
 
 /-!
 # Inherited full column rank of the literal limit matrix

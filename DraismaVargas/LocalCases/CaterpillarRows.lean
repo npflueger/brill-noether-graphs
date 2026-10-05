@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.CaterpillarValency
-import DraismaVargas.LocalCases.CaterpillarStable
-import DraismaVargas.LocalCases.SeedDeterminant
+module
+
+public import DraismaVargas.LocalCases.CaterpillarValency
+public import DraismaVargas.LocalCases.CaterpillarStable
+public import DraismaVargas.LocalCases.SeedDeterminant
+
+@[expose] public section
 
 /-!
 # Full-dimensional caterpillar: actual stable rows and diagonal determinant

@@ -1,7 +1,11 @@
-import DraismaVargas.LocalCases.W4CommonBalance
-import DraismaVargas.LocalCases.W4IncomingPairingReceipts
-import DraismaVargas.LocalCases.RelabelFullDimensional
-import DraismaVargas.LocalCases.FiniteAtlasMarch
+module
+
+public import DraismaVargas.LocalCases.W4CommonBalance
+public import DraismaVargas.LocalCases.W4IncomingPairingReceipts
+public import DraismaVargas.LocalCases.RelabelFullDimensional
+public import DraismaVargas.LocalCases.FiniteAtlasMarch
+
+@[expose] public section
 
 /-!
 # The W4 positive exit in the incoming cover's original coordinates

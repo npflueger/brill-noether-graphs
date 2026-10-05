@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyThreeRowEquiv
-import DraismaVargas.LocalCases.NonTrivalentValencyThreeSimpleCandidate
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyThreeRowEquiv
+public import DraismaVargas.LocalCases.NonTrivalentValencyThreeSimpleCandidate
+
+@[expose] public section
 
 /-!
 # Stable rows of the prescribed Type I / Type II candidates above a three-valent wall

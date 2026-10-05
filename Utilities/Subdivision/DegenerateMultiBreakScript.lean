@@ -1,6 +1,10 @@
-import Utilities.Subdivision.DegenerateInterpolation
-import Utilities.Subdivision.MultiBreakScript
-import Utilities.Subdivision.StrongSeparator
+module
+
+public import Utilities.Subdivision.DegenerateInterpolation
+public import Utilities.Subdivision.MultiBreakScript
+public import Utilities.Subdivision.StrongSeparator
+
+@[expose] public section
 
 /-!
 # Multi-break firing scripts on the closed length orthant

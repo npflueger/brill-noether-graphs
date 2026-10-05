@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoBaseOneExit
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoBaseOneExit
+
+@[expose] public section
 
 /-!
 # The valency-two Base II link, with the strong no-return hypothesis removed

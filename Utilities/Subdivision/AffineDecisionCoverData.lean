@@ -1,4 +1,8 @@
-import Utilities.Subdivision.AffineCover
+module
+
+public import Utilities.Subdivision.AffineCover
+
+@[expose] public section
 
 /-!
 # Affine wall-decision cover certificates
@@ -30,7 +34,7 @@ inductive DecisionTreeData (m : ℕ) where
 
 namespace DecisionTreeData
 
-private def ValidActive {m : ℕ}
+def ValidActive {m : ℕ}
     (cones : List (List (AffineForm m)))
     (active : List (AffineForm m)) : DecisionTreeData m → Prop
   | .impossible farkas => farkas.Valid active
@@ -41,7 +45,7 @@ private def ValidActive {m : ℕ}
       ValidActive cones (active ++ [form]) holds ∧
         ValidActive cones (active ++ [form.violation]) fails
 
-private def checkActive {m : ℕ}
+def checkActive {m : ℕ}
     (cones : List (List (AffineForm m)))
     (active : List (AffineForm m)) : DecisionTreeData m → Bool
   | .impossible farkas => farkas.check active

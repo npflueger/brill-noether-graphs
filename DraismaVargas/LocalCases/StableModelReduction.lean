@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.CertifiedPencil
-import Utilities.Subdivision.TrivalentExpansion
+module
+
+public import DraismaVargas.LocalCases.CertifiedPencil
+public import Utilities.Subdivision.TrivalentExpansion
+
+@[expose] public section
 
 /-!
 # The stable-model reduction, and the constraint that forces it
@@ -186,7 +190,7 @@ theorem key_injective : Function.Injective (key (p := p)) := by
   have h' : 2 * j.val + (if s then 1 else 0) = 2 * j'.val + (if s' then 1 else 0) := h
   clear h
   cases s <;> cases s' <;>
-    simp only [Bool.false_eq_true, if_false, if_true] at h'
+    simp only [Bool.false_eq_true, ite_false, ite_true] at h'
   · have hjj : j = j' := Fin.ext (by omega)
     rw [hjj]
   · omega
@@ -262,10 +266,10 @@ theorem slotEnds_marker {j : Fin p} (hj : mk.first j = true) :
     obtain ⟨j', s⟩ := x
     cases s with
     | false =>
-        simp only [Bool.false_eq_true, if_false] at hx
+        simp only [Bool.false_eq_true, ite_false] at hx
         exact Or.inr (by rw [mk.tail_unique j hj j' hx])
     | true =>
-        simp only [if_true] at hx
+        simp only [ite_true] at hx
         exact Or.inl (by rw [mk.head_unique j hj j' hx])
   · rintro (rfl | rfl)
     · simp
@@ -322,7 +326,7 @@ theorem mem_aEnds {x : Fin p × Bool} :
   constructor
   · rintro ⟨h1, h2, h3⟩
     rw [h2] at h1
-    simp only [Bool.false_eq_true, if_false] at h1
+    simp only [Bool.false_eq_true, ite_false] at h1
     exact ⟨h1, h2, h3⟩
   · rintro ⟨h1, h2, h3⟩
     refine ⟨?_, h2, h3⟩
@@ -335,7 +339,7 @@ theorem mem_bEnds {x : Fin p × Bool} :
   constructor
   · rintro ⟨h1, h2, h3⟩
     rw [h2] at h1
-    simp only [if_true] at h1
+    simp only [ite_true] at h1
     exact ⟨h1, h2, h3⟩
   · rintro ⟨h1, h2, h3⟩
     refine ⟨?_, h2, h3⟩
@@ -432,7 +436,7 @@ def posFn (x : Fin p × Bool) : ℕ :=
 theorem posFn_of_a {x : Fin p × Bool} (hx : x ∈ aEnds mk w) :
     posFn mk w x = rank (aEnds mk w) x := by
   have h := (Finset.mem_filter.mp hx).2
-  simp only [posFn, if_pos h]
+  simp only [posFn, ite_eq_left h]
 
 theorem posFn_of_b {x : Fin p × Bool} (hx : x ∈ bEnds mk w) :
     posFn mk w x = (slotValence C w - loopCount mk w) + rank (bEnds mk w) x := by
@@ -441,12 +445,12 @@ theorem posFn_of_b {x : Fin p × Bool} (hx : x ∈ bEnds mk w) :
     rintro ⟨h1, -⟩
     rw [h1] at h
     exact Bool.noConfusion h.1
-  simp only [posFn, if_neg hnot, if_pos h]
+  simp only [posFn, ite_eq_right hnot, ite_eq_left h]
 
 theorem posFn_of_s {x : Fin p × Bool} (hx : x ∈ sEnds mk w) :
     posFn mk w x = loopCount mk w + rank (sEnds mk w) x := by
   have h := (Finset.mem_filter.mp hx).2
-  simp only [posFn, if_neg h.1, if_neg h.2]
+  simp only [posFn, ite_eq_right h.1, ite_eq_right h.2]
 
 theorem posFn_lt_a {x : Fin p × Bool} (hx : x ∈ aEnds mk w) :
     posFn mk w x < loopCount mk w := by
@@ -580,18 +584,18 @@ def carrier (j : Fin p) : Fin p := if mk.second j = true then mk.mate j else j
 theorem second_carrier (j : Fin p) : mk.second (carrier mk j) = false := by
   unfold carrier
   by_cases h : mk.second j = true
-  · rw [if_pos h]
+  · rw [ite_eq_left h]
     exact mk.second_eq_false _ (mk.first_of_second j h)
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     simpa using h
 
 theorem carrier_of_second {j : Fin p} (h : mk.second j = true) :
-    carrier mk j = mk.mate j := by unfold carrier; rw [if_pos h]
+    carrier mk j = mk.mate j := by unfold carrier; rw [ite_eq_left h]
 
 theorem carrier_of_not_second {j : Fin p} (h : mk.second j = false) :
     carrier mk j = j := by
   unfold carrier
-  rw [if_neg (by simpa using h)]
+  rw [ite_eq_right (by simpa using h)]
 
 /-- The returning end of a loop, seen at the partner. -/
 def mateEnd (j : Fin p) (hj : mk.first j = true) : slotEnds C (C.tail j) :=
@@ -690,9 +694,9 @@ theorem sum_valence_sub_three (hs : Stable mk) :
     by_cases h : mk.IsMarker w
     · obtain ⟨j, hj, hjw⟩ := h
       have hv : slotValence C w = 2 := by rw [← hjw]; exact mk.slotValence_marker hj
-      rw [if_pos ⟨j, hj, hjw⟩, hv]
+      rw [ite_eq_left ⟨j, hj, hjw⟩, hv]
     · have := hs.stable w h
-      rw [if_neg h]
+      rw [ite_eq_right h]
       omega
   rw [Finset.sum_add_distrib, Finset.sum_add_distrib] at hsum
   simp only [Finset.sum_const, Finset.card_univ, Fintype.card_fin,
@@ -819,14 +823,14 @@ theorem bigHead_first (hs : Stable mk) {j : Fin p} (hj : mk.second j = false)
     bigHead mk hs (Sum.inr ⟨j, hj⟩)
       = ⟨C.tail j, legOf mk (C.tail j) (by have := hs.partner j hf; omega)
           (mateEnd mk j hf)⟩ := by
-  simp only [bigHead, dif_pos hf]
+  simp only [bigHead, dite_eq_left hf]
 
 theorem bigHead_not_first (hs : Stable mk) {j : Fin p} (hj : mk.second j = false)
     (hf : mk.first j = false) :
     bigHead mk hs (Sum.inr ⟨j, hj⟩)
       = ⟨C.head j, legOf mk (C.head j) (valence_head mk hs hf) (headEnd C j)⟩ := by
   have hne : ¬ (mk.first j = true) := by rw [hf]; simp
-  simp only [bigHead, dif_neg hne]
+  simp only [bigHead, dite_eq_right hne]
 
 theorem tailEnd_mem_aEnds {j : Fin p} (hf : mk.first j = true) :
     ((tailEnd C j : Fin p × Bool)) ∈ aEnds mk (C.tail j) := by
@@ -1120,14 +1124,14 @@ theorem mixed_absurd {w : Fin n} (hw : ¬ mk.IsMarker w) {x y : Fin p × Bool}
   cases hxb : x.2 with
   | false =>
       rw [hxb] at hx
-      simp only [Bool.false_eq_true, if_false] at hx
+      simp only [Bool.false_eq_true, ite_false] at hx
       have : C.head y.1 = w := by
         rw [← hcarr, head_mate_second mk hxs, hx]
       exact hw ⟨y.1, hfy, this⟩
   | true =>
       have hyb : y.2 = true := by rw [← hs2, hxb]
       rw [hyb] at hy
-      simp only [if_true] at hy
+      simp only [ite_true] at hy
       exact hw ⟨y.1, hfy, hy⟩
 
 theorem bigEndOfEnd_inj (hs : Stable mk) {w : Fin n} (hw : ¬ mk.IsMarker w)
@@ -1163,7 +1167,7 @@ theorem bigEndOfEnd_mem (hs : Stable mk) (w : Fin n) (hw : ¬ mk.IsMarker w)
   rw [mem_slotEnds] at hx
   cases sd with
   | false =>
-      simp only [Bool.false_eq_true, if_false] at hx
+      simp only [Bool.false_eq_true, ite_false] at hx
       subst hx
       have hjs : mk.second j = false := by
         by_contra hc
@@ -1178,7 +1182,7 @@ theorem bigEndOfEnd_mem (hs : Stable mk) (w : Fin n) (hw : ¬ mk.IsMarker w)
         exact bigV_eq hleg
       exact mem_slotEnds_tail mk hs _ _ hstep
   | true =>
-      simp only [if_true] at hx
+      simp only [ite_true] at hx
       subst hx
       have hjf : mk.first j = false := by
         by_contra hc
@@ -1345,12 +1349,12 @@ noncomputable def partnerOf (w : Fin n) : Fin n :=
   if h : mk.IsMarker w then C.tail h.choose else w
 
 theorem partnerOf_of_not_marker {w : Fin n} (hw : ¬ mk.IsMarker w) :
-    partnerOf mk w = w := dif_neg hw
+    partnerOf mk w = w := dite_eq_right hw
 
 theorem partnerOf_marker {j : Fin p} (hj : mk.first j = true) :
     partnerOf mk (C.head j) = C.tail j := by
   have hex : mk.IsMarker (C.head j) := ⟨j, hj, rfl⟩
-  rw [partnerOf, dif_pos hex]
+  rw [partnerOf, dite_eq_left hex]
   rw [mk.head_unique j hj _ hex.choose_spec.2]
 
 theorem bigCore_connected (hs : Stable mk) (hConn : C.Connected) :

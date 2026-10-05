@@ -1,4 +1,8 @@
-import ChipFiringWithLean.Basic
+module
+
+public import ChipFiringWithLean.Basic
+
+@[expose] public section
 
 /-!
 # Maximum closure and clamping of firing scripts
@@ -120,7 +124,7 @@ theorem effective_sub_one_chip_add_prin_clamp_at
     effective (D - one_chip q + prin G (clampScript σ (σ q))) := by
   apply effective_add_prin_clamp_at q _ hσ
   intro v hv
-  simpa only [Pi.sub_apply, one_chip, if_neg hv, sub_zero] using hD v
+  simpa only [Pi.sub_apply, one_chip, ite_eq_right hv, sub_zero] using hD v
 
 /-- Winnability for a divisor effective away from `q` has a nonnegative
 script witness vanishing at `q`. -/
@@ -147,7 +151,7 @@ theorem exists_nonneg_firing_script_sub_one_chip {D : CFDiv G}
       σ q = 0 ∧ (∀ v, 0 ≤ σ v) ∧ effective (D - one_chip q + prin G σ) := by
   apply exists_nonneg_firing_script_of_winnable q _ hwin
   intro v hv
-  simpa only [Pi.sub_apply, one_chip, if_neg hv, sub_zero] using hD v
+  simpa only [Pi.sub_apply, one_chip, ite_eq_right hv, sub_zero] using hD v
 
 end Utilities
 

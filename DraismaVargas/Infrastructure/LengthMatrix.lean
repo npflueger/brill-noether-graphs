@@ -1,5 +1,9 @@
-import DraismaVargas.Infrastructure.GluingRealization
-import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
+module
+
+public import DraismaVargas.Infrastructure.GluingRealization
+public import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
+
+@[expose] public section
 
 /-!
 # Length matrices from occurrence-labelled source paths
@@ -165,15 +169,15 @@ theorem pathBlockCofactorContribution_eq_quotient
       simp only [pathBlockCofactorContribution,
         pathBlockQuotientContribution, List.map_cons, List.sum_cons]
       by_cases hBlock : edgeBlock edge = sourceBlock
-      · rw [if_pos hBlock, if_pos hBlock]
+      · rw [ite_eq_left hBlock, ite_eq_left hBlock]
         by_cases hTarget : presentation.targetEdge column = edge.1.1
-        · rw [if_pos hTarget,
+        · rw [ite_eq_left hTarget,
             coefficient_mul_eq_cofactor_div presentation edge column
               cofactor hTarget, ih]
-        · rw [if_neg hTarget,
+        · rw [ite_eq_right hTarget,
             coefficient_eq_zero_of_target_ne presentation edge column hTarget,
             zero_mul, ih]
-      · rw [if_neg hBlock, if_neg hBlock, ih]
+      · rw [ite_eq_right hBlock, ite_eq_right hBlock, ih]
 
 omit [Fintype coordinate] in
 /-- Multiplying a path's grouped coefficient by a cofactor distributes to
@@ -427,7 +431,7 @@ theorem pathBlockQuotientContribution_eq_filtered_sum
             cofactor) (edge :: rest)).sum
       by_cases hBlock : edgeBlock edge = sourceBlock
       · by_cases hTarget : presentation.targetEdge column = edge.1.1
-        · rw [if_pos hBlock, if_pos hTarget]
+        · rw [ite_eq_left hBlock, ite_eq_left hTarget]
           rw [List.filterMap_cons]
           rw [show matchingQuotientTerm presentation edgeBlock sourceBlock
             column cofactor edge =
@@ -435,13 +439,13 @@ theorem pathBlockQuotientContribution_eq_filtered_sum
                 simp [matchingQuotientTerm, hBlock, hTarget]]
           simp only [List.sum_cons]
           rw [ih]
-        · rw [if_pos hBlock, if_neg hTarget, zero_add]
+        · rw [ite_eq_left hBlock, ite_eq_right hTarget, zero_add]
           rw [List.filterMap_cons]
           rw [show matchingQuotientTerm presentation edgeBlock sourceBlock
             column cofactor edge = none by
                 simp [matchingQuotientTerm, hBlock, hTarget]]
           exact ih
-      · rw [if_neg hBlock, zero_add]
+      · rw [ite_eq_right hBlock, zero_add]
         rw [List.filterMap_cons]
         rw [show matchingQuotientTerm presentation edgeBlock sourceBlock
           column cofactor edge = none by

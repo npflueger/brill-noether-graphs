@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.ResolutionSideCounts
+module
+
+public import DraismaVargas.LocalCases.ResolutionSideCounts
+
+@[expose] public section
 
 /-!
 # Retained source occurrences survive a literal wall resolution

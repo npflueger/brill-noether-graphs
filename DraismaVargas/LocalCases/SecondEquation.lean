@@ -1,7 +1,11 @@
-import DraismaVargas.LocalCases.GlobalBookends
-import DraismaVargas.LocalCases.TrivalenceClosure
-import DraismaVargas.LocalCases.W4Bridge
-import DraismaVargas.LocalCases.W2R1Target
+module
+
+public import DraismaVargas.LocalCases.GlobalBookends
+public import DraismaVargas.LocalCases.TrivalenceClosure
+public import DraismaVargas.LocalCases.W4Bridge
+public import DraismaVargas.LocalCases.W2R1Target
+
+@[expose] public section
 
 /-!
 # The four-valent route at a divalent wall

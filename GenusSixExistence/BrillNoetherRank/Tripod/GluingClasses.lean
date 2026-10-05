@@ -1,8 +1,12 @@
-import GenusSixExistence.BrillNoetherRank.Tripod.Gluing
-import GenusSixExistence.BrillNoetherRank.Tripod.GluingExtend
-import GenusSixExistence.BrillNoetherRank.Tripod.GluingOnto
-import GenusSixExistence.BrillNoetherRank.Tripod.GluingWellDefined
-import GenusSixExistence.BrillNoetherRank.Tripod.GluingPositivity
+module
+
+public import GenusSixExistence.BrillNoetherRank.Tripod.Gluing
+public import GenusSixExistence.BrillNoetherRank.Tripod.GluingExtend
+public import GenusSixExistence.BrillNoetherRank.Tripod.GluingOnto
+public import GenusSixExistence.BrillNoetherRank.Tripod.GluingWellDefined
+public import GenusSixExistence.BrillNoetherRank.Tripod.GluingPositivity
+
+@[expose] public section
 
 /-!
 # The gluing bijection on classes

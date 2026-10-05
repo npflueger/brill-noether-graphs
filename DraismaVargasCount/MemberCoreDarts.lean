@@ -1,6 +1,10 @@
-import DraismaVargasCount.Fibre
-import Utilities.CubicGraphs.CubicCoreDarts
-import DraismaVargas.LocalCases.StableSourceDarts
+module
+
+public import DraismaVargasCount.Fibre
+public import Utilities.CubicGraphs.CubicCoreDarts
+public import DraismaVargas.LocalCases.StableSourceDarts
+
+@[expose] public section
 
 /-!
 # The stable graph of a labelled fibre member, as the requested cubic core
@@ -113,28 +117,28 @@ theorem ends_of_indicator {u w s t : Fin n}
   · refine Or.inl ⟨hus, ?_⟩
     by_contra hwt
     have h1 := H t
-    rw [if_neg hwt, if_pos (rfl : t = t)] at h1
+    rw [ite_eq_right hwt, ite_eq_left (rfl : t = t)] at h1
     by_cases hst : s = t
-    · rw [if_pos hst, if_pos (hus.trans hst)] at h1
+    · rw [ite_eq_left hst, ite_eq_left (hus.trans hst)] at h1
       omega
-    · rw [if_neg hst, if_neg (fun h : u = t ↦ hst (hus ▸ h))] at h1
+    · rw [ite_eq_right hst, ite_eq_right (fun h : u = t ↦ hst (hus ▸ h))] at h1
       omega
   · have hws : w = s := by
       by_contra hw
       have h1 := H s
-      rw [if_neg hus, if_neg hw, if_pos (rfl : s = s)] at h1
+      rw [ite_eq_right hus, ite_eq_right hw, ite_eq_left (rfl : s = s)] at h1
       split_ifs at h1 <;> omega
     have hts : ¬ (t = s) := by
       intro h
       have h1 := H s
-      rw [if_neg hus, if_pos hws, if_pos (rfl : s = s), if_pos h] at h1
+      rw [ite_eq_right hus, ite_eq_left hws, ite_eq_left (rfl : s = s), ite_eq_left h] at h1
       omega
     refine Or.inr ⟨?_, hws⟩
     by_contra hut
     have h1 := H t
-    rw [if_neg hut, if_pos (rfl : t = t),
-      if_neg (fun h : w = t ↦ hts (hws ▸ h).symm),
-      if_neg (fun h : s = t ↦ hts h.symm)] at h1
+    rw [ite_eq_right hut, ite_eq_left (rfl : t = t),
+      ite_eq_right (fun h : w = t ↦ hts (hws ▸ h).symm),
+      ite_eq_right (fun h : s = t ↦ hts h.symm)] at h1
     omega
 
 section Darts
@@ -225,8 +229,8 @@ theorem ends_of_ident (r : StablePath data) :
         (if ident.vertex (vertex data d) = v then 1 else 0) := by
     intro d
     by_cases h : ident.vertex (vertex data d) = v
-    · rw [if_pos h, if_pos (by rw [← h, Equiv.symm_apply_apply])]
-    · refine (if_neg ?_).trans (if_neg h).symm
+    · rw [ite_eq_left h, ite_eq_left (by rw [← h, Equiv.symm_apply_apply])]
+    · refine (ite_eq_right ?_).trans (ite_eq_right h).symm
       intro hh
       exact h (by rw [hh, Equiv.apply_symm_apply])
   rw [hIte, hIte] at hIdent
@@ -298,13 +302,13 @@ theorem dartFlag_tailDart (r : StablePath data) :
     dartFlag hConnected hEnds ident (tailDart hConnected hEnds ident r) = false := by
   unfold dartFlag
   rw [row_tailDart]
-  exact if_pos rfl
+  exact ite_eq_left rfl
 
 theorem dartFlag_headDart (r : StablePath data) :
     dartFlag hConnected hEnds ident (headDart hConnected hEnds ident r) = true := by
   unfold dartFlag
   rw [row_headDart]
-  exact if_neg (headDart_ne_tailDart hConnected hEnds ident r)
+  exact ite_eq_right (headDart_ne_tailDart hConnected hEnds ident r)
 
 theorem eq_headDart_of_ne {d : Dart data}
     (h : d ≠ tailDart hConnected hEnds ident (row data d)) :
@@ -316,12 +320,12 @@ theorem dartFlag_opposite (d : Dart data) :
       !dartFlag hConnected hEnds ident d := by
   by_cases h : d = tailDart hConnected hEnds ident (row data d)
   · have hFlag : dartFlag hConnected hEnds ident d = false := by
-      unfold dartFlag; exact if_pos h
+      unfold dartFlag; exact ite_eq_left h
     rw [hFlag, Bool.not_false]
     conv_lhs => rw [h]
     exact dartFlag_headDart hConnected hEnds ident _
   · have hFlag : dartFlag hConnected hEnds ident d = true := by
-      unfold dartFlag; exact if_neg h
+      unfold dartFlag; exact ite_eq_right h
     rw [hFlag, Bool.not_true]
     conv_lhs => rw [eq_headDart_of_ne hConnected hEnds ident h]
     rw [opposite_headDart]
@@ -337,20 +341,20 @@ noncomputable def dartEquiv : Dart data ≃ Fin p × Bool where
     simp only [Equiv.symm_apply_apply]
     by_cases h : d = tailDart hConnected hEnds ident (row data d)
     · have hFlag : dartFlag hConnected hEnds ident d = false := by
-        unfold dartFlag; exact if_pos h
+        unfold dartFlag; exact ite_eq_left h
       rw [hFlag]
       exact h.symm
     · have hFlag : dartFlag hConnected hEnds ident d = true := by
-        unfold dartFlag; exact if_neg h
+        unfold dartFlag; exact ite_eq_right h
       rw [hFlag]
       exact (eq_headDart_of_ne hConnected hEnds ident h).symm
   right_inv x := by
     obtain ⟨i, b⟩ := x
     cases b
-    · simp only [Bool.false_eq_true, if_false]
+    · simp only [Bool.false_eq_true, ite_false]
       rw [row_tailDart, Equiv.apply_symm_apply,
         dartFlag_tailDart hConnected hEnds ident]
-    · simp only [if_true]
+    · simp only [ite_true]
       rw [row_headDart, Equiv.apply_symm_apply,
         dartFlag_headDart hConnected hEnds ident]
 
@@ -376,13 +380,13 @@ noncomputable def coreIso (hTrivalent : ∀ v, nonDanglingValency data v ≤ 3)
         dartFlag hConnected hEnds ident x) = ident.vertex (vertex data x)
     by_cases h : x = tailDart hConnected hEnds ident (row data x)
     · have hFlag : dartFlag hConnected hEnds ident x = false := by
-        unfold dartFlag; exact if_pos h
+        unfold dartFlag; exact ite_eq_left h
       rw [hFlag]
       show core.tail (ident.row (row data x)) = ident.vertex (vertex data x)
       conv_rhs => rw [h]
       exact (vertex_tailDart hConnected hEnds ident _).symm
     · have hFlag : dartFlag hConnected hEnds ident x = true := by
-        unfold dartFlag; exact if_neg h
+        unfold dartFlag; exact ite_eq_right h
       rw [hFlag]
       show core.head (ident.row (row data x)) = ident.vertex (vertex data x)
       conv_rhs => rw [eq_headDart_of_ne hConnected hEnds ident h]

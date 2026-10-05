@@ -1,6 +1,10 @@
-import Utilities.CubicGraphs.WhiteheadConnectivity
-import Utilities.Subdivision.CubicCore
-import Utilities.Subdivision.SubdivisionConnectivity
+module
+
+public import Utilities.CubicGraphs.WhiteheadConnectivity
+public import Utilities.Subdivision.CubicCore
+public import Utilities.Subdivision.SubdivisionConnectivity
+
+@[expose] public section
 
 /-!
 # A cubic core as a dart graph

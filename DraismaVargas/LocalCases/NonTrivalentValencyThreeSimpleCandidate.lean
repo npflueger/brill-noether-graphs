@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyThreeCandidate
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyThreeCandidate
+
+@[expose] public section
 
 /-!
 # Part II, valency three: the prescribed candidates of Types I and II
@@ -257,11 +261,11 @@ def blockRefine (coarse : SheetPartition degree) (anchor : Fin degree)
   repr_idem := by
     intro sheet
     by_cases hSheet : coarse.Rel anchor sheet
-    · rw [if_pos hSheet, if_pos (hPick sheet hSheet), hIdem sheet hSheet]
+    · rw [ite_eq_left hSheet, ite_eq_left (hPick sheet hSheet), hIdem sheet hSheet]
     · have hNot : ¬coarse.Rel anchor (coarse.repr sheet) := by
         intro hRel
         exact hSheet (hRel.trans (coarse.rel_repr_left sheet))
-      rw [if_neg hSheet, if_neg hNot, coarse.repr_idem]
+      rw [ite_eq_right hSheet, ite_eq_right hNot, coarse.repr_idem]
 
 namespace blockRefine
 
@@ -273,13 +277,13 @@ variable (coarse : SheetPartition degree) (anchor : Fin degree)
 theorem repr_of_rel {sheet : Fin degree} (hSheet : coarse.Rel anchor sheet) :
     (blockRefine coarse anchor pick hPick hIdem).repr sheet = pick sheet := by
   change (if coarse.Rel anchor sheet then pick sheet else coarse.repr sheet) = _
-  rw [if_pos hSheet]
+  rw [ite_eq_left hSheet]
 
 theorem repr_of_not_rel {sheet : Fin degree} (hSheet : ¬coarse.Rel anchor sheet) :
     (blockRefine coarse anchor pick hPick hIdem).repr sheet =
       coarse.repr sheet := by
   change (if coarse.Rel anchor sheet then pick sheet else coarse.repr sheet) = _
-  rw [if_neg hSheet]
+  rw [ite_eq_right hSheet]
 
 theorem refines :
     (blockRefine coarse anchor pick hPick hIdem).Refines coarse := by
@@ -1158,34 +1162,34 @@ noncomputable def rightPick : Fin degree → Fin degree :=
 
 theorem leftPick_of_mem {sheet : Fin degree} (hSheet : sheet ∈ base.alphaBlock) :
     base.leftPick sheet = base.hubSheet := by
-  rw [leftPick, if_pos hSheet]
+  rw [leftPick, ite_eq_left hSheet]
 
 theorem leftPick_of_not_mem {sheet : Fin degree} (hSheet : sheet ∉ base.alphaBlock) :
     base.leftPick sheet = sheet := by
-  rw [leftPick, if_neg hSheet]
+  rw [leftPick, ite_eq_right hSheet]
 
 theorem newEdgePick_of_mem {sheet : Fin degree} (hSheet : sheet ∈ base.newDeltaBlock) :
     base.newEdgePick sheet = base.deltaRepr := by
-  rw [newEdgePick, if_pos hSheet]
+  rw [newEdgePick, ite_eq_left hSheet]
 
 theorem newEdgePick_of_bridge {sheet : Fin degree}
     (hDelta : sheet ∉ base.newDeltaBlock) (hAlpha : sheet ∈ base.alphaBlock) :
     base.newEdgePick sheet = base.hubSheet := by
-  rw [newEdgePick, if_neg hDelta, if_pos hAlpha]
+  rw [newEdgePick, ite_eq_right hDelta, ite_eq_left hAlpha]
 
 theorem newEdgePick_of_outside {sheet : Fin degree} (hAlpha : sheet ∉ base.alphaBlock) :
     base.newEdgePick sheet = sheet := by
   have hDelta : sheet ∉ base.newDeltaBlock := fun hMem ↦
     hAlpha (base.newDeltaBlock_subset_alpha hMem)
-  rw [newEdgePick, if_neg hDelta, if_neg hAlpha]
+  rw [newEdgePick, ite_eq_right hDelta, ite_eq_right hAlpha]
 
 theorem rightPick_of_mem {sheet : Fin degree} (hSheet : sheet ∈ base.newDeltaBlock) :
     base.rightPick sheet = base.deltaRepr := by
-  rw [rightPick, if_pos hSheet]
+  rw [rightPick, ite_eq_left hSheet]
 
 theorem rightPick_of_not_mem {sheet : Fin degree} (hSheet : sheet ∉ base.newDeltaBlock) :
     base.rightPick sheet = base.hubSheet := by
-  rw [rightPick, if_neg hSheet]
+  rw [rightPick, ite_eq_right hSheet]
 
 theorem leftPick_wall (sheet : Fin degree)
     (hSheet : (data.vertexPartition wall).Rel anchor.1 sheet) :
@@ -2248,12 +2252,12 @@ theorem selected_exterior (edge : target.edges)
   rw [base.incidentEdges_eq_triple] at hMem
   simp only [Finset.mem_insert, Finset.mem_singleton] at hMem
   rcases hMem with rfl | rfl | rfl
-  · rw [base.rightAssignment_alpha, if_neg (by simp)]
+  · rw [base.rightAssignment_alpha, ite_eq_right (by simp)]
     exact base.gaugedAlpha_refines_left
   · rw [base.rightAssignment_of_ne (Ne.symm base.alphaEdge_ne_doubledEdge),
-      if_pos rfl]
+      ite_eq_left rfl]
     exact base.gaugedDoubled_refines_right
-  · rw [base.rightAssignment_of_ne (Ne.symm base.alphaEdge_ne_betaEdge), if_pos rfl]
+  · rw [base.rightAssignment_of_ne (Ne.symm base.alphaEdge_ne_betaEdge), ite_eq_left rfl]
     exact base.gaugedBeta_refines_right
 
 end SimpleBase
@@ -2387,9 +2391,9 @@ noncomputable def subdivisionBackground (base : SimpleBase data star anchor)
       (GluingContraction.mem_incidentEdges_iff wall edge).mpr hIncident
     by_cases hEdge : edge = directionEdge star base.alphaLabel
     · subst hEdge
-      rw [base.rightAssignment_alpha, if_neg (by simp)]
+      rw [base.rightAssignment_alpha, ite_eq_right (by simp)]
       exact SheetPartition.Refines.refl _
-    · rw [base.rightAssignment_of_ne hEdge, if_pos rfl]
+    · rw [base.rightAssignment_of_ne hEdge, ite_eq_left rfl]
       exact edgePartition_refines_of_mem_incidentEdges base.gaugedData wall edge hMem
   left_riemannHurwitz := by
     intro block _ _

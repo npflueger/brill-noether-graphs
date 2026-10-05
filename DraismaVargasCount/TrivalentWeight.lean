@@ -1,5 +1,9 @@
-import DraismaVargasCount.Multiplicity
-import DraismaVargas.LocalCases.W2M1kLimitColumns
+module
+
+public import DraismaVargasCount.Multiplicity
+public import DraismaVargas.LocalCases.W2M1kLimitColumns
+
+@[expose] public section
 
 /-!
 # The weight identification in the representative trivalent case
@@ -445,7 +449,7 @@ theorem rowDenominator_one_of_ne (input : W2SourceInput data star)
     rowDenominator (limit.labelling initial 1).presentation row =
       incomingRowDenominator data ((limit.sourceCoordinates initial).symm row) := by
   rw [rowDenominator_member limit initial 1 row, newColumn_one,
-    secondNewColumn_eq input shape _, if_neg hRow, add_zero]
+    secondNewColumn_eq input shape _, ite_eq_right hRow, add_zero]
   exact lcm_den_eq_right (den_dvd_incomingRowDenominator _ _)
 
 /-- **`M⁽²⁾` multiplies `e₂`'s row denominator by `k-1`**, given that the
@@ -461,7 +465,7 @@ theorem rowDenominator_one_at (input : W2SourceInput data star)
       (shape.k - 1) * incomingRowDenominator data (secondRow profile) := by
   have hk : 1 < shape.k := shape.one_lt_k
   rw [rowDenominator_member limit initial 1 row, newColumn_one,
-    secondNewColumn_eq input shape _, if_pos hRow, hRow]
+    secondNewColumn_eq input shape _, ite_eq_left hRow, hRow]
   exact lcm_den_add_unit_inv (fun place ↦ StableSourceMatrix.matrix data (secondRow profile) place)
     (star.edge profile.doubleLabel) (by omega) (by omega) (Or.inl rfl) hDvd hCop
 
@@ -474,7 +478,7 @@ theorem rowDenominator_two_of_ne (input : W2SourceInput data star)
     rowDenominator (limit.labelling initial 2).presentation row =
       incomingRowDenominator data ((limit.sourceCoordinates initial).symm row) := by
   rw [rowDenominator_member limit initial 2 row, newColumn_two,
-    thirdNewColumn_eq input shape _, if_neg hRow, add_zero]
+    thirdNewColumn_eq input shape _, ite_eq_right hRow, add_zero]
   exact lcm_den_eq_right (den_dvd_incomingRowDenominator _ _)
 
 /-- **`M⁽³⁾` multiplies `e₃`'s row denominator by `k+1`.** -/
@@ -489,7 +493,7 @@ theorem rowDenominator_two_at (input : W2SourceInput data star)
       (shape.k + 1) * incomingRowDenominator data (thirdRow profile) := by
   have hk : 1 < shape.k := shape.one_lt_k
   rw [rowDenominator_member limit initial 2 row, newColumn_two,
-    thirdNewColumn_eq input shape _, if_pos hRow, hRow]
+    thirdNewColumn_eq input shape _, ite_eq_left hRow, hRow]
   exact lcm_den_add_unit_inv (fun place ↦ StableSourceMatrix.matrix data (thirdRow profile) place)
     (star.edge profile.singleLabel) (by omega) (by omega) (Or.inr rfl) hDvd hCop
 
@@ -528,13 +532,13 @@ theorem denominatorProduct_one (input : W2SourceInput data star)
     intro path
     by_cases hPath : path = secondRow profile
     · rw [rowDenominator_one_at input limit initial _
-        (by rw [Equiv.symm_apply_apply]; exact hPath) hDvd hCop, if_pos hPath, hPath]
+        (by rw [Equiv.symm_apply_apply]; exact hPath) hDvd hCop, ite_eq_left hPath, hPath]
     · rw [rowDenominator_one_of_ne input limit initial _
         (by rw [Equiv.symm_apply_apply]; exact hPath), Equiv.symm_apply_apply,
-        if_neg hPath, one_mul]
+        ite_eq_right hPath, one_mul]
   rw [Finset.prod_congr rfl fun path _ ↦ hTerm path, Finset.prod_mul_distrib,
     Finset.prod_ite_eq' Finset.univ (secondRow profile) (fun _ ↦ shape.k - 1),
-    if_pos (Finset.mem_univ _)]
+    ite_eq_left (Finset.mem_univ _)]
 
 open scoped Classical in
 /-- **`D⁽³⁾ = (k+1) · D₀`**, given the incoming denominator of `e₃`'s row. -/
@@ -556,13 +560,13 @@ theorem denominatorProduct_two (input : W2SourceInput data star)
     intro path
     by_cases hPath : path = thirdRow profile
     · rw [rowDenominator_two_at input limit initial _
-        (by rw [Equiv.symm_apply_apply]; exact hPath) hDvd hCop, if_pos hPath, hPath]
+        (by rw [Equiv.symm_apply_apply]; exact hPath) hDvd hCop, ite_eq_left hPath, hPath]
     · rw [rowDenominator_two_of_ne input limit initial _
         (by rw [Equiv.symm_apply_apply]; exact hPath), Equiv.symm_apply_apply,
-        if_neg hPath, one_mul]
+        ite_eq_right hPath, one_mul]
   rw [Finset.prod_congr rfl fun path _ ↦ hTerm path, Finset.prod_mul_distrib,
     Finset.prod_ite_eq' Finset.univ (thirdRow profile) (fun _ ↦ shape.k + 1),
-    if_pos (Finset.mem_univ _)]
+    ite_eq_left (Finset.mem_univ _)]
 
 
 /-! ## 6. The leaf counts of the three expanded targets -/
@@ -611,7 +615,7 @@ theorem card_incidentEdges_oldVertex (right : target.edges → Bool)
     · exact hne (congrArg (contractVertex target wall) h).symm
     · exact Sum.inr_ne_inl h
   refine (card_incidentEdges_graph wall right (oldVertex target v)).trans ?_
-  rw [if_neg hNew, zero_add]
+  rw [ite_eq_right hNew, zero_add]
   refine congrArg Finset.card (Finset.filter_congr fun e _ ↦ ?_)
   exact or_congr (expandedEndpoint_eq_oldVertex_iff_of_ne target wall right e _ v hne)
     (expandedEndpoint_eq_oldVertex_iff_of_ne target wall right e _ v hne)
@@ -631,8 +635,8 @@ theorem card_incidentEdges_wall_split (right : target.edges → Bool) :
       (newEnds target wall).2 = oldVertex target wall := Or.inl rfl
   have hPosFresh : (newEnds target wall).1 = freshVertex target ∨
       (newEnds target wall).2 = freshVertex target := Or.inr rfl
-  rw [if_pos hPosOld] at hOldCard
-  rw [if_pos hPosFresh] at hFreshCard
+  rw [ite_eq_left hPosOld] at hOldCard
+  rw [ite_eq_left hPosFresh] at hFreshCard
   have hOldFilter : ((Finset.univ : Finset target.edges).filter fun e ↦
       (oldEnds target wall right e).1 = oldVertex target wall ∨
         (oldEnds target wall right e).2 = oldVertex target wall).card =
@@ -668,11 +672,11 @@ noncomputable def leafIndicator (G : CFGraph) (v : G.V) : ℕ :=
 
 theorem leafIndicator_eq_one (G : CFGraph) (v : G.V)
     (h : (GluingDatum.incidentEdges v).card = 1) : leafIndicator G v = 1 :=
-  if_pos h
+  ite_eq_left h
 
 theorem leafIndicator_eq_zero (G : CFGraph) (v : G.V)
     (h : (GluingDatum.incidentEdges v).card ≠ 1) : leafIndicator G v = 0 :=
-  if_neg h
+  ite_eq_right h
 
 theorem leafCount_eq_sum_leafIndicator (G : CFGraph) :
     leafCount G = ∑ v, leafIndicator G v := by

@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W3FourSurvival
-import DraismaVargas.LocalCases.LimitChainCore
+module
+
+public import DraismaVargas.LocalCases.W3FourSurvival
+public import DraismaVargas.LocalCases.LimitChainCore
+
+@[expose] public section
 
 /-!
 # Stable lift, row descent and the retained columns of Figure 28's four members
@@ -245,11 +249,11 @@ noncomputable def flag (grown : W3FourSourceCandidates.GrowProfile input)
 
 theorem flag_grow (grown : W3FourSourceCandidates.GrowProfile input) :
     flag grown (data.sourceEdge grown.growTarget grown.growAnchor) =
-      grown.growCandidate.newSourceEdge grown.growAnchor := if_pos rfl
+      grown.growCandidate.newSourceEdge grown.growAnchor := ite_eq_left rfl
 
 theorem flag_of_ne (grown : W3FourSourceCandidates.GrowProfile input)
     {edge : data.SourceEdge} (hTarget : edge.1.1 ≠ grown.growTarget) :
-    flag grown edge = grown.growCandidate.oldSourceEdge edge := if_neg hTarget
+    flag grown edge = grown.growCandidate.oldSourceEdge edge := ite_eq_right hTarget
 
 theorem flag_star (grown : W3FourSourceCandidates.GrowProfile input)
     (survival : SelectedSurvival data wall (ofGrowProfile grown))
@@ -430,11 +434,11 @@ noncomputable def flag (position : W3FourClosure.PositionTwo data wall)
 theorem flag_largest (position : W3FourClosure.PositionTwo data wall) :
     flag position
         (data.sourceEdge position.largestTarget position.largestAnchor) =
-      position.candidate.newSourceEdge position.growAnchor := if_pos rfl
+      position.candidate.newSourceEdge position.growAnchor := ite_eq_left rfl
 
 theorem flag_of_ne (position : W3FourClosure.PositionTwo data wall)
     {edge : data.SourceEdge} (hTarget : edge.1.1 ≠ position.largestTarget) :
-    flag position edge = position.candidate.oldSourceEdge edge := if_neg hTarget
+    flag position edge = position.candidate.oldSourceEdge edge := ite_eq_right hTarget
 
 theorem flag_star (position : W3FourClosure.PositionTwo data wall)
     (survival : SelectedSurvival data wall position.toFourStarGeometry)
@@ -620,12 +624,12 @@ noncomputable def rep (sheet : Fin degree) : data.SourceEdge :=
 theorem rep_of_grow {sheet : Fin degree}
     (hGrow : position.fine.Rel sheet position.growAnchor) :
     rep position sheet =
-      data.sourceEdge position.growTarget position.growAnchor := if_pos hGrow
+      data.sourceEdge position.growTarget position.growAnchor := ite_eq_left hGrow
 
 theorem rep_of_not_grow {sheet : Fin degree}
     (hGrow : ¬ position.fine.Rel sheet position.growAnchor) :
     rep position sheet =
-      data.sourceEdge position.otherTarget position.otherAnchor := if_neg hGrow
+      data.sourceEdge position.otherTarget position.otherAnchor := ite_eq_right hGrow
 
 theorem rep_grow : rep position position.growAnchor =
     data.sourceEdge position.growTarget position.growAnchor :=
@@ -655,17 +659,17 @@ noncomputable def branchFlag (edge : data.SourceEdge) :
 theorem branchFlag_grow :
     branchFlag position
         (data.sourceEdge position.growTarget position.growAnchor) =
-      position.candidate.newSourceEdge position.growAnchor := if_pos rfl
+      position.candidate.newSourceEdge position.growAnchor := ite_eq_left rfl
 
 theorem branchFlag_other :
     branchFlag position
         (data.sourceEdge position.otherTarget position.otherAnchor) =
       position.candidate.newSourceEdge position.otherAnchor := by
   unfold branchFlag
-  rw [if_neg (show ¬ ((data.sourceEdge position.otherTarget
+  rw [ite_eq_right (show ¬ ((data.sourceEdge position.otherTarget
         position.otherAnchor).1.1 = position.growTarget) from
       Ne.symm position.grow_ne_other),
-    if_pos (show (data.sourceEdge position.otherTarget
+    ite_eq_left (show (data.sourceEdge position.otherTarget
         position.otherAnchor).1.1 = position.otherTarget from rfl)]
 
 theorem branchFlag_largest :
@@ -674,10 +678,10 @@ theorem branchFlag_largest :
       position.candidate.oldSourceEdge
         (data.sourceEdge position.largestTarget position.largestAnchor) := by
   unfold branchFlag
-  rw [if_neg (show ¬ ((data.sourceEdge position.largestTarget
+  rw [ite_eq_right (show ¬ ((data.sourceEdge position.largestTarget
         position.largestAnchor).1.1 = position.growTarget) from
       Ne.symm position.grow_ne_largest),
-    if_neg (show ¬ ((data.sourceEdge position.largestTarget
+    ite_eq_right (show ¬ ((data.sourceEdge position.largestTarget
         position.largestAnchor).1.1 = position.otherTarget) from
       Ne.symm position.other_ne_largest)]
 

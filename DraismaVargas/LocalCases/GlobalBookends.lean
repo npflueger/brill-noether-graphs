@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.BalancedGlobal
-import DraismaVargas.LocalCases.W4DeterminantContributions
+module
+
+public import DraismaVargas.LocalCases.BalancedGlobal
+public import DraismaVargas.LocalCases.W4DeterminantContributions
+
+@[expose] public section
 
 /-!
 # Global continuation wrappers for Equations (1) and (10)

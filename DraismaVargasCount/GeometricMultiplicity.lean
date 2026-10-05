@@ -1,6 +1,10 @@
-import DraismaVargasCount.GeometricStableTransport
-import DraismaVargasCount.GeometricValidityTransport
-import DraismaVargasCount.TransportMultiplicity
+module
+
+public import DraismaVargasCount.GeometricStableTransport
+public import DraismaVargasCount.GeometricValidityTransport
+public import DraismaVargasCount.TransportMultiplicity
+
+@[expose] public section
 
 /-!
 # Multiplicity and coordinates under orientation-independent transport

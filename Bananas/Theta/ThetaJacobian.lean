@@ -1,4 +1,8 @@
-import Bananas.Theta.ThetaResidue
+module
+
+public import Bananas.Theta.ThetaResidue
+
+@[expose] public section
 
 namespace Bananas
 

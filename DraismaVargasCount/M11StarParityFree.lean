@@ -1,9 +1,13 @@
-import DraismaVargasCount.RegrowthWallInput
-import DraismaVargasCount.ResolutionExpansionFree
-import DraismaVargasCount.M11IncomingDenominator
-import DraismaVargasCount.StarParityFromBalance
-import DraismaVargasCount.Integrality
-import DraismaVargasCount.W4StarParity
+module
+
+public import DraismaVargasCount.RegrowthWallInput
+public import DraismaVargasCount.ResolutionExpansionFree
+public import DraismaVargasCount.M11IncomingDenominator
+public import DraismaVargasCount.StarParityFromBalance
+public import DraismaVargasCount.Integrality
+public import DraismaVargasCount.W4StarParity
+
+@[expose] public section
 
 /-!
 # The M-11 family clause, modulo the star census
@@ -200,7 +204,7 @@ theorem edgePerm_eq_freshPerm
     (hSingle : ∀ x, resolution.right.Rel x sheet → x = sheet) :
     iso.edgePerm edge sheet = t.freshPerm sheet := by
   have h := t.endpoint_compatible edge hIncident sheet
-  rw [if_pos hSide, if_pos hSide] at h
+  rw [ite_eq_left hSide, ite_eq_left hSide] at h
   exact (Equiv.symm_apply_eq _).mp (hSingle _ h)
 
 end Coherence

@@ -1,6 +1,10 @@
-import DraismaVargasCount.BaseCountParity
-import DraismaVargasCount.LollipopBridgeFibreWitness
-import DraismaVargasCount.NonTrivalentCorner
+module
+
+public import DraismaVargasCount.BaseCountParity
+public import DraismaVargasCount.LollipopBridgeFibreWitness
+public import DraismaVargasCount.NonTrivalentCorner
+
+@[expose] public section
 
 /-!
 # The `extract` field of `DiagonalClassification`: the loop slots, and genus two
@@ -119,7 +123,7 @@ theorem coreDiag_eq_two_of_loop (member : FibreMember core y degree)
     LollipopLeafRow.leafRow_loopLeaf member hLoop
   have hcol := LeafFibre.matrix_leafEdge_column member.fullDim hLeaf
     (member.slotMap.symm slot)
-  rw [if_pos hLeafRow.symm] at hcol
+  rw [ite_eq_left hLeafRow.symm] at hcol
   have hEq : member.fullDim.labelling.targetEdge.symm (leafEdge hLeaf) =
       member.slotMap.symm slot := by
     by_contra hne
@@ -274,9 +278,9 @@ theorem coreDiag_apply_genusTwo (member : FibreMember (catCore 0) request (0 + 2
     · exact absurd rfl hstem2
   rw [hstem1] at hstem
   fin_cases slot
-  · rw [if_pos (by decide)]; exact h0
-  · rw [if_neg (by decide)]; exact hstem
-  · rw [if_pos (by decide)]; exact h2
+  · rw [ite_eq_left (by decide)]; exact h0
+  · rw [ite_eq_right (by decide)]; exact hstem
+  · rw [ite_eq_left (by decide)]; exact h2
 
 /-- **Every ballot diagonal at genus two is `(2, 1/2, 2)`.**  `Slopes 2` has a
 single slope and `Slopes.slope_of_ge` forces it to be `2`, so the spine slot
@@ -284,8 +288,8 @@ reads `1 / s₁ = 1 / 2`. -/
 theorem ballotCoreDiag_genusTwo (s : Slopes (2 * (0 + 1))) (slot : Fin (6 * 0 + 3)) :
     BallotSlopes.ballotCoreDiag 0 s slot = if IsLeafEdge 0 slot then 2 else 1 / 2 := by
   by_cases hLeaf : IsLeafEdge 0 slot
-  · rw [if_pos hLeaf, BallotSlopes.ballotCoreDiag_leaf s hLeaf]
-  · rw [if_neg hLeaf]
+  · rw [ite_eq_left hLeaf, BallotSlopes.ballotCoreDiag_leaf s hLeaf]
+  · rw [ite_eq_right hLeaf]
     have hmod : slot.val % 3 = 1 := by
       unfold IsLeafEdge at hLeaf
       omega

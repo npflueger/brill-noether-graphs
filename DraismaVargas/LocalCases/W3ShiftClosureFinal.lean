@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.W3ShiftClosureUnconditional
-import DraismaVargas.LocalCases.W3ShiftStableIncidence
-import DraismaVargas.LocalCases.W3ShiftIncomingTransport
+module
+
+public import DraismaVargas.LocalCases.W3ShiftClosureUnconditional
+public import DraismaVargas.LocalCases.W3ShiftStableIncidence
+public import DraismaVargas.LocalCases.W3ShiftIncomingTransport
+
+@[expose] public section
 
 /-!
 # The `w3Shift` case off the classifier's payload
@@ -312,14 +316,14 @@ theorem endsCompatible_of_endpointFix
   cases hSide : IncomingTargetExpansion.right hc hab hOne divalent with
   | false =>
       rw [hSide] at hFix
-      simp only [Bool.false_eq_true, if_false] at hFix
+      simp only [Bool.false_eq_true, ite_false] at hFix
       refine endsCompatible_of_fixRight_of_leftFixed hab hOne _ _ hc data permutation
         hFix fun e hMem hRight ↦ ?_
       rw [hOnly e hMem (hRight.trans hSide.symm)]
       exact hFixed
   | true =>
       rw [hSide] at hFix
-      simp only [if_true] at hFix
+      simp only [ite_true] at hFix
       refine endsCompatible_of_fixLeft_of_rightFixed hab hOne _ _ hc data permutation
         hFix fun e hRight ↦ ?_
       have hMem : e ∈
@@ -408,7 +412,7 @@ theorem retained_refines_trivalent (retained : (contract target hab hOne).edges)
         cases hR : IncomingTargetExpansion.right hc hab hOne retained
         · exact absurd hR hSideNe
         · rfl
-      simp only [Bool.false_eq_true, if_false]
+      simp only [Bool.false_eq_true, ite_false]
       exact refines_of_mem_incidentEdges data
         ((right_eq_true_iff hc hab hOne retained).mp hTrue)
   | true =>
@@ -417,7 +421,7 @@ theorem retained_refines_trivalent (retained : (contract target hab hOne).edges)
         cases hR : IncomingTargetExpansion.right hc hab hOne retained
         · rfl
         · exact absurd hR hSideNe
-      simp only [if_true]
+      simp only [ite_true]
       exact refines_of_mem_incidentEdges data
         ((right_eq_false_iff_of_incident hc hab hOne retained hMem).mp hFalse)
 

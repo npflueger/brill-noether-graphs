@@ -1,5 +1,9 @@
-import Utilities.Subdivision.SubdivisionSeparator
-import Mathlib.Tactic
+module
+
+public import Utilities.Subdivision.SubdivisionSeparator
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # Named positions on subdivided core edges

@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W2PIncomingCensus
-import DraismaVargas.LocalCases.W3Nd2IncomingMemberMatching
+module
+
+public import DraismaVargas.LocalCases.W2PIncomingCensus
+public import DraismaVargas.LocalCases.W3Nd2IncomingMemberMatching
+
+@[expose] public section
 
 /-!
 # Identifying the incoming `w2P` datum with a named Figure 35 member
@@ -268,7 +272,7 @@ theorem transported_endpoints (side : (contract target hab hOne).edges → Bool)
       IncomingTargetExpansion.right hc hab hOne edge = (orientedStar profile).right edge
   · have hFalse := (support_iff data hc hab hOne fullDim hForest star profile shape
       hBackground).mp hSupport
-    rw [if_pos hSupport] at hPair
+    rw [ite_eq_left hSupport] at hPair
     rw [doubleEnd_of_false data hc hab hOne star profile hFalse,
       singleEnd_of_false data hc hab hOne star profile hFalse]
     exact ⟨congrArg Prod.fst hPair, congrArg Prod.snd hPair⟩
@@ -279,7 +283,7 @@ theorem transported_endpoints (side : (contract target hab hOne).edges → Bool)
           (star.edge profile.doubleLabel) = false := by simpa using hContra
       exact hSupport ((support_iff data hc hab hOne fullDim hForest star profile shape
         hBackground).mpr hFalse)
-    rw [if_neg hSupport] at hPair
+    rw [ite_eq_right hSupport] at hPair
     rw [doubleEnd_of_true data hc hab hOne star profile hTrue,
       singleEnd_of_true data hc hab hOne star profile hTrue]
     exact ⟨congrArg Prod.fst hPair, congrArg Prod.snd hPair⟩

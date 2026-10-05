@@ -1,4 +1,8 @@
-import DraismaVargasCount.LeafFibre
+module
+
+public import DraismaVargasCount.LeafFibre
+
+@[expose] public section
 
 /-!
 # The index pattern along a stable row, from nonsingularity alone
@@ -412,31 +416,31 @@ theorem det_eq_zero_of_two_column_relations
     have hp := congrFun hWeightZero p
     have hq := congrFun hWeightZero q
     unfold pairWeight at hp hq
-    rw [if_pos (rfl : p = p), if_neg hpq] at hp
-    rw [if_neg (Ne.symm hpq), if_pos (rfl : q = q)] at hq
+    rw [ite_eq_left (rfl : p = p), ite_eq_right hpq] at hp
+    rw [ite_eq_right (Ne.symm hpq), ite_eq_left (rfl : q = q)] at hq
     simp only [Pi.zero_apply] at hp hq
     by_cases hpr : p = r
     · have hps : ¬ (p = s) := fun hEq ↦ hrs (hpr.symm.trans hEq)
       have hqr : ¬ (q = r) := fun hEq ↦ hpq (hpr.trans hEq.symm)
-      rw [if_neg hqr] at hq
+      rw [ite_eq_right hqr] at hq
       by_cases hqs : q = s
       · exact hPairs (Or.inl ⟨hpr, hqs⟩)
-      · rw [if_neg hqs] at hq
+      · rw [ite_eq_right hqs] at hq
         exact hB (by linarith)
     · by_cases hps : p = s
       · have hqs : ¬ (q = s) := fun hEq ↦ hpq (hps.trans hEq.symm)
-        rw [if_neg hqs] at hq
+        rw [ite_eq_right hqs] at hq
         by_cases hqr : q = r
         · exact hPairs (Or.inr ⟨hps, hqr⟩)
-        · rw [if_neg hqr] at hq
+        · rw [ite_eq_right hqr] at hq
           exact hB (by linarith)
-      · rw [if_neg hpr, if_neg hps] at hp
+      · rw [ite_eq_right hpr, ite_eq_right hps] at hp
         exact hB (by linarith)
   · intro row
     rw [sum_mul_pairWeight, hRelationA, hRelationB]
     by_cases hCase : row = sourceRow
-    · rw [if_pos hCase, if_pos hCase]; ring
-    · rw [if_neg hCase, if_neg hCase]; ring
+    · rw [ite_eq_left hCase, ite_eq_left hCase]; ring
+    · rw [ite_eq_right hCase, ite_eq_right hCase]; ring
 
 /-- The coefficient vector `2 (δ_p - δ_q) - c δ_t`. -/
 noncomputable def leafWeight (coefficient : ℚ) (p q leafColumn : coordinate) :
@@ -490,20 +494,20 @@ theorem det_eq_zero_of_column_relation_and_leaf
     have hp := congrFun hWeightZero p
     have hq := congrFun hWeightZero q
     unfold leafWeight at hp hq
-    rw [if_pos (rfl : p = p), if_neg hpq] at hp
-    rw [if_neg (Ne.symm hpq), if_pos (rfl : q = q)] at hq
+    rw [ite_eq_left (rfl : p = p), ite_eq_right hpq] at hp
+    rw [ite_eq_right (Ne.symm hpq), ite_eq_left (rfl : q = q)] at hq
     simp only [Pi.zero_apply] at hp hq
     by_cases hpLeaf : p = leafColumn
     · have hqLeaf : ¬ (q = leafColumn) := fun hEq ↦ hpq (hpLeaf.trans hEq.symm)
-      rw [if_neg hqLeaf] at hq
+      rw [ite_eq_right hqLeaf] at hq
       norm_num at hq
-    · rw [if_neg hpLeaf] at hp
+    · rw [ite_eq_right hpLeaf] at hp
       norm_num at hp
   · intro row
     rw [sum_mul_leafWeight, hRelation, hLeafColumn]
     by_cases hCase : row = sourceRow
-    · rw [if_pos hCase, if_pos hCase]; ring
-    · rw [if_neg hCase, if_neg hCase]; ring
+    · rw [ite_eq_left hCase, ite_eq_left hCase]; ring
+    · rw [ite_eq_right hCase, ite_eq_right hCase]; ring
 
 
 end Exclusion
@@ -934,13 +938,13 @@ theorem matrix_sub_eq_of_transition {vertex : data.SourceVertex}
   rw [matrix_eq_sum_fibre, matrix_eq_sum_fibre]
   by_cases hCase : sourceRow = fd.labelling.row (NonDanglingEdge.stablePath
       (⟨first, hFirstSurvives⟩ : NonDanglingEdge data))
-  · rw [if_pos hCase]
+  · rw [ite_eq_left hCase]
     rw [← Finset.add_sum_erase _ _ (hMemFirst.mpr hCase),
       ← Finset.add_sum_erase _ _ (hMemSecond.mpr hCase), hSumErase]
     ring
   · rw [Finset.erase_eq_of_notMem (fun hMem ↦ hCase (hMemFirst.mp hMem)),
       Finset.erase_eq_of_notMem (fun hMem ↦ hCase (hMemSecond.mp hMem))] at hSumErase
-    rw [if_neg hCase, hSumErase]
+    rw [ite_eq_right hCase, hSumErase]
     ring
 
 

@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W4IncomingRetainedFlags
-import DraismaVargas.LocalCases.M11IncomingOuterPartitions
+module
+
+public import DraismaVargas.LocalCases.W4IncomingRetainedFlags
+public import DraismaVargas.LocalCases.M11IncomingOuterPartitions
+
+@[expose] public section
 
 /-!
 # Literal partitions at the normalized incoming W4 target
@@ -83,14 +87,14 @@ theorem targetIso_symm_flag_side
       (freshVertex (contract target hab hOne))) = _ at hPair
   by_cases hSupport : ∀ e ∈ GluingDatum.incidentEdges (target := contract target hab hOne) ⟨a, hab⟩,
       IncomingTargetExpansion.right hc hab hOne e = star.right (pairing data fd hc hab hOne star) e
-  · rw [if_pos hSupport] at hPair
+  · rw [ite_eq_left hSupport] at hPair
     have hLeft := congrArg Prod.fst hPair
     have hRight := congrArg Prod.snd hPair
     have hSide := hSupport edge.1.1 hAt
     rw [endpoint_target, hSide]
     cases hBit : star.right (pairing data fd hc hab hOne star) edge.1.1 <;>
       simp only [Bool.false_eq_true, reduceIte] <;> assumption
-  · rw [if_neg hSupport] at hPair
+  · rw [ite_eq_right hSupport] at hPair
     have hLeft := congrArg Prod.fst hPair
     have hRight := congrArg Prod.snd hPair
     have hOpposite := (pairing_placement data fd hc hab hOne star).resolve_left hSupport

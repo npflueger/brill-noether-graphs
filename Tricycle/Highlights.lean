@@ -1,4 +1,8 @@
-import Tricycle.Gap
+module
+
+public import Tricycle.Gap
+
+@[expose] public section
 
 /-!
 # Highlights of the `Tricycle` library

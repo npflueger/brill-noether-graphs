@@ -1,6 +1,10 @@
-import Bananas.Classification.CorrectedMidpointKGeneral
-import Bananas.Theta.ThetaNonrecurrence
-import Bananas.CrossOneOff.CrossOneOffResidueDelta
+module
+
+public import Bananas.Classification.CorrectedMidpointKGeneral
+public import Bananas.Theta.ThetaNonrecurrence
+public import Bananas.CrossOneOff.CrossOneOffResidueDelta
+
+@[expose] public section
 
 /-!
 # The midpoint torsion bound

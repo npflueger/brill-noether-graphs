@@ -1,7 +1,11 @@
-import DraismaVargasCount.CountSchedule
-import DraismaVargasCount.SwitchingParity
-import DraismaVargasCount.GeometricStar
-import DraismaVargasCount.ConeSide
+module
+
+public import DraismaVargasCount.CountSchedule
+public import DraismaVargasCount.SwitchingParity
+public import DraismaVargasCount.GeometricStar
+public import DraismaVargasCount.ConeSide
+
+@[expose] public section
 
 /-!
 # The bridge from the switching classes to the star of a wall

@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.ClosedEndpoint
-import DraismaVargas.LocalCases.SemanticAtlasMarch
+module
+
+public import DraismaVargas.LocalCases.ClosedEndpoint
+public import DraismaVargas.LocalCases.SemanticAtlasMarch
+
+@[expose] public section
 
 /-!
 # The zero-free terminal face

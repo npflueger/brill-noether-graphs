@@ -1,5 +1,9 @@
-import Utilities.Subdivision.DegenerateAffinePosition
-import Utilities.Subdivision.DegenerateMultiBreakScript
+module
+
+public import Utilities.Subdivision.DegenerateAffinePosition
+public import Utilities.Subdivision.DegenerateMultiBreakScript
+
+@[expose] public section
 
 /-!
 # Affine-positioned chips and break lists on a closed face

@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.A04MoreTags
-import DraismaVargas.LocalCases.M11CertifiedOpposite
-import DraismaVargas.LocalCases.M11HonestGaugeFamily
+module
+
+public import DraismaVargas.LocalCases.A04MoreTags
+public import DraismaVargas.LocalCases.M11CertifiedOpposite
+public import DraismaVargas.LocalCases.M11HonestGaugeFamily
+
+@[expose] public section
 
 /-!
 # The wall input and the full-dimensional supply at the `w2M11` tag

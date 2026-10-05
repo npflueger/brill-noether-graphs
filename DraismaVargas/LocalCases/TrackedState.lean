@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.TrackedPencil
+module
+
+public import DraismaVargas.LocalCases.TrackedPencil
+
+@[expose] public section
 
 /-!
 # The march state that carries its row-labelled graph

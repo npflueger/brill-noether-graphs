@@ -1,5 +1,9 @@
-import Utilities.Foundations.TopologicalVertices
-import Bananas.Classification.BridgelessDegreeOneClasses
+module
+
+public import Utilities.Foundations.TopologicalVertices
+public import Bananas.Classification.BridgelessDegreeOneClasses
+
+@[expose] public section
 
 /-!
 # Structural genus-two preliminaries

@@ -1,5 +1,9 @@
-import Utilities.IntegralGeometry.WallColumnDeterminant
-import DraismaVargas.LocalCases.FiniteAtlasMarch
+module
+
+public import Utilities.IntegralGeometry.WallColumnDeterminant
+public import DraismaVargas.LocalCases.FiniteAtlasMarch
+
+@[expose] public section
 
 /-!
 # The common minor and positive start at a type-changing boundary

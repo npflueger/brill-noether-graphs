@@ -1,5 +1,9 @@
-import DraismaVargasCount.ValencyThreeRigidity
-import DraismaVargasCount.W3ShiftStarExhaustionProof
+module
+
+public import DraismaVargasCount.ValencyThreeRigidity
+public import DraismaVargasCount.W3ShiftStarExhaustionProof
+
+@[expose] public section
 
 set_option autoImplicit false
 
@@ -151,7 +155,7 @@ theorem card_image_eq_succ (F U : SheetPartition d) (S : Finset (Fin d)) (hFU : 
     intro x hx
     by_cases hxr : U.Rel r x
     · have hb : U.repr x = U.repr r := hxr.symm
-      simp only [hb, if_true]
+      simp only [hb, ite_true]
       have hEq : (S.filter (U.Rel x)).image F.repr = {F.repr p, F.repr q} := by
         ext y
         simp only [Finset.mem_image, Finset.mem_filter, Finset.mem_insert, Finset.mem_singleton]
@@ -165,12 +169,12 @@ theorem card_image_eq_succ (F U : SheetPartition d) (S : Finset (Fin d)) (hFU : 
           · exact ⟨q, ⟨hq, hxr.symm.trans hrq⟩, rfl⟩
       rw [hEq, Finset.card_pair hpq]
     · have hb : U.repr x ≠ U.repr r := fun h' ↦ hxr h'.symm
-      simp only [hb, if_false]
+      simp only [hb, ite_false]
       exact fibre_card_one F U S x hx (h x hx hxr)
   rw [card_image_fibre F U S hFU (fun b ↦ if b = U.repr r then 2 else 1) hfib]
   have hmem : U.repr r ∈ S.image U.repr := Finset.mem_image.mpr ⟨r, hr, rfl⟩
-  rw [← Finset.add_sum_erase _ _ hmem, if_pos rfl]
-  rw [Finset.sum_congr rfl (fun b hb ↦ if_neg (Finset.ne_of_mem_erase hb)),
+  rw [← Finset.add_sum_erase _ _ hmem, ite_eq_left rfl]
+  rw [Finset.sum_congr rfl (fun b hb ↦ ite_eq_right (Finset.ne_of_mem_erase hb)),
     Finset.sum_const, smul_eq_mul, mul_one, Finset.card_erase_of_mem hmem]
   have : 0 < (S.image U.repr).card := Finset.card_pos.mpr ⟨_, hmem⟩
   omega
@@ -831,10 +835,10 @@ theorem transportFree_two (U : target₁.edges) (hU : U ∈ GluingDatum.incident
   · intro s; rw [Equiv.symm_apply_apply]; rfl
   · intro edge hInc s
     by_cases hr : rightOf U edge = true
-    · rw [if_pos hr, if_pos hr, hR]
+    · rw [ite_eq_left hr, ite_eq_left hr, hR]
       exact agree_symm_apply ψ σ _ hσ (edgePerm_agree ψ hWall edge
         ((incident_iff ψ hWall edge).mp hInc)) s
-    · rw [if_neg hr, if_neg hr]
+    · rw [ite_eq_right hr, ite_eq_right hr]
       have hEq : edge = U := rightOf_eq_false (by simpa using hr)
       subst hEq
       rw [Equiv.symm_apply_apply]; rfl
@@ -988,14 +992,14 @@ theorem transportFree_three (U Δ X : target₁.edges)
     have hmem := mem_of_ends hInc
     rcases (hEdges edge).mp hmem with rfl | rfl | rfl
     · have hr : rightOf edge edge = false := by simp [rightOf]
-      rw [if_neg (by rw [hr]; exact Bool.false_ne_true), if_neg (by rw [hr]; exact Bool.false_ne_true),
+      rw [ite_eq_right (by rw [hr]; exact Bool.false_ne_true), ite_eq_right (by rw [hr]; exact Bool.false_ne_true),
         Equiv.symm_apply_apply]
       rfl
     · have hr : rightOf U edge = true := by simp [rightOf, Ne.symm hUΔ]
-      rw [if_pos hr, if_pos hr, Equiv.symm_apply_apply]
+      rw [ite_eq_left hr, ite_eq_left hr, Equiv.symm_apply_apply]
       rfl
     · have hr : rightOf U edge = true := by simp [rightOf, Ne.symm hUX]
-      rw [if_pos hr, if_pos hr, hR]
+      rw [ite_eq_left hr, ite_eq_left hr, hR]
       have hmemX' : ψ.targetEdge edge ∈ GluingDatum.incidentEdges wall' :=
         (incident_iff ψ hWall edge).mp hInc
       have hAg := agree_symm_apply ψ ρ _ hρ (edgePerm_agree ψ hWall edge hmemX') s
@@ -1286,7 +1290,7 @@ theorem placement_facts (i₀ : Fin 4)
   have hUU : rightOf U U = false := by simp [rightOf]
   by_cases hsup : ∀ e ∈ GluingDatum.incidentEdges (target := contract target hab hOne) ⟨a, hab⟩,
       IncomingTargetExpansion.right hc hab hOne e = rightOf U e
-  · rw [if_pos hsup] at hpair
+  · rw [ite_eq_left hsup] at hpair
     have hRU := (hsup U hU).trans hUU
     have huv' : divEnd a b = a ∧ triEnd a b = b := by
       rcases huv with h | ⟨hub, hva⟩
@@ -1297,7 +1301,7 @@ theorem placement_facts (i₀ : Fin 4)
         · rw [hRU] at h2; exact Bool.false_ne_true h2
     rw [huv'.1, huv'.2]
     exact ⟨congrArg Prod.fst hpair, congrArg Prod.snd hpair, hnew⟩
-  · rw [if_neg hsup] at hpair
+  · rw [ite_eq_right hsup] at hpair
     have hRU : IncomingTargetExpansion.right hc hab hOne U = true := by
       rcases hP0 with h | h
       · exact (hsup h).elim

@@ -1,5 +1,9 @@
-import DraismaVargasCount.DiagonalClassification
-import DraismaVargasCount.BallotCoreIdentification
+module
+
+public import DraismaVargasCount.DiagonalClassification
+public import DraismaVargasCount.BallotCoreIdentification
+
+@[expose] public section
 
 /-!
 # The base count from the exhaustion package

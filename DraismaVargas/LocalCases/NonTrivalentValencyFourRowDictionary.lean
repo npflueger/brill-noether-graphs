@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyFourDescent
-import DraismaVargas.LocalCases.NonTrivalentUniqueFourValent
-import DraismaVargas.LocalCases.StablePathFacetContraction
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyFourDescent
+public import DraismaVargas.LocalCases.NonTrivalentUniqueFourValent
+public import DraismaVargas.LocalCases.StablePathFacetContraction
+
+@[expose] public section
 
 /-!
 # The `K = 0` row dictionary at a four-valent wall: the descent, unconditionally
@@ -657,7 +661,7 @@ theorem endpointForSide_not_smaller :
     endpointForSide source pairing hNoGlue hRamification
         (!smallerSide source pairing) =
       (gauged).vertexPartition wall :=
-  if_neg (by simp)
+  ite_eq_right (by simp)
 
 /-- **A surviving new occurrence over the anchor block is the bridge.**  Its
 endpoint on the non-smaller side is the anchor's own endpoint vertex, whose

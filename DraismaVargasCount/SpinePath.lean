@@ -1,4 +1,8 @@
-import DraismaVargasCount.LollipopLeafRow
+module
+
+public import DraismaVargasCount.LollipopLeafRow
+
+@[expose] public section
 
 /-!
 # The valency census of the target tree

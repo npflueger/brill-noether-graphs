@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.IncomingW2TargetPlacement
+module
+
+public import DraismaVargas.LocalCases.IncomingW2TargetPlacement
+
+@[expose] public section
 
 /-!
 # Literal incoming target normalization for M11
@@ -91,7 +95,7 @@ private theorem expandedEndpoint_swap (first second : target.edges → Bool)
 
 /-- The narrow graph-isomorphism construction consumes literal Option-column
 endpoint identities, not an assumed graph-isomorphism or arbitrary row map. -/
-private noncomputable def isoOfColumns (first second : target.edges → Bool)
+noncomputable def isoOfColumns (first second : target.edges → Bool)
     (vertices : Vertex target ≃ Vertex target)
     (hColumns : ∀ column : Option target.edges,
       GluingTransport.edgeKey (graph target wall second)
@@ -119,7 +123,7 @@ private noncomputable def isoOfColumns (first second : target.edges → Bool)
     · intro h
       exact Sym2.map.injective vertices.injective h
 
-private theorem support_columns (first second : target.edges → Bool)
+theorem support_columns (first second : target.edges → Bool)
     (hSupport : ∀ edge ∈ GluingDatum.incidentEdges wall, first edge = second edge)
     (column : Option target.edges) :
     GluingTransport.edgeKey (graph target wall second)
@@ -136,7 +140,7 @@ private theorem support_columns (first second : target.edges → Bool)
         (expandedEndpoint_congr second first (fun edge h => (hSupport edge h).symm) edge _ (Or.inl rfl))
         (expandedEndpoint_congr second first (fun edge h => (hSupport edge h).symm) edge _ (Or.inr rfl)))
 
-private theorem swap_columns (first second : target.edges → Bool)
+theorem swap_columns (first second : target.edges → Bool)
     (hSupport : ∀ edge ∈ GluingDatum.incidentEdges wall, first edge = !(second edge))
     (column : Option target.edges) :
     GluingTransport.edgeKey (graph target wall second)

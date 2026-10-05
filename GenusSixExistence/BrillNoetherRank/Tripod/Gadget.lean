@@ -1,5 +1,9 @@
-import Utilities.Subdivision.CubicCore
-import Utilities.Subdivision.SubdivisionConnectivity
+module
+
+public import Utilities.Subdivision.CubicCore
+public import Utilities.Subdivision.SubdivisionConnectivity
+
+@[expose] public section
 
 /-!
 # The tripod gadget as a core
@@ -93,7 +97,7 @@ theorem incidenceDegree_subdivide_castSucc (core : Core n p) (e : Fin p) (v : Fi
     · simp [hie]
   have hsum := Finset.sum_congr rfl (fun i (_ : i ∈ (Finset.univ : Finset (Fin p))) ↦ hpoint i)
   rw [Finset.sum_add_distrib, Finset.sum_ite_eq'] at hsum
-  simp only [Finset.mem_univ, if_true] at hsum
+  simp only [Finset.mem_univ, ite_true] at hsum
   rw [← hsum]
   congr 1
   simp [hlast]
@@ -151,7 +155,7 @@ theorem subdivide_connected (core : Core n p) (e : Fin p) (h : core.Connected) :
         · refine ⟨i.castSucc, Or.inl ⟨by simpa [hmem] using ht, by simpa using hx⟩⟩
         · refine ⟨Fin.last p, Or.inr ⟨by simpa [hmem] using hh, by simpa using hx⟩⟩
     · refine ⟨i.castSucc, ?_⟩
-      simp only [subdivide_tail_castSucc, subdivide_head_castSucc, if_neg hie]
+      simp only [subdivide_tail_castSucc, subdivide_head_castSucc, ite_eq_right hie]
       simpa [hmem] using hi
   · push Not at hsplit
     obtain ⟨v, w, hv, hw⟩ := hS
@@ -366,7 +370,7 @@ theorem tripodCore_cubic (core : Core n p) (s : MarkSlots p) (h : core.Cubic) :
       have hzero : (∑ k : Fin 3, if markVertex n k = w then 1 else 0) = 0 := by
         apply Finset.sum_eq_zero
         intro k _
-        rw [if_neg]
+        rw [ite_eq_right]
         intro hk
         have := congrArg Fin.val hk
         simp only [markVertex] at this

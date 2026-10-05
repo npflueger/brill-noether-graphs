@@ -1,7 +1,11 @@
-import GenusSixExistence.BrillNoetherRank.Tripod.GluingOntoTarget
-import GenusSixExistence.BrillNoetherRank.Tripod.GluingOntoOpen
-import DraismaVargas.Infrastructure.PartitionNormalization
-import GenusSixExistence.BrillNoetherRank.Tripod.ClawShape
+module
+
+public import GenusSixExistence.BrillNoetherRank.Tripod.GluingOntoTarget
+public import GenusSixExistence.BrillNoetherRank.Tripod.GluingOntoOpen
+public import DraismaVargas.Infrastructure.PartitionNormalization
+public import GenusSixExistence.BrillNoetherRank.Tripod.ClawShape
+
+@[expose] public section
 
 /-!
 # The shape of an open glued member
@@ -68,11 +72,11 @@ def restrictLast (P : SheetPartition (d + 1)) : SheetPartition d where
   repr i := if h : P.repr i.castSucc = Fin.last d then i else (P.repr i.castSucc).castPred h
   repr_idem i := by
     by_cases h : P.repr i.castSucc = Fin.last d
-    · simp only [dif_pos h]
-    · simp only [dif_neg h]
+    · simp only [dite_eq_left h]
+    · simp only [dite_eq_right h]
       have h2 : P.repr ((P.repr i.castSucc).castPred h).castSucc = P.repr i.castSucc := by
         rw [Fin.castSucc_castPred, P.repr_idem]
-      rw [dif_neg (by rw [h2]; exact h)]
+      rw [dite_eq_right (by rw [h2]; exact h)]
       exact Fin.castPred_inj.mpr h2
 
 /-- The last sheet is a block on its own. -/
@@ -95,7 +99,7 @@ theorem restrictLast_repr {P : SheetPartition (d + 1)} (h : LastSingleton P) (i 
     ((restrictLast P).repr i).castSucc = P.repr i.castSucc := by
   show (if h' : P.repr i.castSucc = Fin.last d then i else
     (P.repr i.castSucc).castPred h').castSucc = _
-  rw [dif_neg (h.repr_castSucc_ne i), Fin.castSucc_castPred]
+  rw [dite_eq_right (h.repr_castSucc_ne i), Fin.castSucc_castPred]
 
 theorem restrictLast_rel {P : SheetPartition (d + 1)} (h : LastSingleton P) (i j : Fin d) :
     (restrictLast P).Rel i j ↔ P.Rel i.castSucc j.castSucc := by
@@ -1539,21 +1543,21 @@ theorem exists_shape (φ : FibreMember (tripodCore core s) y (3 + 2)) (G : Glued
       have hne := hS.sheet_ne k
       by_cases hi : i' = yS <;> by_cases hj : j' = yS
       · simp [hi, hj]
-      · simp only [hi, hj, if_true, if_false, ρ.injective.eq_iff]
+      · simp only [hi, hj, ite_true, ite_false, ρ.injective.eq_iff]
         constructor
         · intro h; exact Or.inr (Or.inr ⟨rfl, h.symm⟩)
         · rintro (h | ⟨h, -⟩ | ⟨-, h⟩)
           · exact absurd h.symm hj
           · exact absurd h (Ne.symm hne)
           · exact h.symm
-      · simp only [hi, hj, if_true, if_false, ρ.injective.eq_iff]
+      · simp only [hi, hj, ite_true, ite_false, ρ.injective.eq_iff]
         constructor
         · intro h; exact Or.inr (Or.inl ⟨h, rfl⟩)
         · rintro (h | ⟨h, -⟩ | ⟨h, -⟩)
           · exact h.elim
           · exact h
           · exact absurd h hi
-      · simp only [hi, hj, if_false, ρ.injective.eq_iff]
+      · simp only [hi, hj, ite_false, ρ.injective.eq_iff]
         tauto
   have hGE : ∀ ε, ((glueDatum D π).edgePartition ε).SameBlocks (F₂.edgePartition ε) := by
     intro ε
@@ -1732,13 +1736,13 @@ theorem gReach_tip (k : Fin 3) (j : Fin d) :
     · exact absurd h.symm (oldVertex₃_ne_tip D π x' k _)
     · exact absurd h.symm (newVertex_ne_tip D π v k _)
     · obtain ⟨rfl, hrel⟩ := rel_of_tip_eq D π h
-      rw [pair_rel_iff, if_neg (Fin.castSucc_lt_last j).ne,
-        if_neg (Fin.castSucc_lt_last _).ne, Fin.castSucc_inj] at hrel
+      rw [pair_rel_iff, ite_eq_right (Fin.castSucc_lt_last j).ne,
+        ite_eq_right (Fin.castSucc_lt_last _).ne, Fin.castSucc_inj] at hrel
       rw [hrel]
       exact ⟨k, SimpleGraph.Reachable.refl _⟩
     · obtain ⟨rfl, hrel⟩ := rel_of_tip_eq D π h
-      rw [pair_rel_iff, if_neg (Fin.castSucc_lt_last j).ne,
-        if_neg (Fin.castSucc_lt_last _).ne, Fin.castSucc_inj] at hrel
+      rw [pair_rel_iff, ite_eq_right (Fin.castSucc_lt_last j).ne,
+        ite_eq_right (Fin.castSucc_lt_last _).ne, Fin.castSucc_inj] at hrel
       rw [hrel]
       exact hj'
   · intro h
@@ -2211,18 +2215,18 @@ theorem nonDanglingValency_markR₃_eq_zero (hD : D.Connected) (k : Fin 3)
     rw [Refine.nonDanglingValency_sourceEndpoint_old _ _ h₂,
       Refine.nonDanglingValency_sourceEndpoint_old _ _ h₁,
       Refine.nonDanglingValency_sourceEndpoint_fresh _ _ hD,
-      if_pos (show IsDangling D (D.sourceEdge π.edge₀ (π.sheet 0)) from h)]
+      ite_eq_left (show IsDangling D (D.sourceEdge π.edge₀ (π.sheet 0)) from h)]
   | 1, h =>
     show nonDanglingValency (refine₃ D π) ((refine₃ D π).sourceEndpoint
       (subdivOld _ _ (subdivFresh π.T₁ π.edge₁)) (π.sheet 1)) = 0
     rw [Refine.nonDanglingValency_sourceEndpoint_old _ _ h₂,
-      Refine.nonDanglingValency_sourceEndpoint_fresh _ _ h₁, if_pos]
+      Refine.nonDanglingValency_sourceEndpoint_fresh _ _ h₁, ite_eq_left]
     rw [Refine.isDangling_sourceEdge _ _ hD]
     exact h
   | 2, h =>
     show nonDanglingValency (refine₃ D π) ((refine₃ D π).sourceEndpoint
       (subdivFresh π.T₂ π.edge₂) (π.sheet 2)) = 0
-    rw [Refine.nonDanglingValency_sourceEndpoint_fresh _ _ h₂, if_pos]
+    rw [Refine.nonDanglingValency_sourceEndpoint_fresh _ _ h₂, ite_eq_left]
     rw [Refine.isDangling_sourceEdge _ _ h₁, Refine.isDangling_sourceEdge _ _ hD]
     exact h
 

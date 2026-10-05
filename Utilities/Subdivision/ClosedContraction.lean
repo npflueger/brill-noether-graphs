@@ -1,4 +1,8 @@
-import Utilities.Subdivision.ClosedFaceCensus
+module
+
+public import Utilities.Subdivision.ClosedFaceCensus
+
+@[expose] public section
 
 /-!
 # A closed-orthant row proof implies every contraction of its row

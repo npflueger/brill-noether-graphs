@@ -1,7 +1,11 @@
-import DraismaVargas.Infrastructure.GluingTransport
-import DraismaVargas.Infrastructure.SheetJoin
-import DraismaVargas.LocalCases.BalancedGlobal
-import DraismaVargas.LocalCases.SemanticAtlasMarch
+module
+
+public import DraismaVargas.Infrastructure.GluingTransport
+public import DraismaVargas.Infrastructure.SheetJoin
+public import DraismaVargas.LocalCases.BalancedGlobal
+public import DraismaVargas.LocalCases.SemanticAtlasMarch
+
+@[expose] public section
 
 /-!
 # A neutral candidate constructor

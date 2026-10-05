@@ -1,5 +1,9 @@
-import DraismaVargasCount.W2M1kMemberBalance
-import DraismaVargasCount.W2M1kRowTransport
+module
+
+public import DraismaVargasCount.W2M1kMemberBalance
+public import DraismaVargasCount.W2M1kRowTransport
+
+@[expose] public section
 
 /-!
 # The actual regrown transitions of Figure 33

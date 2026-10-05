@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.PrunedSource
-import DraismaVargas.LocalCases.NonDanglingValency
+module
+
+public import DraismaVargas.LocalCases.PrunedSource
+public import DraismaVargas.LocalCases.NonDanglingValency
+
+@[expose] public section
 
 /-!
 # The spanning-forest bound and the trivalence count
@@ -134,7 +138,7 @@ private theorem num_edges_cons_cases (G : CFGraph.{u}) (e : G.V × G.V)
   by_cases hNew : e = (a, b) ∨ e = (b, a)
   · exact Or.inl hNew
   · refine Or.inr ?_
-    rw [num_edges_subEdges, Multiset.filter_cons, if_neg hNew, Multiset.zero_add]
+    rw [num_edges_subEdges, Multiset.filter_cons, ite_eq_right hNew, Multiset.zero_add]
       at hpos
     rw [num_edges_subEdges]
     exact hpos
@@ -176,7 +180,7 @@ private noncomputable def repOf {V : Type u} [Nonempty V] (c : Finset V) : V :=
 
 private theorem repOf_mem {V : Type u} [Nonempty V] {c : Finset V} (h : c.Nonempty) :
     repOf c ∈ c := by
-  rw [repOf, dif_pos h]
+  rw [repOf, dite_eq_left h]
   exact h.choose_spec
 
 /-- **Adding one edge occurrence merges at most two components.**  The

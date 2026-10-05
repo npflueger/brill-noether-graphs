@@ -1,8 +1,12 @@
-import DraismaVargasCount.GeometricContraction
-import DraismaVargas.Infrastructure.ContractionRamification
-import DraismaVargasCount.GeometricValidityTransport
-import DraismaVargas.LocalCases.FullDimensionalSource
-import DraismaVargas.LocalCases.W4TargetPairings
+module
+
+public import DraismaVargasCount.GeometricContraction
+public import DraismaVargas.Infrastructure.ContractionRamification
+public import DraismaVargasCount.GeometricValidityTransport
+public import DraismaVargas.LocalCases.FullDimensionalSource
+public import DraismaVargas.LocalCases.W4TargetPairings
+
+@[expose] public section
 
 /-!
 # Forced local partitions above a discrete contracted vertex

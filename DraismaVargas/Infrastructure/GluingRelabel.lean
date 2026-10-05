@@ -1,5 +1,9 @@
-import DraismaVargas.Infrastructure.GluingDatum
-import Utilities.Subdivision.LaplacianEquiv
+module
+
+public import DraismaVargas.Infrastructure.GluingDatum
+public import Utilities.Subdivision.LaplacianEquiv
+
+@[expose] public section
 
 /-!
 # Global sheet relabelling of a DV gluing datum
@@ -318,7 +322,7 @@ def togglePermutation (moved : Bool) (permutation : Equiv.Perm (Fin degree)) :
 
 /-- Boundary compatibility at the left endpoint is sufficient for the
 relative-permutation condition of a region relabelling. -/
-private theorem toggle_compatible_left
+theorem toggle_compatible_left
     (vertexMoved : target.V → Bool) (edgeMoved : target.edges → Bool)
     (permutation : Equiv.Perm (Fin degree))
     (hBoundary : ∀ edge,
@@ -342,7 +346,7 @@ private theorem toggle_compatible_left
   · simp [togglePermutation, hEdge, hVertex]
 
 /-- The analogous boundary reduction at the right endpoint. -/
-private theorem toggle_compatible_right
+theorem toggle_compatible_right
     (vertexMoved : target.V → Bool) (edgeMoved : target.edges → Bool)
     (permutation : Equiv.Perm (Fin degree))
     (hBoundary : ∀ edge,

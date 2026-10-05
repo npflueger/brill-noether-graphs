@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.M11RemoteCandidates
-import DraismaVargas.Infrastructure.SheetGluingGenus
+module
+
+public import DraismaVargas.LocalCases.M11RemoteCandidates
+public import DraismaVargas.Infrastructure.SheetGluingGenus
+
+@[expose] public section
 
 /-!
 # Source genus of the three universal M11 candidates

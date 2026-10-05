@@ -1,5 +1,9 @@
-import DraismaVargas.Infrastructure.PartitionNormalization
-import DraismaVargas.LocalCases.RelabelFullDimensional
+module
+
+public import DraismaVargas.Infrastructure.PartitionNormalization
+public import DraismaVargas.LocalCases.RelabelFullDimensional
+
+@[expose] public section
 
 /-!
 # Actual stable-source transport across equal partition relations

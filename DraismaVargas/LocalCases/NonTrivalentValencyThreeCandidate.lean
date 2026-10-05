@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyFourKZero
-import DraismaVargas.LocalCases.NonTrivalentValencyThreeRigidity
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyFourKZero
+public import DraismaVargas.LocalCases.NonTrivalentValencyThreeRigidity
+
+@[expose] public section
 
 /-!
 # Part II, valency three: the prescribed candidate of case `{v3-nd4}`
@@ -292,7 +296,7 @@ theorem simple_blockCountWithin_add_sum (hNoGlue : DanglingEdgeNoGlue data)
 
 /-! ## 4.  The two surviving classes of the doubled direction -/
 
-private theorem exists_doubled_pair :
+theorem exists_doubled_pair :
     ∃ first second, first ≠ second ∧
       directionSurvivors data star anchor (doubled source) = {first, second} :=
   Finset.card_eq_two.mp source.distribution.doubled_count
@@ -741,9 +745,9 @@ theorem selected_exterior (hNoGlue : DanglingEdgeNoGlue data) (edge : target.edg
     (GluingContraction.mem_incidentEdges_iff wall edge).mpr hIncident
   by_cases hEdge : edge = doubledEdge source
   · subst hEdge
-    rw [rightAssignment_doubled source, if_neg (by simp)]
+    rw [rightAssignment_doubled source, ite_eq_right (by simp)]
     exact doubledEdge_refines_finePartition source hNoGlue
-  · rw [rightAssignment_of_ne source hEdge, if_pos rfl]
+  · rw [rightAssignment_of_ne source hEdge, ite_eq_left rfl]
     exact edgePartition_refines_of_mem_incidentEdges data wall edge hMem
 
 /-! ## 9.  The guarded background and the installed candidate -/
@@ -920,9 +924,9 @@ noncomputable def subdivisionBackground (hValid : data.Valid) :
       (GluingContraction.mem_incidentEdges_iff wall edge).mpr hIncident
     by_cases hEdge : edge = doubledEdge source
     · subst hEdge
-      rw [rightAssignment_doubled source, if_neg (by simp)]
+      rw [rightAssignment_doubled source, ite_eq_right (by simp)]
       exact SheetPartition.Refines.refl _
-    · rw [rightAssignment_of_ne source hEdge, if_pos rfl]
+    · rw [rightAssignment_of_ne source hEdge, ite_eq_left rfl]
       exact edgePartition_refines_of_mem_incidentEdges data wall edge hMem
   left_riemannHurwitz := by
     intro block _ _

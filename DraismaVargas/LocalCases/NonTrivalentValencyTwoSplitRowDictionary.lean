@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoSplitRowEquiv
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoExitFree
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoSplitRowEquiv
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoExitFree
+
+@[expose] public section
 
 /-!
 # The valency-two Base II **split** `AgreeOffColumn` / common-minor identity

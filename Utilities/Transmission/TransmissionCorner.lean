@@ -1,6 +1,10 @@
-import Utilities.Foundations.ElementaryExistence
-import Utilities.Foundations.RankChipStep
-import Utilities.Transmission.TransmissionBN
+module
+
+public import Utilities.Foundations.ElementaryExistence
+public import Utilities.Foundations.RankChipStep
+public import Utilities.Transmission.TransmissionBN
+
+@[expose] public section
 
 /-!
 # Certifying transmission from finitely many rank corners

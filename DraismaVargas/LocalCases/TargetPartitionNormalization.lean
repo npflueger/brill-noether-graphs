@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.PartitionStableNormalization
+module
+
+public import DraismaVargas.LocalCases.PartitionStableNormalization
+
+@[expose] public section
 
 /-!
 # Occurrence-induced transport through target and partition normalization

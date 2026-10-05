@@ -1,9 +1,13 @@
-import GenusSixExistence.BrillNoetherRank.Tripod.TripodModelDefs
-import Utilities.Subdivision.ScaleLift
-import GenusSixExistence.BrillNoetherRank.Tripod.TripodMarkRefinement
-import DraismaVargas.LocalCases.StableModelPackaging
-import Utilities.Gonality.CoreBridgeless
-import Utilities.Subdivision.OddSubdivisionDescent
+module
+
+public import GenusSixExistence.BrillNoetherRank.Tripod.TripodModelDefs
+public import Utilities.Subdivision.ScaleLift
+public import GenusSixExistence.BrillNoetherRank.Tripod.TripodMarkRefinement
+public import DraismaVargas.LocalCases.StableModelPackaging
+public import Utilities.Gonality.CoreBridgeless
+public import Utilities.Subdivision.OddSubdivisionDescent
+
+@[expose] public section
 
 /-!
 # Every bridgeless genus-six graph with three marks has a tripod model

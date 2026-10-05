@@ -1,8 +1,12 @@
-import GenusSixExistence.BrillNoetherRank.Tripod.GluingLayout
-import GenusSixExistence.BrillNoetherRank.Tripod.GluingPieceIdent
-import DraismaVargasCount.RowWalk
-import DraismaVargas.LocalCases.OrientedTraversal
-import DraismaVargas.LocalCases.TraversalPresentation
+module
+
+public import GenusSixExistence.BrillNoetherRank.Tripod.GluingLayout
+public import GenusSixExistence.BrillNoetherRank.Tripod.GluingPieceIdent
+public import DraismaVargasCount.RowWalk
+public import DraismaVargas.LocalCases.OrientedTraversal
+public import DraismaVargas.LocalCases.TraversalPresentation
+
+@[expose] public section
 
 /-!
 # The three stages of the gluing, as layouts
@@ -236,11 +240,11 @@ theorem sum_incident_walkOE (b : Fin n) :
     rw [map_fst_walkOE, mem_orderedRow_iff]
     exact ⟨fun ⟨_, h⟩ ↦ h, fun h ↦ ⟨z.2, h⟩⟩
   by_cases h1 : z.stablePath = P
-  · rw [if_pos (hiff.mpr h1)]
+  · rw [ite_eq_left (hiff.mpr h1)]
     by_cases h2 : Incident ψ.data z.1 (V₀ ψ b)
-    · rw [if_pos h2, if_pos ⟨h2, h1⟩]
-    · rw [if_neg h2, if_neg (fun h ↦ h2 h.1)]
-  · rw [if_neg (fun h ↦ h1 (hiff.mp h)), if_neg (fun h ↦ h1 h.2)]
+    · rw [ite_eq_left h2, ite_eq_left ⟨h2, h1⟩]
+    · rw [ite_eq_right h2, ite_eq_right (fun h ↦ h2 h.1)]
+  · rw [ite_eq_right (fun h ↦ h1 (hiff.mp h)), ite_eq_right (fun h ↦ h1 h.2)]
 
 /-- **The orientation of a walk**: it runs from the tail vertex of its slot to the head vertex,
 or the other way round. -/
@@ -275,23 +279,23 @@ theorem orient (i : Fin p) :
     · left
       refine ⟨h1, ?_⟩
       have k := key (core.head i)
-      rw [if_pos (rfl : core.head i = core.head i)] at k
+      rw [ite_eq_left (rfl : core.head i = core.head i)] at k
       subst h1
       by_contra hne
-      rw [if_neg hne] at k
+      rw [ite_eq_right hne] at k
       omega
     · right
       have k := key a
-      rw [if_pos (rfl : a = a), if_neg (Ne.symm h1)] at k
+      rw [ite_eq_left (rfl : a = a), ite_eq_right (Ne.symm h1)] at k
       have hha : core.head i = a := by
         by_contra hc
-        rw [if_neg hc] at k
+        rw [ite_eq_right hc] at k
         omega
       refine ⟨hha.symm, ?_⟩
       have k' := key (core.tail i)
-      rw [if_neg h1, if_pos (rfl : core.tail i = core.tail i), hha, if_neg h1] at k'
+      rw [ite_eq_right h1, ite_eq_left (rfl : core.tail i = core.tail i), hha, ite_eq_right h1] at k'
       by_contra hne
-      rw [if_neg hne] at k'
+      rw [ite_eq_right hne] at k'
       omega
   rcases hor with ⟨h1, h2⟩ | ⟨h1, h2⟩
   · left
@@ -310,8 +314,8 @@ theorem sum_srcLen_walkOE (w : ψ.target.edges → ℚ) :
     rw [map_fst_walkOE, mem_orderedRow_iff]
     exact ⟨fun ⟨_, h⟩ ↦ h, fun h ↦ ⟨z.2, h⟩⟩
   by_cases h1 : z.stablePath = P
-  · rw [if_pos (hiff.mpr h1), if_pos h1]
-  · rw [if_neg (fun h ↦ h1 (hiff.mp h)), if_neg h1]
+  · rw [ite_eq_left (hiff.mpr h1), ite_eq_left h1]
+  · rw [ite_eq_right (fun h ↦ h1 (hiff.mp h)), ite_eq_right h1]
 
 /-- **Stage zero**: the stable paths of `ψ` as a layout of `G̃`, under any non-negative target
 lengths along which every stable path has its requested length. -/
@@ -379,10 +383,10 @@ theorem exists_layout₀ (w : ψ.target.edges → ℚ) (hw : ∀ e, 0 ≤ w e)
     · exact isChain_revChain (isChain_walkOE ψ _)
   · intro i
     by_cases h : ok i
-    · rw [head_congr' (show ch i = walkOE ψ (Pi i) by simp only [hch, if_pos h]) (hne i)
+    · rw [head_congr' (show ch i = walkOE ψ (Pi i) by simp only [hch, ite_eq_left h]) (hne i)
         (walkOE_ne_nil ψ _), head_walkOE]
       exact h
-    · rw [head_congr' (show ch i = revChain (walkOE ψ (Pi i)) by simp only [hch, if_neg h])
+    · rw [head_congr' (show ch i = revChain (walkOE ψ (Pi i)) by simp only [hch, ite_eq_right h])
         (hne i)
         (revChain_ne_nil (walkOE_ne_nil ψ _)), head_revChain (walkOE_ne_nil ψ _), last_walkOE]
       rcases orient ψ i with ⟨h1, -⟩ | ⟨-, h2⟩
@@ -390,14 +394,14 @@ theorem exists_layout₀ (w : ψ.target.edges → ℚ) (hw : ∀ e, 0 ≤ w e)
       · exact h2
   · intro i
     by_cases h : ok i
-    · rw [getLast_congr' (show ch i = walkOE ψ (Pi i) by simp only [hch, if_pos h]) (hne i)
+    · rw [getLast_congr' (show ch i = walkOE ψ (Pi i) by simp only [hch, ite_eq_left h]) (hne i)
         (walkOE_ne_nil ψ _), last_walkOE]
       rcases orient ψ i with ⟨-, h2⟩ | ⟨h1, h2⟩
       · exact h2
       · -- a loop slot: both ends are one vertex
         have hth : core.head i = core.tail i := V₀_injective ψ (h1.symm.trans h)
         rw [h2, hth]
-    · rw [getLast_congr' (show ch i = revChain (walkOE ψ (Pi i)) by simp only [hch, if_neg h])
+    · rw [getLast_congr' (show ch i = revChain (walkOE ψ (Pi i)) by simp only [hch, ite_eq_right h])
         (hne i)
         (revChain_ne_nil (walkOE_ne_nil ψ _)), last_revChain (walkOE_ne_nil ψ _), head_walkOE]
       rcases orient ψ i with ⟨h1, -⟩ | ⟨h1, -⟩
@@ -412,8 +416,8 @@ theorem exists_layout₀ (w : ψ.target.edges → ℚ) (hw : ∀ e, 0 ≤ w e)
       have hiff : x.stablePath = Pi i ↔ ψ.ident.row x.stablePath = i := by
         rw [hPi, Equiv.eq_symm_apply]
       by_cases h1 : x.stablePath = Pi i
-      · rw [if_pos h1, if_pos (hiff.mp h1)]
-      · rw [if_neg h1, if_neg (fun h ↦ h1 (hiff.mpr h))]
+      · rw [ite_eq_left h1, ite_eq_left (hiff.mp h1)]
+      · rw [ite_eq_right h1, ite_eq_right (fun h ↦ h1 (hiff.mpr h))]
     simp only [hch]
     split_ifs
     · rw [hs, hs']
@@ -566,7 +570,7 @@ theorem pieceLabels_of_labelData
   have hlab_gp : ∀ z, lab (gp z) = R.lab z := by
     intro z
     have h : ∃ z', gp z' = gp z := ⟨z, rfl⟩
-    simp only [hlab, dif_pos h]
+    simp only [hlab, dite_eq_left h]
     exact hconst _ _ h.choose_spec
   -- the glued old paths are as many as the labels, so the labels tell them apart
   have hcard := CutPaths.card_image_gluedPath hD hT hπ ψ.fullDim.targetGenus ψ.fullDim.trivalent
@@ -611,9 +615,9 @@ theorem pieceLabels_of_labelData
   · rw [hlab_gp, ← R.len (R.lab z₀)]
     refine Finset.sum_congr rfl fun z _ ↦ ?_
     by_cases h : R.lab z = R.lab z₀
-    · rw [if_pos ((hiff z z₀).mpr h), if_pos h]
+    · rw [ite_eq_left ((hiff z z₀).mpr h), ite_eq_left h]
       rfl
-    · rw [if_neg (fun h' ↦ h ((hiff z z₀).mp h')), if_neg h]
+    · rw [ite_eq_right (fun h' ↦ h ((hiff z z₀).mp h')), ite_eq_right h]
 
 end Bridge
 
@@ -645,9 +649,9 @@ theorem len_of_member {yG : Fin p → ℚ} {d : ℕ} (ψ : FibreMember core yG d
       ψ.fullDim.labelling.row (ψ.ident.row.symm i) ↔ ψ.ident.row x.stablePath = i := by
     rw [ψ.fullDim.labelling.row.injective.eq_iff, Equiv.eq_symm_apply]
   by_cases hx : ψ.ident.row x.stablePath = i
-  · rw [if_pos hx, if_pos (hiff.mpr hx)]
+  · rw [ite_eq_left hx, ite_eq_left (hiff.mpr hx)]
     rfl
-  · rw [if_neg hx, if_neg (fun h ↦ hx (hiff.mp h))]
+  · rw [ite_eq_right hx, ite_eq_right (fun h ↦ hx (hiff.mp h))]
 
 /-- The placement of the three marks on three successive surviving edges. -/
 abbrev mkPlacement {T : CFGraph} {d : ℕ} {D : GluingDatum T d} (x₀ : NonDanglingEdge D)
@@ -876,9 +880,9 @@ theorem labelData₃_of_gluing (hφ : φ.Open) :
     have hiff : lab z = i ↔ gp z = gp z₀ := by
       rw [hlabiff, ← hz₀, (iso.stablePathEquiv hG).injective.eq_iff]
     by_cases h : lab z = i
-    · rw [if_pos h, if_pos (hiff.mp h)]
+    · rw [ite_eq_left h, ite_eq_left (hiff.mp h)]
       rfl
-    · rw [if_neg h, if_neg (fun h' ↦ h (hiff.mpr h'))]
+    · rw [ite_eq_right h, ite_eq_right (fun h' ↦ h (hiff.mpr h'))]
   · -- the merged labels are the rows of `ψ`
     intro z
     have h := pieceLabel_eq hπ iso hL z
@@ -952,7 +956,7 @@ theorem request_pos_of_open {m q : ℕ} {C : Core m q} {y : Fin q → ℚ} {d : 
     · exact le_rfl
   · have hc : φ.fullDim.labelling.row x₀.stablePath =
         φ.fullDim.labelling.row (φ.ident.row.symm i) := congrArg φ.fullDim.labelling.row hx₀
-    rw [if_pos hc]
+    rw [ite_eq_left hc]
     exact div_pos (hφ _) (sourceEdgeIndex_pos' _)
 
 /-- **Lengths realising the request along the rows of a member are its coordinates.** -/
@@ -971,9 +975,9 @@ theorem w_eq_coords {yG : Fin p → ℚ} {d : ℕ} (ψ : FibreMember core yG d)
     have hiff : L.row x.stablePath = r ↔ ψ.ident.row x.stablePath = ψ.ident.row (L.row.symm r) := by
       rw [ψ.ident.row.injective.eq_iff, Equiv.eq_symm_apply]
     by_cases hx : L.row x.stablePath = r
-    · rw [if_pos hx, if_pos (hiff.mp hx), Equiv.apply_symm_apply]
+    · rw [ite_eq_left hx, ite_eq_left (hiff.mp hx), Equiv.apply_symm_apply]
       rfl
-    · rw [if_neg hx, if_neg (fun h ↦ hx (hiff.mpr h))])
+    · rw [ite_eq_right hx, ite_eq_right (fun h ↦ hx (hiff.mpr h))])
   funext e
   have := congrFun hc (L.targetEdge.symm e)
   simp only [Equiv.apply_symm_apply] at this

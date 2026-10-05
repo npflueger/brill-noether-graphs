@@ -1,5 +1,9 @@
-import Bananas.Wedge.WedgeTorsionRestriction
-import Bananas.Transmission.NonrecurrenceWitness
+module
+
+public import Bananas.Wedge.WedgeTorsionRestriction
+public import Bananas.Transmission.NonrecurrenceWitness
+
+@[expose] public section
 
 /-!
 # Unequal periods force recurrence on an opposite-side genus-one wedge

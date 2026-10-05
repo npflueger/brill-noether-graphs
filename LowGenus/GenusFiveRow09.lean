@@ -1,7 +1,11 @@
-import LowGenus.ClosedConstructionTail
-import LowGenus.ConfigurationChippedTriangle
-import LowGenus.ConfigurationMarkedRow
-import LowGenus.GuardingSet
+module
+
+public import LowGenus.ClosedConstructionTail
+public import LowGenus.ConfigurationChippedTriangle
+public import LowGenus.ConfigurationMarkedRow
+public import LowGenus.GuardingSet
+
+@[expose] public section
 
 /-!
 # The Atanasov--Ranganathan construction on row 09
@@ -717,7 +721,7 @@ theorem t4Coeff_owner (d : DegSpec 8 12) : 1 ≤ t4Coeff d (ownerFour d) := by
   unfold ownerFour
   by_cases hDel : Delivers (d.length 4) (d.length 5) (d.length 6) (hcT4 d)
       (h0T4 d) (htT4 d)
-  · rw [if_pos hDel]
+  · rw [ite_eq_left hDel]
     show (1 : ℤ) ≤ zeroChip (d.length 4)
         + (headContribution (d.length 4) 0 (htT4 d)
             + headContribution (d.length 5) (hcT4 d) (htT4 d)
@@ -729,10 +733,10 @@ theorem t4Coeff_owner (d : DegSpec 8 12) : 1 ≤ t4Coeff d (ownerFour d) := by
       rfl rfl rfl rfl (by norm_num) le_rfl (fun _ => hDel)
     simp only [fwd_tail, rev_tail] at this
     omega
-  · rw [if_neg hDel]
+  · rw [ite_eq_right hDel]
     by_cases hFall :
         d.length 5 = 0 ∧ lend (d.length 7) (hcT4 d) (d.length 3) = 0
-    · rw [if_pos hFall]
+    · rw [ite_eq_left hFall]
       show (1 : ℤ) ≤ 1 + zeroChip (d.length 9)
           - lend (d.length 7) (hcT4 d) (d.length 3)
           + (tailContribution (d.length 9) (hcT4 d) 0
@@ -745,7 +749,7 @@ theorem t4Coeff_owner (d : DegSpec 8 12) : 1 ≤ t4Coeff d (ownerFour d) := by
         rfl rfl rfl rfl (by norm_num) le_rfl (fun _ => hFall)
       simp only [fwd_tail, rev_tail] at this
       omega
-    · rw [if_neg hFall]
+    · rw [ite_eq_right hFall]
       show (1 : ℤ) ≤ zeroChip (d.length 3)
           + lend (d.length 7) (hcT4 d) (d.length 3)
           + (headContribution (d.length 3) 0 (hvT4 d)
@@ -768,13 +772,13 @@ theorem ownerFour_rep {d : DegSpec 8 12} (hCore : d.core = row09Core) :
   unfold ownerFour
   by_cases hDel : Delivers (d.length 4) (d.length 5) (d.length 6) (hcT4 d)
       (h0T4 d) (htT4 d)
-  · rw [if_pos hDel]
-  · rw [if_neg hDel]
+  · rw [ite_eq_left hDel]
+  · rw [ite_eq_right hDel]
     by_cases hFall :
         d.length 5 = 0 ∧ lend (d.length 7) (hcT4 d) (d.length 3) = 0
-    · rw [if_pos hFall]
+    · rw [ite_eq_left hFall]
       exact rep_zero_five hCore hFall.1
-    · rw [if_neg hFall]
+    · rw [ite_eq_right hFall]
       rcases class_of_not_delivers (al := d.length 4) (be := d.length 3)
         (ga := d.length 9) (p := d.length 5) (q := d.length 6)
         (r := d.length 7) (hc := hcT4 d) (h0 := h0T4 d) (ht := htT4 d)
@@ -890,7 +894,7 @@ theorem t5Coeff_owner (d : DegSpec 8 12) : 1 ≤ t5Coeff d (ownerFive d) := by
   unfold ownerFive
   by_cases hDel : Delivers (d.length 3) (d.length 7) (d.length 6) (hcT5 d)
       (h0T5 d) (htT5 d)
-  · rw [if_pos hDel]
+  · rw [ite_eq_left hDel]
     show (1 : ℤ) ≤ zeroChip (d.length 3)
         + (headContribution (d.length 3) 0 (htT5 d)
             + tailContribution (d.length 7) (htT5 d) (hcT5 d)
@@ -902,10 +906,10 @@ theorem t5Coeff_owner (d : DegSpec 8 12) : 1 ≤ t5Coeff d (ownerFive d) := by
       rfl rfl rfl rfl (by norm_num) le_rfl (fun _ => hDel)
     simp only [fwd_tail, rev_tail] at this
     omega
-  · rw [if_neg hDel]
+  · rw [ite_eq_right hDel]
     by_cases hFall :
         d.length 7 = 0 ∧ lend (d.length 5) (hcT5 d) (d.length 4) = 0
-    · rw [if_pos hFall]
+    · rw [ite_eq_left hFall]
       show (1 : ℤ) ≤ 1 + zeroChip (d.length 9)
           - lend (d.length 5) (hcT5 d) (d.length 4)
           + (tailContribution (d.length 9) (hcT5 d) 0
@@ -918,7 +922,7 @@ theorem t5Coeff_owner (d : DegSpec 8 12) : 1 ≤ t5Coeff d (ownerFive d) := by
         rfl rfl rfl rfl (by norm_num) le_rfl (fun _ => hFall)
       simp only [fwd_tail, rev_tail] at this
       omega
-    · rw [if_neg hFall]
+    · rw [ite_eq_right hFall]
       show (1 : ℤ) ≤ zeroChip (d.length 4)
           + lend (d.length 5) (hcT5 d) (d.length 4)
           + (headContribution (d.length 4) 0 (hvT5 d)
@@ -941,13 +945,13 @@ theorem ownerFive_rep {d : DegSpec 8 12} (hCore : d.core = row09Core) :
   unfold ownerFive
   by_cases hDel : Delivers (d.length 3) (d.length 7) (d.length 6) (hcT5 d)
       (h0T5 d) (htT5 d)
-  · rw [if_pos hDel]
-  · rw [if_neg hDel]
+  · rw [ite_eq_left hDel]
+  · rw [ite_eq_right hDel]
     by_cases hFall :
         d.length 7 = 0 ∧ lend (d.length 5) (hcT5 d) (d.length 4) = 0
-    · rw [if_pos hFall]
+    · rw [ite_eq_left hFall]
       exact (rep_zero_seven hCore hFall.1).symm
-    · rw [if_neg hFall]
+    · rw [ite_eq_right hFall]
       rcases class_of_not_delivers (al := d.length 3) (be := d.length 4)
         (ga := d.length 9) (p := d.length 7) (q := d.length 6)
         (r := d.length 5) (hc := hcT5 d) (h0 := h0T5 d) (ht := htT5 d)

@@ -1,5 +1,9 @@
-import DraismaVargasCount.GeneralKTracks
-import DraismaVargasCount.GeneralKExit
+module
+
+public import DraismaVargasCount.GeneralKTracks
+public import DraismaVargasCount.GeneralKExit
+
+@[expose] public section
 
 /-!
 # The tracking of the general-`K` candidate at a four-valent wall
@@ -67,10 +71,10 @@ theorem card_filter_triple {α : Type*} [DecidableEq α] (a b c : α) (hab : a �
       (if P a then 1 else 0) + (if P b then 1 else 0) + (if P c then 1 else 0) := by
   rw [Finset.filter_insert]
   by_cases h : P a
-  · rw [if_pos h, Finset.card_insert_of_notMem (by simp [Finset.mem_filter, hab, hac]),
-      NonTrivalentValencyThreeStarCount.card_filter_pair b c hbc P, if_pos h]
+  · rw [ite_eq_left h, Finset.card_insert_of_notMem (by simp [Finset.mem_filter, hab, hac]),
+      NonTrivalentValencyThreeStarCount.card_filter_pair b c hbc P, ite_eq_left h]
     omega
-  · rw [if_neg h, NonTrivalentValencyThreeStarCount.card_filter_pair b c hbc P, if_neg h]
+  · rw [ite_eq_right h, NonTrivalentValencyThreeStarCount.card_filter_pair b c hbc P, ite_eq_right h]
     omega
 
 theorem ite3_congr {κ : Type*} [DecidableEq κ] {X₁ X₂ X₃ Y₁ Y₂ Y₃ c : κ} (h₁ : X₁ = Y₁)
@@ -413,7 +417,7 @@ theorem incidence_inr_false
   classical
   obtain ⟨hBase, first, second, hFirst, hSecond, hStarM⟩ := hPres
   set c := fdOut.labelling.row r with hc
-  rw [vertexEquivK_inr, if_neg Bool.false_ne_true,
+  rw [vertexEquivK_inr, ite_eq_right Bool.false_ne_true,
     ← NonTrivalentValencyFourTracks.vert_base_eq m wd wallStar hBase,
     branchEquivK_inr, incidenceCount_eq_card_filter _ fdOut.labelling.row
       fdOut.labelling.row.injective r, ← hc]

@@ -1,5 +1,9 @@
-import DraismaVargas.Infrastructure.TargetExpansion
-import Mathlib.Tactic
+module
+
+public import DraismaVargas.Infrastructure.TargetExpansion
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # The unique target expansion at a divalent wall

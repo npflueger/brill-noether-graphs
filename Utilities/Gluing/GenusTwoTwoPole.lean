@@ -1,6 +1,10 @@
-import Utilities.Foundations.RiemannRochWinnable
-import Utilities.Gluing.CanonicalWedge
-import Utilities.Gluing.TwoPole
+module
+
+public import Utilities.Foundations.RiemannRochWinnable
+public import Utilities.Gluing.CanonicalWedge
+public import Utilities.Gluing.TwoPole
+
+@[expose] public section
 
 /-!
 # Genus-two seeds for two-pole gluing

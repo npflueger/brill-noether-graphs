@@ -1,5 +1,9 @@
-import DraismaVargasCount.CorePencilCoverProducer
-import Utilities.Subdivision.BivalentPaths
+module
+
+public import DraismaVargasCount.CorePencilCoverProducer
+public import Utilities.Subdivision.BivalentPaths
+
+@[expose] public section
 
 /-!
 # Rank one through bivalent chains
@@ -78,7 +82,7 @@ theorem marker_step_cases (s : T.Step) (y : T.Vertex)
     obtain ⟨hl, hr⟩ := h
     unfold Spec.stepLeft at hl
     by_cases ho0 : o.val = 0
-    · rw [dif_pos ho0] at hl
+    · rw [dite_eq_left ho0] at hl
       have hj : j = j₂ := hpair.2.2.2 j (Sum.inl.inj hl)
       subst hj
       left
@@ -86,13 +90,13 @@ theorem marker_step_cases (s : T.Step) (y : T.Vertex)
       rw [← hr, chainVertex_eq_slotVtx_second T hpair 1,
         slotVtx_of_le T j (T.length_pos j), stepRight_eq_pathVertex]
       exact PathHelpers.pathVertex_congr T j _ _ (by simp [ho0])
-    · rw [dif_neg ho0] at hl
+    · rw [dite_eq_right ho0] at hl
       exact absurd hl (by simp [Spec.interiorVertex, Spec.coreVertex])
   · simp only [Spec.unitEdge, Prod.mk.injEq] at h
     obtain ⟨hl, hr⟩ := h
     unfold Spec.stepRight at hr
     by_cases hoL : o.val + 1 = T.length j
-    · rw [dif_pos hoL] at hr
+    · rw [dite_eq_left hoL] at hr
       have hj : j = j₁ := hpair.2.2.1 j (Sum.inl.inj hr)
       subst hj
       right
@@ -100,7 +104,7 @@ theorem marker_step_cases (s : T.Step) (y : T.Vertex)
       rw [← hl, chainVertex_eq_slotVtx_first T (by omega), slotVtx_of_le T j (by omega),
         stepLeft_eq_pathVertex]
       exact PathHelpers.pathVertex_congr T j _ _ (by simp; omega)
-    · rw [dif_neg hoL] at hr
+    · rw [dite_eq_right hoL] at hr
       exact absurd hr (by simp [Spec.interiorVertex, Spec.coreVertex])
 
 theorem chain_adj {t : ℕ} (ht : t < T.length j₁ + T.length j₂) :

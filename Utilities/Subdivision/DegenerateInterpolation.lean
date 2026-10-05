@@ -1,5 +1,9 @@
-import Utilities.Subdivision.DegenerateSlopeScript
-import Utilities.Subdivision.ValidClosed
+module
+
+public import Utilities.Subdivision.DegenerateSlopeScript
+public import Utilities.Subdivision.ValidClosed
+
+@[expose] public section
 
 /-!
 # Canonical integer interpolation on the CLOSED length orthant

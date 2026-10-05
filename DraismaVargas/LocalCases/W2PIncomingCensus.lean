@@ -1,7 +1,11 @@
-import DraismaVargas.LocalCases.W2PLimitMatrix
-import DraismaVargas.LocalCases.W3Nd2IncomingNormalization
-import DraismaVargas.LocalCases.IncomingMatchingCore
-import DraismaVargas.LocalCases.IncomingW2TargetPlacement
+module
+
+public import DraismaVargas.LocalCases.W2PLimitMatrix
+public import DraismaVargas.LocalCases.W3Nd2IncomingNormalization
+public import DraismaVargas.LocalCases.IncomingMatchingCore
+public import DraismaVargas.LocalCases.IncomingW2TargetPlacement
+
+@[expose] public section
 
 /-!
 # The incoming census at a `{w2-r2-nd3-P}` wall
@@ -763,28 +767,28 @@ omit [Fintype coordinate] [DecidableEq coordinate] fullDim hForest shape in
     (hFalse : IncomingTargetExpansion.right hc hab hOne
       (star.edge profile.doubleLabel) = false) :
     doubleEnd data hc hab hOne star profile = a := by
-  simp only [doubleEnd, hFalse, Bool.false_eq_true, if_false]
+  simp only [doubleEnd, hFalse, Bool.false_eq_true, ite_false]
 
 omit [Fintype coordinate] [DecidableEq coordinate] fullDim hForest shape in
 @[simp] theorem singleEnd_of_false
     (hFalse : IncomingTargetExpansion.right hc hab hOne
       (star.edge profile.doubleLabel) = false) :
     singleEnd data hc hab hOne star profile = b := by
-  simp only [singleEnd, hFalse, Bool.false_eq_true, if_false]
+  simp only [singleEnd, hFalse, Bool.false_eq_true, ite_false]
 
 omit [Fintype coordinate] [DecidableEq coordinate] fullDim hForest shape in
 @[simp] theorem doubleEnd_of_true
     (hTrue : IncomingTargetExpansion.right hc hab hOne
       (star.edge profile.doubleLabel) = true) :
     doubleEnd data hc hab hOne star profile = b := by
-  simp only [doubleEnd, hTrue, if_true]
+  simp only [doubleEnd, hTrue, ite_true]
 
 omit [Fintype coordinate] [DecidableEq coordinate] fullDim hForest shape in
 @[simp] theorem singleEnd_of_true
     (hTrue : IncomingTargetExpansion.right hc hab hOne
       (star.edge profile.doubleLabel) = true) :
     singleEnd data hc hab hOne star profile = a := by
-  simp only [singleEnd, hTrue, if_true]
+  simp only [singleEnd, hTrue, ite_true]
 
 omit [Fintype coordinate] [DecidableEq coordinate] fullDim hForest shape in
 theorem ends_cases :
@@ -795,8 +799,8 @@ theorem ends_cases :
   unfold doubleEnd singleEnd
   by_cases hTrue : IncomingTargetExpansion.right hc hab hOne
     (star.edge profile.doubleLabel) = true
-  · exact Or.inr ⟨if_pos hTrue, if_pos hTrue⟩
-  · exact Or.inl ⟨if_neg hTrue, if_neg hTrue⟩
+  · exact Or.inr ⟨ite_eq_left hTrue, ite_eq_left hTrue⟩
+  · exact Or.inl ⟨ite_eq_right hTrue, ite_eq_right hTrue⟩
 
 omit [Fintype coordinate] [DecidableEq coordinate] fullDim hForest shape in
 /-- The `t₂` occurrence of the incoming target meets `doubleEnd`. -/
@@ -806,9 +810,9 @@ theorem retained_mem_doubleEnd :
   unfold doubleEnd retainedOccurrence
   by_cases hTrue : IncomingTargetExpansion.right hc hab hOne
     (star.edge profile.doubleLabel) = true
-  · rw [if_pos hTrue]
+  · rw [ite_eq_left hTrue]
     exact (IncomingW2TargetPlacement.right_eq_true_iff hc hab hOne _).mp hTrue
-  · rw [if_neg hTrue]
+  · rw [ite_eq_right hTrue]
     exact (IncomingW2TargetPlacement.right_eq_false_iff_of_incident hc hab hOne _
       (star.edge_mem_incidentEdges profile.doubleLabel)).mp
       (by simpa using hTrue)
@@ -881,7 +885,7 @@ theorem isolated_mem_singleEnd
   unfold singleEnd isolatedOccurrence
   by_cases hTrue : IncomingTargetExpansion.right hc hab hOne
     (star.edge profile.doubleLabel) = true
-  · rw [if_pos hTrue]
+  · rw [ite_eq_left hTrue]
     have hSingleFalse : IncomingTargetExpansion.right hc hab hOne
         (star.edge profile.singleLabel) = false := by
       by_contra hContra
@@ -890,7 +894,7 @@ theorem isolated_mem_singleEnd
       exact hNe (hTrue.trans hContra'.symm)
     exact (IncomingW2TargetPlacement.right_eq_false_iff_of_incident hc hab hOne _
       (star.edge_mem_incidentEdges profile.singleLabel)).mp hSingleFalse
-  · rw [if_neg hTrue]
+  · rw [ite_eq_right hTrue]
     have hFalse : IncomingTargetExpansion.right hc hab hOne
         (star.edge profile.doubleLabel) = false := by simpa using hTrue
     have hSingleTrue : IncomingTargetExpansion.right hc hab hOne

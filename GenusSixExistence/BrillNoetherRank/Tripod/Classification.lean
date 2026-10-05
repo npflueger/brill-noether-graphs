@@ -1,7 +1,11 @@
-import GenusSixExistence.BrillNoetherRank.Tripod.ClawDefs
-import GenusSixExistence.BrillNoetherRank.Tripod.Dichotomy
-import GenusSixExistence.BrillNoetherRank.Tripod.GluingClasses
-import DraismaVargasCount.Assembly
+module
+
+public import GenusSixExistence.BrillNoetherRank.Tripod.ClawDefs
+public import GenusSixExistence.BrillNoetherRank.Tripod.Dichotomy
+public import GenusSixExistence.BrillNoetherRank.Tripod.GluingClasses
+public import DraismaVargasCount.Assembly
+
+@[expose] public section
 
 /-!
 # Glued and claw members over the tripod gadget, and the parity of the claws

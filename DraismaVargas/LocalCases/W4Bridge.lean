@@ -1,5 +1,9 @@
-import DraismaVargas.Infrastructure.ContractionRamification
-import DraismaVargas.LocalCases.WallDegeneration
+module
+
+public import DraismaVargas.Infrastructure.ContractionRamification
+public import DraismaVargas.LocalCases.WallDegeneration
+
+@[expose] public section
 
 /-!
 # Feeding the four-valent wall interface from a contraction, under the paper's own hypothesis

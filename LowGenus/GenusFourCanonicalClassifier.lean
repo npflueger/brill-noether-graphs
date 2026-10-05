@@ -1,7 +1,11 @@
-import LowGenus.Generated.GenusFourCanonicalClassifierData
-import LowGenus.GenusFourCubicAtlas
-import Utilities.Certificate.CubicMatrixCanonical
-import Utilities.Subdivision.CoreRelabeling
+module
+
+public import LowGenus.Generated.GenusFourCanonicalClassifierData
+public import LowGenus.GenusFourCubicAtlas
+public import Utilities.Certificate.CubicMatrixCanonical
+public import Utilities.Subdivision.CoreRelabeling
+
+@[expose] public section
 
 /-!
 # The public genus-four cubic classifier

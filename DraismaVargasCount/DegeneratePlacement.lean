@@ -1,6 +1,10 @@
-import DraismaVargasCount.CanonicalSurvivor
-import DraismaVargasCount.PendantDivisorTransport
-import DraismaVargasCount.SurvivingSlotMap
+module
+
+public import DraismaVargasCount.CanonicalSurvivor
+public import DraismaVargasCount.PendantDivisorTransport
+public import DraismaVargasCount.SurvivingSlotMap
+
+@[expose] public section
 
 /-!
 # Placing a member on a target subdivision it only partly fills
@@ -258,7 +262,7 @@ theorem survivingPoint_branch (branch : BranchVertex member.data) :
     survivingPoint B y member hClosed hFit ⟨branch.1, by have := branch.2; omega⟩ =
       B.coreVertex (member.ident.vertex branch) := by
   classical
-  simp only [survivingPoint, dif_pos branch.2]
+  simp only [survivingPoint, dite_eq_left branch.2]
   rfl
 
 theorem survivingPoint_address (address : InteriorAddress member.fullDim) :
@@ -268,7 +272,7 @@ theorem survivingPoint_address (address : InteriorAddress member.fullDim) :
   classical
   have hNotBranch : ¬ 3 ≤ nonDanglingValency member.data
       (addressVertex member.fullDim address) := by rw [addressVertex_valency]; omega
-  rw [survivingPoint, dif_neg hNotBranch]
+  rw [survivingPoint, dite_eq_right hNotBranch]
   congr 1
   exact (addressEquiv member.fullDim).symm_apply_apply address
 
@@ -504,11 +508,11 @@ theorem divisor_interior (root : member.target.V) (e : Fin Q) (o : Fin (B.length
     exact exists_congr fun i ↦
       and_congr_right fun _ ↦ offsetVal_eq_iff B y member hClosed hFit e o (i.val + 1)
   by_cases hRoot : raw.1.1 = root
-  · simp only [fibre, hRoot, if_true, true_and]
+  · simp only [fibre, hRoot, ite_true, true_and]
     by_cases hHit : sourcePoint B y member hClosed hFit raw = B.interiorVertex e o
-    · rw [if_pos hHit, if_pos (hCond.mp hHit)]
-    · rw [if_neg hHit, if_neg fun hx ↦ hHit (hCond.mpr hx)]
-  · simp only [fibre, hRoot, if_false, false_and, if_false, ite_self]
+    · rw [ite_eq_left hHit, ite_eq_left (hCond.mp hHit)]
+    · rw [ite_eq_right hHit, ite_eq_right fun hx ↦ hHit (hCond.mpr hx)]
+  · simp only [fibre, hRoot, ite_false, false_and, ite_false, ite_self]
 
 /-- **`bnExists_of_bigDivisor`'s `hBig`, at the placement.**  Every interior
 coefficient carries the odd-denominator receipt at its own position.  The
@@ -528,7 +532,7 @@ theorem divisor_interior_mem
     have hLength : memberScale member * y e = B.length e := hExact e (by omega)
     have hOff : B.length e - (o.val + 1) = memberScale member * y e - (o.val + 1) := by
       rw [hLength]
-    simp only [hRev, if_true, hOff]
+    simp only [hRev, ite_true, hOff]
     have hBound : o.val + 1 ≤ memberScale member * y e := by omega
     have hScaleQ : (memberScale member : ℚ) ≠ 0 := by
       exact_mod_cast (Nat.ne_of_gt (memberScale_pos member))
@@ -543,7 +547,7 @@ theorem divisor_interior_mem
     convert hDifference using 1
     field_simp
     ring
-  · simp only [hRev, Bool.false_eq_true, if_false]
+  · simp only [hRev, Bool.false_eq_true, ite_false]
     exact member_collisionCoefficient_mem (fun e ↦ ((y e : ℤ))) member hClosed hOdd e
       hInternal (o.val + 1)
 

@@ -1,6 +1,10 @@
-import Bananas.Theta.ThetaBoundarySubmodularity
-import Bananas.CrossOneOff.CrossOneOffDelta
-import Bananas.Classification.GenusTwoDegreeTwo
+module
+
+public import Bananas.Theta.ThetaBoundarySubmodularity
+public import Bananas.CrossOneOff.CrossOneOffDelta
+public import Bananas.Classification.GenusTwoDegreeTwo
+
+@[expose] public section
 
 /-!
 # Rigidity of the non-endpoint theta submodularity families

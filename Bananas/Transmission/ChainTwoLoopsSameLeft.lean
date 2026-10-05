@@ -1,8 +1,12 @@
-import Bananas.Theta.ThetaBoundarySubmodularity
-import Bananas.Wedge.WedgeSubmodularity
-import Utilities.Gluing.CycleRigidity
-import Utilities.Transmission.TransmissionWedge
-import Utilities.Gluing.VertexWedgeGenusOne
+module
+
+public import Bananas.Theta.ThetaBoundarySubmodularity
+public import Bananas.Wedge.WedgeSubmodularity
+public import Utilities.Gluing.CycleRigidity
+public import Utilities.Transmission.TransmissionWedge
+public import Utilities.Gluing.VertexWedgeGenusOne
+
+@[expose] public section
 
 /-!
 # The same-loop branch for a chain of two loops

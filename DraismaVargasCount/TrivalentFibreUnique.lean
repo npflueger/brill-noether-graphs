@@ -1,4 +1,8 @@
-import DraismaVargasCount.BallotResidues
+module
+
+public import DraismaVargasCount.BallotResidues
+
+@[expose] public section
 
 /-!
 # No target vertex carries two surviving source vertices

@@ -1,7 +1,11 @@
-import DraismaVargas.Infrastructure.ContractionRamification
-import DraismaVargas.Infrastructure.NonnegativeRationalRealization
-import Utilities.Subdivision.ContractionForestCensusGeneral
-import Utilities.Subdivision.UnitSubdivisionPresentation
+module
+
+public import DraismaVargas.Infrastructure.ContractionRamification
+public import DraismaVargas.Infrastructure.NonnegativeRationalRealization
+public import Utilities.Subdivision.ContractionForestCensusGeneral
+public import Utilities.Subdivision.UnitSubdivisionPresentation
+
+@[expose] public section
 
 /-!
 # Where the contraction forest receipt comes from
@@ -596,13 +600,13 @@ theorem mergeLabel_of_above (data : GluingDatum target degree) (a b : target.V)
     {source : data.SourceVertex} (h : source.1.1 = a ∨ source.1.1 = b) :
     mergeLabel data a b source
       = (a, (mergedPartition data a b).repr source.1.2) :=
-  if_pos h
+  ite_eq_left h
 
 theorem mergeLabel_of_not_above (data : GluingDatum target degree)
     (a b : target.V) {source : data.SourceVertex}
     (h : ¬(source.1.1 = a ∨ source.1.1 = b)) :
     mergeLabel data a b source = source.1 :=
-  if_neg h
+  ite_eq_right h
 
 /-- The label's image splits into one point per merged block and one point per
 source vertex above neither endpoint. -/

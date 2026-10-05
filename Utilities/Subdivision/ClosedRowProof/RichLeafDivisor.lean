@@ -1,5 +1,9 @@
-import Utilities.Subdivision.ClosedRowProof.RichChipBridge
-import Utilities.Subdivision.ClosedRowProof.RichW5Aggregation
+module
+
+public import Utilities.Subdivision.ClosedRowProof.RichChipBridge
+public import Utilities.Subdivision.ClosedRowProof.RichW5Aggregation
+
+@[expose] public section
 
 /-!
 # The divisor denoted by a rich row-proof leaf

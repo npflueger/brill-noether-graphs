@@ -1,5 +1,9 @@
-import Utilities.Foundations.RiemannRochWinnable
-import Utilities.Foundations.RankInvariance
+module
+
+public import Utilities.Foundations.RiemannRochWinnable
+public import Utilities.Foundations.RankInvariance
+
+@[expose] public section
 
 /-!
 # Canonical slack pairs

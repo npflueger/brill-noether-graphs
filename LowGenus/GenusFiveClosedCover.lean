@@ -1,6 +1,10 @@
-import LowGenus.GenusFiveConfigurations
-import Utilities.Subdivision.AffineCoverData
-import Utilities.Subdivision.DegenerateSpecCensus
+module
+
+public import LowGenus.GenusFiveConfigurations
+public import Utilities.Subdivision.AffineCoverData
+public import Utilities.Subdivision.DegenerateSpecCensus
+
+@[expose] public section
 
 /-!
 # Exact affine covers for closed genus-five rows

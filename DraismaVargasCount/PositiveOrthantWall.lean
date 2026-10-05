@@ -1,4 +1,8 @@
-import DraismaVargasCount.StarPilot
+module
+
+public import DraismaVargasCount.StarPilot
+
+@[expose] public section
 
 /-!
 # Walls inside the positive orthant: the exact criterion

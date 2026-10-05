@@ -1,5 +1,9 @@
-import Utilities.Transmission.Transmission
-import Demazure.InvSet
+module
+
+public import Utilities.Transmission.Transmission
+public import Demazure.InvSet
+
+@[expose] public section
 
 /-!
 # Output shifts of ASP permutations and transmission witnesses

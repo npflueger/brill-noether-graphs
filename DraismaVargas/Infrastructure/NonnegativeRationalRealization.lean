@@ -1,5 +1,9 @@
-import DraismaVargas.Infrastructure.RationalRealization
-import Utilities.Subdivision.ClosedFaceCensus
+module
+
+public import DraismaVargas.Infrastructure.RationalRealization
+public import Utilities.Subdivision.ClosedFaceCensus
+
+@[expose] public section
 
 /-!
 # Clearing a nonnegative rational gluing realization

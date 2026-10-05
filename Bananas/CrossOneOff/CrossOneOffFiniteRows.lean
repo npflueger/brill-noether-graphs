@@ -1,4 +1,8 @@
-import Bananas.CrossOneOff.CrossOneOffBlock
+module
+
+public import Bananas.CrossOneOff.CrossOneOffBlock
+
+@[expose] public section
 
 /-!
 # Finite-row inversion counting for the corrected both-off block

@@ -1,4 +1,8 @@
-import Bananas.SameStrand.BananaEndpointRankCriterion
+module
+
+public import Bananas.SameStrand.BananaEndpointRankCriterion
+
+@[expose] public section
 
 /-!
 # Restricted rank and rank-determining sets

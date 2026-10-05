@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.SeedCandidate
-import DraismaVargas.LocalCases.IncomingTargetExpansion
-import DraismaVargas.LocalCases.RelabelFullDimensional
+module
+
+public import DraismaVargas.LocalCases.SeedCandidate
+public import DraismaVargas.LocalCases.IncomingTargetExpansion
+public import DraismaVargas.LocalCases.RelabelFullDimensional
+
+@[expose] public section
 
 /-!
 # A neutral seed from an actual cover and a contractible target edge
@@ -65,7 +69,7 @@ theorem exterior : ExteriorRefines (contractDatum data hc hab hOne) ⟨a, hab⟩
   · have hRight : IncomingTargetExpansion.right hc hab hOne edge = true := by
       simpa only [IncomingTargetExpansion.right, decide_eq_true_eq] using
         (mem_incidentEdges_iff _ _).mp hB
-    rw [hRight, if_pos rfl]
+    rw [hRight, ite_eq_left rfl]
     exact refines_of_incident data _ _ hB
   · have hRight : IncomingTargetExpansion.right hc hab hOne edge = false := by
       simp only [IncomingTargetExpansion.right, decide_eq_false_iff_not]

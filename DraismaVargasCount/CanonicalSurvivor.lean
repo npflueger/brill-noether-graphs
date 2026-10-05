@@ -1,6 +1,10 @@
-import DraismaVargasCount.PendantRetraction
-import DraismaVargasCount.Fibre
-import DraismaVargas.LocalCases.ClassInjectivity
+module
+
+public import DraismaVargasCount.PendantRetraction
+public import DraismaVargasCount.Fibre
+public import DraismaVargas.LocalCases.ClassInjectivity
+
+@[expose] public section
 
 /-!
 # The unique surviving representative of every pendant class
@@ -130,7 +134,7 @@ theorem sum_retractedFibre (hConnected : data.Connected)
   classical
   simp_rw [← representative_fibre_sum hConnected hNonempty root]
   rw [Finset.sum_comm]
-  simp only [Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp only [Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   exact data.sum_sourceVertex_localDegree_over root
 
 theorem retractedFibre_nonneg (root : target.V) (vertex : data.SourceVertex) :

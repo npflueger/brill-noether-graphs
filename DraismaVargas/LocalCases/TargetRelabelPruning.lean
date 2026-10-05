@@ -1,5 +1,9 @@
-import DraismaVargas.Infrastructure.GluingTransport
-import DraismaVargas.LocalCases.SheetRelabelPruning
+module
+
+public import DraismaVargas.Infrastructure.GluingTransport
+public import DraismaVargas.LocalCases.SheetRelabelPruning
+
+@[expose] public section
 
 /-!
 # Literal source isomorphism and pruning under a target relabelling

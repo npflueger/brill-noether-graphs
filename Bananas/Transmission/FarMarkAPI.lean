@@ -1,4 +1,8 @@
-import Bananas.Transmission.GenericFarWitness
+module
+
+public import Bananas.Transmission.GenericFarWitness
+
+@[expose] public section
 
 /-!
 # Normalized coordinates for the far-mark construction

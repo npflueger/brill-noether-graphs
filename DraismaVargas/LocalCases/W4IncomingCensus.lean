@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W4Bridge
-import DraismaVargas.LocalCases.DivalentSourceLocal
+module
+
+public import DraismaVargas.LocalCases.W4Bridge
+public import DraismaVargas.LocalCases.DivalentSourceLocal
+
+@[expose] public section
 
 /-!
 # The incoming four-valent source census

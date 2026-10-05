@@ -1,6 +1,10 @@
-import Bananas.SameStrand.SameStrand
-import Bananas.SameStrand.EndpointInversions
-import Utilities.Segments.SeamCalculus
+module
+
+public import Bananas.SameStrand.SameStrand
+public import Bananas.SameStrand.EndpointInversions
+public import Utilities.Segments.SeamCalculus
+
+@[expose] public section
 
 /-!
 # Generic-genus rank witnesses on bananas

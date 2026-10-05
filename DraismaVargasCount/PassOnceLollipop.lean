@@ -1,4 +1,8 @@
-import DraismaVargasCount.LollipopBridgeFibre
+module
+
+public import DraismaVargasCount.LollipopBridgeFibre
+
+@[expose] public section
 
 /-!
 # Pass-once at the lollipop: `φ(A)` is adjacent to the leaf of its loop row
@@ -854,8 +858,8 @@ theorem trivalentPassOnce (fd : FullDimensionalSourcePresentation data coordinat
     (fun row ↦ LeafFibre.matrix_leafEdge_column fd hLeaf row))
   intro row
   by_cases hCase : row = LeafFibre.leafRow fd hLeaf
-  · rw [if_pos hCase, hCase]
-  · rw [if_neg hCase, hColumn s t hs ht hst₁ htt₁ hst row hCase, sub_self]
+  · rw [ite_eq_left hCase, hCase]
+  · rw [ite_eq_right hCase, hColumn s t hs ht hst₁ htt₁ hst row hCase, sub_self]
 
 /-! ## 8.  Pass-once at the lollipop, unconditionally -/
 

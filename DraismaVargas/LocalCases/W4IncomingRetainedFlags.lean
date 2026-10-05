@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.W4IncomingSideCensus
-import DraismaVargas.LocalCases.W4IncomingTargetNormalization
-import DraismaVargas.LocalCases.IncomingNormalizationRows
+module
+
+public import DraismaVargas.LocalCases.W4IncomingSideCensus
+public import DraismaVargas.LocalCases.W4IncomingTargetNormalization
+public import DraismaVargas.LocalCases.IncomingNormalizationRows
+
+@[expose] public section
 
 /-!
 # Canonical incoming retained flags at a W4 wall

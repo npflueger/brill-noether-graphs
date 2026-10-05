@@ -1,5 +1,9 @@
-import Mathlib.Data.Finset.Card
-import Mathlib.Tactic
+module
+
+public import Mathlib.Data.Finset.Card
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # Sheet partitions for Draisma--Vargas gluing data
@@ -120,24 +124,24 @@ theorem exists_third_of_blockCard_eq_add_one
 
 /-! ## Splitting one block -/
 
-private def splitBlockRepr (partition : SheetPartition d) (anchor i : Fin d) :
+def splitBlockRepr (partition : SheetPartition d) (anchor i : Fin d) :
     Fin d :=
   if partition.Rel anchor i then i else partition.repr i
 
-private theorem splitBlockRepr_idem (partition : SheetPartition d)
+theorem splitBlockRepr_idem (partition : SheetPartition d)
     (anchor i : Fin d) :
     splitBlockRepr partition anchor (splitBlockRepr partition anchor i) =
       splitBlockRepr partition anchor i := by
   unfold splitBlockRepr
   by_cases hi : partition.Rel anchor i
-  · rw [if_pos hi, if_pos hi]
-  · rw [if_neg hi]
+  · rw [ite_eq_left hi, ite_eq_left hi]
+  · rw [ite_eq_right hi]
     have hrepr : ¬partition.Rel anchor (partition.repr i) := by
       intro h
       apply hi
       unfold Rel at h ⊢
       simpa only [partition.repr_idem i] using h
-    rw [if_neg hrepr, partition.repr_idem i]
+    rw [ite_eq_right hrepr, partition.repr_idem i]
 
 /-- Refine one selected block into singleton sheets, leaving every other block
 unchanged.  This is the partition operation used when a DV wall class splits
@@ -151,13 +155,13 @@ def splitBlock (partition : SheetPartition d) (anchor : Fin d) :
     (anchor i : Fin d) (hi : partition.Rel anchor i) :
     (partition.splitBlock anchor).repr i = i := by
   change splitBlockRepr partition anchor i = i
-  exact if_pos hi
+  exact ite_eq_left hi
 
 @[simp] theorem splitBlock_repr_of_not_rel (partition : SheetPartition d)
     (anchor i : Fin d) (hi : ¬partition.Rel anchor i) :
     (partition.splitBlock anchor).repr i = partition.repr i := by
   change splitBlockRepr partition anchor i = partition.repr i
-  exact if_neg hi
+  exact ite_eq_right hi
 
 /-- Every new singleton block remains inside its original block. -/
 theorem splitBlock_repr_rel (partition : SheetPartition d)
@@ -241,13 +245,13 @@ theorem splitBlock_blockCard_of_rel (partition : SheetPartition d)
 
 /-! ## Detaching one sheet from a block -/
 
-private def detachSheetRepr (partition : SheetPartition d)
+def detachSheetRepr (partition : SheetPartition d)
     (single remainder : Fin d) (i : Fin d) : Fin d :=
   if i = single then single
   else if partition.Rel single i then remainder
   else partition.repr i
 
-private theorem detachSheetRepr_idem (partition : SheetPartition d)
+theorem detachSheetRepr_idem (partition : SheetPartition d)
     (single remainder : Fin d) (hne : single ≠ remainder)
     (hTogether : partition.Rel single remainder) (i : Fin d) :
     detachSheetRepr partition single remainder
@@ -255,11 +259,11 @@ private theorem detachSheetRepr_idem (partition : SheetPartition d)
       detachSheetRepr partition single remainder i := by
   unfold detachSheetRepr
   by_cases hiSingle : i = single
-  · rw [if_pos hiSingle, if_pos rfl]
-  · rw [if_neg hiSingle]
+  · rw [ite_eq_left hiSingle, ite_eq_left rfl]
+  · rw [ite_eq_right hiSingle]
     by_cases hiBlock : partition.Rel single i
-    · rw [if_pos hiBlock, if_neg hne.symm, if_pos hTogether]
-    · rw [if_neg hiBlock]
+    · rw [ite_eq_left hiBlock, ite_eq_right hne.symm, ite_eq_left hTogether]
+    · rw [ite_eq_right hiBlock]
       have hReprSingle : partition.repr i ≠ single := by
         intro h
         apply hiBlock
@@ -271,7 +275,7 @@ private theorem detachSheetRepr_idem (partition : SheetPartition d)
         apply hiBlock
         unfold Rel at h ⊢
         simpa only [partition.repr_idem i] using h
-      rw [if_neg hReprSingle, if_neg hReprBlock, partition.repr_idem i]
+      rw [ite_eq_right hReprSingle, ite_eq_right hReprBlock, partition.repr_idem i]
 
 /-- Detach `single` from its original block, using `remainder` as the
 representative of the nonempty residual block and leaving all other blocks
@@ -287,7 +291,7 @@ def detachSheet (partition : SheetPartition d) (single remainder : Fin d)
     (hTogether : partition.Rel single remainder) :
     (partition.detachSheet single remainder hne hTogether).repr single = single := by
   change detachSheetRepr partition single remainder single = single
-  exact if_pos rfl
+  exact ite_eq_left rfl
 
 theorem detachSheet_repr_of_rel_of_ne (partition : SheetPartition d)
     (single remainder i : Fin d) (hne : single ≠ remainder)
@@ -295,7 +299,7 @@ theorem detachSheet_repr_of_rel_of_ne (partition : SheetPartition d)
     (hiSingle : i ≠ single) (hiBlock : partition.Rel single i) :
     (partition.detachSheet single remainder hne hTogether).repr i = remainder := by
   change detachSheetRepr partition single remainder i = remainder
-  rw [detachSheetRepr, if_neg hiSingle, if_pos hiBlock]
+  rw [detachSheetRepr, ite_eq_right hiSingle, ite_eq_left hiBlock]
 
 theorem detachSheet_repr_of_not_rel (partition : SheetPartition d)
     (single remainder i : Fin d) (hne : single ≠ remainder)
@@ -308,7 +312,7 @@ theorem detachSheet_repr_of_not_rel (partition : SheetPartition d)
     subst i
     exact hiBlock rfl
   change detachSheetRepr partition single remainder i = partition.repr i
-  rw [detachSheetRepr, if_neg hiSingle, if_neg hiBlock]
+  rw [detachSheetRepr, ite_eq_right hiSingle, ite_eq_right hiBlock]
 
 /-- The detached sheet is a singleton. -/
 theorem detachSheet_rel_single_iff (partition : SheetPartition d)
@@ -425,32 +429,32 @@ theorem detachSheet_repr_rel (partition : SheetPartition d)
 
 /-! ## Retaining exactly one pair inside a wall block -/
 
-private def pairBlockRepr (partition : SheetPartition d)
+def pairBlockRepr (partition : SheetPartition d)
     (first second : Fin d) (i : Fin d) : Fin d :=
   if partition.Rel first i then
     if i = second then first else i
   else partition.repr i
 
-private theorem pairBlockRepr_idem (partition : SheetPartition d)
+theorem pairBlockRepr_idem (partition : SheetPartition d)
     (first second : Fin d) (hne : first ≠ second) (i : Fin d) :
     pairBlockRepr partition first second
         (pairBlockRepr partition first second i) =
       pairBlockRepr partition first second i := by
   unfold pairBlockRepr
   by_cases hiBlock : partition.Rel first i
-  · rw [if_pos hiBlock]
+  · rw [ite_eq_left hiBlock]
     by_cases hiSecond : i = second
-    · rw [if_pos hiSecond]
+    · rw [ite_eq_left hiSecond]
       have hFirstBlock : partition.Rel first first := rfl
-      rw [if_pos hFirstBlock, if_neg hne]
-    · rw [if_neg hiSecond, if_pos hiBlock, if_neg hiSecond]
-  · rw [if_neg hiBlock]
+      rw [ite_eq_left hFirstBlock, ite_eq_right hne]
+    · rw [ite_eq_right hiSecond, ite_eq_left hiBlock, ite_eq_right hiSecond]
+  · rw [ite_eq_right hiBlock]
     have hReprBlock : ¬partition.Rel first (partition.repr i) := by
       intro h
       apply hiBlock
       unfold Rel at h ⊢
       simpa only [partition.repr_idem i] using h
-    rw [if_neg hReprBlock, partition.repr_idem i]
+    rw [ite_eq_right hReprBlock, partition.repr_idem i]
 
 /-- Inside the block containing `first` and `second`, retain exactly their
 two-sheet block and split every other sheet into a singleton. Outside that
@@ -464,28 +468,28 @@ def pairBlock (partition : SheetPartition d) (first second : Fin d)
     (first second : Fin d) (hne : first ≠ second) :
     (partition.pairBlock first second hne).repr first = first := by
   change pairBlockRepr partition first second first = first
-  rw [pairBlockRepr, if_pos (show partition.Rel first first from rfl), if_neg hne]
+  rw [pairBlockRepr, ite_eq_left (show partition.Rel first first from rfl), ite_eq_right hne]
 
 @[simp] theorem pairBlock_repr_second (partition : SheetPartition d)
     (first second : Fin d) (hne : first ≠ second)
     (hTogether : partition.Rel first second) :
     (partition.pairBlock first second hne).repr second = first := by
   change pairBlockRepr partition first second second = first
-  rw [pairBlockRepr, if_pos hTogether, if_pos rfl]
+  rw [pairBlockRepr, ite_eq_left hTogether, ite_eq_left rfl]
 
 theorem pairBlock_repr_of_rel_of_ne_second (partition : SheetPartition d)
     (first second i : Fin d) (hne : first ≠ second)
     (hiBlock : partition.Rel first i) (hiSecond : i ≠ second) :
     (partition.pairBlock first second hne).repr i = i := by
   change pairBlockRepr partition first second i = i
-  rw [pairBlockRepr, if_pos hiBlock, if_neg hiSecond]
+  rw [pairBlockRepr, ite_eq_left hiBlock, ite_eq_right hiSecond]
 
 theorem pairBlock_repr_of_not_rel (partition : SheetPartition d)
     (first second i : Fin d) (hne : first ≠ second)
     (hiBlock : ¬partition.Rel first i) :
     (partition.pairBlock first second hne).repr i = partition.repr i := by
   change pairBlockRepr partition first second i = partition.repr i
-  rw [pairBlockRepr, if_neg hiBlock]
+  rw [pairBlockRepr, ite_eq_right hiBlock]
 
 theorem pairBlock_repr_rel (partition : SheetPartition d)
     (first second i : Fin d) (hne : first ≠ second)
@@ -591,11 +595,11 @@ theorem pairBlock_block_first (partition : SheetPartition d)
 
 /-! ## Joining two existing blocks -/
 
-private def mergeBlocksRepr (partition : SheetPartition d)
+def mergeBlocksRepr (partition : SheetPartition d)
     (first extra i : Fin d) : Fin d :=
   if partition.Rel extra i then partition.repr first else partition.repr i
 
-private theorem mergeBlocksRepr_idem (partition : SheetPartition d)
+theorem mergeBlocksRepr_idem (partition : SheetPartition d)
     (first extra : Fin d) (hSeparate : ¬partition.Rel first extra)
     (i : Fin d) :
     mergeBlocksRepr partition first extra
@@ -603,20 +607,20 @@ private theorem mergeBlocksRepr_idem (partition : SheetPartition d)
       mergeBlocksRepr partition first extra i := by
   unfold mergeBlocksRepr
   by_cases hiExtra : partition.Rel extra i
-  · rw [if_pos hiExtra]
+  · rw [ite_eq_left hiExtra]
     have hFirstOutside : ¬partition.Rel extra (partition.repr first) := by
       intro h
       apply hSeparate
       unfold Rel at h ⊢
       simpa only [partition.repr_idem first] using h.symm
-    rw [if_neg hFirstOutside, partition.repr_idem first]
-  · rw [if_neg hiExtra]
+    rw [ite_eq_right hFirstOutside, partition.repr_idem first]
+  · rw [ite_eq_right hiExtra]
     have hReprOutside : ¬partition.Rel extra (partition.repr i) := by
       intro h
       apply hiExtra
       unfold Rel at h ⊢
       simpa only [partition.repr_idem i] using h
-    rw [if_neg hReprOutside, partition.repr_idem i]
+    rw [ite_eq_right hReprOutside, partition.repr_idem i]
 
 /-- Join the blocks containing `first` and `extra`, leaving every other block
 unchanged. -/
@@ -635,11 +639,11 @@ theorem mergeBlocks_rel_first_iff (partition : SheetPartition d)
   unfold mergeBlocksRepr
   have hExtraFirst : ¬partition.Rel extra first :=
     fun h ↦ hSeparate h.symm
-  rw [if_neg hExtraFirst]
+  rw [ite_eq_right hExtraFirst]
   by_cases hiExtra : partition.Rel extra i
-  · rw [if_pos hiExtra]
+  · rw [ite_eq_left hiExtra]
     exact iff_of_true rfl (Or.inr hiExtra)
-  · rw [if_neg hiExtra]
+  · rw [ite_eq_right hiExtra]
     exact ⟨Or.inl, fun h ↦ h.elim id (fun hExtra ↦ (hiExtra hExtra).elim)⟩
 
 theorem mergeBlocks_block_first (partition : SheetPartition d)
@@ -678,15 +682,15 @@ theorem mergeBlocks_block_of_separate (partition : SheetPartition d)
   unfold mergeBlocksRepr
   have hExtraOther : ¬partition.Rel extra other :=
     fun h ↦ hOtherExtra h.symm
-  rw [if_neg hExtraOther]
+  rw [ite_eq_right hExtraOther]
   by_cases hiExtra : partition.Rel extra i
-  · rw [if_pos hiExtra]
+  · rw [ite_eq_left hiExtra]
     constructor
     · intro h
       exact (hOtherFirst h).elim
     · intro h
       exact (hOtherExtra (h.trans hiExtra.symm)).elim
-  · rw [if_neg hiExtra]
+  · rw [ite_eq_right hiExtra]
 
 theorem mergeBlocks_blockCard_of_separate (partition : SheetPartition d)
     (first extra other : Fin d) (hSeparate : ¬partition.Rel first extra)
@@ -870,8 +874,8 @@ theorem refines_mergeBlocks (partition : SheetPartition d)
     unfold Rel
     rw [hij]
   by_cases hi : partition.Rel extra i
-  · rw [if_pos hi, if_pos (hExtraIff.mp hi)]
-  · rw [if_neg hi, if_neg (fun hj ↦ hi (hExtraIff.mpr hj))]
+  · rw [ite_eq_left hi, ite_eq_left (hExtraIff.mp hi)]
+  · rw [ite_eq_right hi, ite_eq_right (fun hj ↦ hi (hExtraIff.mpr hj))]
     exact hij
 
 /-- Joining two endpoint blocks that lie in one coarse block still refines
@@ -889,15 +893,15 @@ theorem mergeBlocks_refines_coarse
   by_cases hiExtra : partition.Rel extra i <;>
       by_cases hjExtra : partition.Rel extra j
   · exact (hRefines.rel hiExtra).symm.trans (hRefines.rel hjExtra)
-  · rw [if_pos hiExtra, if_neg hjExtra] at hij
+  · rw [ite_eq_left hiExtra, ite_eq_right hjExtra] at hij
     have hFirstJ : partition.Rel first j := hij
     exact (hRefines.rel hiExtra).symm.trans
       (hTogether.symm.trans (hRefines.rel hFirstJ))
-  · rw [if_neg hiExtra, if_pos hjExtra] at hij
+  · rw [ite_eq_right hiExtra, ite_eq_left hjExtra] at hij
     have hIFirst : partition.Rel i first := hij
     exact (hRefines.rel hIFirst).trans
       (hTogether.trans (hRefines.rel hjExtra))
-  · rw [if_neg hiExtra, if_neg hjExtra] at hij
+  · rw [ite_eq_right hiExtra, ite_eq_right hjExtra] at hij
     exact hRefines.rel hij
 
 /-- A refinement of a singleton coarse block has the same singleton block. -/
@@ -1143,23 +1147,23 @@ theorem sum_blockCard_representatives_eq_blockCard
   refine (Fintype.sum_eq_single representative ?_).trans ?_
   · intro j hne
     by_cases hOuter : fine.repr j = j ∧ coarse.Rel i j
-    · rw [if_pos hOuter]
+    · rw [ite_eq_left hOuter]
       by_cases hjFine : fine.Rel j k
       · exfalso
         apply hne
         unfold Rel at hjFine
         exact hOuter.1.symm.trans hjFine
-      · rw [if_neg hjFine]
-    · rw [if_neg hOuter]
+      · rw [ite_eq_right hjFine]
+    · rw [ite_eq_right hOuter]
   · by_cases hk : coarse.Rel i k
     · have hOuter : fine.repr representative = representative ∧
           coarse.Rel i representative :=
         ⟨hRepresentative, hCoarseIff.mpr hk⟩
-      rw [if_pos hOuter, if_pos hFineRepresentative, if_pos hk]
+      rw [ite_eq_left hOuter, ite_eq_left hFineRepresentative, ite_eq_left hk]
     · have hOuter : ¬(fine.repr representative = representative ∧
           coarse.Rel i representative) :=
         fun h ↦ hk (hCoarseIff.mp h.2)
-      rw [if_neg hOuter, if_neg hk]
+      rw [ite_eq_right hOuter, ite_eq_right hk]
 
 /-- The block-decomposition identity with a common integer coefficient. -/
 theorem sum_blockCard_representatives_mul_eq_blockCard_mul

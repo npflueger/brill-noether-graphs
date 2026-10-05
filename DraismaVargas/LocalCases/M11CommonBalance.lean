@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.M11RemoteLimitMatrix
-import DraismaVargas.LocalCases.M11JoinedBackgroundMatrix
-import Utilities.IntegralGeometry.WallColumnDeterminant
+module
+
+public import DraismaVargas.LocalCases.M11RemoteLimitMatrix
+public import DraismaVargas.LocalCases.M11JoinedBackgroundMatrix
+public import Utilities.IntegralGeometry.WallColumnDeterminant
+
+@[expose] public section
 
 /-!
 # Actual M11 common cofactors and Equation (6)

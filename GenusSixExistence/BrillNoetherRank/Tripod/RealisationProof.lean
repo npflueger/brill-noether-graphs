@@ -1,12 +1,16 @@
-import GenusSixExistence.BrillNoetherRank.Tripod.TripodModelDefs
-import GenusSixExistence.BrillNoetherRank.Tripod.ClawDefs
-import DraismaVargasCount.DegenerateBigDivisor
-import DraismaVargasCount.ExpansionSeriesMoment
-import DraismaVargasCount.RowHairpinPosition
-import Utilities.Subdivision.ZeroBudgetRounding
-import GenusSixExistence.BrillNoetherRank.Tripod.ChainSeparator
-import DraismaVargasCount.PencilTransportProducer
-import GenusSixExistence.BrillNoetherRank.Tripod.ClawShape
+module
+
+public import GenusSixExistence.BrillNoetherRank.Tripod.TripodModelDefs
+public import GenusSixExistence.BrillNoetherRank.Tripod.ClawDefs
+public import DraismaVargasCount.DegenerateBigDivisor
+public import DraismaVargasCount.ExpansionSeriesMoment
+public import DraismaVargasCount.RowHairpinPosition
+public import Utilities.Subdivision.ZeroBudgetRounding
+public import GenusSixExistence.BrillNoetherRank.Tripod.ChainSeparator
+public import DraismaVargasCount.PencilTransportProducer
+public import GenusSixExistence.BrillNoetherRank.Tripod.ClawShape
+
+@[expose] public section
 
 /-!
 # The realisation of a closed odd claw member, link by link
@@ -127,7 +131,7 @@ theorem winnable_sub_one_chip_of_linear_equiv {H : CFGraph} {Dv P : CFDiv H}
     · subst hb
       simp only [Pi.sub_apply, one_chip_apply_v]
       omega
-    · simp only [Pi.sub_apply, one_chip, if_neg hb, sub_zero]
+    · simp only [Pi.sub_apply, one_chip, ite_eq_right hb, sub_zero]
       exact hP b
   · unfold linear_equiv at hEquiv ⊢
     have hEq : (P - one_chip x) - (Dv - one_chip x) = P - Dv := by abel
@@ -629,7 +633,7 @@ theorem placedG_interior (hScale : memberScale mem = k) (root : mem.target.V)
   by_cases hHit : DegeneratePlacement.sourcePoint (tripodSpec M k hk) (legRequest M) mem hClosed
       (tripod_fit k hk mem hScale) raw =
       (tripodSpec M k hk).interiorVertex (Fin.castAdd 3 e) o
-  · rw [if_pos hHit, if_pos hHit]
+  · rw [ite_eq_left hHit, ite_eq_left hHit]
     obtain ⟨i, hClass, -⟩ := (DegeneratePlacement.sourcePoint_eq_interior_iff
       (tripodSpec M k hk) (legRequest M) mem hClosed
       (tripod_fit k hk mem hScale) (Fin.castAdd 3 e) o raw).mp hHit
@@ -649,8 +653,8 @@ theorem placedG_interior (hScale : memberScale mem = k) (root : mem.target.V)
         show (mem.ident.row (mem.ident.row.symm (Fin.castAdd 3 e))).val < 15 + 1 + 1 + 1
         rw [Equiv.apply_symm_apply]
         simp
-    simp only [gFibre, if_neg hNot]
-  · rw [if_neg hHit, if_neg hHit]
+    simp only [gFibre, ite_eq_right hNot]
+  · rw [ite_eq_right hHit, ite_eq_right hHit]
 
 /-- **The placement of `G′` lands on G-positions.** A surviving vertex off the tripod is a branch
 vertex with a label of the marked core, or an interior vertex of a G-row; both are placed in the
@@ -697,14 +701,14 @@ theorem placedG_support (hScale : memberScale mem = k) (root : mem.target.V)
   obtain ⟨raw, -, hraw⟩ := Finset.exists_ne_zero_of_sum_ne_zero hv'
   by_cases hHit : DegeneratePlacement.sourcePoint (tripodSpec M k hk) (legRequest M) mem hClosed
       (tripod_fit k hk mem hScale) raw = v
-  · rw [if_pos hHit] at hraw
+  · rw [ite_eq_left hHit] at hraw
     have hNot : ¬ OnTripod mem (representative mem.fullDim.connected (survivor_exists mem) raw) := by
       intro hOn
       apply hraw
-      simp only [gFibre, if_pos hOn]
+      simp only [gFibre, ite_eq_left hOn]
     obtain ⟨w, hw⟩ := survivingPoint_mem_range k hk mem hClosed hScale _ hNot
     exact ⟨w, hHit.symm.trans hw⟩
-  · rw [if_neg hHit] at hraw
+  · rw [ite_eq_right hHit] at hraw
     exact absurd rfl hraw
 
 /-- **`φ(c)` is internal.** The centre is a branch vertex of the member, and a branch vertex never
@@ -1066,7 +1070,7 @@ theorem loopRow_interior (hScale : memberScale mem = k) (e : Fin (15 + 1 + 1 + 1
   have hSlope : PencilTransportProducer.rowSlope mem s (Fin.castAdd 3 e) i0 ≠ 0 := by
     have hidx := GluingDatum.sourceEdgeIndex_pos mem.data
       (RowWalk.orderedRow mem.fullDim.pathEnds (mem.ident.row.symm (Fin.castAdd 3 e)))[i0]
-    have hs : s t = 1 := if_pos rfl
+    have hs : s t = 1 := ite_eq_left rfl
     unfold PencilTransportProducer.rowSlope PencilTransportProducer.edgeSlope
     rw [← ht, hs]
     split_ifs <;> omega
@@ -1158,10 +1162,10 @@ theorem exists_slidBase_pos (hScale : memberScale mem = k) {w : (M.small.scale k
       CanonicalSurvivor.representative_fixes _ _ s
     show (1 : ℤ) ≤ if OnTripod mem (representative mem.fullDim.connected (survivor_exists mem) s.1)
       then 0 else DegeneratePlacement.fibre (tripodSpec M k hk) (legRequest M) mem s.1.1.1 s.1
-    rw [hRep, if_neg hs]
+    rw [hRep, ite_eq_right hs]
     show (1 : ℤ) ≤ if s.1.1.1 = s.1.1.1 then
       ((mem.data.vertexPartition s.1.1.1).blockCard s.1.1.2 : ℤ) else 0
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     exact_mod_cast (mem.data.vertexPartition s.1.1.1).blockCard_pos s.1.1.2
   have hPlace : DegeneratePlacement.sourcePoint (tripodSpec M k hk) (legRequest M) mem hClosed
       (tripod_fit k hk mem hScale) s.1 = gEmbed M k hk v :=
@@ -1177,7 +1181,7 @@ theorem exists_slidBase_pos (hScale : memberScale mem = k) {w : (M.small.scale k
       if DegeneratePlacement.sourcePoint (tripodSpec M k hk) (legRequest M) mem hClosed
           (tripod_fit k hk mem hScale) raw = gEmbed M k hk v then
         gFibre k hk mem s.1.1.1 raw else 0) (fun raw _ ↦ ?_) (Finset.mem_univ s.1))
-    · simp only [if_pos hPlace]
+    · simp only [ite_eq_left hPlace]
       exact hFib
     · split_ifs
       · exact gFibre_effective k hk mem _ raw
@@ -1196,7 +1200,7 @@ theorem exists_slidBase_pos (hScale : memberScale mem = k) {w : (M.small.scale k
         (expansion_loopless M) v then
       gPart M k hk (placedG k hk mem hClosed hScale s.1.1.1) v' else 0)
     (fun v' _ ↦ ?_) (Finset.mem_univ v)))
-  · rw [if_pos rfl]
+  · rw [ite_eq_left rfl]
     exact le_rfl
   · split_ifs
     · exact gPart_effective M k hk
@@ -1292,7 +1296,7 @@ theorem gRealize_of_onTripod (hScale : memberScale mem = k) {raw : mem.data.Sour
     (hOn : OnTripod mem (representative mem.fullDim.connected (survivor_exists mem) raw)) :
     gRealize k hk mem hClosed hScale raw = none := by
   unfold gRealize
-  rw [if_pos hOn]
+  rw [ite_eq_left hOn]
 
 theorem gRealize_of_eq (hScale : memberScale mem = k) {raw : mem.data.SourceVertex}
     (hNot : ¬ OnTripod mem (representative mem.fullDim.connected (survivor_exists mem) raw))
@@ -1305,7 +1309,7 @@ theorem gRealize_of_eq (hScale : memberScale mem = k) {raw : mem.data.SourceVert
   have h : ∃ v, DegeneratePlacement.sourcePoint (tripodSpec M k hk) (legRequest M) mem hClosed
       (tripod_fit k hk mem hScale) raw = gEmbed M k hk v := ⟨v, hv⟩
   unfold gRealize
-  rw [if_neg hNot, dif_pos h]
+  rw [ite_eq_right hNot, dite_eq_left h]
   congr 2
   exact gEmbed_injective M k hk (h.choose_spec.symm.trans hv)
 
@@ -1341,7 +1345,7 @@ theorem slidBase_apply (hScale : memberScale mem = k) (x : mem.target.V)
   by_cases hOn : OnTripod mem (representative mem.fullDim.connected (survivor_exists mem) raw)
   · have hz : gFibre k hk mem x raw = 0 := by
       unfold gFibre
-      rw [if_pos hOn]
+      rw [ite_eq_left hOn]
     rw [gRealize_of_onTripod k hk mem hClosed hScale hOn, hz]
     simp
   · obtain ⟨w, hw⟩ := survivingPoint_mem_range k hk mem hClosed hScale _ hOn
@@ -1350,7 +1354,7 @@ theorem slidBase_apply (hScale : memberScale mem = k) (x : mem.target.V)
     have hg : gFibre k hk mem x raw =
         DegeneratePlacement.fibre (tripodSpec M k hk) (legRequest M) mem x raw := by
       unfold gFibre
-      rw [if_neg hOn]
+      rw [ite_eq_right hOn]
     rw [gRealize_of_eq k hk mem hClosed hScale hOn hsp, hg, hsp]
     have hI : ∀ v, (gEmbed M k hk w = gEmbed M k hk v) ↔ (w = v) :=
       fun v ↦ (gEmbed_injective M k hk).eq_iff
@@ -1622,29 +1626,29 @@ theorem gRealize_legRow (hScale : memberScale mem = k) (j : Fin 3) (i : ℕ)
     rw [M.fib_mark j]
   rcases Nat.eq_zero_or_pos i with rfl | hi0
   · by_cases hr : DegeneratePlacement.reverse mem (legSlot 15 j) = true
-    · rw [if_pos hr, if_pos rfl]
+    · rw [ite_eq_left hr, ite_eq_left rfl]
       have h := gRealize_branch k hk mem hClosed hScale
         (RowSlotOrientation.startBranch mem.fullDim (mem.ident.row.symm (legSlot 15 j)))
-        (markVertex 10 j) (by rw [hEnds.1, if_pos hr]; rfl)
+        (markVertex 10 j) (by rw [hEnds.1, ite_eq_left hr]; rfl)
       exact h.trans hMark
-    · rw [if_neg hr, if_neg (by omega)]
+    · rw [ite_eq_right hr, ite_eq_right (by omega)]
       exact gRealize_centre k hk mem hClosed hScale
         (RowSlotOrientation.startBranch mem.fullDim (mem.ident.row.symm (legSlot 15 j)))
-        (by rw [hEnds.1, if_neg hr])
+        (by rw [hEnds.1, ite_eq_right hr])
   by_cases hil : i = (RowWalk.orderedRow mem.fullDim.pathEnds
       (mem.ident.row.symm (legSlot 15 j))).length
   · subst hil
     by_cases hr : DegeneratePlacement.reverse mem (legSlot 15 j) = true
-    · rw [if_pos hr, if_neg (by omega)]
+    · rw [ite_eq_left hr, ite_eq_right (by omega)]
       exact gRealize_centre k hk mem hClosed hScale
         (RowSlotOrientation.finishBranch mem.fullDim (mem.ident.row.symm (legSlot 15 j)))
-        (by rw [hEnds.2, if_pos hr])
-    · rw [if_neg hr, if_pos rfl]
+        (by rw [hEnds.2, ite_eq_left hr])
+    · rw [ite_eq_right hr, ite_eq_left rfl]
       have h := gRealize_branch k hk mem hClosed hScale
         (RowSlotOrientation.finishBranch mem.fullDim (mem.ident.row.symm (legSlot 15 j)))
-        (markVertex 10 j) (by rw [hEnds.2, if_neg hr]; rfl)
+        (markVertex 10 j) (by rw [hEnds.2, ite_eq_right hr]; rfl)
       exact h.trans hMark
-  · rw [if_neg (by split_ifs <;> omega)]
+  · rw [ite_eq_right (by split_ifs <;> omega)]
     obtain ⟨i', rfl⟩ : ∃ i', i = i' + 1 := ⟨i - 1, by omega⟩
     refine gRealize_of_onTripod k hk mem hClosed hScale ?_
     have h := (address_onTripod_iff mem
@@ -1737,9 +1741,9 @@ theorem gCompat (hScale : memberScale mem = k) (s : mem.target.edges → ℤ) (P
     have hF := labelPot_finish mem P e
     unfold gSlotValue gSlotPos
     cases hr : DegeneratePlacement.reverse mem (Fin.castAdd 3 e)
-    · simp only [hr, Bool.false_eq_true, if_false] at hS ⊢
+    · simp only [hr, Bool.false_eq_true, ite_false] at hS ⊢
       rw [PencilTransportProducer.rowValue_of_nonpos _ _ _ _ _ (by simp), hS]
-    · simp only [hr, if_true] at hF ⊢
+    · simp only [hr, ite_true] at hF ⊢
       rw [PencilTransportProducer.rowValue_of_ge _ _ _ _ hRise _ (by have := hFull e; omega), hF]
   · intro e
     change _ = labelPot mem P (M.expansion.bigCore.head e)
@@ -1747,9 +1751,9 @@ theorem gCompat (hScale : memberScale mem = k) (s : mem.target.edges → ℤ) (P
     have hF := labelPot_finish mem P e
     unfold gSlotValue gSlotPos
     cases hr : DegeneratePlacement.reverse mem (Fin.castAdd 3 e)
-    · simp only [hr, Bool.false_eq_true, if_false] at hF ⊢
+    · simp only [hr, Bool.false_eq_true, ite_false] at hF ⊢
       rw [PencilTransportProducer.rowValue_of_ge _ _ _ _ hRise _ (by have := hFull e; omega), hF]
-    · simp only [hr, if_true] at hS ⊢
+    · simp only [hr, ite_true] at hS ⊢
       rw [PencilTransportProducer.rowValue_of_nonpos _ _ _ _ _ (by simp), hS]
 
 /-- **The G-row script descends**: it is constant on the fibres of the contraction. -/
@@ -1844,17 +1848,17 @@ theorem gPushDiv_prin_script (hScale : memberScale mem = k) (s : mem.target.edge
     intro x
     by_cases hx : (ExpansionData.certificate M.expansion (M.small.scale k hk) (by norm_num)
         (expansion_loopless M)).vertexMap x = b
-    · rw [if_pos hx]
+    · rw [ite_eq_left hx]
       refine Finset.sum_congr rfl fun step _ ↦ ?_
       have hx' : ExpansionData.vertexMap M.expansion (M.small.scale k hk) (by norm_num)
           (expansion_loopless M) x = b := hx
-      simp only [hx', if_true]
-    · rw [if_neg hx]
+      simp only [hx', ite_true]
+    · rw [ite_eq_right hx]
       have hx' : ¬ ExpansionData.vertexMap M.expansion (M.small.scale k hk) (by norm_num)
           (expansion_loopless M) x = b := hx
-      simp only [hx', if_false, ite_self, add_zero, Finset.sum_const_zero]
+      simp only [hx', ite_false, ite_self, add_zero, Finset.sum_const_zero]
   rw [Finset.sum_congr rfl fun x _ ↦ hSwap x, Finset.sum_comm]
-  simp only [Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp only [Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   rw [← Finset.sum_add_distrib, Fintype.sum_sigma]
   refine Finset.sum_congr rfl fun e _ ↦ Finset.sum_congr rfl fun o _ ↦ ?_
   rw [ExpansionData.vertexMap_stepLeft hCond' e o, ExpansionData.vertexMap_stepRight hCond' e o]
@@ -1885,7 +1889,7 @@ theorem gSlot_sum (hScale : memberScale mem = k) (s : mem.target.edges → ℤ)
   simp only [offsetVal_eq', tripodLength_castAdd]
   unfold gSlotValue gSlotPos
   cases hr : DegeneratePlacement.reverse mem (Fin.castAdd 3 e)
-  · simp only [Bool.false_eq_true, if_false]
+  · simp only [Bool.false_eq_true, ite_false]
     have hDiff : ∀ o : ℕ,
         PencilTransportProducer.rowValue mem hClosed s P (Fin.castAdd 3 e) ((o + 1 : ℕ) : ℤ) -
             PencilTransportProducer.rowValue mem hClosed s P (Fin.castAdd 3 e) (o : ℤ) =
@@ -1920,7 +1924,7 @@ theorem gSlot_sum (hScale : memberScale mem = k) (s : mem.target.edges → ℤ)
       (δ (PencilTransportProducer.rowStart mem hClosed (Fin.castAdd 3 e) i) -
         δ (PencilTransportProducer.rowStart mem hClosed (Fin.castAdd 3 e) (i.val + 1)))
     rw [PencilTransportProducer.rowStart_succ]
-  · simp only [if_true]
+  · simp only [ite_true]
     have hDiff : ∀ o : ℕ, o < (bigSpecAt M k hk).length e →
         PencilTransportProducer.rowValue mem hClosed s P (Fin.castAdd 3 e)
             (((bigSpecAt M k hk).length e : ℤ) - ((o + 1 : ℕ) : ℤ)) -
@@ -2039,19 +2043,19 @@ theorem tree_flow_eq {T : CFGraph} (hConn : graph_connected T) (hGenus : genus T
     rw [Finset.sum_comm]
     rw [Finset.sum_eq_single t]
     · simp only [mul_add, Finset.sum_add_distrib, mul_ite, mul_zero, Finset.sum_ite_eq,
-        Finset.mem_univ, if_true]
+        Finset.mem_univ, ite_true]
       rw [TreeMetricPotential.cutValue_tail t, TreeMetricPotential.cutValue_head hConn hGenus t]
       ring
     · intro u _ hu
       simp only [mul_add, Finset.sum_add_distrib, mul_ite, mul_zero, Finset.sum_ite_eq,
-        Finset.mem_univ, if_true]
+        Finset.mem_univ, ite_true]
       rw [TreeMetricPotential.cutValue_other hConn hGenus t u (Ne.symm hu)]
       ring
     · simp
   have key2 : ∑ v : T.V, TreeMetricPotential.cutValue t v * GluingDatum.targetEdgeIncidence f v =
       TreeMetricPotential.cutValue t anchor - TreeMetricPotential.cutValue t root := by
     simp only [hf, mul_sub, mul_ite, mul_one, mul_zero, Finset.sum_sub_distrib, Finset.sum_ite_eq',
-      Finset.mem_univ, if_true]
+      Finset.mem_univ, ite_true]
   linarith
 
 theorem cutValue_cases {T : CFGraph} (t : T.edges) (v : T.V) :
@@ -2093,18 +2097,18 @@ theorem leg_ends (j : Fin 3) :
   by_cases hr : DegeneratePlacement.reverse mem (legSlot 15 j) = true
   · have h1 : mem.ident.vertex.symm (tripodMark 10 j) =
         RowSlotOrientation.startBranch mem.fullDim (mem.ident.row.symm (legSlot 15 j)) := by
-      rw [Equiv.symm_apply_eq, hEnds.1, if_pos hr]
+      rw [Equiv.symm_apply_eq, hEnds.1, ite_eq_left hr]
     have h2 : mem.ident.vertex.symm (centre 10) =
         RowSlotOrientation.finishBranch mem.fullDim (mem.ident.row.symm (legSlot 15 j)) := by
-      rw [Equiv.symm_apply_eq, hEnds.2, if_pos hr]
+      rw [Equiv.symm_apply_eq, hEnds.2, ite_eq_left hr]
     simp only [hr, ↓reduceIte]
     exact ⟨congrArg (fun b ↦ b.1) h1, congrArg (fun b ↦ b.1) h2⟩
   · have h1 : mem.ident.vertex.symm (tripodMark 10 j) =
         RowSlotOrientation.finishBranch mem.fullDim (mem.ident.row.symm (legSlot 15 j)) := by
-      rw [Equiv.symm_apply_eq, hEnds.2, if_neg hr]
+      rw [Equiv.symm_apply_eq, hEnds.2, ite_eq_right hr]
     have h2 : mem.ident.vertex.symm (centre 10) =
         RowSlotOrientation.startBranch mem.fullDim (mem.ident.row.symm (legSlot 15 j)) := by
-      rw [Equiv.symm_apply_eq, hEnds.1, if_neg hr]
+      rw [Equiv.symm_apply_eq, hEnds.1, ite_eq_right hr]
     simp only [hr, Bool.false_eq_true, ↓reduceIte]
     exact ⟨congrArg (fun b ↦ b.1) h1, congrArg (fun b ↦ b.1) h2⟩
 
@@ -2189,10 +2193,10 @@ theorem germ_mark (j : Fin 3) :
   have hLenPos := RowSlotOrientation.orderedRow_length_pos mem.fullDim
     (mem.ident.row.symm (legSlot 15 j))
   by_cases hr : DegeneratePlacement.reverse mem (legSlot 15 j) = true
-  · rw [if_pos hr, hMark]
+  · rw [ite_eq_left hr, hMark]
     unfold markIdx germIdx
     simp only [hr, ↓reduceIte]
-  · rw [if_neg hr, hMark, ← hSucc]
+  · rw [ite_eq_right hr, hMark, ← hSucc]
     unfold markIdx germIdx
     simp only [hr, Bool.false_eq_true, ↓reduceIte]
     congr 1
@@ -2219,7 +2223,7 @@ theorem markCoeff_eq_germ (x : mem.target.V) (j : Fin 3) :
   rw [Finset.sum_eq_single (germ mem j)]
   · simp only [germ_onRow, germ_incident, true_and]
   · intro e _ he
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro ⟨hOn, hInc, -⟩
     exact he (germ_unique mem j e hOn hInc)
   · simp
@@ -2301,15 +2305,15 @@ theorem germ_balance (root anchor : mem.target.V) (j : Fin 3) :
         else -PencilTransportProducer.edgeSlope mem
             (PencilTransportProducer.chipSlope mem root anchor) (germ mem j))) = _
     by_cases hr : DegeneratePlacement.reverse mem (legSlot 15 j) = true
-    · rw [if_pos hr] at hMark ⊢
+    · rw [ite_eq_left hr] at hMark ⊢
       rw [hMark]
-    · rw [if_neg hr] at hMark ⊢
+    · rw [ite_eq_right hr] at hMark ⊢
       rw [hMark]
       unfold W4StableSource.otherEnd
       by_cases h1 : (mem.data.sourceEnds (germ mem j)).1 = RowPosition.rowVertex mem.fullDim
           (mem.ident.row.symm (legSlot 15 j)) (germIdx mem j)
-      · rw [if_pos h1, if_pos h1, if_neg hne]
-      · rw [if_neg h1, if_neg h1, if_pos rfl, neg_neg]
+      · rw [ite_eq_left h1, ite_eq_left h1, ite_eq_right hne]
+      · rw [ite_eq_right h1, ite_eq_right h1, ite_eq_left rfl, neg_neg]
   -- the side of the mark on the target edge of the leg edge
   have hct : if (mem.data.sourceEnds (germ mem j)).1 = (mem.ident.vertex.symm (tripodMark 10 j)).1
       then TreeMetricPotential.cutValue (germ mem j).1.1
@@ -2466,9 +2470,9 @@ theorem slidFibre_transport (hScale : memberScale mem = k) (root anchor : mem.ta
       markChip k hk j b) h).trans ?_
     unfold markChip one_chip
     by_cases hb : b = (M.small.scale k hk).coreVertex (M.smallMark j)
-    · rw [if_pos hb.symm, if_pos hb]
+    · rw [ite_eq_left hb.symm, ite_eq_left hb]
       linarith
-    · rw [if_neg (Ne.symm hb), if_neg hb]
+    · rw [ite_eq_right (Ne.symm hb), ite_eq_right hb]
       ring
   have hCorr : ∀ x, (∑ j, ((markCoeff mem x j : ℕ) : ℤ) • markChip k hk j) b =
       ∑ j, ((markCoeff mem x j : ℕ) : ℤ) * markChip k hk j b := fun x ↦ by
@@ -2612,7 +2616,6 @@ theorem sum_gFibre_centre (hClaw : MemberIsClaw mem) :
   have hTot : (∑ v : mem.data.SourceVertex,
       if v.1.1 = x then ((mem.data.vertexPartition v.1.1).blockCard v.1.2 : ℤ) else 0) = 5 := by
     convert GluingDatum.sum_sourceVertex_localDegree_over mem.data x
-    norm_num
   have hY := ClawShape.sum_yCore_centre (Frame.of mem) M.connected hClaw
   change (∑ v : mem.data.SourceVertex, if overCentreY mem v then
     ((mem.data.vertexPartition v.1.1).blockCard v.1.2 : ℤ) else 0) = 3 at hY
@@ -2641,11 +2644,11 @@ theorem sum_gFibre_centre (hClaw : MemberIsClaw mem) :
     by_cases h1 : raw.1.1 = x
     · by_cases h2 : OnTripod mem (representative mem.fullDim.connected (survivor_exists mem) raw)
       · have h3 : overCentreY mem raw := And.intro h1 (hOn.mp h2)
-        simp only [if_pos h1, if_pos h2, if_pos h3, zero_add]
+        simp only [ite_eq_left h1, ite_eq_left h2, ite_eq_left h3, zero_add]
       · have h3 : ¬ overCentreY mem raw := fun h ↦ h2 (hOn.mpr (And.right h))
-        simp only [if_pos h1, if_neg h2, if_neg h3, add_zero]
+        simp only [ite_eq_left h1, ite_eq_right h2, ite_eq_right h3, add_zero]
     · have h3 : ¬ overCentreY mem raw := fun h ↦ h1 (And.left h)
-      simp only [if_neg h1, if_neg h3, add_zero, ite_self]
+      simp only [ite_eq_right h1, ite_eq_right h3, add_zero, ite_self]
   have hSum : (∑ raw : mem.data.SourceVertex,
       if raw.1.1 = x then ((mem.data.vertexPartition raw.1.1).blockCard raw.1.2 : ℤ) else 0) =
       (∑ raw : mem.data.SourceVertex, gFibre k hk mem x raw) +

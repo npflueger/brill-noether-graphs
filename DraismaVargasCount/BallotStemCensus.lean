@@ -1,4 +1,8 @@
-import DraismaVargasCount.BallotFullDimensional
+module
+
+public import DraismaVargasCount.BallotFullDimensional
+
+@[expose] public section
 
 /-!
 # The stem census of the ballot caterpillar, at a general slope sequence
@@ -96,9 +100,9 @@ theorem spineLow_step (s : Slopes g) {k i : ℕ}
     s.cum i + 2 ≤ k + s.slope i := by
   have hc := Slopes.cum_succ s i
   rcases Slopes.slope_trichotomy s i with hup | hdown | hflat
-  · rw [if_pos hup] at hc; omega
-  · rw [if_neg (show ¬ (s.slope (i + 1) = s.slope i + 1) by omega)] at hc; omega
-  · rw [if_neg (show ¬ (s.slope (i + 1) = s.slope i + 1) by omega)] at hc; omega
+  · rw [ite_eq_left hup] at hc; omega
+  · rw [ite_eq_right (show ¬ (s.slope (i + 1) = s.slope i + 1) by omega)] at hc; omega
+  · rw [ite_eq_right (show ¬ (s.slope (i + 1) = s.slope i + 1) by omega)] at hc; omega
 
 /-- **The lower condition of `SpineMem` is a down-set in the spine index.** -/
 theorem spineLow_anti (s : Slopes g) {k : ℕ} :

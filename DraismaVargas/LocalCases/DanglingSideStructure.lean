@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.TerminalContraction
-import DraismaVargas.LocalCases.NonDanglingValency
+module
+
+public import DraismaVargas.LocalCases.TerminalContraction
+public import DraismaVargas.LocalCases.NonDanglingValency
+
+@[expose] public section
 
 /-!
 # The structure of a dangling side
@@ -157,7 +161,7 @@ theorem mem_side_of_reachP {inner outer : G.V} (cut : DanglingSide G inner outer
   have hCross := cut.cross_num_edges p q hp hq
   by_cases hPair : p = inner ∧ q = outer
   · exact hqne hPair.2
-  · rw [if_neg hPair] at hCross
+  · rw [ite_eq_right hPair] at hCross
     omega
 
 /-- **The branch of a tree.**  A vertex of a dangling side other than its
@@ -275,7 +279,7 @@ theorem isDangling_of_incident_mem_side (data : GluingDatum target degree) :
       · have hCross := cut.cross_num_edges vertex other hVertex hOther
         have hOuter : other = outer := by
           by_contra hne
-          rw [if_neg (fun hPair ↦ hne hPair.2)] at hCross
+          rw [ite_eq_right (fun hPair ↦ hne hPair.2)] at hCross
           omega
         subst hOuter
         exact isDangling_of_danglingSide data hEnds cut
@@ -427,11 +431,11 @@ theorem outer_mem_side_of_inner_mem_side (data : GluingDatum target degree)
     by_contra hno
     have hVanish : num_edges data.sourceGraph item₂.inner item₂.outer = 0 := by
       rw [hCross]
-      exact if_neg hno
+      exact ite_eq_right hno
     omega
   have hOne : num_edges data.sourceGraph item₂.inner item₂.outer = 1 := by
     rw [hCross]
-    exact if_pos hPair
+    exact ite_eq_left hPair
   have hEnds : data.sourceEnds edge₂ = (item₁.inner, item₁.outer) ∨
       data.sourceEnds edge₂ = (item₁.outer, item₁.inner) := by
     rw [← hPair.1, ← hPair.2]
@@ -492,11 +496,11 @@ theorem mem_side_of_sourceLength_zero
     by_contra hne
     have hVanish : num_edges data.sourceGraph p q = 0 := by
       rw [hCross]
-      exact if_neg hne
+      exact ite_eq_right hne
     omega
   have hOne : num_edges data.sourceGraph p q = 1 := by
     rw [hCross]
-    exact if_pos hEq
+    exact ite_eq_left hEq
   have hZeroEnds : data.sourceEnds zero = (inner, outer) ∨
       data.sourceEnds zero = (outer, inner) := by
     rw [← hEq.1, ← hEq.2]

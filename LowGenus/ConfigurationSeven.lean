@@ -1,5 +1,9 @@
-import LowGenus.ConfigurationMarkedCommon
-import LowGenus.ConfigurationThree
+module
+
+public import LowGenus.ConfigurationMarkedCommon
+public import LowGenus.ConfigurationThree
+
+@[expose] public section
 
 /-!
 # Atanasov--Ranganathan configuration 7, generic in the core
@@ -192,7 +196,7 @@ theorem headArm_tail (hMarks : d.MarksAdmissible potential mark markValue)
         (d.markRiseIn potential markValue e)
         (d.markRiseOut potential markValue e) 0 = 0 := by
   rw [ConfigurationMarkedCommon.splitStep_tail_eq_zero_of_flat d hMarks
-    (markRiseIn_head d hTail hMarkValue), if_pos hPos]
+    (markRiseIn_head d hTail hMarkValue), ite_eq_left hPos]
 
 /-- What the centre receives along a marked arm read from its head: minus the
 last slope of the canonical ramp of rise `-height` over `length e - mark e`

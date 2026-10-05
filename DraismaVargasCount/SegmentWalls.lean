@@ -1,5 +1,9 @@
-import DraismaVargasCount.FibreNormalForm
-import Utilities.IntegralGeometry.RationalGenericStart
+module
+
+public import DraismaVargasCount.FibreNormalForm
+public import Utilities.IntegralGeometry.RationalGenericStart
+
+@[expose] public section
 
 /-!
 # Wall parameters of a segment of requests, and constancy between them

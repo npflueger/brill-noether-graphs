@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.IncomingPairing
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoTracksLeaf
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoBaseOneExit
+module
+
+public import DraismaVargas.LocalCases.IncomingPairing
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoTracksLeaf
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoBaseOneExit
+
+@[expose] public section
 
 /-!
 # The vertex dictionary of the valency-two **Base I** type change, and (H-BaseI)
@@ -258,12 +262,12 @@ def candVertex (w : data.SourceVertex) : (cand).datum.SourceVertex :=
 theorem candVertex_wall (w : data.SourceVertex) (hw : w.1.1 = wall) :
     candVertex setup w = branchVertex setup w.1.2 := by
   unfold candVertex
-  rw [if_pos hw]
+  rw [ite_eq_left hw]
 
 theorem candVertex_away (w : data.SourceVertex) (hw : w.1.1 ≠ wall) :
     candVertex setup w = ResolutionAwayFromWall.retainedVertex (cand) w := by
   unfold candVertex
-  rw [if_neg hw]
+  rw [ite_eq_right hw]
 
 theorem branchVertex_target (y : Fin degree) :
     (branchVertex setup y).1.1 = freshVertex target :=

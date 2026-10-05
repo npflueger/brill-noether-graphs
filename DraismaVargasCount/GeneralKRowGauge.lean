@@ -1,4 +1,8 @@
-import DraismaVargasCount.GeneralKRowEquiv
+module
+
+public import DraismaVargasCount.GeneralKRowEquiv
+
+@[expose] public section
 
 /-!
 # Transport across the general-`K` label gauge
@@ -145,16 +149,16 @@ theorem isDangling_gauged_iff (l : Fin 4) (s : Fin degree) :
     (fun sheet ↦ by rw [LabelGauge.stage3_wall]; exact gauge.fix 3 sheet)
     hConnected hGenus c3 l t
   fin_cases l
-  · simp only [Fin.zero_eta, Fin.isValue, if_true, Fin.reduceEq, if_false,
+  · simp only [Fin.zero_eta, Fin.isValue, ite_true, Fin.reduceEq, ite_false,
       Equiv.refl_apply] at h0 h1 h2 h3
     exact ((h3 _).trans ((h2 _).trans (h1 _))).trans (h0 s)
-  · simp only [Fin.mk_one, Fin.isValue, if_true, Fin.reduceEq, if_false,
+  · simp only [Fin.mk_one, Fin.isValue, ite_true, Fin.reduceEq, ite_false,
       Equiv.refl_apply] at h0 h1 h2 h3
     exact ((h3 _).trans (h2 _)).trans ((h1 s).trans (h0 s))
-  · simp only [Fin.reduceFinMk, Fin.isValue, if_true, Fin.reduceEq, if_false,
+  · simp only [Fin.reduceFinMk, Fin.isValue, ite_true, Fin.reduceEq, ite_false,
       Equiv.refl_apply] at h0 h1 h2 h3
     exact (h3 _).trans ((h2 s).trans ((h1 s).trans (h0 s)))
-  · simp only [Fin.reduceFinMk, Fin.isValue, if_true, Fin.reduceEq, if_false,
+  · simp only [Fin.reduceFinMk, Fin.isValue, ite_true, Fin.reduceEq, ite_false,
       Equiv.refl_apply] at h0 h1 h2 h3
     exact (h3 s).trans ((h2 s).trans ((h1 s).trans (h0 s)))
 

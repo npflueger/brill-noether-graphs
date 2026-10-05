@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.M11SplitRowDescent
+module
+
+public import DraismaVargas.LocalCases.M11SplitRowDescent
+
+@[expose] public section
 
 /-!
 # The first-split M11 matrix has the literal common-wall retained columns

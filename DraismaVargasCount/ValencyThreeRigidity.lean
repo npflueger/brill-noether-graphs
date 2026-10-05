@@ -1,5 +1,9 @@
-import DraismaVargasCount.ValencyThreeSplit
-import DraismaVargasCount.ResolutionExpansionFree
+module
+
+public import DraismaVargasCount.ValencyThreeSplit
+public import DraismaVargasCount.ResolutionExpansionFree
+
+@[expose] public section
 
 set_option autoImplicit false
 

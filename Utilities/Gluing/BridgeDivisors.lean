@@ -1,4 +1,8 @@
-import Utilities.Gluing.BridgeGraph
+module
+
+public import Utilities.Gluing.BridgeGraph
+
+@[expose] public section
 
 /-!
 # Divisors and firing scripts on a bridge graph

@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.WallInheritedRank
-import DraismaVargas.LocalCases.StablePathContraction
+module
+
+public import DraismaVargas.LocalCases.WallInheritedRank
+public import DraismaVargas.LocalCases.StablePathContraction
+
+@[expose] public section
 
 /-!
 # Rank exclusions for actual divalent walls

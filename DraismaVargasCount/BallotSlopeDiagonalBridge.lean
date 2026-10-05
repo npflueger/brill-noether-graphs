@@ -1,5 +1,9 @@
-import DraismaVargasCount.BallotSlopeSeparation
-import DraismaVargasCount.BallotDiagonal
+module
+
+public import DraismaVargasCount.BallotSlopeSeparation
+public import DraismaVargasCount.BallotDiagonal
+
+@[expose] public section
 
 /-!
 # Distinct slope sequences give distinct classes, for members with the ballot matrix

@@ -1,5 +1,9 @@
-import DraismaVargasCount.BallotMultiplicity
-import DraismaVargasCount.BallotSlopeDiagonalBridge
+module
+
+public import DraismaVargasCount.BallotMultiplicity
+public import DraismaVargasCount.BallotSlopeDiagonalBridge
+
+@[expose] public section
 
 /-!
 # The ballot core identification
@@ -244,13 +248,13 @@ theorem bIncidenceCount_bCore (s : Slopes (2 * (m + 1))) (vertex : (catTree m).V
         have hIndexEq := congrArg (ballotLabelling m s).row hPath
         rwa [row_bMainND, row_bMainND] at hIndexEq
       subst hEq
-      rw [if_pos hIndex]
+      rw [ite_eq_left hIndex]
       exact hVisible
     · intro first _ second _ hEq
       exact Subtype.ext hEq
     · intro occurrence hOccurrence
       by_cases hIndex : slot ∈ incidentIndices m vertex
-      · rw [if_pos hIndex] at hOccurrence
+      · rw [ite_eq_left hIndex] at hOccurrence
         have hMem : occurrence ∈ nonDanglingIncident (ballotDatum m s)
             (bCore m s vertex) := by
           rw [hStar]
@@ -265,12 +269,12 @@ theorem bIncidenceCount_bCore (s : Slopes (2 * (m + 1))) (vertex : (catTree m).V
             NonDanglingEdge (ballotDatum m s)) : (ballotDatum m s).SourceEdge).1.1
               = occ m slot from bVisible_target s hOccurrence,
           hSymm]
-      · rw [if_neg hIndex] at hOccurrence
+      · rw [ite_eq_right hIndex] at hOccurrence
         exact absurd hOccurrence (by simp)
   rw [incidenceCount, row_symm_eq_bMainND, hCard]
   by_cases hIndex : slot ∈ incidentIndices m vertex
-  · rw [if_pos hIndex, if_pos hIndex, card_bVisible]
-  · rw [if_neg hIndex, if_neg hIndex, Finset.card_empty]
+  · rw [ite_eq_left hIndex, ite_eq_left hIndex, card_bVisible]
+  · rw [ite_eq_right hIndex, ite_eq_right hIndex, Finset.card_empty]
 
 /-! ## 4.  The identification, for every slope sequence -/
 

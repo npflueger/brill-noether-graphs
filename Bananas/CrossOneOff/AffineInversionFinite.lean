@@ -1,4 +1,8 @@
-import Bananas.Basics.Definitions
+module
+
+public import Bananas.Basics.Definitions
+
+@[expose] public section
 
 /-!
 # Finiteness for periodic affine inversion sets

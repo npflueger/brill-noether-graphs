@@ -1,7 +1,11 @@
-import DraismaVargasCount.W2M1kTransitionSiting
-import DraismaVargas.LocalCases.W2MkkStableIncidence
-import DraismaVargasCount.W2MkkClosure
-import DraismaVargasCount.W2MkkMultiplicityBalance
+module
+
+public import DraismaVargasCount.W2M1kTransitionSiting
+public import DraismaVargas.LocalCases.W2MkkStableIncidence
+public import DraismaVargasCount.W2MkkClosure
+public import DraismaVargasCount.W2MkkMultiplicityBalance
+
+@[expose] public section
 
 /-!
 # Sharp incoming row denominators from the M-kk members

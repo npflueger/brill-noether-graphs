@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.MoveMirror
-import DraismaVargas.LocalCases.NonTrivalentValencyThreeSimpleStarCount
-import DraismaVargas.LocalCases.NonTrivalentValencyFourDispatcher
+module
+
+public import DraismaVargas.LocalCases.MoveMirror
+public import DraismaVargas.LocalCases.NonTrivalentValencyThreeSimpleStarCount
+public import DraismaVargas.LocalCases.NonTrivalentValencyFourDispatcher
+
+@[expose] public section
 
 /-!
 # The valency-three move-to-type dispatcher: `TypeChangeLink m wd` for every move
@@ -711,7 +715,7 @@ theorem incidenceCount_leftEnd (ρ : StablePath wd.cover) (hρ : ρ ≠ facetRow
       push Not
       exact ⟨fun h ↦ hft h.symm, fun h ↦ hfl h.symm⟩),
     Finset.sum_insert (by simpa using htl), Finset.sum_singleton,
-    if_neg (by rw [facetEdge_stablePath m wd]; exact fun h ↦ hρ h.symm)]
+    ite_eq_right (by rw [facetEdge_stablePath m wd]; exact fun h ↦ hρ h.symm)]
   ring
 
 include wallStar hBase in
@@ -740,7 +744,7 @@ theorem incidenceCount_rightEnd (ρ : StablePath wd.cover) (hρ : ρ ≠ facetRo
       push Not
       exact ⟨fun h ↦ hft h.symm, fun h ↦ hfl h.symm⟩),
     Finset.sum_insert (by simpa using htl), Finset.sum_singleton,
-    if_neg (by rw [facetEdge_stablePath m wd]; exact fun h ↦ hρ h.symm)]
+    ite_eq_right (by rw [facetEdge_stablePath m wd]; exact fun h ↦ hρ h.symm)]
   ring
 
 end Ends
@@ -818,8 +822,8 @@ theorem census (hBase : wd.tracks.iso.dart (facetDartLeft m wd wallStar) = m.bas
       rw [← hw]
       exact ⟨fun h ↦ inRow_injective m wd wallStar h, fun h ↦ congrArg _ h⟩
     by_cases hc : w = r
-    · rw [if_pos (hiff.mpr hc), if_pos hc]
-    · rw [if_neg (fun hbad ↦ hc (hiff.mp hbad)), if_neg hc]
+    · rw [ite_eq_left (hiff.mpr hc), ite_eq_left hc]
+    · rw [ite_eq_right (fun hbad ↦ hc (hiff.mp hbad)), ite_eq_right hc]
   have h4 : incidenceCount (contractDatum wd.cover wd.hc wd.hab wd.hOne)
       (anchorVertex m wd anchorBlk) r =
         (if (doubledND src false).stablePath = r then 1 else 0) +
@@ -844,8 +848,8 @@ private theorem pair_of_count_eq {α : Type*} [DecidableEq α] {a b c d : α}
   classical
   have h1 := h a
   have h2 := h b
-  have haa : (if a = a then (1 : ℕ) else 0) = 1 := if_pos rfl
-  have hbb : (if b = b then (1 : ℕ) else 0) = 1 := if_pos rfl
+  have haa : (if a = a then (1 : ℕ) else 0) = 1 := ite_eq_left rfl
+  have hbb : (if b = b then (1 : ℕ) else 0) = 1 := ite_eq_left rfl
   rw [haa] at h1
   rw [hbb] at h2
   by_cases hca : c = a
@@ -853,18 +857,18 @@ private theorem pair_of_count_eq {α : Type*} [DecidableEq α] {a b c d : α}
     refine Or.inl ⟨rfl, ?_⟩
     by_cases hdb : d = b
     · exact hdb
-    · rw [if_neg hdb] at h2
+    · rw [ite_eq_right hdb] at h2
       omega
   · have hda : d = a := by
       by_cases hd : d = a
       · exact hd
-      · rw [if_neg hca, if_neg hd] at h1
+      · rw [ite_eq_right hca, ite_eq_right hd] at h1
         omega
     subst hda
     refine Or.inr ⟨?_, rfl⟩
     by_cases hcb : c = b
     · exact hcb
-    · rw [if_neg hcb] at h2
+    · rw [ite_eq_right hcb] at h2
       omega
 
 include wallStar src hValid in
@@ -918,12 +922,12 @@ theorem classify (hBase : wd.tracks.iso.dart (facetDartLeft m wd wallStar) = m.b
         have hA := hc (broughtRow m wd)
         have hD := hswapD j (broughtRow m wd)
         have e1 : (if (doubledND src (!j)).stablePath = broughtRow m wd then 1 else 0) = 0 :=
-          if_neg hbd
+          ite_eq_right hbd
         have e2 : (if (simpleND src false).stablePath = broughtRow m wd then 1 else 0) = 0 :=
-          if_neg (hno false)
+          ite_eq_right (hno false)
         have e3 : (if (simpleND src true).stablePath = broughtRow m wd then 1 else 0) = 0 :=
-          if_neg (hno true)
-        have e4 : (if broughtRow m wd = broughtRow m wd then (1 : ℕ) else 0) = 1 := if_pos rfl
+          ite_eq_right (hno true)
+        have e4 : (if broughtRow m wd = broughtRow m wd then (1 : ℕ) else 0) = 1 := ite_eq_left rfl
         have e5 : (if (doubledND src j).stablePath = broughtRow m wd then 1 else 0) =
             (if keptRow m wd = broughtRow m wd then 1 else 0) := by rw [hj]
         omega
@@ -950,14 +954,14 @@ theorem classify (hBase : wd.tracks.iso.dart (facetDartLeft m wd wallStar) = m.b
       push Not at hno
       have hA := hc (keptRow m wd)
       have e1 : (if (doubledND src false).stablePath = keptRow m wd then 1 else 0) = 0 :=
-        if_neg (hkd false)
+        ite_eq_right (hkd false)
       have e2 : (if (doubledND src true).stablePath = keptRow m wd then 1 else 0) = 0 :=
-        if_neg (hkd true)
+        ite_eq_right (hkd true)
       have e3 : (if (simpleND src false).stablePath = keptRow m wd then 1 else 0) = 0 :=
-        if_neg (hno false)
+        ite_eq_right (hno false)
       have e4 : (if (simpleND src true).stablePath = keptRow m wd then 1 else 0) = 0 :=
-        if_neg (hno true)
-      have e5 : (if keptRow m wd = keptRow m wd then (1 : ℕ) else 0) = 1 := if_pos rfl
+        ite_eq_right (hno true)
+      have e5 : (if keptRow m wd = keptRow m wd then (1 : ℕ) else 0) = 1 := ite_eq_left rfl
       omega
     obtain ⟨i, hi⟩ := hks
     by_cases hbd : ∃ j : Bool, (doubledND src j).stablePath = broughtRow m wd
@@ -984,12 +988,12 @@ theorem classify (hBase : wd.tracks.iso.dart (facetDartLeft m wd wallStar) = m.b
         have hA := hc (broughtRow m wd)
         have hS := hswapS i (broughtRow m wd)
         have e1 : (if (doubledND src false).stablePath = broughtRow m wd then 1 else 0) = 0 :=
-          if_neg (hbd false)
+          ite_eq_right (hbd false)
         have e2 : (if (doubledND src true).stablePath = broughtRow m wd then 1 else 0) = 0 :=
-          if_neg (hbd true)
+          ite_eq_right (hbd true)
         have e3 : (if (simpleND src (!i)).stablePath = broughtRow m wd then 1 else 0) = 0 :=
-          if_neg hno
-        have e4 : (if broughtRow m wd = broughtRow m wd then (1 : ℕ) else 0) = 1 := if_pos rfl
+          ite_eq_right hno
+        have e4 : (if broughtRow m wd = broughtRow m wd then (1 : ℕ) else 0) = 1 := ite_eq_left rfl
         have e5 : (if (simpleND src i).stablePath = broughtRow m wd then 1 else 0) =
             (if keptRow m wd = broughtRow m wd then 1 else 0) := by rw [hi]
         omega

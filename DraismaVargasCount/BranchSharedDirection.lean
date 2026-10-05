@@ -1,4 +1,8 @@
-import DraismaVargasCount.SpineSingleColumn
+module
+
+public import DraismaVargasCount.SpineSingleColumn
+
+@[expose] public section
 
 /-!
 # A shared direction at a branch vertex is a lollipop hairpin

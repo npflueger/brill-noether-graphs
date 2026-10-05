@@ -1,4 +1,8 @@
-import TreewidthGonality.Treewidth.SeymourThomasInduction
+module
+
+public import TreewidthGonality.Treewidth.SeymourThomasInduction
+
+@[expose] public section
 
 /-!
 # Seymour--Thomas duality

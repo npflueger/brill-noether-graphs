@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W2M1kLeafStableLift
+module
+
+public import DraismaVargas.LocalCases.W2M1kLeafStableLift
+
+@[expose] public section
 
 /-!
 # Descending Figure 33's leaf member to incoming stable rows
@@ -81,7 +85,7 @@ theorem leafRowOfEdge_retained (input : W2SourceInput data star) (shape : Shape 
   have hOld : ∃ other : NonDanglingEdge data,
       retainedEdge (LeafPair.candidate input shape pair) input.valid.1 other =
         retainedEdge (LeafPair.candidate input shape pair) input.valid.1 old := ⟨old, rfl⟩
-  rw [leafRowOfEdge, dif_pos hOld]
+  rw [leafRowOfEdge, dite_eq_left hOld]
   exact congrArg NonDanglingEdge.stablePath
     (retainedEdge_injective _ input.valid.1 (Classical.choose_spec hOld))
 
@@ -102,7 +106,7 @@ theorem leafRowOfEdge_new (input : W2SourceInput data star) (shape : Shape profi
       (congrArg (fun occurrence :
         NonDanglingEdge (LeafPair.candidate input shape pair).datum ↦ occurrence.1.1.1) hEqual)
     cases hLabels
-  exact dif_neg hNot
+  exact dite_eq_right hNot
 
 /-! ## §2  The junctions of the outgoing stable quotient -/
 

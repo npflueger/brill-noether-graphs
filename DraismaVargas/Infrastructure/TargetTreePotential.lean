@@ -1,5 +1,9 @@
-import DraismaVargas.Infrastructure.GluingRealization
-import Utilities.Subdivision.SubdivisionSeparator
+module
+
+public import DraismaVargas.Infrastructure.GluingRealization
+public import Utilities.Subdivision.SubdivisionSeparator
+
+@[expose] public section
 
 /-!
 # Target-tree potentials for integral Draisma--Vargas realizations
@@ -226,22 +230,22 @@ theorem prin_script_core_eq_firstStep_incidence
         if spec.core.tail edge = vertex then
           scriptStep spec script edge ⟨0, spec.length_pos edge⟩ else 0 := by
     by_cases hTail : spec.core.tail edge = vertex
-    · rw [if_pos hTail]
+    · rw [ite_eq_left hTail]
       let first : Fin (spec.length edge) := ⟨0, spec.length_pos edge⟩
       refine (Fintype.sum_eq_single first ?_).trans ?_
       · intro offset hne
-        rw [if_neg]
+        rw [ite_eq_right]
         intro hLeft
         have hZero := (spec.stepLeft_eq_coreVertex_iff edge offset vertex).mp hLeft
         apply hne
         apply Fin.ext
         exact hZero.1
-      · rw [if_pos]
+      · rw [ite_eq_left]
         rw [spec.stepLeft_zero, hTail]
-    · rw [if_neg hTail]
+    · rw [ite_eq_right hTail]
       apply Finset.sum_eq_zero
       intro offset _
-      rw [if_neg]
+      rw [ite_eq_right]
       intro hLeft
       exact hTail ((spec.stepLeft_eq_coreVertex_iff edge offset vertex).mp hLeft).2
   have hRight :
@@ -251,12 +255,12 @@ theorem prin_script_core_eq_firstStep_incidence
         if spec.core.head edge = vertex then
           -scriptStep spec script edge ⟨0, spec.length_pos edge⟩ else 0 := by
     by_cases hHead : spec.core.head edge = vertex
-    · rw [if_pos hHead]
+    · rw [ite_eq_left hHead]
       let last : Fin (spec.length edge) :=
         ⟨spec.length edge - 1, by have := spec.length_pos edge; omega⟩
       refine (Fintype.sum_eq_single last ?_).trans ?_
       · intro offset hne
-        rw [if_neg]
+        rw [ite_eq_right]
         intro hRight
         have hLast :=
           (spec.stepRight_eq_coreVertex_iff edge offset vertex).mp hRight
@@ -264,13 +268,13 @@ theorem prin_script_core_eq_firstStep_incidence
         apply Fin.ext
         dsimp [last]
         omega
-      · rw [if_pos]
+      · rw [ite_eq_left]
         · rw [scriptStep_eq_first_of_prin_interior_zero spec script hInterior]
         · simp [last, hHead]
-    · rw [if_neg hHead]
+    · rw [ite_eq_right hHead]
       apply Finset.sum_eq_zero
       intro offset _
-      rw [if_neg]
+      rw [ite_eq_right]
       intro hRight
       exact hHead ((spec.stepRight_eq_coreVertex_iff edge offset vertex).mp hRight).2
   change

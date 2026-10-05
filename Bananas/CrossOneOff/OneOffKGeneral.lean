@@ -1,4 +1,8 @@
-import Bananas.CrossOneOff.OneOffInversionLowerBound
+module
+
+public import Bananas.CrossOneOff.OneOffInversionLowerBound
+
+@[expose] public section
 
 /-!
 # One-off general-transmission obstruction

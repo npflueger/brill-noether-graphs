@@ -1,4 +1,8 @@
-import DraismaVargasCount.DiscreteW4Normalization
+module
+
+public import DraismaVargasCount.DiscreteW4Normalization
+
+@[expose] public section
 
 /-!
 # Recognizing the uniform expansion, and transporting along an equality of data

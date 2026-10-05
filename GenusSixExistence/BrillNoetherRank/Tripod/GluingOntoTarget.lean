@@ -1,7 +1,11 @@
-import GenusSixExistence.BrillNoetherRank.Tripod.Gluing
-import DraismaVargas.Infrastructure.GraphContraction
-import DraismaVargas.Infrastructure.IteratedContraction
-import DraismaVargas.LocalCases.IncomingTargetExpansion
+module
+
+public import GenusSixExistence.BrillNoetherRank.Tripod.Gluing
+public import DraismaVargas.Infrastructure.GraphContraction
+public import DraismaVargas.Infrastructure.IteratedContraction
+public import DraismaVargas.LocalCases.IncomingTargetExpansion
+
+@[expose] public section
 
 /-!
 # The target of a glued member is a glued target
@@ -55,7 +59,7 @@ theorem num_edges_graph (A : CFGraph) (w : A.V) (r : A.edges → Bool) (X Y : Ve
 theorem leaf_num_edges_old (A : CFGraph) (u x y : A.V) :
     num_edges (leafTarget A u) (Sum.inl x) (Sum.inl y) = num_edges A x y := by
   unfold leafTarget
-  rw [num_edges_graph, if_neg (by simp [newEnds, oldVertex, freshVertex]), zero_add,
+  rw [num_edges_graph, ite_eq_right (by simp [newEnds, oldVertex, freshVertex]), zero_add,
     num_edges_eq_card_univ]
   congr 1
   apply Multiset.filter_congr
@@ -93,13 +97,13 @@ theorem subdiv_oldEnds_self (A : CFGraph) (t : A.edges) :
     oldEnds A (t : A.V × A.V).2 (subdivRight A t) t =
       (Sum.inl (t : A.V × A.V).1, Sum.inr ()) := by
   have hne := fst_ne_snd t
-  simp only [oldEnds, expandedEndpoint, subdivRight, decide_true, if_true, if_neg hne]
+  simp only [oldEnds, expandedEndpoint, subdivRight, decide_true, ite_true, ite_eq_right hne]
   rfl
 
 theorem subdiv_oldEnds_ne (A : CFGraph) {t e : A.edges} (h : e ≠ t) :
     oldEnds A (t : A.V × A.V).2 (subdivRight A t) e =
       (Sum.inl (e : A.V × A.V).1, Sum.inl (e : A.V × A.V).2) := by
-  simp only [oldEnds, expandedEndpoint, subdivRight, h, decide_false, Bool.false_eq_true, if_false]
+  simp only [oldEnds, expandedEndpoint, subdivRight, h, decide_false, Bool.false_eq_true, ite_false]
   rfl
 
 theorem subdiv_num_edges_old (A : CFGraph) (t : A.edges) (x y : A.V) :
@@ -108,7 +112,7 @@ theorem subdiv_num_edges_old (A : CFGraph) (t : A.edges) (x y : A.V) :
       num_edges A x y := by
   classical
   unfold subdivTarget
-  rw [num_edges_graph, if_neg (by simp [newEnds, oldVertex, freshVertex]), zero_add,
+  rw [num_edges_graph, ite_eq_right (by simp [newEnds, oldVertex, freshVertex]), zero_add,
     num_edges_eq_card_univ]
   set P : A.edges → Prop := fun e ↦ (e : A.V × A.V) = (x, y) ∨ (e : A.V × A.V) = (y, x) with hP
   have hfil : (enumeratedEdges A).filter (fun e ↦
@@ -133,8 +137,8 @@ theorem subdiv_num_edges_old (A : CFGraph) (t : A.edges) (x y : A.V) :
     simp [and_comm]
   rw [hsplit]
   by_cases ht : P t
-  · rw [if_pos ht, Finset.card_erase_add_one (Finset.mem_filter.mpr ⟨Finset.mem_univ _, ht⟩)]
-  · rw [if_neg ht, add_zero, Finset.erase_eq_of_notMem (by simp [ht])]
+  · rw [ite_eq_left ht, Finset.card_erase_add_one (Finset.mem_filter.mpr ⟨Finset.mem_univ _, ht⟩)]
+  · rw [ite_eq_right ht, add_zero, Finset.erase_eq_of_notMem (by simp [ht])]
 
 theorem subdiv_num_edges_fresh (A : CFGraph) (t : A.edges) (x : A.V) :
     num_edges (subdivTarget A t) (Sum.inl x) (Sum.inr ()) =
@@ -164,10 +168,10 @@ theorem subdiv_num_edges_fresh (A : CFGraph) (t : A.edges) (x : A.V) :
     rw [hfil]
     change (Finset.univ.filter fun e ↦ e = t ∧ x = (t : A.V × A.V).1).card = _
     by_cases h : x = (t : A.V × A.V).1
-    · rw [if_pos h]
+    · rw [ite_eq_left h]
       simp only [h, and_true]
       exact Finset.card_eq_one.mpr ⟨t, by ext e; simp⟩
-    · rw [if_neg h]
+    · rw [ite_eq_right h]
       simp [h]
 
 theorem subdiv_num_edges_fresh' (A : CFGraph) (t : A.edges) (x : A.V) :
@@ -330,7 +334,7 @@ theorem num_edges_contract_bivalent (A : CFGraph) {a b x : A.V} (hab : a ≠ b)
         if s(cval A hab h1 z, cval A hab h1 w) = s(a, x) then 1 else 0 := by
   by_cases hza : cval A hab h1 z = a <;> by_cases hwa : cval A hab h1 w = a
   · have e : z = w := cval_injective A hab h1 (hza.trans hwa.symm)
-    rw [e, num_edges_self_zero, num_edges_self_zero, if_neg]
+    rw [e, num_edges_self_zero, num_edges_self_zero, ite_eq_right]
     rw [Sym2.eq_iff]
     rintro (⟨-, h⟩ | ⟨h, -⟩)
     · exact hxa (h.symm.trans (e ▸ hza))
@@ -343,7 +347,7 @@ theorem num_edges_contract_bivalent (A : CFGraph) {a b x : A.V} (hab : a ≠ b)
     congr 1
     by_cases hwx : cval A hab h1 w = x
     · simp [hwx]
-    · rw [if_neg hwx, if_neg]
+    · rw [ite_eq_right hwx, ite_eq_right]
       rw [Sym2.eq_iff]
       rintro (⟨-, h⟩ | ⟨-, h⟩)
       · exact hwx h
@@ -356,7 +360,7 @@ theorem num_edges_contract_bivalent (A : CFGraph) {a b x : A.V} (hab : a ≠ b)
     congr 1
     by_cases hzx : cval A hab h1 z = x
     · simp [hzx, Sym2.eq_swap]
-    · rw [if_neg hzx, if_neg]
+    · rw [ite_eq_right hzx, ite_eq_right]
       rw [Sym2.eq_iff]
       rintro (⟨h, -⟩ | ⟨h, -⟩)
       · exact hza h
@@ -364,7 +368,7 @@ theorem num_edges_contract_bivalent (A : CFGraph) {a b x : A.V} (hab : a ≠ b)
   · have hne : num_edges (contract A hab h1) z w =
         num_edges A (cval A hab h1 z) (cval A hab h1 w) :=
       num_edges_contract_of_ne A hab h1 (cval_ne A hab h1 z) (cval_ne A hab h1 w) hza hwa
-    rw [hne, if_neg, add_zero]
+    rw [hne, ite_eq_right, add_zero]
     rw [Sym2.eq_iff]
     rintro (⟨h, -⟩ | ⟨-, h⟩)
     · exact hza h
@@ -382,9 +386,9 @@ def unleafIso (A : CFGraph) {u v : A.V} (huv : u ≠ v) (h1 : num_edges A u v = 
       intro z
       have hT := leaf_num_edges_tip (contract A huv h1) (cv A huv h1 u huv) z
       by_cases hzu : cval A huv h1 z = u
-      · rw [if_pos (eq_cv_of_cval A huv h1 z hzu)] at hT
+      · rw [ite_eq_left (eq_cv_of_cval A huv h1 z hzu)] at hT
         rw [hT, hzu, h1]
-      · rw [if_neg (fun h ↦ hzu (by rw [h, cval_cv]))] at hT
+      · rw [ite_eq_right (fun h ↦ hzu (by rw [h, cval_cv]))] at hT
         rw [hT, num_edges_symmetric, hpend _ hzu]
     rintro (z | ⟨⟩) (w | ⟨⟩)
     · exact ((leaf_num_edges_old _ _ z w).trans
@@ -408,7 +412,7 @@ theorem exists_bivalentEdge (A : CFGraph) {a b x : A.V} (hab : a ≠ b)
     ∃ t : (contract A hab h1).edges,
       GluingTransport.edgeKey _ t = s(cv A hab h1 x hxb, cv A hab h1 a hab) := by
   have hnum : 0 < num_edges (contract A hab h1) (cv A hab h1 x hxb) (cv A hab h1 a hab) := by
-    rw [num_edges_contract_bivalent A hab h1 hxa hbx, cval_cv, cval_cv, if_pos Sym2.eq_swap]
+    rw [num_edges_contract_bivalent A hab h1 hxa hbx, cval_cv, cval_cv, ite_eq_left Sym2.eq_swap]
     omega
   have hcard := GluingTransport.card_edgeKey_fiber (contract A hab h1) (cv A hab h1 x hxb)
     (cv A hab h1 a hab)
@@ -466,12 +470,12 @@ def unsubdivIso (A : CFGraph) {a b x : A.V} (hab : a ≠ b)
       have hval : num_edges A b (cval A hab h1 z) =
           (if z = cv A hab h1 a hab then 1 else 0) + if z = cv A hab h1 x hxb then 1 else 0 := by
         by_cases hza : cval A hab h1 z = a
-        · rw [if_pos (eq_cv_of_cval A hab h1 z hza), if_neg (fun h ↦ hxa (by
+        · rw [ite_eq_left (eq_cv_of_cval A hab h1 z hza), ite_eq_right (fun h ↦ hxa (by
             rw [h, cval_cv] at hza; exact hza)), hza, num_edges_symmetric, h1]
-        · rw [if_neg (fun h ↦ hza (by rw [h, cval_cv])), hbx _ hza, zero_add]
+        · rw [ite_eq_right (fun h ↦ hza (by rw [h, cval_cv])), hbx _ hza, zero_add]
           by_cases hzx : cval A hab h1 z = x
-          · rw [if_pos hzx, if_pos (eq_cv_of_cval A hab h1 z hzx)]
-          · rw [if_neg hzx, if_neg (fun h ↦ hzx (by rw [h, cval_cv]))]
+          · rw [ite_eq_left hzx, ite_eq_left (eq_cv_of_cval A hab h1 z hzx)]
+          · rw [ite_eq_right hzx, ite_eq_right (fun h ↦ hzx (by rw [h, cval_cv]))]
       rw [hval]
       rcases hends with h | h <;> rw [h]
       exact add_comm _ _
@@ -528,8 +532,8 @@ theorem exists_degree_two_nbrs {A : CFGraph} (hA : graph_connected A) (hA0 : gen
   · rw [h, num_edges_self_zero] at hy; exact zero_ne_one hy
   · rw [num_edges_symmetric]; exact hy
   · by_cases hzx : z = x
-    · rw [if_pos hzx, hzx, hx]
-    · rw [if_neg hzx]
+    · rw [ite_eq_left hzx, hzx, hx]
+    · rw [ite_eq_right hzx]
       have := hle w z
       have hne : num_edges A w z ≠ 1 := fun h ↦ by
         rcases (hmem z).mp h with h' | h'
@@ -560,11 +564,11 @@ theorem leaf_step {A : CFGraph.{0}} (hA : graph_connected A) (hA0 : genus A = 0)
     fun _ _ ↦ rfl, fun z hz ↦ ?_, fun z hz z' hz' ↦ num_edges_contract_pendant A huv h1 hpend _ _⟩
   by_cases hzu : z = u
   · subst hzu
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     have := vertex_degree_contract_merge A huv h1
     rw [hv] at this
     exact this.trans (by ring)
-  · rw [if_neg hzu, sub_zero]
+  · rw [ite_eq_right hzu, sub_zero]
     exact vertex_degree_contract_of_ne A huv h1 hz hzu
 
 /-- **One erasure of a divalent vertex**, with its inverse. -/
@@ -630,7 +634,7 @@ theorem exists_targetShape {X : CFGraph.{0}} (hX : graph_connected X) (hX0 : gen
   -- delete the leaf `v 1`
   have hw1 : b₅ (w 1) (hwv 1 2) ≠ b₅ (v 1) (hvv 1 2 h12) := fun h ↦ hwv 1 1 (inj₅ _ _ _ _ h)
   obtain ⟨X₄, b₄, ι₅, hc₄, hg₄, ι₅r, ι₅l, hd₄, hn₄⟩ :=
-    leaf_step hc₅ hg₅ hw1 (by rw [hd₅, hv, if_neg (hwv 2 1).symm]; norm_num)
+    leaf_step hc₅ hg₅ hw1 (by rw [hd₅, hv, ite_eq_right (hwv 2 1).symm]; norm_num)
       (by rw [hn₅]; exact hvw 1)
   have inj₄ : ∀ z hz z' hz', b₄ z hz = b₄ z' hz' → z = z' := fun z hz z' hz' h ↦ by
     rw [← ι₅l z hz, ← ι₅l z' hz', h]
@@ -644,7 +648,7 @@ theorem exists_targetShape {X : CFGraph.{0}} (hX : graph_connected X) (hX0 : gen
   obtain ⟨X₃, b₃, ι₄, hc₃, hg₃, ι₄r, ι₄l, hd₃, -⟩ :=
     leaf_step hc₄ hg₄ hw0
       (by
-        rw [hd₄, hd₅, hv, if_neg (hwv 2 0).symm, if_neg (fun h ↦ hwv 1 0 (inj₅ _ _ _ _ h).symm)]
+        rw [hd₄, hd₅, hv, ite_eq_right (hwv 2 0).symm, ite_eq_right (fun h ↦ hwv 1 0 (inj₅ _ _ _ _ h).symm)]
         norm_num)
       (by rw [hn₄, hn₅]; exact hvw 0)
   have inj₃ : ∀ z hz z' hz', b₃ z hz = b₃ z' hz' → z = z' := fun z hz z' hz' h ↦ by

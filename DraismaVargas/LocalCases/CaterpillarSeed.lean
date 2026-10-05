@@ -1,8 +1,12 @@
-import DraismaVargas.LocalCases.SeedFromContraction
-import DraismaVargas.LocalCases.CaterpillarDatum
-import DraismaVargas.LocalCases.InitialState
-import DraismaVargas.LocalCases.CaterpillarRows
-import DraismaVargas.LocalCases.ReachableMarch
+module
+
+public import DraismaVargas.LocalCases.SeedFromContraction
+public import DraismaVargas.LocalCases.CaterpillarDatum
+public import DraismaVargas.LocalCases.InitialState
+public import DraismaVargas.LocalCases.CaterpillarRows
+public import DraismaVargas.LocalCases.ReachableMarch
+
+@[expose] public section
 
 /-!
 # The actual caterpillar cover as a neutral seed

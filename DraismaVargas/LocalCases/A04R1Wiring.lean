@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.A04MoreTags
-import DraismaVargas.LocalCases.W2R1ArbitraryIncomingExit
+module
+
+public import DraismaVargas.LocalCases.A04MoreTags
+public import DraismaVargas.LocalCases.W2R1ArbitraryIncomingExit
+
+@[expose] public section
 
 /-!
 # The wall dispatcher and the full-dimensional supply at the `w2R1` tag

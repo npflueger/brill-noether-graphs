@@ -1,4 +1,8 @@
-import Utilities.Gluing.VertexCutConnectivity
+module
+
+public import Utilities.Gluing.VertexCutConnectivity
+
+@[expose] public section
 
 /-!
 # Finite checking for one-vertex cuts

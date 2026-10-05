@@ -1,5 +1,9 @@
-import Utilities.Gonality.LegalFiring
-import Utilities.Foundations.ScriptClamping
+module
+
+public import Utilities.Gonality.LegalFiring
+public import Utilities.Foundations.ScriptClamping
+
+@[expose] public section
 
 /-!
 # Legal firing chains and the reduced-divisor maximum principle
@@ -180,9 +184,9 @@ theorem exists_legal_fireChain {D D' : CFDiv G} (hD : effective D)
           show max (x v - (K - ((t : ℤ) + 1))) 0
               = max (x v - (K - (t : ℤ))) 0 + indicator_script G (U t) v
           by_cases h : K - (t : ℤ) ≤ x v
-          · rw [indicator_script, if_pos ((hmemU t v).mpr h)]
+          · rw [indicator_script, ite_eq_left ((hmemU t v).mpr h)]
             omega
-          · rw [indicator_script, if_neg (fun hc => h ((hmemU t v).mp hc))]
+          · rw [indicator_script, ite_eq_right (fun hc => h ((hmemU t v).mp hc))]
             omega
         rw [fireChain_succ, ih, set_firing_eq_add_prin_indicator_script]
         push_cast
@@ -235,14 +239,14 @@ private theorem prin_le_neg_outdeg_of_argmax (F : firing_script G)
     rw [outdeg_S_eq_sum_filter, Finset.sum_filter]
     refine Finset.sum_congr rfl fun u _ => ?_
     by_cases hu : u ∈ S
-    · rw [if_pos hu, if_neg (not_not_intro hu)]
-    · rw [if_neg hu, if_pos hu]
+    · rw [ite_eq_left hu, ite_eq_right (not_not_intro hu)]
+    · rw [ite_eq_right hu, ite_eq_left hu]
   rw [prin_apply, hout, ← Finset.sum_neg_distrib]
   refine Finset.sum_le_sum fun u _ => ?_
   by_cases hu : u ∈ S
   · have heq : F u = F v := le_antisymm (hmax u) ((hS u).mp hu v)
-    rw [if_pos hu, heq, sub_self, zero_mul, neg_zero]
-  · rw [if_neg hu]
+    rw [ite_eq_left hu, heq, sub_self, zero_mul, neg_zero]
+  · rw [ite_eq_right hu]
     calc (F u - F v) * (num_edges G v u : ℤ)
         ≤ (-1) * (num_edges G v u : ℤ) :=
           mul_le_mul_of_nonneg_right (hdrop u hu) (Int.natCast_nonneg _)

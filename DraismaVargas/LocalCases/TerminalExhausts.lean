@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.OrientedTraversal
-import DraismaVargas.LocalCases.SeedDeterminant
+module
+
+public import DraismaVargas.LocalCases.OrientedTraversal
+public import DraismaVargas.LocalCases.SeedDeterminant
+
+@[expose] public section
 
 /-!
 # The genus receipt at a terminal face, for a *fixed* specification

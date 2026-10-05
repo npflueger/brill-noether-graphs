@@ -1,4 +1,8 @@
-import DraismaVargasCount.RowRealizedPosition
+module
+
+public import DraismaVargasCount.RowRealizedPosition
+
+@[expose] public section
 
 /-!
 # Actual interior source vertices, each exactly once
@@ -241,8 +245,8 @@ theorem collisionCoefficient_eq_raw_fibre_sum
     apply Finset.sum_congr rfl
     intro i _
     by_cases hOffset : integralPrefix fd realization path (i.val + 1) = offset
-    · simp only [hOffset, if_true, retractedFibre, true_and]
-    · simp only [hOffset, if_false, false_and, Finset.sum_const_zero]
+    · simp only [hOffset, ite_true, retractedFibre, true_and]
+    · simp only [hOffset, ite_false, false_and, Finset.sum_const_zero]
   rw [hExpand, Finset.sum_comm]
   apply Finset.sum_congr rfl
   intro vertex _
@@ -251,22 +255,22 @@ theorem collisionCoefficient_eq_raw_fibre_sum
         retractVertex vertex = retractVertex (rowVertex fd path (i.val + 1)) ∧
           integralPrefix fd realization path (i.val + 1) = offset
     · obtain ⟨i, hClass, hOffset⟩ := hExists
-      rw [if_pos ⟨hRoot, i, hClass, hOffset⟩]
+      rw [ite_eq_left ⟨hRoot, i, hClass, hOffset⟩]
       rw [Finset.sum_eq_single i]
-      · simp only [hOffset, hClass, hRoot, and_self, if_true]
+      · simp only [hOffset, hClass, hRoot, and_self, ite_true]
       · intro j _ hNe
         have hClassNe : retractVertex vertex ≠ retractVertex (rowVertex fd path (j.val + 1)) := by
           intro h
           exact hNe ((interior_retract_injective fd path) (h.symm.trans hClass))
-        simp only [hClassNe, false_and, and_false, if_false]
+        simp only [hClassNe, false_and, and_false, ite_false]
       · simp
-    · rw [if_neg (by simpa only [hRoot, true_and] using hExists)]
+    · rw [ite_eq_right (by simpa only [hRoot, true_and] using hExists)]
       apply Finset.sum_eq_zero
       intro i _
       split_ifs with h
       · exact False.elim (hExists ⟨i, h.2.1, h.1⟩)
       · rfl
-  · simp only [hRoot, and_false, false_and, if_false, Finset.sum_const_zero]
+  · simp only [hRoot, and_false, false_and, ite_false, Finset.sum_const_zero]
 
 end DraismaVargas.Count.RowVertexEnumeration
 

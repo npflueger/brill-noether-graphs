@@ -1,5 +1,9 @@
-import DraismaVargasCount.CrossCoreTransport
-import DraismaVargasCount.StepSupplyGenusSix
+module
+
+public import DraismaVargasCount.CrossCoreTransport
+public import DraismaVargasCount.StepSupplyGenusSix
+
+@[expose] public section
 
 /-!
 # A count link is a parity; the open odd subfibre

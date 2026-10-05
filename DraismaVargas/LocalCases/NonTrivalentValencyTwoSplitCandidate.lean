@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoBaseOne
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoBaseOne
+
+@[expose] public section
 
 /-!
 # Part II, valency two, Configuration A: the **Base II split** candidates
@@ -122,24 +126,24 @@ section Meet
 
 variable {d : ℕ}
 
-private theorem min'_congr {s t : Finset (Fin d)} (h : s = t) (hs : s.Nonempty) :
+theorem min'_congr {s t : Finset (Fin d)} (h : s = t) (hs : s.Nonempty) :
     s.min' hs = t.min' (h ▸ hs) := by
   subst h
   rfl
 
 /-- The sheets related to `i` in both partitions. -/
-private def meetBlock (first second : SheetPartition d) (i : Fin d) : Finset (Fin d) :=
+def meetBlock (first second : SheetPartition d) (i : Fin d) : Finset (Fin d) :=
   Finset.univ.filter fun j ↦ first.Rel i j ∧ second.Rel i j
 
-private theorem mem_meetBlock (first second : SheetPartition d) (i j : Fin d) :
+theorem mem_meetBlock (first second : SheetPartition d) (i j : Fin d) :
     j ∈ meetBlock first second i ↔ first.Rel i j ∧ second.Rel i j := by
   simp [meetBlock]
 
-private theorem meetBlock_nonempty (first second : SheetPartition d) (i : Fin d) :
+theorem meetBlock_nonempty (first second : SheetPartition d) (i : Fin d) :
     (meetBlock first second i).Nonempty :=
   ⟨i, (mem_meetBlock first second i i).mpr ⟨rfl, rfl⟩⟩
 
-private theorem meetBlock_eq_of_rel (first second : SheetPartition d) {i j : Fin d}
+theorem meetBlock_eq_of_rel (first second : SheetPartition d) {i j : Fin d}
     (h₁ : first.Rel i j) (h₂ : second.Rel i j) :
     meetBlock first second i = meetBlock first second j := by
   ext k
@@ -460,10 +464,10 @@ theorem selected_exterior (edge : target.edges)
     (GluingContraction.mem_incidentEdges_iff wall edge).mpr hIncident
   by_cases hEdge : edge = thickEdge data star anchor
   · subst hEdge
-    rw [rightAssignment_thick data star anchor, if_neg (by simp)]
+    rw [rightAssignment_thick data star anchor, ite_eq_right (by simp)]
     exact refines_refineOnBlock (thickEdge_refines_wall data star anchor)
       (thickEdge_refines_wall data star anchor) ((SheetPartition.Refines.refl _).refinesOnBlock _)
-  · rw [rightAssignment_of_ne data star anchor hEdge, if_pos rfl]
+  · rw [rightAssignment_of_ne data star anchor hEdge, ite_eq_left rfl]
     rw [incidentEdges_eq_pair data star anchor] at hMem
     simp only [Finset.mem_insert, Finset.mem_singleton] at hMem
     rcases hMem with hThick | hThin

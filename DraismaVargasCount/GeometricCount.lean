@@ -1,6 +1,10 @@
-import DraismaVargasCount.GeometricFibre
-import DraismaVargasCount.GeometricSegmentWalls
-import DraismaVargasCount.FibreCaterpillar
+module
+
+public import DraismaVargasCount.GeometricFibre
+public import DraismaVargasCount.GeometricSegmentWalls
+public import DraismaVargasCount.FibreCaterpillar
+
+@[expose] public section
 
 /-!
 # Geometric counting and the subdivision-request interface

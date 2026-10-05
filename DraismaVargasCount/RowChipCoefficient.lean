@@ -1,5 +1,9 @@
-import DraismaVargasCount.PendantRetraction
-import DraismaVargas.Infrastructure.TargetSeparation
+module
+
+public import DraismaVargasCount.PendantRetraction
+public import DraismaVargas.Infrastructure.TargetSeparation
+
+@[expose] public section
 
 /-!
 # Interior-row coefficients of the actual pendant-contraction fibre
@@ -151,7 +155,7 @@ theorem retractedFibre_eq_direction_card
     retractedFibre root (retractVertex vertex) =
       ((danglingDirection vertex direction).card : ℤ) := by
   classical
-  rw [retractedFibre_eq_branch_sum fd root hSurvives, if_neg (Ne.symm hNe), zero_add]
+  rw [retractedFibre_eq_branch_sum fd root hSurvives, ite_eq_right (Ne.symm hNe), zero_add]
   rw [← sum_attached_direction vertex direction]
   apply Finset.sum_congr rfl
   intro edge _
@@ -175,13 +179,13 @@ theorem retractedFibre_at_target
     retractedFibre vertex.1.1 (retractVertex vertex) =
       ((data.vertexPartition vertex.1.1).blockCard vertex.1.2 : ℤ) := by
   classical
-  rw [retractedFibre_eq_branch_sum fd vertex.1.1 hSurvives, if_pos rfl]
+  rw [retractedFibre_eq_branch_sum fd vertex.1.1 hSurvives, ite_eq_left rfl]
   have hZero : (∑ edge : AttachedEdge vertex,
       if ReachP target (fun v ↦ v ≠ vertex.1.1)
         (chosenDangling edge.2.2).inner.1.1 vertex.1.1 then (1 : ℤ) else 0) = 0 := by
     apply Finset.sum_eq_zero
     intro edge _
-    apply if_neg
+    apply ite_eq_right
     rw [attached_inner_target hSurvives edge]
     intro h
     have hIncident := IndexPattern.target_mem_of_incident edge.2.1
@@ -308,7 +312,7 @@ theorem coefficient_of_ramification_two
     congrArg (blockVertex data vertex.1.1) hBlock
   have hSurvives : 0 < nonDanglingValency data vertex := by omega
   have hRoot : vertex.1.1 ≠ root := fun h ↦ hInternal (h ▸ hLeaf)
-  rw [retractedFibre_eq_branch_sum fd root hSurvives, if_neg hRoot, zero_add]
+  rw [retractedFibre_eq_branch_sum fd root hSurvives, ite_eq_right hRoot, zero_add]
   apply Finset.sum_eq_zero
   intro edge _
   have hNot := LeafFibre.not_isDangling_of_incident_coreVertex fd hLeaf

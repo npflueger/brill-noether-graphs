@@ -1,5 +1,9 @@
-import GenusSixExistence.BrillNoetherRank.Tripod.ClawDefs
-import Utilities.IntegralGeometry.DeterminantExpansion
+module
+
+public import GenusSixExistence.BrillNoetherRank.Tripod.ClawDefs
+public import Utilities.IntegralGeometry.DeterminantExpansion
+
+@[expose] public section
 
 /-!
 # The Cools--Draisma tripod gluing, and the gluing bijection
@@ -237,7 +241,7 @@ theorem subdivOcc_some_self (T : CFGraph) (t : T.edges) :
     T.loopless (t : T.V × T.V).1 (by
       rw [show ((t : T.V × T.V).1, (t : T.V × T.V).1) = (t : T.V × T.V) from Prod.ext rfl h]
       exact Multiset.coe_mem)
-  simp only [oldEnds, expandedEndpoint, subdivRight, decide_true, if_true, if_neg hne]
+  simp only [oldEnds, expandedEndpoint, subdivRight, decide_true, ite_true, ite_eq_right hne]
   rfl
 
 theorem subdivOcc_some_of_ne (T : CFGraph) {t e : T.edges} (h : e ≠ t) :
@@ -246,7 +250,7 @@ theorem subdivOcc_some_of_ne (T : CFGraph) {t e : T.edges} (h : e ≠ t) :
         (subdivOld T t (e : T.V × T.V).1, subdivOld T t (e : T.V × T.V).2) := by
   rw [subdivOcc_some]
   simp only [oldEnds, expandedEndpoint, subdivRight, h, decide_false, Bool.false_eq_true,
-    if_false]
+    ite_false]
   rfl
 
 theorem leafOcc_none (T : CFGraph) (u : T.V) :
@@ -298,7 +302,7 @@ theorem vertex_degree_leafOld (T : CFGraph) (u w : T.V) :
 
 theorem vertex_degree_leafOld_of_ne (T : CFGraph) {u w : T.V} (h : w ≠ u) :
     vertex_degree (leafTarget T u) (leafOld T u w) = vertex_degree T w := by
-  rw [vertex_degree_leafOld, if_neg h, add_zero]
+  rw [vertex_degree_leafOld, ite_eq_right h, add_zero]
 
 /-- The attached leaf has valency one. -/
 theorem vertex_degree_leafTip (T : CFGraph) (u : T.V) :
@@ -324,13 +328,13 @@ theorem refines_expanded (D : GluingDatum T d) (t e₀ : T.edges) (v : T.V)
   unfold expandedEndpoint
   by_cases he : e₀ = t
   · subst he
-    simp only [subdivRight, decide_true, if_true]
+    simp only [subdivRight, decide_true, ite_true]
     by_cases hw : v = (e₀ : T.V × T.V).2
-    · rw [if_pos hw]
+    · rw [ite_eq_left hw]
       exact SheetPartition.Refines.refl _
-    · rw [if_neg hw]
+    · rw [ite_eq_right hw]
       exact hold
-  · simp only [subdivRight, he, decide_false, Bool.false_eq_true, if_false]
+  · simp only [subdivRight, he, decide_false, Bool.false_eq_true, ite_false]
     exact hold
 
 /-- **Refine a datum at a target edge.** The fresh vertex and both halves carry the partition
@@ -589,7 +593,7 @@ theorem vertex_degree_graph_old (w : T.V) (r : T.edges → Bool) {v : T.V} (hne 
   rw [card_filter_expandedEdges, ← card_filter_incident_eq_vertex_degree]
   have hnew : ¬ ((newEnds T w).1 = oldVertex T v ∨ (newEnds T w).2 = oldVertex T v) := by
     simp [newEnds, oldVertex, freshVertex, Ne.symm hne]
-  rw [if_neg hnew, zero_add]
+  rw [ite_eq_right hnew, zero_add]
   congr 2
   apply Multiset.filter_congr
   intro e _
@@ -650,7 +654,7 @@ theorem vertex_degree_subdivOld_wall (t : T.edges) :
     fun e : Vertex T × Vertex T ↦ e.1 = oldVertex T (t : T.V × T.V).2 ∨
       e.2 = oldVertex T (t : T.V × T.V).2) : ℤ) = _
   rw [card_filter_expandedEdges, ← card_filter_incident_eq_vertex_degree,
-    if_pos (show (newEnds T (t : T.V × T.V).2).1 = oldVertex T (t : T.V × T.V).2 ∨
+    ite_eq_left (show (newEnds T (t : T.V × T.V).2).1 = oldVertex T (t : T.V × T.V).2 ∨
       (newEnds T (t : T.V × T.V).2).2 = oldVertex T (t : T.V × T.V).2 from Or.inl rfl)]
   rw [← card_filter_succ t (fun e : T.edges ↦ (e : T.V × T.V).1 = (t : T.V × T.V).2 ∨
     (e : T.V × T.V).2 = (t : T.V × T.V).2)
@@ -671,7 +675,7 @@ theorem vertex_degree_subdivFresh (t : T.edges) :
   change (Multiset.card ((expandedEdges T _ (subdivRight T t)).filter
     fun e : Vertex T × Vertex T ↦ e.1 = freshVertex T ∨ e.2 = freshVertex T) : ℤ) = _
   rw [card_filter_expandedEdges,
-    if_pos (show (newEnds T (t : T.V × T.V).2).1 = freshVertex T ∨
+    ite_eq_left (show (newEnds T (t : T.V × T.V).2).1 = freshVertex T ∨
       (newEnds T (t : T.V × T.V).2).2 = freshVertex T from Or.inr rfl),
     card_filter_eq_self t _ fun e ↦ ?_]
   · rfl
@@ -714,7 +718,7 @@ theorem leafCount_subdivTarget (t : T.edges) : leafCount (subdivTarget T t) = le
   have hfresh : ¬ IsLeafVertex (subdivTarget T t) (subdivFresh T t) := by
     rw [isLeafVertex_iff, vertex_degree_subdivFresh]
     norm_num
-  rw [show freshVertex T = subdivFresh T t from rfl, if_neg hfresh, add_zero]
+  rw [show freshVertex T = subdivFresh T t from rfl, ite_eq_right hfresh, add_zero]
   refine Finset.sum_congr rfl fun v _ ↦ ?_
   rw [show oldVertex T v = subdivOld T t v from rfl]
   refine if_congr ?_ rfl rfl
@@ -727,7 +731,7 @@ theorem leafCount_leafTarget (u : T.V) (hu : vertex_degree T u = 2) :
     (fun v : (leafTarget T u).V ↦ if IsLeafVertex (leafTarget T u) v then 1 else 0)).trans ?_
   have htip : IsLeafVertex (leafTarget T u) (leafTip T u) := by
     rw [isLeafVertex_iff, vertex_degree_leafTip]
-  rw [show freshVertex T = leafTip T u from rfl, if_pos htip]
+  rw [show freshVertex T = leafTip T u from rfl, ite_eq_left htip]
   congr 1
   refine Finset.sum_congr rfl fun v _ ↦ ?_
   rw [show oldVertex T v = leafOld T u v from rfl]
@@ -828,7 +832,7 @@ theorem numBlocks_extendNew (P : SheetPartition d) :
   unfold numBlocks
   rw [Finset.card_filter, Finset.card_filter, Fin.sum_univ_castSucc]
   simp only [SheetOps.extendNew_repr_castSucc, SheetOps.extendNew_repr_last, Fin.castSucc_inj,
-    if_true]
+    ite_true]
 
 theorem numBlocks_discrete (d : ℕ) : numBlocks (SheetPartition.discrete d) = d := by
   simp [numBlocks, SheetPartition.discrete]
@@ -958,12 +962,12 @@ theorem riemannHurwitz_leafDatum (D : GluingDatum T d) (hD : D.RiemannHurwitz) (
       leafTip_ne_leafOld, or_false]
     have hb : (0 : ℤ) ≤ (D.vertexPartition w).blockCard sheet := by positivity
     by_cases huw : u = w
-    · simp only [huw, if_true]
+    · simp only [huw, ite_true]
       nlinarith
-    · simp only [huw, if_false]
+    · simp only [huw, ite_false]
       linarith
   · simp only [leafDatum_vertexPartition_leafTip, Ne.symm (leafTip_ne_leafOld _ _ _),
-      or_true, if_true, false_or, if_false, Finset.sum_const_zero, add_zero]
+      or_true, ite_true, false_or, ite_false, Finset.sum_const_zero, add_zero]
     have hb : (1 : ℤ) ≤ (SheetOps.pair a b).blockCard sheet := by
       exact_mod_cast (SheetOps.pair a b).blockCard_pos sheet
     push_cast
@@ -1121,7 +1125,7 @@ theorem sum_incidentEdges_subdivFresh (t : T.edges) (f : (subdivTarget T t).edge
         then f (subdivOcc T t (some e)) else 0) = 0 := by
     refine Finset.sum_eq_zero fun e he ↦ ?_
     simp only [subdivOcc_some_of_ne T (Finset.ne_of_mem_erase he),
-      Ne.symm (subdivFresh_ne_subdivOld T t _), or_self, if_false]
+      Ne.symm (subdivFresh_ne_subdivOld T t _), or_self, ite_false]
   rw [herase]
   simp [subdivOcc_some_self]
 
@@ -1536,7 +1540,7 @@ theorem incident_tip_iff (k : Fin 3) (j : Fin (d + 1)) (x : (glueDatum D π).Sou
 
 theorem pair_rel_last (k : Fin 3) :
     (SheetOps.pair (π.sheet k).castSucc (Fin.last d)).Rel (Fin.last d) (π.sheet k).castSucc := by
-  rw [pair_rel_iff, if_pos rfl, if_neg (Fin.castSucc_lt_last _).ne]
+  rw [pair_rel_iff, ite_eq_left rfl, ite_eq_right (Fin.castSucc_lt_last _).ne]
 
 /-- **The arms off the hairpin dangle**: in a sheet other than the mark's and the new one, the
 arm ends at a source vertex of valency one. -/
@@ -1558,7 +1562,7 @@ theorem isDangling_armSheetEdge (hconn : (glueDatum D π).Connected) (k : Fin 3)
     show x = armSheetEdge D π k j
     rw [eq_armSheetEdge D π x hx1]
     congr 1
-    rw [pair_rel_iff, if_neg hΛ] at hrel
+    rw [pair_rel_iff, ite_eq_right hΛ] at hrel
     split_ifs at hrel with h
     · exact absurd hrel.symm hK
     · exact hrel
@@ -1688,11 +1692,11 @@ theorem not_isDangling_of_returns {S : CFGraph} {k : ℕ} (E : GluingDatum S k) 
   rcases h with h | h <;> obtain ⟨cut⟩ := h
   · have hmem := mem_side_of_reachP cut cut.left_mem hur
     have hc := cut.cross_num_edges u' _ hmem cut.right_not_mem
-    rw [if_neg (fun h ↦ hune h.1)] at hc
+    rw [ite_eq_right (fun h ↦ hune h.1)] at hc
     omega
   · have hmem := mem_side_of_reachP cut cut.left_mem hvr
     have hc := cut.cross_num_edges v' _ hmem cut.right_not_mem
-    rw [if_neg (fun h ↦ hvne h.1)] at hc
+    rw [ite_eq_right (fun h ↦ hvne h.1)] at hc
     omega
 
 theorem rtg_of_walk {V W : Type*} {H : SimpleGraph V} (R : W → W → Prop) (f : V → W)
@@ -2167,12 +2171,12 @@ theorem mem_incidentEdges_subdivOld (t : T.edges) (w : T.V) (ε : (subdivTarget 
     simp only [pieceT, true_and, subdivOld_eq_iff]
     constructor
     · rintro (h | h)
-      · exact ⟨Or.inr h, by rw [if_pos h]⟩
+      · exact ⟨Or.inr h, by rw [ite_eq_left h]⟩
       · exact absurd h (subdivFresh_ne_subdivOld T t w)
     · rintro ⟨-, h⟩
       by_cases h2 : (t : T.V × T.V).2 = w
       · exact Or.inl h2
-      · rw [if_neg h2] at h
+      · rw [ite_eq_right h2] at h
         exact absurd ((subdivOcc T t).injective h) (by simp)
   | some e =>
     rw [parentT_some]
@@ -2183,15 +2187,15 @@ theorem mem_incidentEdges_subdivOld (t : T.edges) (w : T.V) (ε : (subdivTarget 
       constructor
       · rintro (h | h)
         · have h2 : (e : T.V × T.V).2 ≠ w := fun h2 ↦ hne (h.trans h2.symm)
-          exact ⟨Or.inl h, by rw [if_neg h2]⟩
+          exact ⟨Or.inl h, by rw [ite_eq_right h2]⟩
         · exact absurd h (subdivFresh_ne_subdivOld T e w)
       · rintro ⟨h1, h⟩
         by_cases h2 : (e : T.V × T.V).2 = w
-        · rw [if_pos h2] at h
+        · rw [ite_eq_left h2] at h
           exact absurd ((subdivOcc T e).injective h) (by simp)
         · exact Or.inl (h1.resolve_right h2)
     · rw [subdivOcc_some_of_ne T het]
-      simp only [pieceT, het, false_and, if_false, subdivOld_eq_iff, and_true]
+      simp only [pieceT, het, false_and, ite_false, subdivOld_eq_iff, and_true]
 
 /-- The target edges at the fresh vertex are the two halves of `t`. -/
 theorem mem_incidentEdges_subdivFresh (t : T.edges) (ε : (subdivTarget T t).edges) :
@@ -2500,7 +2504,7 @@ theorem stablePath_eq_of_parentSE_eq (hD : D.Connected)
   have hpar : ¬ IsDangling D (parentSE D t y.1) := (isDangling_iff D t hD y.1).not.mp y.2
   obtain ⟨i, hi, hcase⟩ := eq_or_halves_of_parentSE_eq D t h hyy
   have hval : nonDanglingValency (refineDatum D t) (freshSV D t i hi) = 2 := by
-    rw [nonDanglingValency_freshSV D t hD, if_neg]
+    rw [nonDanglingValency_freshSV D t hD, ite_eq_right]
     rcases hcase with ⟨h1, -⟩ | ⟨h1, -⟩
     · rwa [h1, parentSE_halfNone] at hpar
     · rwa [h1, parentSE_halfSome] at hpar
@@ -2585,18 +2589,18 @@ theorem nonDanglingValency_markR₃ (hD : D.Connected) (hπ : π.NonDangling D) 
     rw [Refine.nonDanglingValency_sourceEndpoint_old _ _ h₂,
       Refine.nonDanglingValency_sourceEndpoint_old _ _ h₁,
       Refine.nonDanglingValency_sourceEndpoint_fresh _ _ hD,
-      if_neg (show ¬ IsDangling D (D.sourceEdge π.edge₀ (π.sheet 0)) from hπ 0)]
+      ite_eq_right (show ¬ IsDangling D (D.sourceEdge π.edge₀ (π.sheet 0)) from hπ 0)]
   | 1 =>
     show nonDanglingValency (refine₃ D π) ((refine₃ D π).sourceEndpoint
       (subdivOld _ _ (subdivFresh π.T₁ π.edge₁)) (π.sheet 1)) = 2
     rw [Refine.nonDanglingValency_sourceEndpoint_old _ _ h₂,
-      Refine.nonDanglingValency_sourceEndpoint_fresh _ _ h₁, if_neg]
+      Refine.nonDanglingValency_sourceEndpoint_fresh _ _ h₁, ite_eq_right]
     rw [Refine.isDangling_sourceEdge _ _ hD]
     exact hπ 1
   | 2 =>
     show nonDanglingValency (refine₃ D π) ((refine₃ D π).sourceEndpoint
       (subdivFresh π.T₂ π.edge₂) (π.sheet 2)) = 2
-    rw [Refine.nonDanglingValency_sourceEndpoint_fresh _ _ h₂, if_neg]
+    rw [Refine.nonDanglingValency_sourceEndpoint_fresh _ _ h₂, ite_eq_right]
     rw [Refine.isDangling_sourceEdge _ _ h₁, Refine.isDangling_sourceEdge _ _ hD]
     exact hπ 2
 
@@ -3039,7 +3043,7 @@ theorem sum_arm_oldVertex₃ {W : (glueDatum D π).SourceEdge → Prop} (hW : Ha
     · rintro ⟨hk, hrel⟩
       exact ⟨Or.inl rfl, hk, _, rfl, hrel⟩
   · intro j _ hj
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro ⟨hWj, hinc⟩
     rcases (hW k j).mp hWj with h | h
     · exact hj h
@@ -3059,7 +3063,7 @@ theorem wCount_glue_oldVertex₃ {W : (glueDatum D π).SourceEdge → Prop} (hW 
   rw [wCount_glue_eq, sum_arm_oldVertex₃ D π hW, wCount_eq_sum]
   have hnew : (∑ ε, if W (newSE D π ε) ∧ Incident _ (newSE D π ε) (oldVertex₃ D π x)
       then 1 else 0) = 0 :=
-    Finset.sum_eq_zero fun ε _ ↦ if_neg fun h ↦ not_incident_newSE_oldVertex₃ D π ε x h.2
+    Finset.sum_eq_zero fun ε _ ↦ ite_eq_right fun h ↦ not_incident_newSE_oldVertex₃ D π ε x h.2
   rw [hnew, zero_add]
   congr 1
   refine Finset.sum_congr rfl fun x' _ ↦ if_congr ?_ rfl rfl
@@ -3073,7 +3077,7 @@ theorem sum_mark_le_one (x : (refine₃ D π).SourceVertex) :
     rw [Finset.sum_eq_single k]
     · simp
     · intro b _ hb
-      rw [if_neg]
+      rw [ite_eq_right]
       intro h'
       exact hb (markR₃_injective D π h').symm
     · simp
@@ -3086,7 +3090,7 @@ theorem sum_mark_eq_one (k : Fin 3) :
   rw [Finset.sum_eq_single k]
   · simp
   · intro b _ hb
-    rw [if_neg]
+    rw [ite_eq_right]
     intro h'
     exact hb (markR₃_injective D π h').symm
   · simp
@@ -3094,7 +3098,7 @@ theorem sum_mark_eq_one (k : Fin 3) :
 open Classical in
 theorem sum_mark_eq_zero {x : (refine₃ D π).SourceVertex} (h : ∀ k, x ≠ markR₃ D π k) :
     (∑ k, if x = markR₃ D π k then 1 else 0) = 0 :=
-  Finset.sum_eq_zero fun k _ ↦ if_neg (h k)
+  Finset.sum_eq_zero fun k _ ↦ ite_eq_right (h k)
 
 open Classical in
 /-- **The count at a new-sheet vertex**, for a hairpin-shaped property. -/
@@ -3105,7 +3109,7 @@ theorem wCount_glue_newVertex {W : (glueDatum D π).SourceEdge → Prop} (hW : H
   rw [wCount_glue_eq, tCount_eq_sum]
   have hold : (∑ x, if W (liftSE D π x) ∧ Incident _ (liftSE D π x) (newVertex D π v)
       then 1 else 0) = 0 :=
-    Finset.sum_eq_zero fun x _ ↦ if_neg fun h ↦ not_incident_liftSE_newVertex D π x v h.2
+    Finset.sum_eq_zero fun x _ ↦ ite_eq_right fun h ↦ not_incident_liftSE_newVertex D π x v h.2
   rw [hold, zero_add]
   congr 1
   · refine Finset.sum_congr rfl fun ε _ ↦ if_congr ?_ rfl rfl
@@ -3116,7 +3120,7 @@ theorem wCount_glue_newVertex {W : (glueDatum D π).SourceEdge → Prop} (hW : H
       rw [hW, incident_arm_newVertex_iff]
       simp
     · intro j _ hj
-      rw [if_neg]
+      rw [ite_eq_right]
       rintro ⟨-, hinc⟩
       exact hj ((incident_arm_newVertex_iff D π k j v).mp hinc).2
     · intro h; exact absurd (Finset.mem_univ _) h
@@ -3271,7 +3275,7 @@ theorem card_adj_le_card_erase {V : Type*} [Fintype V] [DecidableEq V] {H : Simp
   have hf : ∀ w (h : H.Adj v w), f w ∈ M ∧ ∃ q : H.Walk w (f w),
       (SimpleGraph.Walk.cons h q).IsPath := by
     intro w h
-    have hfw : f w = Classical.choose (hex w h) := dif_pos h
+    have hfw : f w = Classical.choose (hex w h) := dite_eq_left h
     rw [hfw]
     exact Classical.choose_spec (hex w h)
   refine Finset.card_le_card_of_injOn f ?_ ?_
@@ -3339,10 +3343,10 @@ theorem tCount_eq_card_adj (hpar : ∀ u w : S.V, num_edges S u w ≤ 1) (X : S.
     refine ⟨ε, hε.1, ?_⟩
     unfold otherEnd
     rcases hε.2 with h | h
-    · rw [if_pos h]; left; exact Prod.ext h rfl
+    · rw [ite_eq_left h]; left; exact Prod.ext h rfl
     · by_cases h1 : (ε : S.V × S.V).1 = v
-      · rw [if_pos h1]; left; exact Prod.ext h1 rfl
-      · rw [if_neg h1]; right; exact Prod.ext rfl h
+      · rw [ite_eq_left h1]; left; exact Prod.ext h1 rfl
+      · rw [ite_eq_right h1]; right; exact Prod.ext rfl h
   · intro ε₁ h₁ ε₂ h₂ heq
     simp only [Finset.mem_filter, Finset.mem_univ, true_and, GluingDatum.incidentEdges] at h₁ h₂
     have hends : ∀ ε : S.edges, ((ε : S.V × S.V).1 = v ∨ (ε : S.V × S.V).2 = v) →
@@ -3350,8 +3354,8 @@ theorem tCount_eq_card_adj (hpar : ∀ u w : S.V, num_edges S u w ≤ 1) (X : S.
       intro ε h
       unfold otherEnd
       by_cases h1 : (ε : S.V × S.V).1 = v
-      · rw [if_pos h1]; left; exact Prod.ext h1 rfl
-      · rw [if_neg h1]; right; exact Prod.ext rfl (h.resolve_left h1)
+      · rw [ite_eq_left h1]; left; exact Prod.ext h1 rfl
+      · rw [ite_eq_right h1]; right; exact Prod.ext rfl (h.resolve_left h1)
     have hle := hpar v (otherEnd v ε₁)
     rw [num_edges_eq_card_univ_filter] at hle
     have hm₁ : ε₁ ∈ Finset.univ.filter fun ε : S.edges ↦
@@ -3403,10 +3407,10 @@ theorem tCount_add_le (hS : graph_connected S) (hg : genus S = 0) (M : Finset S.
   have h := card_adj_le_card_erase hac M hdeg v
   rw [← tCount_eq_card_adj hpar] at h
   by_cases hv : v ∈ M
-  · rw [if_pos hv]
+  · rw [ite_eq_left hv]
     have := Finset.card_erase_add_one hv
     omega
-  · rw [if_neg hv, Finset.erase_eq_of_notMem hv] at *
+  · rw [ite_eq_right hv, Finset.erase_eq_of_notMem hv] at *
     omega
 
 /-- **A forest has a leaf**: an edge set of a tree with no vertex of valency one is empty. -/
@@ -3415,7 +3419,7 @@ theorem not_of_tCount_ne_one (hS : graph_connected S) (hg : genus S = 0) (X : S.
   classical
   intro hε
   have h := tCount_add_le hS hg ∅ X (fun u _ ↦ hX u) (ε : S.V × S.V).1
-  simp only [Finset.notMem_empty, if_false, add_zero, Finset.card_empty] at h
+  simp only [Finset.notMem_empty, ite_false, add_zero, Finset.card_empty] at h
   have hpos : 0 < tCount X (ε : S.V × S.V).1 := by
     unfold tCount
     exact Finset.card_pos.mpr ⟨ε, by simp [GluingDatum.incidentEdges, hε]⟩
@@ -3550,8 +3554,8 @@ theorem card_branch_eq_one (hS : graph_connected S) (hg : genus S = 0) (M : Fins
     intro v hv
     simp only [val]
     by_cases hvM : v ∈ M
-    · rw [if_pos hvM]; have := hXM v hvM; omega
-    · rw [if_neg hvM]
+    · rw [ite_eq_left hvM]; have := hXM v hvM; omega
+    · rw [ite_eq_right hvM]
       have h1 := hX v hvM
       rcases (hmemV' v).mp hv with h | h
       · omega
@@ -3570,7 +3574,7 @@ theorem card_branch_eq_one (hS : graph_connected S) (hg : genus S = 0) (M : Fins
       refine ⟨(hmemV' v).mpr ?_, h⟩
       by_contra hn
       push Not at hn
-      have : val v = 0 := by simp only [val]; rw [if_neg hn.2]; omega
+      have : val v = 0 := by simp only [val]; rw [ite_eq_right hn.2]; omega
       omega
     · exact fun h ↦ h.2
   show (Finset.univ.filter fun v ↦ 3 ≤ val v).card = 1
@@ -3777,15 +3781,15 @@ theorem sum_markVertex_eq (v : π.T₃.V) :
     (∑ k, if π.markVertex₃ k = v then 1 else 0) = if v ∈ π.markSet then 1 else 0 := by
   by_cases hv : v ∈ π.markSet
   · obtain ⟨k, -, rfl⟩ := Finset.mem_image.mp hv
-    rw [if_pos hv, Finset.sum_eq_single k]
+    rw [ite_eq_left hv, Finset.sum_eq_single k]
     · simp
     · intro b _ hb
-      rw [if_neg]
+      rw [ite_eq_right]
       intro h
       exact hb (π.markVertex₃_injective h)
     · simp
-  · rw [if_neg hv]
-    refine Finset.sum_eq_zero fun k _ ↦ if_neg fun h ↦ hv ?_
+  · rw [ite_eq_right hv]
+    refine Finset.sum_eq_zero fun k _ ↦ ite_eq_right fun h ↦ hv ?_
     rw [← h]
     exact Finset.mem_image_of_mem _ (Finset.mem_univ _)
 
@@ -3805,7 +3809,7 @@ theorem nonDanglingValency_newVertex_le_three (hD : D.Connected) (hT : graph_con
   refine tCount_add_le (π.T₃_connected hT) (π.T₃_genus hT0) π.markSet _ (fun u hu ↦ ?_) v
   have h := DraismaVargas.LocalCases.NonDanglingValency.nonDanglingValency_ne_one _ hG
     (newVertex D π u)
-  rw [nonDanglingValency_newVertex D π hD hT, π.sum_markVertex_eq, if_neg hu, add_zero] at h
+  rw [nonDanglingValency_newVertex D π hD hT, π.sum_markVertex_eq, ite_eq_right hu, add_zero] at h
   exact h
 
 /-- **The glued datum is trivalent** (S2 in its general form). -/
@@ -3992,7 +3996,7 @@ theorem incidenceCount_eq_zero_of_two_ends {S : CFGraph} {k : ℕ} (E : GluingDa
   have hle := Finset.sum_le_sum_of_subset (Finset.subset_univ ({a, b, w} : Finset E.SourceVertex))
     (f := fun v ↦ if ¬ nonDanglingValency E v = 2 then incidenceCount E v C else 0)
   rw [Finset.sum_insert (by simp [hab, Ne.symm hwa]), Finset.sum_insert (by simp [Ne.symm hwb]),
-    Finset.sum_singleton, if_pos ha, if_pos hb, if_pos hw] at hle
+    Finset.sum_singleton, ite_eq_left ha, ite_eq_left hb, ite_eq_left hw] at hle
   omega
 
 theorem fin3_third : ∀ k j : Fin 3, k ≠ j → ∃ l, l ≠ k ∧ l ≠ j := by decide
@@ -4103,17 +4107,17 @@ theorem hairpinPath_ne_glue (hD : D.Connected) (hT : graph_connected T) (hT0 : g
       rw [hZX]
       have := DraismaVargas.LocalCases.NonDanglingValency.nonDanglingValency_ne_one _ hG
         (newVertex D π u)
-      rw [nonDanglingValency_newVertex D π hD hT, π.sum_markVertex_eq, if_neg huM, add_zero] at this
+      rw [nonDanglingValency_newVertex D π hD hT, π.sum_markVertex_eq, ite_eq_right huM, add_zero] at this
       exact this
   have hle := tCount_add_le (π.T₃_connected hT) (π.T₃_genus hT0) {π.markVertex₃ l} Z hZ
     (π.markVertex₃ l)
-  rw [if_pos (Finset.mem_singleton_self _), Finset.card_singleton] at hle
+  rw [ite_eq_left (Finset.mem_singleton_self _), Finset.card_singleton] at hle
   have hZl : tCount Z (π.markVertex₃ l) = tCount (NewSurvives D π) (π.markVertex₃ l) :=
     tCount_congr fun ε hε ↦ ⟨fun h ↦ h.1, fun h ↦ ⟨h, fun hY ↦ hnl ε hY hε⟩⟩
   have hXl := DraismaVargas.LocalCases.NonDanglingValency.nonDanglingValency_ne_one _ hG
     (newVertex D π (π.markVertex₃ l))
   rw [nonDanglingValency_newVertex D π hD hT, π.sum_markVertex_eq,
-    if_pos (show π.markVertex₃ l ∈ π.markSet from
+    ite_eq_left (show π.markVertex₃ l ∈ π.markSet from
       Finset.mem_image_of_mem _ (Finset.mem_univ _))] at hXl
   omega
 
@@ -4222,13 +4226,13 @@ theorem card_stableVertices_glue (hD : D.Connected) (hT : graph_connected T) (hT
       intro u hu
       have h := DraismaVargas.LocalCases.NonDanglingValency.nonDanglingValency_ne_one _ hG
         (newVertex D π u)
-      rw [nonDanglingValency_newVertex D π hD hT, π.sum_markVertex_eq, if_neg hu, add_zero] at h
+      rw [nonDanglingValency_newVertex D π hD hT, π.sum_markVertex_eq, ite_eq_right hu, add_zero] at h
       exact h
     have hXM : ∀ u ∈ π.markSet, tCount (NewSurvives D π) u ≠ 0 := by
       intro u hu
       have h := DraismaVargas.LocalCases.NonDanglingValency.nonDanglingValency_ne_one _ hG
         (newVertex D π u)
-      rw [nonDanglingValency_newVertex D π hD hT, π.sum_markVertex_eq, if_pos hu] at h
+      rw [nonDanglingValency_newVertex D π hD hT, π.sum_markVertex_eq, ite_eq_left hu] at h
       omega
     have h := card_branch_eq_one (π.T₃_connected hT) (π.T₃_genus hT0) π.markSet π.card_markSet
       (NewSurvives D π) hX hXM
@@ -4494,8 +4498,8 @@ theorem abs_det_clsMatrix_refine (D : GluingDatum T d) (t : T.edges) (hD : D.Con
     rw [Finset.sum_congr rfl fun y _ ↦ hsplit y, Refine.sum_over_none D t hD]
     refine Finset.sum_congr rfl fun x _ ↦ ?_
     by_cases hx : x.1.1.1 = t
-    · rw [if_pos hx, if_pos hx, hidx_n x hx]
-    · rw [if_neg hx, if_neg hx]
+    · rw [ite_eq_left hx, ite_eq_left hx, hidx_n x hx]
+    · rw [ite_eq_right hx, ite_eq_right hx]
   have hBe : ∀ r c, B r c = ∑ x : NonDanglingEdge D,
       if x.1.1.1 = col c then (if cls x = r then w x else 0) else 0 := by
     intro r c
@@ -4537,50 +4541,50 @@ theorem abs_det_clsMatrix_refine (D : GluingDatum T d) (t : T.edges) (hD : D.Con
     rw [hM_some, hM_none, htc]
     refine Finset.sum_congr rfl fun x _ ↦ ?_
     by_cases hx : x.1.1.1 = t
-    · rw [if_pos hx, if_pos hx]
+    · rw [ite_eq_left hx, ite_eq_left hx]
       have h1 := e1 _ _ r hr (hs_s x)
       have h2 := e1 _ _ r hr (hs_n x hx)
       by_cases hc : cls x = r
-      · rw [if_pos (h1.mpr hc), if_pos (h2.mpr hc)]
-      · rw [if_neg (fun h ↦ hc (h1.mp h)), if_neg (fun h ↦ hc (h2.mp h))]
-    · rw [if_neg hx, if_neg hx]
+      · rw [ite_eq_left (h1.mpr hc), ite_eq_left (h2.mpr hc)]
+      · rw [ite_eq_right (fun h ↦ hc (h1.mp h)), ite_eq_right (fun h ↦ hc (h2.mp h))]
+    · rw [ite_eq_right hx, ite_eq_right hx]
   have hsum : M (some (cls f)) (some (col.symm t)) + M none (some (col.symm t)) =
       M (some (cls f)) none + M none none := by
     rw [hM_some, hM_some, hM_none, hM_none, htc, ← Finset.sum_add_distrib,
       ← Finset.sum_add_distrib]
     refine Finset.sum_congr rfl fun x _ ↦ ?_
     by_cases hx : x.1.1.1 = t
-    · rw [if_pos hx, if_pos hx, if_pos hx, if_pos hx, e2 _ _ _ (hs_s x), e2 _ _ _ (hs_n x hx)]
-    · rw [if_neg hx, if_neg hx, if_neg hx, if_neg hx]
+    · rw [ite_eq_left hx, ite_eq_left hx, ite_eq_left hx, ite_eq_left hx, e2 _ _ _ (hs_s x), e2 _ _ _ (hs_n x hx)]
+    · rw [ite_eq_right hx, ite_eq_right hx, ite_eq_right hx, ite_eq_right hx]
   have hrow : ∀ c, B (cls f) c = M (some (cls f)) (some c) + M none (some c) := by
     intro c
     rw [hBe, hM_some, hM_some, ← Finset.sum_add_distrib]
     refine Finset.sum_congr rfl fun x _ ↦ ?_
     by_cases hx : x.1.1.1 = col c
-    · rw [if_pos hx, if_pos hx, if_pos hx, e2 _ _ _ (hs_s x)]
-    · rw [if_neg hx, if_neg hx, if_neg hx, add_zero]
+    · rw [ite_eq_left hx, ite_eq_left hx, ite_eq_left hx, e2 _ _ _ (hs_s x)]
+    · rw [ite_eq_right hx, ite_eq_right hx, ite_eq_right hx, add_zero]
   have hB' : ∀ r, r ≠ cls f → ∀ c, B r c = M (some r) (some c) := by
     intro r hr c
     rw [hBe, hM_some]
     refine Finset.sum_congr rfl fun x _ ↦ ?_
     by_cases hx : x.1.1.1 = col c
-    · rw [if_pos hx, if_pos hx]
+    · rw [ite_eq_left hx, ite_eq_left hx]
       have h1 := e1 _ _ r hr (hs_s x)
       by_cases hc : cls x = r
-      · rw [if_pos hc, if_pos (h1.mpr hc)]
-      · rw [if_neg hc, if_neg (fun h ↦ hc (h1.mp h))]
-    · rw [if_neg hx, if_neg hx]
+      · rw [ite_eq_left hc, ite_eq_left (h1.mpr hc)]
+      · rw [ite_eq_right hc, ite_eq_right (fun h ↦ hc (h1.mp h))]
+    · rw [ite_eq_right hx, ite_eq_right hx]
   rw [abs_det_refine B M (cls f) (col.symm t) hother hsum hrow hB']
   -- the entry `δ`: only the halves of `f` differ
   have hδ : M (some (cls f)) (some (col.symm t)) - M (some (cls f)) none =
       (if cls' (sH f) = some (cls f) then w f else 0) -
         (if cls' (nH f) = some (cls f) then w f else 0) := by
     rw [hM_some, hM_none, htc, ← Finset.sum_sub_distrib, Finset.sum_eq_single f]
-    · rw [if_pos hs.over_t, if_pos hs.over_t]
+    · rw [ite_eq_left hs.over_t, ite_eq_left hs.over_t]
     · intro x _ hxf
       by_cases hx : x.1.1.1 = t
-      · rw [if_pos hx, if_pos hx, hs.others x hx hxf, sub_self]
-      · rw [if_neg hx, if_neg hx, sub_self]
+      · rw [ite_eq_left hx, ite_eq_left hx, hs.others x hx hxf, sub_self]
+      · rw [ite_eq_right hx, ite_eq_right hx, sub_self]
     · intro h; exact absurd (Finset.mem_univ f) h
   have hapos : (0 : ℚ) < D.sourceEdgeIndex f.1 := by
     have := (D.edgePartition f.1.1.1).blockCard_pos f.1.1.2
@@ -4594,8 +4598,8 @@ theorem abs_det_clsMatrix_refine (D : GluingDatum T d) (t : T.edges) (hD : D.Con
     have hne := hs.split
     rcases hs1 with h1 | ⟨-, h1⟩ <;> rcases hn1 with h2 | ⟨-, h2⟩
     · exact absurd (h1.trans h2.symm) hne
-    · rw [if_pos h1, if_neg (by rw [h2]; simp), sub_zero, abs_of_nonneg hwpos]
-    · rw [if_neg (by rw [h1]; simp), if_pos h2, zero_sub, abs_neg, abs_of_nonneg hwpos]
+    · rw [ite_eq_left h1, ite_eq_right (by rw [h2]; simp), sub_zero, abs_of_nonneg hwpos]
+    · rw [ite_eq_right (by rw [h1]; simp), ite_eq_left h2, zero_sub, abs_neg, abs_of_nonneg hwpos]
     · exact absurd (h1.trans h2.symm) hne
   rw [hδ, habs]
   simp only [w]
@@ -4978,7 +4982,7 @@ theorem incident_halves (hD : D.Connected) {x : NonDanglingEdge D} (hx : x.1.1.1
 
 theorem nonDanglingValency_freshOf (hD : D.Connected) (x : NonDanglingEdge D)
     (hx : x.1.1.1 = t) : nonDanglingValency (refineDatum D t) (freshOf D t x.1 hx) = 2 := by
-  rw [freshOf, nonDanglingValency_freshSV D t hD, if_neg]
+  rw [freshOf, nonDanglingValency_freshSV D t hD, ite_eq_right]
   have h : (⟨(t, x.1.1.2), repr_of_over D t hx⟩ : D.SourceEdge) = x.1 :=
     Subtype.ext (Prod.ext hx.symm rfl)
   rw [h]
@@ -5070,7 +5074,7 @@ theorem merged_parentND {f : NonDanglingEdge D} {c : NonDanglingEdge (refineDatu
     · conv_rhs => rw [h, hpf]
       unfold merged mergeFn
       rw [hpf]
-      simp only [if_true]
+      simp only [ite_true]
       split_ifs <;> rfl
     · conv_rhs => rw [h, ← hc _ hp hpf]
       rfl
@@ -5098,11 +5102,11 @@ theorem card_image_merged {f : NonDanglingEdge D} {c : NonDanglingEdge (refineDa
   set S := c (Refine.someHalfND D t hD f)
   set N := c (Refine.noneHalfND D t hD f)
   by_cases hSN : S = N
-  · rw [if_pos hSN, add_zero]
+  · rw [ite_eq_left hSN, add_zero]
     have hid : mergeFn S N = id := by
       funext P; unfold mergeFn; split_ifs with h <;> simp [h, hSN]
     rw [hid, Finset.image_id]
-  · rw [if_neg hSN]
+  · rw [ite_eq_right hSN]
     have hN : N ∈ Finset.univ.image c := Finset.mem_image_of_mem _ (Finset.mem_univ _)
     have heq : (Finset.univ.image c).image (mergeFn S N) = (Finset.univ.image c).erase N := by
       ext P
@@ -5114,7 +5118,7 @@ theorem card_image_merged {f : NonDanglingEdge D} {c : NonDanglingEdge (refineDa
         · exact ⟨hSN, _, rfl⟩
         · exact ⟨h, z, rfl⟩
       · rintro ⟨hP, z, rfl⟩
-        exact ⟨_, ⟨z, rfl⟩, by unfold mergeFn; rw [if_neg hP]⟩
+        exact ⟨_, ⟨z, rfl⟩, by unfold mergeFn; rw [ite_eq_right hP]⟩
     rw [heq, Finset.card_erase_of_mem hN]
     have : 0 < (Finset.univ.image c).card := Finset.card_pos.mpr ⟨N, hN⟩
     omega
@@ -5139,11 +5143,11 @@ theorem splitsAt_of_separated {ι : Type*} {f : NonDanglingEdge D}
     unfold liftLabel mergeFn
     by_cases hy : c y = N
     · right
-      exact ⟨by rw [if_pos hy], by rw [if_pos hy]⟩
+      exact ⟨by rw [ite_eq_left hy], by rw [ite_eq_left hy]⟩
     · left
-      rw [if_neg hy, if_neg hy]
+      rw [ite_eq_right hy, ite_eq_right hy]
   · unfold liftLabel
-    rw [if_neg hsep, if_pos rfl]
+    rw [ite_eq_right hsep, ite_eq_left rfl]
     simp
   · show liftLabel N lab (c (Refine.someHalfND D t hD f')) =
       liftLabel N lab (c (Refine.noneHalfND D t hD f'))
@@ -5210,9 +5214,9 @@ theorem mergeFn_eq_mergeFn {S N P P' : α} (h : Merge.mergeFn S N P = Merge.merg
   unfold Merge.mergeFn at h
   by_cases hP : P = N <;> by_cases hP' : P' = N
   · exact absurd (hP.trans hP'.symm) hne
-  · rw [if_pos hP, if_neg hP'] at h; exact Or.inl ⟨hP, h.symm⟩
-  · rw [if_neg hP, if_pos hP'] at h; exact Or.inr ⟨h, hP'⟩
-  · rw [if_neg hP, if_neg hP'] at h; exact absurd h hne
+  · rw [ite_eq_left hP, ite_eq_right hP'] at h; exact Or.inl ⟨hP, h.symm⟩
+  · rw [ite_eq_right hP, ite_eq_left hP'] at h; exact Or.inr ⟨h, hP'⟩
+  · rw [ite_eq_right hP, ite_eq_right hP'] at h; exact absurd h hne
 
 /-- **Merging two classes divides the product of the lcms by the merge defect.** -/
 theorem prod_lcm_merge (F G : X → α) {S N : α} (hG : ∀ x, G x = Merge.mergeFn S N (F x))
@@ -5237,7 +5241,7 @@ theorem prod_lcm_merge (F G : X → α) {S N : α} (hG : ∀ x, G x = Merge.merg
       · exact ⟨hSN, x₁, h₁⟩
       · exact ⟨h, x, rfl⟩
     · rintro ⟨hP, x, rfl⟩
-      exact ⟨x, by simp only [m, Merge.mergeFn, if_neg hP]⟩
+      exact ⟨x, by simp only [m, Merge.mergeFn, ite_eq_right hP]⟩
   have hother : ∀ Q, Q ≠ S → Q ≠ N →
       idxSet idx (fun x ↦ m (F x)) Q = idxSet idx F Q := by
     intro Q hQS hQN
@@ -5258,8 +5262,8 @@ theorem prod_lcm_merge (F G : X → α) {S N : α} (hG : ∀ x, G x = Merge.merg
       · exact Or.inr ⟨x, h, rfl⟩
       · exact Or.inl ⟨x, hx, rfl⟩
     · rintro (⟨x, hx, rfl⟩ | ⟨x, hx, rfl⟩)
-      · exact ⟨x, by simp only [m, Merge.mergeFn, hx, if_neg hSN], rfl⟩
-      · exact ⟨x, by simp only [m, Merge.mergeFn, hx, if_true], rfl⟩
+      · exact ⟨x, by simp only [m, Merge.mergeFn, hx, ite_eq_right hSN], rfl⟩
+      · exact ⟨x, by simp only [m, Merge.mergeFn, hx, ite_true], rfl⟩
   rw [himg, ← Finset.mul_prod_erase _ _ hN, ← Finset.mul_prod_erase _ _ hSe,
     ← Finset.mul_prod_erase _ _ hSe, hSS]
   have hrest : ∏ Q ∈ ((Finset.univ.image F).erase N).erase S,
@@ -5878,22 +5882,22 @@ theorem exists_cutLabels (hT0 : genus T = 0) (h3 : ∀ x, nonDanglingValency D x
   have hs₃ : gluedPath D π hD hT hπ (Refine.someHalfND _ _ h₂ (π.markEdge₂ D hD hπ)) ≠
       gluedPath D π hD hT hπ (Refine.noneHalfND _ _ h₂ (π.markEdge₂ D hD hπ)) := by
     intro h
-    rw [if_pos h] at hc₂
+    rw [ite_eq_left h] at hc₂
     split_ifs at hc₁ hc₀ <;> omega
   have hs₂ : cut₂ D π hD hT hπ (Refine.someHalfND _ _ h₁ (π.markEdge₁ D hD hπ)) ≠
       cut₂ D π hD hT hπ (Refine.noneHalfND _ _ h₁ (π.markEdge₁ D hD hπ)) := by
     intro h
-    rw [if_pos h] at hc₁
+    rw [ite_eq_left h] at hc₁
     split_ifs at hc₂ hc₀ <;> omega
   have hs₁ : cut₁ D π hD hT hπ (Refine.someHalfND _ _ hD (π.markEdge₀ D hπ)) ≠
       cut₁ D π hD hT hπ (Refine.noneHalfND _ _ hD (π.markEdge₀ D hπ)) := by
     intro h
-    rw [if_pos h] at hc₀
+    rw [ite_eq_left h] at hc₀
     split_ifs at hc₂ hc₁ <;> omega
   have hκcard : (Finset.univ.image κ).card = (Finset.univ : Finset (StablePath D)).card := by
-    rw [if_neg hs₃] at hc₂
-    rw [if_neg hs₂] at hc₁
-    rw [if_neg hs₁] at hc₀
+    rw [ite_eq_right hs₃] at hc₂
+    rw [ite_eq_right hs₂] at hc₁
+    rw [ite_eq_right hs₁] at hc₀
     rw [Finset.card_univ]
     omega
   have hκinj : Function.Injective κ := by
@@ -6087,23 +6091,23 @@ theorem separations (hT0 : genus T = 0) (h3 : ∀ x, nonDanglingValency D x ≤ 
   have hs₃ : gluedPath D π hD hT hπ (Refine.someHalfND _ _ h₂ (π.markEdge₂ D hD hπ)) ≠
       gluedPath D π hD hT hπ (Refine.noneHalfND _ _ h₂ (π.markEdge₂ D hD hπ)) := by
     intro h
-    rw [if_pos h] at hc₂
+    rw [ite_eq_left h] at hc₂
     split_ifs at hc₁ hc₀ <;> omega
   have hs₂ : cut₂ D π hD hT hπ (Refine.someHalfND _ _ h₁ (π.markEdge₁ D hD hπ)) ≠
       cut₂ D π hD hT hπ (Refine.noneHalfND _ _ h₁ (π.markEdge₁ D hD hπ)) := by
     intro h
-    rw [if_pos h] at hc₁
+    rw [ite_eq_left h] at hc₁
     split_ifs at hc₂ hc₀ <;> omega
   have hs₁ : cut₁ D π hD hT hπ (Refine.someHalfND _ _ hD (π.markEdge₀ D hπ)) ≠
       cut₁ D π hD hT hπ (Refine.noneHalfND _ _ hD (π.markEdge₀ D hπ)) := by
     intro h
-    rw [if_pos h] at hc₀
+    rw [ite_eq_left h] at hc₀
     split_ifs at hc₂ hc₁ <;> omega
   refine ⟨hs₃, hs₂, hs₁, fun x x' h ↦ ?_⟩
   have hκcard : (Finset.univ.image κ).card = (Finset.univ : Finset (StablePath D)).card := by
-    rw [if_neg hs₃] at hc₂
-    rw [if_neg hs₂] at hc₁
-    rw [if_neg hs₁] at hc₀
+    rw [ite_eq_right hs₃] at hc₂
+    rw [ite_eq_right hs₂] at hc₁
+    rw [ite_eq_right hs₁] at hc₀
     rw [Finset.card_univ]
     omega
   have hκinj := Finset.card_image_iff.mp hκcard
@@ -6301,9 +6305,9 @@ theorem nonleg_cover {yG : Fin p → ℚ} (ψ : FibreMember core yG (2 + 2))
     intro k
     have h := matrix_armColumn ψ.data π L hG k (hairpin_not_isDangling ψ.data π hD hT k).1
       (hairpin_not_isDangling ψ.data π hD hT k).2 (legRow k)
-    rw [harm, if_pos rfl] at h
+    rw [harm, ite_eq_left rfl] at h
     by_contra hne
-    rw [if_neg hne] at h
+    rw [ite_eq_right hne] at h
     norm_num at h
   have hnl : ∀ z, L.row (g z) ∉ Set.range legRow := by
     rintro z ⟨k, hk⟩
@@ -6470,12 +6474,12 @@ theorem exists_refinementChain_glueDatum {yG : Fin p → ℚ} (ψ : FibreMember 
         rw [hγ]
         exact π.liftE₃_injective.eq_iff
       by_cases hc : lab (g z) = Equiv.ofBijective β hβ i ∧ z.1.1.1 = col₃ ((e.trans γ) j)
-      · rw [if_pos ((and_congr hrow hcol).mpr hc), if_pos hc]
+      · rw [ite_eq_left ((and_congr hrow hcol).mpr hc), ite_eq_left hc]
         show (1 : ℚ) / ((glueDatum ψ.data π).sourceEdgeIndex (liftSE ψ.data π z.1) : ℚ) = _
         rw [CutPaths.sourceEdgeIndex_liftSE z.1]
-      · rw [if_neg (fun h ↦ hc ((and_congr hrow hcol).mp h)), if_neg hc]
+      · rw [ite_eq_right (fun h ↦ hc ((and_congr hrow hcol).mp h)), ite_eq_right hc]
     · intro x hx
-      rw [if_neg]
+      rw [ite_eq_right]
       rintro ⟨hrow, -⟩
       obtain ⟨z, hz⟩ := hcover i.1 i.2
       rw [← hz] at hrow
@@ -6848,7 +6852,7 @@ theorem rowDenominator_legRow {yG : Fin p → ℚ} (ψ : FibreMember core yG (2 
   refine EdgeDenominator.rowDenominator_eq_one_of_passesAboveLeaf fd ?_
   have hne : GluingDatum.LengthMatrixPresentation.matrix fd.labelling.presentation (legRow k)
       (fd.labelling.targetEdge.symm (π.armEdge k)) ≠ 0 := by
-    rw [harm, if_pos rfl]
+    rw [harm, ite_eq_left rfl]
     norm_num
   obtain ⟨edge, hmem, hedge⟩ := exists_mem_rowEdges_of_matrix_ne_zero _ _ _ hne
   refine ⟨edge, hmem, π.tipTarget k, (isLeafVertex_iff _ _).mpr (π.vertex_degree_tipTarget k), ?_⟩

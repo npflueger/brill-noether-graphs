@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.PrunedContractionFibre
-import DraismaVargas.LocalCases.PrunedSource
+module
+
+public import DraismaVargas.LocalCases.PrunedContractionFibre
+public import DraismaVargas.LocalCases.PrunedSource
+
+@[expose] public section
 
 /-!
 # Actual occurrence accounting in a pruned contraction fibre
@@ -54,10 +58,10 @@ theorem sum_nonDanglingValency_set (data : GluingDatum target degree)
     · have hSecond : (data.sourceEnds edge).2 ≠ vertex := by
         intro hSecond
         exact hNe (hFirst.trans hSecond.symm)
-      simp only [Incident, hFirst, hSecond, or_false, if_true, if_false, add_zero]
+      simp only [Incident, hFirst, hSecond, or_false, ite_true, ite_false, add_zero]
     · by_cases hSecond : (data.sourceEnds edge).2 = vertex
-      · simp only [Incident, hFirst, hSecond, false_or, if_true, if_false, zero_add]
-      · simp only [Incident, hFirst, hSecond, or_self, if_false, add_zero]
+      · simp only [Incident, hFirst, hSecond, false_or, ite_true, ite_false, zero_add]
+      · simp only [Incident, hFirst, hSecond, or_self, ite_false, add_zero]
   simp_rw [hAt]
   rw [Finset.sum_comm]
   apply Finset.sum_congr rfl

@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.W3InteriorGraphTracking
-import DraismaVargas.LocalCases.W3ShiftGraphTracking
-import DraismaVargas.LocalCases.W2R1ArbitraryIncomingExit
+module
+
+public import DraismaVargas.LocalCases.W3InteriorGraphTracking
+public import DraismaVargas.LocalCases.W3ShiftGraphTracking
+public import DraismaVargas.LocalCases.W2R1ArbitraryIncomingExit
+
+@[expose] public section
 
 /-!
 # Same-candidate graph and row tracking for Equation (10)

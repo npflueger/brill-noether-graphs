@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W4StableGraph
+module
+
+public import DraismaVargas.LocalCases.W4StableGraph
+
+@[expose] public section
 
 /-!
 # The outgoing W4 new-occurrence census

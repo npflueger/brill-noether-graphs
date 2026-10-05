@@ -1,9 +1,13 @@
-import GenusSixExistence.BrillNoetherRank.Tripod.Dichotomy
-import DraismaVargasCount.PassOnceLollipop
-import DraismaVargasCount.PendantRetraction
-import DraismaVargasCount.RowSlotOrientation
-import DraismaVargasCount.RowPosition
-import DraismaVargasCount.TreeMetricPotential
+module
+
+public import GenusSixExistence.BrillNoetherRank.Tripod.Dichotomy
+public import DraismaVargasCount.PassOnceLollipop
+public import DraismaVargasCount.PendantRetraction
+public import DraismaVargasCount.RowSlotOrientation
+public import DraismaVargasCount.RowPosition
+public import DraismaVargasCount.TreeMetricPotential
+
+@[expose] public section
 
 /-!
 # The shape of a claw frame (Theorem 4.7(b), Lemma 4.8, Corollary 4.10)
@@ -104,8 +108,8 @@ theorem lastEdge_unique (k : Fin 3) {g : NonDanglingEdge κ.data}
     show incidenceCount κ.data (κ.ident.vertex.symm (centre n)).1 _ = 1
     rw [hInc]
     unfold coreIncidence
-    rw [tripodCore_tail_legSlot, tripodCore_head_legSlot, if_pos rfl,
-      if_neg (centre_ne_tripodMark k).symm]
+    rw [tripodCore_tail_legSlot, tripodCore_head_legSlot, ite_eq_left rfl,
+      ite_eq_right (centre_ne_tripodMark k).symm]
   unfold incidenceCount at hOne
   refine Finset.card_le_one.mp hOne.le g ?_ (lastEdge κ k) ?_
   · exact Finset.mem_filter.mpr ⟨(StablePathCount.mem_incidentEdges _ _ _).mpr hg,
@@ -1647,7 +1651,7 @@ theorem secondSurvivor_spec {k : Fin 3} (hDet : IsLeafEdge κ.target (lastEdge �
       (data := κ.data) hv).card) (lastEdge κ k).1
     obtain ⟨hyS, hyt⟩ := (LeafFibre.mem_leafSurvivors hv).mp hy
     exact ⟨y, hyS, hyt.trans hvt.symm, hyne⟩
-  have hDef : secondSurvivor κ k = hEx.choose := dif_pos hEx
+  have hDef : secondSurvivor κ k = hEx.choose := dite_eq_left hEx
   obtain ⟨h1, h2, h3⟩ := hEx.choose_spec
   rw [hDef]
   refine ⟨h1, h2, h3, fun y hyS hyt hyne ↦ ?_⟩
@@ -1958,9 +1962,9 @@ theorem branch_avoids_centre (hconn : core.Connected) (hClaw : TripodFrame.IsCla
       (if g₂.1.1 = dir then (κ.data.sourceEdgeIndex g₂ : ℤ) else 0) at hcardD
     rw [hgi, show κ.data.sourceEdgeIndex g₂ = 1 from hg₂i] at hcardD
     rcases hdir with rfl | rfl
-    · rw [if_pos rfl, if_neg (Ne.symm hT12)] at hcardD
+    · rw [ite_eq_left rfl, ite_eq_right (Ne.symm hT12)] at hcardD
       omega
-    · rw [if_neg hT12, if_pos rfl] at hcardD
+    · rw [ite_eq_right hT12, ite_eq_left rfl] at hcardD
       omega
   -- the cuts
   obtain ⟨A⟩ := TargetGeodesic.exists_treeRank κ.target κ.fullDim.targetConnected
@@ -2027,21 +2031,21 @@ theorem sum_yCore_centre (hconn : core.Connected) (hClaw : TripodFrame.IsClaw κ
             ((κ.data.vertexPartition v.1.1).blockCard v.1.2 : ℤ) else 0) := by
     intro v
     by_cases hO : OverCentreY κ v
-    · rw [if_pos hO]
+    · rw [ite_eq_left hO]
       obtain ⟨hvc, w₀, hw₀, hY₀, hR₀⟩ := hO
       rw [Finset.sum_eq_single w₀]
-      · rw [if_pos ⟨hR₀, hvc⟩]
+      · rw [ite_eq_left ⟨hR₀, hvc⟩]
       · intro w hwS hne
-        rw [if_neg]
+        rw [ite_eq_right]
         rintro ⟨hR, -⟩
         exact hne (PendantRetraction.surviving_vertex_unique (Finset.mem_filter.mp hwS).2.1 hw₀
           (hR.symm.trans hR₀))
       · intro h
         exact absurd (Finset.mem_filter.mpr ⟨Finset.mem_univ _, hw₀, hY₀⟩) h
-    · rw [if_neg hO]
+    · rw [ite_eq_right hO]
       symm
       refine Finset.sum_eq_zero fun w hwS ↦ ?_
-      rw [if_neg]
+      rw [ite_eq_right]
       rintro ⟨hR, hvc⟩
       exact hO ⟨hvc, w, (Finset.mem_filter.mp hwS).2.1, (Finset.mem_filter.mp hwS).2.2, hR⟩
   rw [Finset.sum_congr rfl fun v _ ↦ hPoint v, Finset.sum_comm]
@@ -2060,7 +2064,7 @@ theorem sum_yCore_centre (hconn : core.Connected) (hClaw : TripodFrame.IsClaw κ
         if DanglingSideStructure.ReachP κ.target (fun x ↦ x ≠ w.1.1)
           (DanglingSideStructure.chosenDangling e.2.2).inner.1.1 (TripodFrame.centreTarget κ)
         then (1 : ℤ) else 0) = 0 :=
-      Finset.sum_eq_zero fun e _ ↦ if_neg (branch_avoids_centre κ hconn hClaw hw0 hY e)
+      Finset.sum_eq_zero fun e _ ↦ ite_eq_right (branch_avoids_centre κ hconn hClaw hw0 hY e)
     rw [hZero, add_zero] at hB
     rw [← hB]
     unfold PendantRetraction.retractedFibre

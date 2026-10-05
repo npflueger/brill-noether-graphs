@@ -1,6 +1,10 @@
-import Utilities.Subdivision.CoreVertexReachability
-import Utilities.Subdivision.SubdivisionConnectivity
-import Mathlib.Tactic
+module
+
+public import Utilities.Subdivision.CoreVertexReachability
+public import Utilities.Subdivision.SubdivisionConnectivity
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # Core-supported rank-one divisors on subdivisions

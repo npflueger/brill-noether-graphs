@@ -1,5 +1,9 @@
-import Bananas.Basics.Definitions
-import Utilities.Iso.GraphIso
+module
+
+public import Bananas.Basics.Definitions
+public import Utilities.Iso.GraphIso
+
+@[expose] public section
 
 /-!
 # Torsion order under graph isomorphism

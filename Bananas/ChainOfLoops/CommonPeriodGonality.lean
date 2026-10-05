@@ -1,6 +1,10 @@
-import Bananas.ChainOfLoops.BridgeChainTransport
-import Bananas.Transmission.EqualTorsionKGeneral
-import Bananas.Transmission.KGeneralGonality
+module
+
+public import Bananas.ChainOfLoops.BridgeChainTransport
+public import Bananas.Transmission.EqualTorsionKGeneral
+public import Bananas.Transmission.KGeneralGonality
+
+@[expose] public section
 
 /-!
 # Exact gonality of common-period chains

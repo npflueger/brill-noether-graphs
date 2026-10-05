@@ -1,5 +1,9 @@
-import Utilities.Gluing.ChainGluing
-import Utilities.Transmission.DemazureFactorization
+module
+
+public import Utilities.Gluing.ChainGluing
+public import Utilities.Transmission.DemazureFactorization
+
+@[expose] public section
 
 /-!
 # Unconditional transmission gluing for Section 6

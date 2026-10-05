@@ -1,5 +1,9 @@
-import DraismaVargasCount.ValencyThreeSplit
-import DraismaVargasCount.NonTrivalentBalance
+module
+
+public import DraismaVargasCount.ValencyThreeSplit
+public import DraismaVargasCount.NonTrivalentBalance
+
+@[expose] public section
 
 /-!
 # Stage 3 of valency-three uniqueness: `TypeMatch` at valency-three anchors

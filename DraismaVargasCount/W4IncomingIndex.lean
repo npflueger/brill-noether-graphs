@@ -1,5 +1,9 @@
-import DraismaVargasCount.RowGeodesic
-import DraismaVargasCount.W4UnitBalance
+module
+
+public import DraismaVargasCount.RowGeodesic
+public import DraismaVargasCount.W4UnitBalance
+
+@[expose] public section
 
 /-!
 # The `{w4}` wall index hypothesis, and Equation (1)

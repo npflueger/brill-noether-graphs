@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.M11JoinedBackground
-import DraismaVargas.LocalCases.ResolutionAwayFromWall
+module
+
+public import DraismaVargas.LocalCases.M11JoinedBackground
+public import DraismaVargas.LocalCases.ResolutionAwayFromWall
+
+@[expose] public section
 
 /-!
 # Induced stable-row map for the actual joined M11 resolution

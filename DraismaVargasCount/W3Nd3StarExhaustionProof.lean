@@ -1,5 +1,9 @@
-import DraismaVargasCount.W3Nd2StarExhaustionProof
-import DraismaVargasCount.W3Nd3StarCensusProof
+module
+
+public import DraismaVargasCount.W3Nd2StarExhaustionProof
+public import DraismaVargasCount.W3Nd3StarCensusProof
+
+@[expose] public section
 
 /-!
 # W3 nd3 star exhaustion: the `w3Nd3CoarseFine` clause with no hypothesis

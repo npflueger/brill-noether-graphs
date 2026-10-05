@@ -1,4 +1,8 @@
-import LowGenus.ConfigurationMarkedThree
+module
+
+public import LowGenus.ConfigurationMarkedThree
+
+@[expose] public section
 
 /-!
 # The tripod centre over a marked script

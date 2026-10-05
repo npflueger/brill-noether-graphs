@@ -1,5 +1,9 @@
-import DraismaVargasCount.DiagonalClassification
-import DraismaVargasCount.BranchSharedDirection
+module
+
+public import DraismaVargasCount.DiagonalClassification
+public import DraismaVargasCount.BranchSharedDirection
+
+@[expose] public section
 
 /-!
 # The `diagonal` field of `DiagonalClassification` from `LeafAvoidingSeparated`

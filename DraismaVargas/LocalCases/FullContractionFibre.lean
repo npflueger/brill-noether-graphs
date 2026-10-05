@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.PrunedFibreValency
+module
+
+public import DraismaVargas.LocalCases.PrunedFibreValency
+
+@[expose] public section
 
 /-!
 # The literal full fibre count of a forest contraction

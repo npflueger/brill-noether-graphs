@@ -1,6 +1,10 @@
-import LowGenus.GenusFiveCoreAtlas
-import Utilities.Subdivision.CubicCore
-import Utilities.Subdivision.TwoPoleSubdivision
+module
+
+public import LowGenus.GenusFiveCoreAtlas
+public import Utilities.Subdivision.CubicCore
+public import Utilities.Subdivision.TwoPoleSubdivision
+
+@[expose] public section
 
 /-!
 # Finite two-pole data for six genus-five rows
@@ -21,7 +25,7 @@ open Utilities.Certificate
 open Utilities.Certificate.TwoPoleSubdivision
 open GenusFiveCoreAtlas
 
-private def permutation {n : ℕ} (forward inverse : Fin n → Fin n)
+def permutation {n : ℕ} (forward inverse : Fin n → Fin n)
     (hLeft : ∀ i, inverse (forward i) = i)
     (hRight : ∀ i, forward (inverse i) = i) : Equiv.Perm (Fin n) where
   toFun := forward
@@ -29,11 +33,11 @@ private def permutation {n : ℕ} (forward inverse : Fin n → Fin n)
   left_inv := hLeft
   right_inv := hRight
 
-private def vertexIndex (perm : Equiv.Perm (Fin 8)) :
+def vertexIndex (perm : Equiv.Perm (Fin 8)) :
     (Fin 4 ⊕ Fin 4) ≃ Fin 8 :=
   (@finSumFinEquiv 4 4).trans perm
 
-private def slotIndex (perm : Equiv.Perm (Fin 12)) :
+def slotIndex (perm : Equiv.Perm (Fin 12)) :
     ((Fin 5 ⊕ Fin 5) ⊕ Fin 2) ≃ Fin 12 :=
   ((Equiv.sumCongr (@finSumFinEquiv 5 5) (Equiv.refl (Fin 2))).trans
     (@finSumFinEquiv 10 2)).trans perm
@@ -86,7 +90,7 @@ def row13RightCore : ExplicitPotential.Core 4 5 := row07LeftCore
 
 /-! ## The two choices of first connector -/
 
-private def row01Focus0 : Data row01Core 4 5 4 5 where
+def row01Focus0 : Data row01Core 4 5 4 5 where
   leftCore := row01LeftCore
   rightCore := row01RightCore
   vertices := vertexIndex (Equiv.refl _)
@@ -103,7 +107,7 @@ private def row01Focus0 : Data row01Core 4 5 4 5 where
   head_first := by decide
   second_ends := by decide
 
-private def row01Focus1 : Data row01Core 4 5 4 5 where
+def row01Focus1 : Data row01Core 4 5 4 5 where
   leftCore := row01LeftCore
   rightCore := row01RightCore
   vertices := vertexIndex (Equiv.refl _)
@@ -124,7 +128,7 @@ private def row01Focus1 : Data row01Core 4 5 4 5 where
 def row01 (focus : Fin 2) : Data row01Core 4 5 4 5 :=
   if focus = 0 then row01Focus0 else row01Focus1
 
-private def row02Focus0 : Data row02Core 4 5 4 5 where
+def row02Focus0 : Data row02Core 4 5 4 5 where
   leftCore := row02RightCore
   rightCore := row02LeftCore
   vertices := vertexIndex (permutation ![0, 5, 6, 7, 1, 2, 3, 4] ![0, 4, 5, 6, 7, 1, 2, 3] (by decide) (by decide))
@@ -141,7 +145,7 @@ private def row02Focus0 : Data row02Core 4 5 4 5 where
   head_first := by decide
   second_ends := by decide
 
-private def row02Focus1 : Data row02Core 4 5 4 5 where
+def row02Focus1 : Data row02Core 4 5 4 5 where
   leftCore := row02LeftCore
   rightCore := row02RightCore
   vertices := vertexIndex (permutation ![1, 2, 3, 4, 0, 5, 6, 7] ![4, 0, 1, 2, 3, 5, 6, 7] (by decide) (by decide))
@@ -162,7 +166,7 @@ private def row02Focus1 : Data row02Core 4 5 4 5 where
 def row02 (focus : Fin 2) : Data row02Core 4 5 4 5 :=
   if focus = 0 then row02Focus0 else row02Focus1
 
-private def row03Focus0 : Data row03Core 4 5 4 5 where
+def row03Focus0 : Data row03Core 4 5 4 5 where
   leftCore := row03LeftCore
   rightCore := row03RightCore
   vertices := vertexIndex (Equiv.refl _)
@@ -179,7 +183,7 @@ private def row03Focus0 : Data row03Core 4 5 4 5 where
   head_first := by decide
   second_ends := by decide
 
-private def row03Focus1 : Data row03Core 4 5 4 5 where
+def row03Focus1 : Data row03Core 4 5 4 5 where
   leftCore := row03LeftCore
   rightCore := row03RightCore
   vertices := vertexIndex (Equiv.refl _)
@@ -200,7 +204,7 @@ private def row03Focus1 : Data row03Core 4 5 4 5 where
 def row03 (focus : Fin 2) : Data row03Core 4 5 4 5 :=
   if focus = 0 then row03Focus0 else row03Focus1
 
-private def row04Focus0 : Data row04Core 4 5 4 5 where
+def row04Focus0 : Data row04Core 4 5 4 5 where
   leftCore := row04LeftCore
   rightCore := row04RightCore
   vertices := vertexIndex (Equiv.refl _)
@@ -217,7 +221,7 @@ private def row04Focus0 : Data row04Core 4 5 4 5 where
   head_first := by decide
   second_ends := by decide
 
-private def row04Focus1 : Data row04Core 4 5 4 5 where
+def row04Focus1 : Data row04Core 4 5 4 5 where
   leftCore := row04RightCore
   rightCore := row04LeftCore
   vertices := vertexIndex (permutation ![4, 5, 6, 7, 0, 1, 2, 3] ![4, 5, 6, 7, 0, 1, 2, 3] (by decide) (by decide))
@@ -238,7 +242,7 @@ private def row04Focus1 : Data row04Core 4 5 4 5 where
 def row04 (focus : Fin 2) : Data row04Core 4 5 4 5 :=
   if focus = 0 then row04Focus0 else row04Focus1
 
-private def row07Focus0 : Data row07Core 4 5 4 5 where
+def row07Focus0 : Data row07Core 4 5 4 5 where
   leftCore := row07LeftCore
   rightCore := row07RightCore
   vertices := vertexIndex (Equiv.refl _)
@@ -255,7 +259,7 @@ private def row07Focus0 : Data row07Core 4 5 4 5 where
   head_first := by decide
   second_ends := by decide
 
-private def row07Focus1 : Data row07Core 4 5 4 5 where
+def row07Focus1 : Data row07Core 4 5 4 5 where
   leftCore := row07LeftCore
   rightCore := row07RightCore
   vertices := vertexIndex (Equiv.refl _)
@@ -276,7 +280,7 @@ private def row07Focus1 : Data row07Core 4 5 4 5 where
 def row07 (focus : Fin 2) : Data row07Core 4 5 4 5 :=
   if focus = 0 then row07Focus0 else row07Focus1
 
-private def row13Focus0 : Data row13Core 4 5 4 5 where
+def row13Focus0 : Data row13Core 4 5 4 5 where
   leftCore := row13LeftCore
   rightCore := row13RightCore
   vertices := vertexIndex (Equiv.refl _)
@@ -293,7 +297,7 @@ private def row13Focus0 : Data row13Core 4 5 4 5 where
   head_first := by decide
   second_ends := by decide
 
-private def row13Focus1 : Data row13Core 4 5 4 5 where
+def row13Focus1 : Data row13Core 4 5 4 5 where
   leftCore := row13LeftCore
   rightCore := row13RightCore
   vertices := vertexIndex (Equiv.refl _)

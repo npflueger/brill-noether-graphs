@@ -1,6 +1,10 @@
-import Utilities.Iso.GraphIso
-import Utilities.Subdivision.LaplacianEquiv
-import Utilities.Transmission.TransmissionExistence
+module
+
+public import Utilities.Iso.GraphIso
+public import Utilities.Subdivision.LaplacianEquiv
+public import Utilities.Transmission.TransmissionExistence
+
+@[expose] public section
 
 /-!
 # Compatibility between graph and Laplacian equivalences

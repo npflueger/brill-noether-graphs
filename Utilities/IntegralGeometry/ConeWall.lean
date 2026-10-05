@@ -1,5 +1,9 @@
-import Mathlib.LinearAlgebra.Matrix.Adjugate
-import Mathlib.Tactic
+module
+
+public import Mathlib.LinearAlgebra.Matrix.Adjugate
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # Rational algebra at a one-column cone wall

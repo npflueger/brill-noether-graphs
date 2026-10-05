@@ -1,4 +1,8 @@
-import DraismaVargasCount.DegenerateBigDivisor
+module
+
+public import DraismaVargasCount.DegenerateBigDivisor
+
+@[expose] public section
 
 /-!
 # The pencil of fibres at the degenerate request, and a split of the rank hypothesis
@@ -122,7 +126,7 @@ theorem pushableReaches_of_chip {X : CFDiv G} (tau : firing_script H)
   · subst hv
     simp only [one_chip_apply_v]
     omega
-  · simp only [one_chip, if_neg hv, sub_zero]
+  · simp only [one_chip, ite_eq_right hv, sub_zero]
     exact hEff v
 
 /-- **A positive pushforward coefficient is a chip in the fibre.**  For an
@@ -138,9 +142,9 @@ theorem exists_chip_of_pushDiv_pos {Y : CFDiv G} (hEff : effective Y) {b : H.V}
     by_cases hx : c.vertexMap x = b
     · have hlt := hNone x hx
       have hge := hEff x
-      rw [if_pos hx]
+      rw [ite_eq_left hx]
       omega
-    · exact if_neg hx
+    · exact ite_eq_right hx
   omega
 
 /-- **The split, at the level of the certificate interface.**  Reachability at
@@ -179,7 +183,7 @@ theorem one_le_fibre_self (raw : member.data.SourceVertex) :
     1 ≤ DegeneratePlacement.fibre B y member raw.1.1 raw := by
   show (1 : ℤ) ≤ if raw.1.1 = raw.1.1 then
       ((member.data.vertexPartition raw.1.1).blockCard raw.1.2 : ℤ) else 0
-  rw [if_pos rfl]
+  rw [ite_eq_left rfl]
   exact_mod_cast (member.data.vertexPartition raw.1.1).blockCard_pos raw.1.2
 
 theorem fibre_nonneg (root : member.target.V) (raw : member.data.SourceVertex) :
@@ -205,13 +209,13 @@ theorem one_le_divisor_sourcePoint (raw : member.data.SourceVertex) :
             DegeneratePlacement.sourcePoint B y member hClosed hFit raw then
           DegeneratePlacement.fibre B y member raw.1.1 r else 0)
       (fun r _ ↦ ?_) (Finset.mem_univ raw))
-  · rw [if_pos rfl]
+  · rw [ite_eq_left rfl]
     exact one_le_fibre_self B y member raw
   · by_cases hr : DegeneratePlacement.sourcePoint B y member hClosed hFit r =
         DegeneratePlacement.sourcePoint B y member hClosed hFit raw
-    · rw [if_pos hr]
+    · rw [ite_eq_left hr]
       exact fibre_nonneg B y member raw.1.1 r
-    · rw [if_neg hr]
+    · rw [ite_eq_right hr]
 
 end Chip
 
@@ -295,10 +299,10 @@ theorem fibreCover_of_realizationSurjective
         (degenerateLength D small) member hClosed
         (fit D small hN hL k hk member hScale) raw, Finset.mem_univ _, ?_⟩⟩
   · by_cases hv : ExpansionData.vertexMap D (small.scale k hk) hN hL v = b
-    · rw [if_pos hv]
+    · rw [ite_eq_left hv]
       exact bigDivisor_effective D small hN hL k hk member hClosed hScale raw.1.1 v
-    · rw [if_neg hv]
-  · rw [if_pos hmap]
+    · rw [ite_eq_right hv]
+  · rw [ite_eq_left hmap]
     exact lt_of_lt_of_le Int.zero_lt_one
       (one_le_divisor_sourcePoint (D.bigSpec (small.scale k hk) hN hL)
         (degenerateLength D small) member hClosed

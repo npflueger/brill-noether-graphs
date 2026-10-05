@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.RetainedExhausts
+module
+
+public import DraismaVargas.LocalCases.RetainedExhausts
+
+@[expose] public section
 
 /-!
 # The Statement's conclusion from the link and the vertex datum

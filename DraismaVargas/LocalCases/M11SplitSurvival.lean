@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.M11SplitRows
-import DraismaVargas.LocalCases.M11SourceGenus
-import DraismaVargas.LocalCases.ResolutionPruning
+module
+
+public import DraismaVargas.LocalCases.M11SplitRows
+public import DraismaVargas.LocalCases.M11SourceGenus
+public import DraismaVargas.LocalCases.ResolutionPruning
+
+@[expose] public section
 
 /-!
 # Survival of the distinguished new M11 split arms
@@ -209,7 +213,7 @@ theorem firstSplit_new_survives (input : W2SourceInput data star)
     (hIncident chosen (sheet_rel_of_incident_block profile.deleted.edge)) _ hDangling
   rw [vertex_degree_sourceGraph_eq_card_incidentSourceEdge]
   have hTwo := firstSplit_left_card input profile hCard block.1
-  rw [if_pos (show (data.vertexPartition wall).Rel block.1 block.1 from rfl), hCard] at hTwo
+  rw [ite_eq_left (show (data.vertexPartition wall).Rel block.1 block.1 from rfl), hCard] at hTwo
   exact_mod_cast hTwo
 
 /-- The exact new-fibre survival criterion for the first split. -/

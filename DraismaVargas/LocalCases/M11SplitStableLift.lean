@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.M11JoinedStableLift
+module
+
+public import DraismaVargas.LocalCases.M11JoinedStableLift
+
+@[expose] public section
 
 /-!
 # The actual induced stable-row map for the first M11 split

@@ -1,10 +1,14 @@
-import DraismaVargasCount.MemberCoreDarts
-import DraismaVargasCount.FibreCaterpillar
-import DraismaVargas.LocalCases.CaterpillarSeed
-import DraismaVargas.LocalCases.SeedFromContraction
-import DraismaVargas.LocalCases.TerminalIdentification
-import DraismaVargas.LocalCases.TrackedState
-import Utilities.Subdivision.ConnectedCheckFast
+module
+
+public import DraismaVargasCount.MemberCoreDarts
+public import DraismaVargasCount.FibreCaterpillar
+public import DraismaVargas.LocalCases.CaterpillarSeed
+public import DraismaVargas.LocalCases.SeedFromContraction
+public import DraismaVargas.LocalCases.TerminalIdentification
+public import DraismaVargas.LocalCases.TrackedState
+public import Utilities.Subdivision.ConnectedCheckFast
+
+@[expose] public section
 
 /-!
 # The certified pencil from a fibre member

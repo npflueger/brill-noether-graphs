@@ -1,4 +1,8 @@
-import DraismaVargasCount.M11StarParityFree
+module
+
+public import DraismaVargasCount.M11StarParityFree
+
+@[expose] public section
 
 /-!
 # A family-generic engine for star censuses

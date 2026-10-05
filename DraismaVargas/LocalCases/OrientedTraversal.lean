@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.CycleRows
-import DraismaVargas.LocalCases.RefinementCore
-import DraismaVargas.LocalCases.StrongRefinement
+module
+
+public import DraismaVargas.LocalCases.CycleRows
+public import DraismaVargas.LocalCases.RefinementCore
+public import DraismaVargas.LocalCases.StrongRefinement
+
+@[expose] public section
 
 /-!
 # Oriented rows, and the stable model they build
@@ -479,7 +483,7 @@ noncomputable def reflectFinish (strong : StrongPresentation data coordinate)
   getLast_isPathEnd := by
     intro row edge hEdge
     by_cases hrow : row = r
-    · rw [if_pos hrow]
+    · rw [ite_eq_left hrow]
       refine strong.head_isPathEnd row edge ?_
       have hLen' : (strong.toPresentation.path row).length = 1 := by
         rw [hrow]; exact hLen
@@ -487,7 +491,7 @@ noncomputable def reflectFinish (strong : StrongPresentation data coordinate)
       rw [Option.mem_def, getLast?_eq_getElem _ (by omega)] at hEdge
       rw [Option.mem_def, head?_eq_getElem _ (by omega), ← hEdge]
       simp [hidx]
-    · simp only [if_neg hrow]
+    · simp only [ite_eq_right hrow]
       exact strong.getLast_isPathEnd row edge hEdge
   path_ne_nil := strong.path_ne_nil
 
@@ -505,7 +509,7 @@ noncomputable def reflectFinish (strong : StrongPresentation data coordinate)
     (hLen : (strong.toPresentation.path r).length = 1) :
     (reflectFinish strong r hLen).finish r = strong.start r := by
   show (if r = r then strong.start r else strong.finish r) = strong.start r
-  rw [if_pos rfl]
+  rw [ite_eq_left rfl]
 
 /-- **Orientation is a strengthening of `StrongPresentation`, not a theorem
 about it.**  A single-occurrence row admits a strong presentation with the same
@@ -1239,12 +1243,12 @@ theorem sourceEnds_occurrence_fst (x : RefinedSlotIndex iface face) :
   have hb := slotPosition_lt (strong := strong) (iface := iface) x
   by_cases hc : (candidate.datum.sourceEnds (occurrence x)).1 =
       rowWalk strong iface x.1 (slotPosition x)
-  · rw [show reversedAt x = false from if_pos hc, if_neg (by simp)]
+  · rw [show reversedAt x = false from ite_eq_left hc, ite_eq_right (by simp)]
     exact hc
-  · rw [show reversedAt x = true from if_neg hc, if_pos rfl,
+  · rw [show reversedAt x = true from ite_eq_right hc, ite_eq_left rfl,
       rowWalk_succ hb, ← occurrence_eq_getElem x]
     unfold otherEnd
-    rw [if_neg hc]
+    rw [ite_eq_right hc]
 
 /-- **and the second.** -/
 theorem sourceEnds_occurrence_snd (x : RefinedSlotIndex iface face) :
@@ -1254,11 +1258,11 @@ theorem sourceEnds_occurrence_snd (x : RefinedSlotIndex iface face) :
   have hb := slotPosition_lt (strong := strong) (iface := iface) x
   by_cases hc : (candidate.datum.sourceEnds (occurrence x)).1 =
       rowWalk strong iface x.1 (slotPosition x)
-  · rw [show reversedAt x = false from if_pos hc, if_neg (by simp),
+  · rw [show reversedAt x = false from ite_eq_left hc, ite_eq_right (by simp),
       rowWalk_succ hb, ← occurrence_eq_getElem x]
     unfold otherEnd
-    rw [if_pos hc]
-  · rw [show reversedAt x = true from if_neg hc, if_pos rfl]
+    rw [ite_eq_left hc]
+  · rw [show reversedAt x = true from ite_eq_right hc, ite_eq_left rfl]
     have hInc := rowWalk_incident (strong := strong) (iface := iface) hb
     rw [← occurrence_eq_getElem x] at hInc
     rcases hInc with hCase | hCase

@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W2PSurvival
+module
+
+public import DraismaVargas.LocalCases.W2PSurvival
+
+@[expose] public section
 
 /-!
 # Figure 35's induced stable-row map

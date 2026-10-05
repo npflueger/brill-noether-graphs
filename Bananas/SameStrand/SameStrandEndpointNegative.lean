@@ -1,5 +1,9 @@
-import Bananas.SameStrand.NSMSecondCrossWitness
-import Bananas.SameStrand.SameStrandInteriorNegative
+module
+
+public import Bananas.SameStrand.NSMSecondCrossWitness
+public import Bananas.SameStrand.SameStrandInteriorNegative
+
+@[expose] public section
 
 /-!
 # Same-strand endpoint witnesses for Theorem 3.9

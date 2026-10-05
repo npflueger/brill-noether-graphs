@@ -1,5 +1,9 @@
-import DraismaVargas.Infrastructure.GluingDatum
-import Utilities.Foundations.TreeFamily
+module
+
+public import DraismaVargas.Infrastructure.GluingDatum
+public import Utilities.Foundations.TreeFamily
+
+@[expose] public section
 
 /-!
 # The caterpillar-of-loops target tree `T^CL_g`

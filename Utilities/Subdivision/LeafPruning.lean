@@ -1,5 +1,9 @@
-import Utilities.Subdivision.LaplacianEquiv
-import Utilities.Subdivision.LeafExtension
+module
+
+public import Utilities.Subdivision.LaplacianEquiv
+public import Utilities.Subdivision.LeafExtension
+
+@[expose] public section
 
 /-!
 # Pruning a degree-one vertex
@@ -73,7 +77,7 @@ noncomputable def root (hDegree : vertex_degree G leaf = 1) :
     have hZero : num_edges G leaf leaf = 0 := num_edges_self_zero G leaf
     omega⟩
 
-private theorem num_edges_leaf_eq (hDegree : vertex_degree G leaf = 1)
+theorem num_edges_leaf_eq (hDegree : vertex_degree G leaf = 1)
     (x : G.V) :
     num_edges G leaf x =
       if x = (leafData G leaf hDegree).root then 1 else 0 := by
@@ -86,16 +90,16 @@ private theorem num_edges_leaf_eq (hDegree : vertex_degree G leaf = 1)
 def NonLeafEdge (edge : G.V × G.V) : Prop :=
   edge.1 ≠ leaf ∧ edge.2 ≠ leaf
 
-private noncomputable def keptEdges : Multiset (G.V × G.V) := by
+noncomputable def keptEdges : Multiset (G.V × G.V) := by
   classical
   exact G.edges.filter (NonLeafEdge G leaf)
 
-private def restrictEdge (edge : G.V × G.V)
+def restrictEdge (edge : G.V × G.V)
     (hEdge : NonLeafEdge G leaf edge) :
     Remaining G leaf × Remaining G leaf :=
   (⟨edge.1, hEdge.1⟩, ⟨edge.2, hEdge.2⟩)
 
-private theorem keptEdges_all :
+theorem keptEdges_all :
     ∀ edge ∈ keptEdges G leaf, NonLeafEdge G leaf edge := by
   classical
   intro edge hEdge

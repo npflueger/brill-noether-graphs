@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W2PRowDescent
+module
+
+public import DraismaVargas.LocalCases.W2PRowDescent
+
+@[expose] public section
 
 /-!
 # Figure 35's stable incidence graph
@@ -179,12 +183,12 @@ noncomputable def doubleFlag (member : MemberShape profile) (edge : data.SourceE
 
 theorem doubleFlag_double (member : MemberShape profile) {edge : data.SourceEdge}
     (hTarget : edge.1.1 = star.edge profile.doubleLabel) :
-    doubleFlag member edge = member.candidate.newSourceEdge edge.1.2 := if_pos hTarget
+    doubleFlag member edge = member.candidate.newSourceEdge edge.1.2 := ite_eq_left hTarget
 
 theorem doubleFlag_single (member : MemberShape profile) {edge : data.SourceEdge}
     (hTarget : edge.1.1 = star.edge profile.singleLabel) :
     doubleFlag member edge = member.candidate.oldSourceEdge edge :=
-  if_neg (fun h ↦ profile.labels_ne
+  ite_eq_right (fun h ↦ profile.labels_ne
     (star.edge_injective (hTarget.symm.trans h)).symm)
 
 /-- **The branch flag of the third member.**  At the `t₂` endpoint
@@ -198,12 +202,12 @@ noncomputable def singleFlag (member : MemberShape profile) (anchor : Fin degree
 
 theorem singleFlag_single (member : MemberShape profile) (anchor : Fin degree)
     {edge : data.SourceEdge} (hTarget : edge.1.1 = star.edge profile.singleLabel) :
-    singleFlag member anchor edge = member.candidate.newSourceEdge anchor := if_pos hTarget
+    singleFlag member anchor edge = member.candidate.newSourceEdge anchor := ite_eq_left hTarget
 
 theorem singleFlag_double (member : MemberShape profile) (anchor : Fin degree)
     {edge : data.SourceEdge} (hTarget : edge.1.1 = star.edge profile.doubleLabel) :
     singleFlag member anchor edge = member.candidate.oldSourceEdge edge :=
-  if_neg (fun h ↦ profile.labels_ne (star.edge_injective (hTarget.symm.trans h)))
+  ite_eq_right (fun h ↦ profile.labels_ne (star.edge_injective (hTarget.symm.trans h)))
 
 /-! ## §4  `M⁽¹⁾` and `M⁽²⁾`: the branch vertex is the `t₃` endpoint -/
 

@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyThreeSimpleRowDictionary
-import DraismaVargas.LocalCases.NonTrivalentValencyThreePathEnds
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyThreeSimpleRowDictionary
+public import DraismaVargas.LocalCases.NonTrivalentValencyThreePathEnds
+
+@[expose] public section
 
 /-!
 # The valency-three Type I / Type II exit: outgoing presentation and link

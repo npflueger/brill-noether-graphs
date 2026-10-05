@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W3FourStableIncidence
+module
+
+public import DraismaVargas.LocalCases.W3FourStableIncidence
+
+@[expose] public section
 
 /-!
 # Figure 28's honest receipts, carrying their own dictionaries

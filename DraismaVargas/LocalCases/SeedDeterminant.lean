@@ -1,6 +1,10 @@
-import DraismaVargas.Infrastructure.LengthMatrix
-import Utilities.Foundations.TreeFamily
-import Mathlib.LinearAlgebra.Matrix.Block
+module
+
+public import DraismaVargas.Infrastructure.LengthMatrix
+public import Utilities.Foundations.TreeFamily
+public import Mathlib.LinearAlgebra.Matrix.Block
+
+@[expose] public section
 
 /-!
 # Nonsingularity of a seed length matrix
@@ -168,7 +172,7 @@ theorem coefficient_pos (edge : data.SourceEdge) (column : coordinate)
     simpa using hTarget
   have hIndex : (0 : ℚ) < (data.sourceEdgeIndex edge : ℚ) := by
     exact_mod_cast data.sourceEdgeIndex_pos edge
-  simp only [LengthMatrixPresentation.coefficient, if_pos hColumn]
+  simp only [LengthMatrixPresentation.coefficient, ite_eq_left hColumn]
   exact div_pos one_pos hIndex
 
 theorem row_nil (presentation : data.LengthMatrixPresentation coordinate)
@@ -458,7 +462,7 @@ theorem coefficient_fibre (target : CFGraph)
       (fibrePresentation target vertexPartition index).targetEdge.symm edge.1.1 := by
     show sourceRow = index.symm edge.1.1
     rw [hEdge, Equiv.symm_apply_apply]
-  simp only [LengthMatrixPresentation.coefficient, if_pos hColumn, hIndex]
+  simp only [LengthMatrixPresentation.coefficient, ite_eq_left hColumn, hIndex]
   norm_num
 
 /-- Each diagonal entry is `2`: two index-one blocks over the row's own target
@@ -580,12 +584,12 @@ theorem card_sourceVertex_starDatum (n : ℕ) :
         rw [starDatum_vertexPartition_ne_zero n hzero]
         exact Iff.rfl
       rw [Fintype.card_congr (Equiv.subtypeEquivRight hiff),
-        Fintype.card_subtype_eq', if_neg hzero]
+        Fintype.card_subtype_eq', ite_eq_right hzero]
   have hzero : (∑ vertex : (starGraph n).V,
       if vertex = (0 : Fin (n + 1)) then 1 else 0) = 1 := by
     refine Eq.trans (Finset.sum_eq_single (0 : Fin (n + 1)) ?_ ?_) ?_
     · intro other _ hother
-      exact if_neg hother
+      exact ite_eq_right hother
     · intro hmem
       exact absurd (Finset.mem_univ _) hmem
     · split_ifs with hcond
@@ -720,12 +724,12 @@ theorem det_subdivision (old : Matrix index index ℚ)
   have hColumnOld : ∀ row column,
       columnCleared row (Sum.inl column) = subdivided row (Sum.inl column) := by
     intro row column
-    rw [hcolumnCleared, Matrix.updateCol_apply, if_neg (by simp)]
+    rw [hcolumnCleared, Matrix.updateCol_apply, ite_eq_right (by simp)]
   have hColumnNew : ∀ row,
       columnCleared row (Sum.inr ()) = subdivided row (Sum.inr ()) -
         subdivided row (Sum.inl splitColumn) := by
     intro row
-    rw [hcolumnCleared, Matrix.updateCol_apply, if_pos rfl]
+    rw [hcolumnCleared, Matrix.updateCol_apply, ite_eq_left rfl]
     ring
   have hRowOther : ∀ row, row ≠ Sum.inl splitRow → ∀ column,
       rowCleared row column = columnCleared row column := by

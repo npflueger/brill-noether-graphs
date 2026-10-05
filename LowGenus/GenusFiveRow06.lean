@@ -1,6 +1,10 @@
-import LowGenus.ConfigurationBananaTail
-import LowGenus.ConfigurationTwo
-import LowGenus.GuardingSet
+module
+
+public import LowGenus.ConfigurationBananaTail
+public import LowGenus.ConfigurationTwo
+public import LowGenus.GuardingSet
+
+@[expose] public section
 
 /-!
 # The Atanasov--Ranganathan construction on row 06, as a guarding set
@@ -417,7 +421,7 @@ theorem allocated_class_sum_eq (c : Fin 8) (hc : isBananaCenter c = true)
       ∑ v ∈ Finset.univ.filter (fun v : Fin 8 => d.rep v = d.rep r),
           (if P then transferWeight source target v else 0) = 0 := by
     by_cases hP : P
-    · simp only [if_pos hP]
+    · simp only [ite_eq_left hP]
       exact sum_transferWeight_eq_zero d (hRep hP) r
     · simp [hP]
   simp only [allocatedWeight, Finset.sum_add_distrib]
@@ -649,7 +653,7 @@ theorem bananaResidual_nonneg (c : Fin 8) (hc : isBananaCenter c = true)
         positiveChip (d.length (armSlotA c)) +
           fwd.head (d.length (armSlotA c)) (armHeight c d) 0 := by
       unfold bananaCoefficient
-      rw [if_pos hvA]
+      rw [ite_eq_left hvA]
     rw [hcoef, hvA, hkOff _ hAd hAc]
     have h := leaf_nonneg fwd (L := d.length (armSlotA c))
       (hu := armHeight c d) (hv := 0) (Nat.zero_le _) hCla
@@ -659,7 +663,7 @@ theorem bananaResidual_nonneg (c : Fin 8) (hc : isBananaCenter c = true)
         positiveChip (d.length (armSlotB c)) +
           fwd.head (d.length (armSlotB c)) (armHeight c d) 0 := by
       unfold bananaCoefficient
-      rw [if_neg hvA, if_pos hvB]
+      rw [ite_eq_right hvA, ite_eq_left hvB]
     rw [hcoef, hvB, hkOff _ hBd hBc]
     have h := leaf_nonneg fwd (L := d.length (armSlotB c))
       (hu := armHeight c d) (hv := 0) (Nat.zero_le _) hClb
@@ -673,7 +677,7 @@ theorem bananaResidual_nonneg (c : Fin 8) (hc : isBananaCenter c = true)
             fwd.tail (d.length (midSlot c)) (armHeight c d)
               (midHeight c d)) := by
       unfold bananaCoefficient
-      rw [if_neg hvA, if_neg hvB, if_pos hv2]
+      rw [ite_eq_right hvA, ite_eq_right hvB, ite_eq_left hv2]
     rw [hcoef, hv2, hkOff _ h2d h2c]
     have h := armCenter_nonneg fwd fwd fwd
       (la := d.length (armSlotA c)) (lb := d.length (armSlotB c))
@@ -691,7 +695,7 @@ theorem bananaResidual_nonneg (c : Fin 8) (hc : isBananaCenter c = true)
             fwd.tail (d.length (banSlotQ c)) (midHeight c d)
               (endHeight c d)) := by
       unfold bananaCoefficient
-      rw [if_neg hvA, if_neg hvB, if_neg hv2, if_pos hvd]
+      rw [ite_eq_right hvA, ite_eq_right hvB, ite_eq_right hv2, ite_eq_left hvd]
     rw [hcoef, hvd, hkBan]
     have h := bananaChip_nonneg fwd fwd fwd
       (la := d.length (armSlotA c)) (lb := d.length (armSlotB c))
@@ -710,7 +714,7 @@ theorem bananaResidual_nonneg (c : Fin 8) (hc : isBananaCenter c = true)
         by_cases hP : parMin c d = 0 ∧
           armMin c d + d.length (midSlot c) < d.length (tailSlot c)
         · exact hP.1
-        · rw [if_neg hP] at hk; norm_num at hk)
+        · rw [ite_eq_right hP] at hk; norm_num at hk)
     omega
   by_cases hvc : v = c
   · have hcoef : bananaCoefficient c d v =
@@ -719,7 +723,7 @@ theorem bananaResidual_nonneg (c : Fin 8) (hc : isBananaCenter c = true)
             fwd.head (d.length (banSlotQ c)) (midHeight c d) (endHeight c d) +
             (tailLedger c).tail (d.length (tailSlot c)) (endHeight c d) 0) := by
       unfold bananaCoefficient
-      rw [if_neg hvA, if_neg hvB, if_neg hv2, if_neg hvd, if_pos hvc]
+      rw [ite_eq_right hvA, ite_eq_right hvB, ite_eq_right hv2, ite_eq_right hvd, ite_eq_left hvc]
     rw [hcoef, hvc, hkCen]
     have h := center_nonneg fwd fwd (tailLedger c)
       (la := d.length (armSlotA c)) (lb := d.length (armSlotB c))
@@ -736,7 +740,7 @@ theorem bananaResidual_nonneg (c : Fin 8) (hc : isBananaCenter c = true)
         intro hk
         by_cases hP : parMin c d = 0 ∧
           armMin c d + d.length (midSlot c) < d.length (tailSlot c)
-        · rw [if_pos hP] at hk; norm_num at hk
+        · rw [ite_eq_left hP] at hk; norm_num at hk
         · exact hP)
     omega
   by_cases hv3 : v = 3
@@ -744,16 +748,16 @@ theorem bananaResidual_nonneg (c : Fin 8) (hc : isBananaCenter c = true)
         positiveChip (d.length (tailSlot c)) +
           (tailLedger c).head (d.length (tailSlot c)) (endHeight c d) 0 := by
       unfold bananaCoefficient
-      rw [if_neg hvA, if_neg hvB, if_neg hv2, if_neg hvd, if_neg hvc,
-        if_pos hv3]
+      rw [ite_eq_right hvA, ite_eq_right hvB, ite_eq_right hv2, ite_eq_right hvd, ite_eq_right hvc,
+        ite_eq_left hv3]
     rw [hcoef, hv3, hkOff _ (Ne.symm hd3) (Ne.symm hc3)]
     have h := leaf_nonneg (tailLedger c) (L := d.length (tailSlot c))
       (hu := endHeight c d) (hv := 0) (Nat.zero_le _) hEu
     omega
   · have hcoef : bananaCoefficient c d v = 0 := by
       unfold bananaCoefficient
-      rw [if_neg hvA, if_neg hvB, if_neg hv2, if_neg hvd, if_neg hvc,
-        if_neg hv3]
+      rw [ite_eq_right hvA, ite_eq_right hvB, ite_eq_right hv2, ite_eq_right hvd, ite_eq_right hvc,
+        ite_eq_right hv3]
     rw [hcoef, hkOff v hvd hvc]
     norm_num
 
@@ -820,7 +824,7 @@ theorem residual_effective (c : Fin 8) (hc : isBananaCenter c = true)
     rw [rowDivisor, d.coreClassDivisor_interiorVertex]
     have hNe : d.coreVertex c ≠ d.interiorVertex edge offset := by
       simp [DegSpec.coreVertex, DegSpec.interiorVertex]
-    simp only [one_chip, if_neg hNe.symm, zero_sub, neg_zero, zero_add]
+    simp only [one_chip, ite_eq_right hNe.symm, zero_sub, neg_zero, zero_add]
     exact d.prin_interpolatedScript_interiorVertex_nonneg hInv edge offset
 
 /-! ## The guarding set -/

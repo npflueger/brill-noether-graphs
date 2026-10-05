@@ -1,5 +1,9 @@
-import Bananas.Theta.ThetaPrefix
-import Bananas.Theta.ThetaArithmetic
+module
+
+public import Bananas.Theta.ThetaPrefix
+public import Bananas.Theta.ThetaArithmetic
+
+@[expose] public section
 
 namespace Bananas
 

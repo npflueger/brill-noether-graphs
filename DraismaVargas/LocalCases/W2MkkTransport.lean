@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.LimitChainCore
-import DraismaVargas.LocalCases.W2MkkSourceCandidates
-import DraismaVargas.LocalCases.W2SourceTransport
+module
+
+public import DraismaVargas.LocalCases.LimitChainCore
+public import DraismaVargas.LocalCases.W2MkkSourceCandidates
+public import DraismaVargas.LocalCases.W2SourceTransport
+
+@[expose] public section
 
 /-!
 # Transporting Figure 34's M-kk data across the branch swap

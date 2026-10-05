@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.GlobalM11Arbitrary
-import DraismaVargas.LocalCases.ResolutionCoarseFine
+module
+
+public import DraismaVargas.LocalCases.GlobalM11Arbitrary
+public import DraismaVargas.LocalCases.ResolutionCoarseFine
+
+@[expose] public section
 
 /-!
 # Global coarse/fine continuations for Equations (4) and (5)

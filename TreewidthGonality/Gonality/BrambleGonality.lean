@@ -1,7 +1,11 @@
-import Utilities.Gonality.DivisorialGonality
-import Utilities.Gonality.LegalFiring
-import TreewidthGonality.Treewidth.Bramble
-import Utilities.Foundations.UnderlyingSimpleGraph
+module
+
+public import Utilities.Gonality.DivisorialGonality
+public import Utilities.Gonality.LegalFiring
+public import TreewidthGonality.Treewidth.Bramble
+public import Utilities.Foundations.UnderlyingSimpleGraph
+
+@[expose] public section
 
 /-!
 # Theorem A: the bramble number bounds the gonality

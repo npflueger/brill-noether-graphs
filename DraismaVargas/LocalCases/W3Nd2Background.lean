@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W3Nd2Survival
+module
+
+public import DraismaVargas.LocalCases.W3Nd2Survival
+
+@[expose] public section
 
 /-!
 # Background rows for the true Figure 31 candidates

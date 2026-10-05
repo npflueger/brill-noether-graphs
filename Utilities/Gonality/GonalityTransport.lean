@@ -1,7 +1,11 @@
-import Utilities.Gonality.DivisorialGonality
-import Utilities.Subdivision.SubdivisionIso
-import Utilities.Subdivision.UnitSubdivisionPresentation
-import Mathlib.Tactic
+module
+
+public import Utilities.Gonality.DivisorialGonality
+public import Utilities.Subdivision.SubdivisionIso
+public import Utilities.Subdivision.UnitSubdivisionPresentation
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # Transport of divisorial gonality, and gonality over regular subdivisions

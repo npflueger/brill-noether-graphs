@@ -1,7 +1,11 @@
-import Utilities.Gluing.VertexWedgeGenusOneCollapse
-import GenusSixExistence.Existence
-import GenusSixExistence.OnceMarked.OnceMarkedGenusFive
-import Utilities.Gluing.CycleRigidity
+module
+
+public import Utilities.Gluing.VertexWedgeGenusOneCollapse
+public import GenusSixExistence.Existence
+public import GenusSixExistence.OnceMarked.OnceMarkedGenusFive
+public import Utilities.Gluing.CycleRigidity
+
+@[expose] public section
 
 /-!
 # Once-marked Brill--Noether existence through genus five, from genus six

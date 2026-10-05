@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W2M1kLeafBackground
-import DraismaVargas.LocalCases.W2M1kSelectedCensus
+module
+
+public import DraismaVargas.LocalCases.W2M1kLeafBackground
+public import DraismaVargas.LocalCases.W2M1kSelectedCensus
+
+@[expose] public section
 
 /-!
 # The case split and the `background` field at an M-1k wall

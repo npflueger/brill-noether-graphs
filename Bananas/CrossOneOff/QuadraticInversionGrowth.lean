@@ -1,8 +1,12 @@
-import Bananas.SameStrand.EndpointBlock
-import Bananas.SameStrand.EndpointCardinality
-import Bananas.CrossOneOff.OneOffRefinedInversion
-import Bananas.CrossOneOff.CrossOneOffCorrectedInversion
-import Bananas.CrossOneOff.CrossOneOffPeriodSeparation
+module
+
+public import Bananas.SameStrand.EndpointBlock
+public import Bananas.SameStrand.EndpointCardinality
+public import Bananas.CrossOneOff.OneOffRefinedInversion
+public import Bananas.CrossOneOff.CrossOneOffCorrectedInversion
+public import Bananas.CrossOneOff.CrossOneOffPeriodSeparation
+
+@[expose] public section
 
 /-!
 # Explicit quadratic inversion growth on bananas

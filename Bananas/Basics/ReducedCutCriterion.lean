@@ -1,4 +1,8 @@
-import Bananas.Basics.BananaGeometry
+module
+
+public import Bananas.Basics.BananaGeometry
+
+@[expose] public section
 
 /-!
 # A cut criterion for reduced divisors

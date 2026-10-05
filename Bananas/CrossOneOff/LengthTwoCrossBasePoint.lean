@@ -1,4 +1,8 @@
-import Bananas.CrossOneOff.LengthTwoCross
+module
+
+public import Bananas.CrossOneOff.LengthTwoCross
+
+@[expose] public section
 
 /-!
 # Base-point calculations for the length-two cross exception

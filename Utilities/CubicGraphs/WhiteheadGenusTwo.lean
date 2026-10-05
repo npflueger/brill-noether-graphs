@@ -1,4 +1,8 @@
-import Utilities.CubicGraphs.CubicDarts
+module
+
+public import Utilities.CubicGraphs.CubicDarts
+
+@[expose] public section
 
 /-!
 # The actual genus-two cubic dart classification

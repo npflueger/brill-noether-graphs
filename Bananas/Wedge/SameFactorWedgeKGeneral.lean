@@ -1,6 +1,10 @@
-import Bananas.Transmission.TwoVertexGenusOneTorsion
-import Bananas.Transmission.TorsionOrderTwoGeneral
-import Bananas.Wedge.TwoVertexWedgeSubmodularity
+module
+
+public import Bananas.Transmission.TwoVertexGenusOneTorsion
+public import Bananas.Transmission.TorsionOrderTwoGeneral
+public import Bananas.Wedge.TwoVertexWedgeSubmodularity
+
+@[expose] public section
 
 /-!
 # The same-factor exceptional wedge marking

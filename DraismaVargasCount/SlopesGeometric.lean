@@ -1,5 +1,9 @@
-import DraismaVargasCount.BallotSlopeSeparation
-import DraismaVargas.LocalCases.NonDanglingValency
+module
+
+public import DraismaVargasCount.BallotSlopeSeparation
+public import DraismaVargas.LocalCases.NonDanglingValency
+
+@[expose] public section
 
 /-!
 # The geometric half of the slope conditions: what they actually cost

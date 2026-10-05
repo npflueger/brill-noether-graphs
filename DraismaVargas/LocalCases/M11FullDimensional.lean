@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.M11StableGraphs
-import DraismaVargas.LocalCases.M11SourceGenus
-import DraismaVargas.LocalCases.StableGraphFullDimensional
+module
+
+public import DraismaVargas.LocalCases.M11StableGraphs
+public import DraismaVargas.LocalCases.M11SourceGenus
+public import DraismaVargas.LocalCases.StableGraphFullDimensional
+
+@[expose] public section
 
 /-!
 # Full-dimensionality of an actual M11 family member

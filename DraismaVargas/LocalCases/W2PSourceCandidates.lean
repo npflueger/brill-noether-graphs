@@ -1,7 +1,11 @@
-import DraismaVargas.LocalCases.GlobalP
-import DraismaVargas.LocalCases.M11SourceGenus
-import DraismaVargas.LocalCases.W3ShiftSourceCandidates
-import DraismaVargas.LocalCases.W3ShiftShrinkExistence
+module
+
+public import DraismaVargas.LocalCases.GlobalP
+public import DraismaVargas.LocalCases.M11SourceGenus
+public import DraismaVargas.LocalCases.W3ShiftSourceCandidates
+public import DraismaVargas.LocalCases.W3ShiftShrinkExistence
+
+@[expose] public section
 
 /-!
 # Source-derived case-P geometry (Figure 35)
@@ -766,7 +770,7 @@ noncomputable def pattern (profile : W2R2SourceProfile.SourceProfile data star b
           distinguished).right ((orientedStar profile).edge 0) = false := by
         rw [joinedBackground_right]
         exact TwoStar.right_edge_zero _
-      rw [if_neg (by rw [hFalse]; simp)]
+      rw [ite_eq_right (by rw [hFalse]; simp)]
       show (data.edgePartition ((orientedStar profile).edge 0)).Refines fine
       rw [orientedStar_edge_zero]
       exact hLeft
@@ -774,7 +778,7 @@ noncomputable def pattern (profile : W2R2SourceProfile.SourceProfile data star b
           distinguished).right ((orientedStar profile).edge 1) = true := by
         rw [joinedBackground_right]
         exact TwoStar.right_edge_one _
-      rw [if_pos hTrue]
+      rw [ite_eq_left hTrue]
       show (data.edgePartition ((orientedStar profile).edge 1)).Refines
         (data.vertexPartition wall)
       rw [orientedStar_edge_one]
@@ -836,9 +840,9 @@ noncomputable def literalThirdPattern (shape : Shape profile) :
         true_and] using hAt)
     by_cases hSide : (M11SourceCandidates.joinedBackground data (orientedStar profile)
         (firstSheet profile)).right edge
-    · rw [if_pos hSide]
+    · rw [ite_eq_left hSide]
       exact hRefines
-    · rw [if_neg hSide]
+    · rw [ite_eq_right hSide]
       exact hRefines
 
 /-! ### The local partitions of the three members, named -/
@@ -1356,9 +1360,9 @@ theorem sum_defect_eq_one (wallPartition : SheetPartition degree)
           then 1 else 0) := by
     refine Finset.sum_eq_single_of_mem _ (Finset.mem_univ _) ?_
     intro other _ hNe
-    exact if_neg fun hEq ↦ hNe (Subtype.ext hEq)
+    exact ite_eq_right fun hEq ↦ hNe (Subtype.ext hEq)
   rw [hSum, SheetPartition.toBlock_val]
-  exact if_pos rfl
+  exact ite_eq_left rfl
 
 /-- **The genus defect at an actual case-P profile.**  `GlobalP`'s third Figure 35
 member, assembled over a real source profile, has source genus **exactly one
@@ -1385,14 +1389,14 @@ theorem literalThirdMember_sourceGenus_eq_succ (shape : Shape profile) :
       have hBlock : (data.vertexPartition wall).Rel block.1 anchor :=
         (firstSheet_rel profile).trans hRel
       obtain ⟨hLeft, hNew, hRight⟩ := literalThirdLocal_blockCountWithin shape anchor hBlock
-      rw [hResolution, LocalResolution.onBlock_of_rel _ _ _ _ _ hRel, if_pos hAnchor,
+      rw [hResolution, LocalResolution.onBlock_of_rel _ _ _ _ _ hRel, ite_eq_left hAnchor,
         hLeft, hNew, hRight]
     · have hRel : ¬(data.vertexPartition wall).Rel (firstSheet profile) anchor := by
         intro hRel
         apply hAnchor
         rw [SheetPartition.rel_iff] at hRel
         rw [← hAnchorFixed, ← hRel]
-      rw [hResolution, LocalResolution.onBlock_of_not_rel _ _ _ _ _ hRel, if_neg hAnchor]
+      rw [hResolution, LocalResolution.onBlock_of_not_rel _ _ _ _ _ hRel, ite_eq_right hAnchor]
       show (data.vertexPartition wall).blockCountWithin (data.vertexPartition wall) anchor + 1 =
         (data.vertexPartition wall).blockCountWithin (data.vertexPartition wall) anchor +
           (data.vertexPartition wall).blockCountWithin (data.vertexPartition wall) anchor + 0

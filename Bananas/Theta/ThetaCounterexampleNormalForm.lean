@@ -1,5 +1,9 @@
-import Bananas.Classification.GenusTwoReduction
-import Bananas.Basics.DegreeOneRepresentatives
+module
+
+public import Bananas.Classification.GenusTwoReduction
+public import Bananas.Basics.DegreeOneRepresentatives
+
+@[expose] public section
 
 /-!
 # Normal form for a theta counterexample

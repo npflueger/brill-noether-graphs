@@ -1,7 +1,11 @@
-import DraismaVargasCount.DegenerateRealizationImage
-import Utilities.Subdivision.OneEdgeSplitRefinement
-import DraismaVargasCount.DegenerateTransport
-import DraismaVargasCount.WitnessAssembly
+module
+
+public import DraismaVargasCount.DegenerateRealizationImage
+public import Utilities.Subdivision.OneEdgeSplitRefinement
+public import DraismaVargasCount.DegenerateTransport
+public import DraismaVargasCount.WitnessAssembly
+
+@[expose] public section
 
 /-!
 # The endgame: rank one from a marker-free set, and the genus-six witness
@@ -128,23 +132,23 @@ theorem pathVertex_eq_coreVertex_iff (S : Spec n p) (j : Fin p) (t : S.PathPosit
   have hpos := S.length_pos j
   unfold Spec.pathVertex
   by_cases h0 : t.val = 0
-  · rw [dif_pos h0]
+  · rw [dite_eq_left h0]
     simp only [Spec.coreVertex, Sum.inl.injEq, h0, true_and]
     constructor
     · exact Or.inl
     · rintro (h | ⟨h, _⟩)
       · exact h
       · omega
-  · rw [dif_neg h0]
+  · rw [dite_eq_right h0]
     by_cases hl : t.val = S.length j
-    · rw [dif_pos hl]
+    · rw [dite_eq_left hl]
       simp only [Spec.coreVertex, Sum.inl.injEq]
       constructor
       · exact fun h ↦ Or.inr ⟨hl, h⟩
       · rintro (⟨h, _⟩ | ⟨_, h⟩)
         · exact absurd h h0
         · exact h
-    · rw [dif_neg hl]
+    · rw [dite_eq_right hl]
       simp only [Spec.interiorVertex, Spec.coreVertex, reduceCtorEq, false_iff, not_or,
         not_and]
       exact ⟨fun h ↦ absurd h h0, fun h ↦ absurd h hl⟩
@@ -278,7 +282,7 @@ theorem pushDivisor_pos_iff (root' : member.target.V) (b : (small.scale k hk).Ve
           (degenerateLength D small) member root' raw = 0 := by
         show (if raw.1.1 = root' then
           ((member.data.vertexPartition raw.1.1).blockCard raw.1.2 : ℤ) else 0) = 0
-        rw [if_neg hRoot]
+        rw [ite_eq_right hRoot]
       omega
     · exact absurd hPos (lt_irrefl 0)
   · rintro ⟨raw, hRoot, hHit⟩
@@ -558,12 +562,12 @@ def chainStep (T : Spec n p) (j₁ j₂ : Fin p) (u : ℕ) : T.Step :=
 theorem chainStep_first (T : Spec n p) {j₁ j₂ : Fin p} (o : Fin (T.length j₁)) :
     chainStep T j₁ j₂ o.val = ⟨j₁, o⟩ := by
   unfold chainStep
-  rw [dif_pos o.isLt]
+  rw [dite_eq_left o.isLt]
 
 theorem chainStep_second (T : Spec n p) {j₁ j₂ : Fin p} (o : Fin (T.length j₂)) :
     chainStep T j₁ j₂ (T.length j₁ + o.val) = ⟨j₂, o⟩ := by
   unfold chainStep
-  rw [dif_neg (by omega), dif_pos (by have := o.isLt; omega)]
+  rw [dite_eq_right (by omega), dite_eq_left (by have := o.isLt; omega)]
   congr 2
   simp
 
@@ -582,7 +586,7 @@ theorem unitEdge_chainStep (T : Spec n p) {j₁ j₂ : Fin p}
     T.unitEdge (chainStep T j₁ j₂ u) = (chainVertex T j₁ j₂ u, chainVertex T j₁ j₂ (u + 1)) := by
   by_cases h : u < T.length j₁
   · have hs : chainStep T j₁ j₂ u = ⟨j₁, ⟨u, h⟩⟩ := by
-      unfold chainStep; rw [dif_pos h]
+      unfold chainStep; rw [dite_eq_left h]
     rw [hs]
     show (T.stepLeft j₁ ⟨u, h⟩, T.stepRight j₁ ⟨u, h⟩) = _
     rw [stepLeft_eq_pathVertex, stepRight_eq_pathVertex]
@@ -650,20 +654,20 @@ theorem moveVertex_inl (v : Fin n) :
 theorem moveVertex_inr_first (o : Fin (T.length j₁ - 1)) :
     moveVertex T T' j₁ j₂ (Sum.inr ⟨j₁, o⟩) = chainVertex T' j₁ j₂ (o.val + 1) := by
   show (if j₁ = j₁ then chainVertex T' j₁ j₂ (o.val + 1) else _) = _
-  rw [if_pos rfl]
+  rw [ite_eq_left rfl]
 
 theorem moveVertex_inr_second (hne : j₂ ≠ j₁) (o : Fin (T.length j₂ - 1)) :
     moveVertex T T' j₁ j₂ (Sum.inr ⟨j₂, o⟩) =
       chainVertex T' j₁ j₂ (T.length j₁ + o.val + 1) := by
   show (if j₂ = j₁ then _ else if j₂ = j₂ then
     chainVertex T' j₁ j₂ (T.length j₁ + o.val + 1) else _) = _
-  rw [if_neg hne, if_pos rfl]
+  rw [ite_eq_right hne, ite_eq_left rfl]
 
 theorem moveVertex_inr_other {j : Fin p} (hj₁ : j ≠ j₁) (hj₂ : j ≠ j₂)
     (hLen : T'.length j = T.length j) (o : Fin (T.length j - 1)) :
     moveVertex T T' j₁ j₂ (Sum.inr ⟨j, o⟩) =
       (Sum.inr ⟨j, Fin.cast (congrArg (· - 1) hLen.symm) o⟩ : T'.Vertex) := by
-  simp only [moveVertex, if_neg hj₁, if_neg hj₂, dif_pos hLen]
+  simp only [moveVertex, ite_eq_right hj₁, ite_eq_right hj₂, dite_eq_left hLen]
 
 theorem moveStep_first (o : Fin (T.length j₁)) :
     moveStep T T' j₁ j₂ ⟨j₁, o⟩ = chainStep T' j₁ j₂ o.val := by
@@ -676,7 +680,7 @@ theorem moveStep_second (hne : j₂ ≠ j₁) (o : Fin (T.length j₂)) :
 theorem moveStep_other {j : Fin p} (hj₁ : j ≠ j₁) (hj₂ : j ≠ j₂)
     (hLen : T'.length j = T.length j) (o : Fin (T.length j)) :
     moveStep T T' j₁ j₂ ⟨j, o⟩ = (⟨j, Fin.cast hLen.symm o⟩ : T'.Step) := by
-  simp only [moveStep, if_neg hj₁, if_neg hj₂, dif_pos hLen]
+  simp only [moveStep, ite_eq_right hj₁, ite_eq_right hj₂, dite_eq_left hLen]
 
 end Equations
 
@@ -702,24 +706,24 @@ theorem moveHyp_moveSpec (T : Spec n p) {j₁ j₂ : Fin p} (hpair : MarkerPair 
   len_eq := by
     intro j h1 h2
     show (if j = j₁ then a else if j = j₂ then b else T.length j) = T.length j
-    rw [if_neg h1, if_neg h2]
+    rw [ite_eq_right h1, ite_eq_right h2]
   sum_eq := by
     show (if j₁ = j₁ then a else if j₁ = j₂ then b else T.length j₁) +
       (if j₂ = j₁ then a else if j₂ = j₂ then b else T.length j₂) = _
-    rw [if_pos rfl, if_neg (Ne.symm hpair.1), if_pos rfl]
+    rw [ite_eq_left rfl, ite_eq_right (Ne.symm hpair.1), ite_eq_left rfl]
     exact hab
 
 theorem moveSpec_length_first (T : Spec n p) {j₁ j₂ : Fin p} (a b : ℕ) (ha : 0 < a)
     (hb : 0 < b) : (moveSpec T j₁ j₂ a b ha hb).length j₁ = a := by
   show (if j₁ = j₁ then a else if j₁ = j₂ then b else T.length j₁) = a
-  rw [if_pos rfl]
+  rw [ite_eq_left rfl]
 
 /-- Off the marker, core vertices are fixed. -/
 theorem moveVertex_coreVertex {T T' : Spec n p} {j₁ j₂ : Fin p} {v : Fin n}
     (hv : v ≠ T.core.head j₁) :
     moveVertex T T' j₁ j₂ (T.coreVertex v) = T'.coreVertex v := by
   show moveVertex T T' j₁ j₂ (Sum.inl v) = Sum.inl v
-  rw [moveVertex_inl, if_neg hv]
+  rw [moveVertex_inl, ite_eq_right hv]
 
 section MoveLemmas
 
@@ -754,7 +758,7 @@ theorem moveVertex_chainVertex {t : ℕ} (ht : t ≤ T.length j₁ + T.length j�
   · subst heq
     rw [chainVertex_first]
     show moveVertex T T' j₁ j₂ (Sum.inl (T.core.head j₁)) = _
-    rw [moveVertex_inl, if_pos rfl]
+    rw [moveVertex_inl, ite_eq_left rfl]
   · rcases lt_or_eq_of_le ht with hlt | heq
     · rw [chainVertex_of_gt T hgt hlt]
       show moveVertex T T' j₁ j₂ (Sum.inr ⟨j₂, ⟨t - T.length j₁ - 1, _⟩⟩) = _
@@ -840,11 +844,11 @@ theorem moveVertex_moveVertex (h : MoveHyp T T' j₁ j₂) (x : T.Vertex) :
   rcases x with v | ⟨j, o⟩
   · by_cases hv : v = T.core.head j₁
     · subst hv
-      rw [moveVertex_inl, if_pos rfl, moveVertex_chainVertex hs (by rw [h.sum_eq]; omega),
+      rw [moveVertex_inl, ite_eq_left rfl, moveVertex_chainVertex hs (by rw [h.sum_eq]; omega),
         chainVertex_first]
       rfl
     · have hv' : v ≠ T'.core.head j₁ := by rw [h.core_eq]; exact hv
-      rw [moveVertex_inl, if_neg hv, moveVertex_inl, if_neg hv']
+      rw [moveVertex_inl, ite_eq_right hv, moveVertex_inl, ite_eq_right hv']
   · have ho := o.isLt
     by_cases hj₁ : j = j₁
     · subst hj₁
@@ -1110,7 +1114,7 @@ theorem winnable_sub_one_chip_of_linear_equiv {G : CFGraph} {Dv E : CFDiv G}
     · subst hb
       simp only [Pi.sub_apply, one_chip_apply_v]
       omega
-    · simp only [Pi.sub_apply, one_chip, if_neg hb, sub_zero]
+    · simp only [Pi.sub_apply, one_chip, ite_eq_right hb, sub_zero]
       exact hE b
   · unfold linear_equiv at hEquiv ⊢
     have hEq : (E - one_chip x) - (Dv - one_chip x) = E - Dv := by abel

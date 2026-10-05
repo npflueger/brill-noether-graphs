@@ -1,6 +1,10 @@
-import DraismaVargasCount.TransportedChipEndgame
-import Utilities.Subdivision.CoreExpansion
-import Utilities.Subdivision.SlotMoment
+module
+
+public import DraismaVargasCount.TransportedChipEndgame
+public import Utilities.Subdivision.CoreExpansion
+public import Utilities.Subdivision.SlotMoment
+
+@[expose] public section
 
 /-!
 # The series moment of an expanded slot
@@ -611,9 +615,9 @@ theorem pushDivisor_interior (hCond : D.Conditions small.core)
         kindVertex small (D.fib (D.bigCore.tail e)) (D.kind e) (o.val + 1) then Bv v
       else 0) = _
   rw [Finset.sum_eq_single ((D.bigSpec small hN hL).interiorVertex e o)]
-  · rw [if_pos himage]
+  · rw [ite_eq_left himage]
   · intro v _ hne
-    refine if_neg ?_
+    refine ite_eq_right ?_
     intro hv
     exact hne (ExpansionData.interior_fibre hCond e o v (hv.trans himage.symm))
   · intro hmem
@@ -642,7 +646,7 @@ theorem deg_pushDivisor (Bv : CFDiv (D.bigSpec small hN hL).graph) :
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun v _ ↦ ?_
   rw [Finset.sum_ite_eq Finset.univ (ExpansionData.vertexMap D small hN hL v)
-    (fun _ ↦ Bv v), if_pos (Finset.mem_univ _)]
+    (fun _ ↦ Bv v), ite_eq_left (Finset.mem_univ _)]
 
 /-- **The per-position receipts transfer from the big side.**  This is the
 hypothesis `dvd_slotMoment_of_expansion` consumes, produced from the same

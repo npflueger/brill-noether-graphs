@@ -1,5 +1,9 @@
-import DraismaVargasCount.GeometricSegmentWalls
-import DraismaVargasCount.NonTrivalentNonfacetDenominator
+module
+
+public import DraismaVargasCount.GeometricSegmentWalls
+public import DraismaVargasCount.NonTrivalentNonfacetDenominator
+
+@[expose] public section
 
 /-!
 # The per-wall link of the count transport

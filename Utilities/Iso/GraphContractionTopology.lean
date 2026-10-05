@@ -1,6 +1,10 @@
-import Utilities.Iso.GraphContraction
-import Utilities.Subdivision.AffineCover
-import Mathlib.Tactic
+module
+
+public import Utilities.Iso.GraphContraction
+public import Utilities.Subdivision.AffineCover
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # Topological graph-contraction certificates

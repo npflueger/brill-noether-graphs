@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W2R1IncomingMatching
-import DraismaVargas.LocalCases.FiniteAtlasMarch
+module
+
+public import DraismaVargas.LocalCases.W2R1IncomingMatching
+public import DraismaVargas.LocalCases.FiniteAtlasMarch
+
+@[expose] public section
 
 /-!
 # `{w2-r1}`: the positive exit of an identified member, and the incoming side

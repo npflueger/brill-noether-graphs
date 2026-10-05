@@ -1,5 +1,9 @@
-import Utilities.Subdivision.CorePairMultiplicity
-import Utilities.Subdivision.SubdivisionIso
+module
+
+public import Utilities.Subdivision.CorePairMultiplicity
+public import Utilities.Subdivision.SubdivisionIso
+
+@[expose] public section
 
 /-!
 # Occurrence-sensitive relabeling of ordered subdivision cores

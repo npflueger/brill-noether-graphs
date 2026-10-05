@@ -1,7 +1,11 @@
-import Utilities.Segments.AtanasovRanganathanConfigurations
-import Utilities.Subdivision.ConnectedCheckFast
-import Utilities.Subdivision.WindowProfileReachability
-import LowGenus.GenusFourCubicAtlas
+module
+
+public import Utilities.Segments.AtanasovRanganathanConfigurations
+public import Utilities.Subdivision.ConnectedCheckFast
+public import Utilities.Subdivision.WindowProfileReachability
+public import LowGenus.GenusFourCubicAtlas
+
+@[expose] public section
 
 /-!
 # The signed-window proof for genus-four Core 095

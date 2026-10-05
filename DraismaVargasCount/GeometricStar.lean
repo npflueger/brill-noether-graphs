@@ -1,5 +1,9 @@
-import DraismaVargasCount.GeometricInheritedBranches
-import DraismaVargasCount.InheritedLimitIncidence
+module
+
+public import DraismaVargasCount.GeometricInheritedBranches
+public import DraismaVargasCount.InheritedLimitIncidence
+
+@[expose] public section
 
 /-!
 # The geometric star of an inherited labelled metric limit

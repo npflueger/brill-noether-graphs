@@ -1,7 +1,11 @@
-import LowGenus.GenusFourRow095CaseOne
-import LowGenus.GenusFourRow095CasesTwoThree
-import LowGenus.GenusFourRow095CaseThreeProof
-import LowGenus.GenusFourRow095Symmetry
+module
+
+public import LowGenus.GenusFourRow095CaseOne
+public import LowGenus.GenusFourRow095CasesTwoThree
+public import LowGenus.GenusFourRow095CaseThreeProof
+public import LowGenus.GenusFourRow095Symmetry
+
+@[expose] public section
 
 /-!
 # Unconditional existence on genus-four Core 095

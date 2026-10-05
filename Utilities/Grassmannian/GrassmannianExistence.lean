@@ -1,5 +1,9 @@
-import Utilities.Grassmannian.GrassmannianShift
-import Utilities.Grassmannian.OnceMarked
+module
+
+public import Utilities.Grassmannian.GrassmannianShift
+public import Utilities.Grassmannian.OnceMarked
+
+@[expose] public section
 
 /-!
 # Grassmannian transmission existence: the universal interface

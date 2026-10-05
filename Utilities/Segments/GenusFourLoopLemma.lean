@@ -1,7 +1,11 @@
-import Utilities.Pseudocore.GenusFourPseudocore
-import Utilities.Subdivision.CoreVertexReachability
-import Utilities.Foundations.EffectiveDifference
-import Utilities.Transmission.TransmissionCorner
+module
+
+public import Utilities.Pseudocore.GenusFourPseudocore
+public import Utilities.Subdivision.CoreVertexReachability
+public import Utilities.Foundations.EffectiveDifference
+public import Utilities.Transmission.TransmissionCorner
+
+@[expose] public section
 
 /-!
 # A loop-split interface for the genus-four loop lemma
@@ -291,7 +295,7 @@ theorem twoChipReflection_of_two_oriented_paths
       SubdivisionArithmetic.step (spec.length second)
         (spec.coreRise potential second) 0 = -1 := by
     rw [hSecondStep]
-    rw [if_pos (spec.length_pos first)]
+    rw [ite_eq_left (spec.length_pos first)]
   have sum_two_ite (A B : ℤ) :
       (∑ edge : Fin p,
         if edge = first then A else if edge = second then B else 0) = A + B := by
@@ -335,12 +339,12 @@ theorem twoChipReflection_of_two_oriented_paths
             else 0 := by
         by_cases hEF : edge = first
         · subst edge
-          simp only [if_pos]
+          simp only [ite_eq_left]
           simp only [hFirstTail, hFirstHead, hFirstInitial,
             hFirstFinal, neg_neg, eq_comm]
         · by_cases hES : edge = second
           · subst edge
-            simp only [if_pos]
+            simp only [ite_eq_left]
             have hLast : spec.length second - 1 < spec.length first := by
               rw [hEqual]
               exact Nat.sub_lt (spec.length_pos second) (by omega)
@@ -352,7 +356,7 @@ theorem twoChipReflection_of_two_oriented_paths
               simp [hLast]
             simp [hSecondTail, hSecondHead, hSecondInitial,
               hSecondFinal, hFirstSecond.symm, eq_comm]
-          · simp only [if_neg hEF, if_neg hES]
+          · simp only [ite_eq_right hEF, ite_eq_right hES]
             rw [hOtherRise edge hEF hES]
             have hLast : spec.length edge - 1 < spec.length edge :=
               Nat.sub_lt (spec.length_pos edge) (by omega)
@@ -424,12 +428,12 @@ theorem twoChipReflection_of_two_oriented_paths
             else 0 := by
         by_cases hEF : edge = first
         · subst edge
-          simp only [if_pos]
+          simp only [ite_eq_left]
           simp only [hFirstTail, hFirstHead, hFirstInitial,
             hFirstFinal, neg_neg, eq_comm]
         · by_cases hES : edge = second
           · subst edge
-            simp only [if_pos]
+            simp only [ite_eq_left]
             have hLast : ¬ spec.length second - 1 < spec.length first := by
               omega
             have hSecondFinal :
@@ -441,7 +445,7 @@ theorem twoChipReflection_of_two_oriented_paths
             have hNot : second ≠ first := hFirstSecond.symm
             simp [hSecondTail, hSecondHead, hSecondInitial,
               hSecondFinal, hNot, eq_comm]
-          · simp only [if_neg hEF, if_neg hES]
+          · simp only [ite_eq_right hEF, ite_eq_right hES]
             rw [hOtherRise edge hEF hES]
             have hLast : spec.length edge - 1 < spec.length edge :=
               Nat.sub_lt (spec.length_pos edge) (by omega)

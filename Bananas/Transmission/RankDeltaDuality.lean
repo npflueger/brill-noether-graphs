@@ -1,5 +1,9 @@
-import Bananas.Basics.Definitions
-import ChipFiringWithLean.RiemannRoch
+module
+
+public import Bananas.Basics.Definitions
+public import ChipFiringWithLean.RiemannRoch
+
+@[expose] public section
 
 /-!
 # Riemann--Roch duality for the marked rank second difference

@@ -1,5 +1,9 @@
-import GenusSixExistence.OnceMarked.OnceMarkedLowGenus
-import GenusSixExistence.OnceMarked.MarkedGenusFive
+module
+
+public import GenusSixExistence.OnceMarked.OnceMarkedLowGenus
+public import GenusSixExistence.OnceMarked.MarkedGenusFive
+
+@[expose] public section
 
 /-!
 # Once-marked Brill--Noether existence in genus five

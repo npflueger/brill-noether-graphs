@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.M11SplitLimitMatrix
+module
+
+public import DraismaVargas.LocalCases.M11SplitLimitMatrix
+
+@[expose] public section
 
 /-!
 # The actual first-split branch vertex

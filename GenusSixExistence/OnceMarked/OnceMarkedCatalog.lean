@@ -1,3 +1,7 @@
+module
+
+@[expose] public section
+
 /-!
 # Handwritten data grammar for once-marked finite catalogs
 

@@ -1,7 +1,11 @@
-import Utilities.CubicGraphs.WhiteheadSlide
-import Utilities.CubicGraphs.WhiteheadPeel
-import Utilities.CubicGraphs.WhiteheadGenusTwo
-import Utilities.CubicGraphs.WhiteheadLoop
+module
+
+public import Utilities.CubicGraphs.WhiteheadSlide
+public import Utilities.CubicGraphs.WhiteheadPeel
+public import Utilities.CubicGraphs.WhiteheadGenusTwo
+public import Utilities.CubicGraphs.WhiteheadLoop
+
+@[expose] public section
 
 /-!
 # Whitehead connectivity of all connected cubic dart types

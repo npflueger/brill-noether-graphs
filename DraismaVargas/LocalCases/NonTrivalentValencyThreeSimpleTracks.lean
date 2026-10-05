@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyThreeTracks
-import DraismaVargas.LocalCases.NonTrivalentValencyThreeSimpleExit
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyThreeTracks
+public import DraismaVargas.LocalCases.NonTrivalentValencyThreeSimpleExit
+
+@[expose] public section
 
 /-!
 # The vertex dictionary of the valency-three Type I / Type II type change, and (H-I/II)
@@ -420,13 +424,13 @@ def candVertex (w : base.gaugedData.SourceVertex) :
 theorem candVertex_wall (w : base.gaugedData.SourceVertex) (hw : w.1.1 = wall) :
     candVertex base hValid w = endpointVertex base hValid true w.1.2 := by
   unfold candVertex
-  rw [if_pos hw]
+  rw [ite_eq_left hw]
 
 theorem candVertex_away (w : base.gaugedData.SourceVertex) (hw : w.1.1 ≠ wall) :
     candVertex base hValid w =
       ResolutionAwayFromWall.retainedVertex (validCandidate base hValid) w := by
   unfold candVertex
-  rw [if_neg hw]
+  rw [ite_eq_right hw]
 
 /-- **The surviving valency is unchanged.** -/
 theorem nonDanglingValency_candVertex (w : base.gaugedData.SourceVertex)

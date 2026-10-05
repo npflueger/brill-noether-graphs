@@ -1,6 +1,10 @@
-import DraismaVargasCount.SheetLayerCensus
-import DraismaVargasCount.TrivalentFibreUnique
-import DraismaVargasCount.LollipopDivalent
+module
+
+public import DraismaVargasCount.SheetLayerCensus
+public import DraismaVargasCount.TrivalentFibreUnique
+public import DraismaVargasCount.LollipopDivalent
+
+@[expose] public section
 
 /-!
 # The partition census, proved at every `m`
@@ -188,7 +192,7 @@ theorem isLeafVertex_tip (member : FibreMember (catCore m) y (m + 2))
   have hInj := (absMap_bijective member hD).injective
   have hEnds : absEnds m t.1 = (Sum.inl ((catCore m).tail t.1), Sum.inr t) := by
     unfold absEnds
-    rw [dif_pos t.2]
+    rw [dite_eq_left t.2]
   unfold IsLeafVertex
   rw [Finset.card_eq_one]
   refine ⟨slotEdge member t.1, ?_⟩
@@ -300,7 +304,7 @@ theorem slotEdge_mem_incidentEdges_tip (member : FibreMember (catCore m) y (m + 
   classical
   have hEnds : absEnds m t.1 = (Sum.inl ((catCore m).tail t.1), Sum.inr t) := by
     unfold absEnds
-    rw [dif_pos t.2]
+    rw [dite_eq_left t.2]
   simp only [GluingDatum.incidentEdges, Finset.mem_filter, Finset.mem_univ, true_and]
   rcases slotEdge_absEnds member hD t.1 with h | h <;> rw [h, hEnds]
   · exact Or.inr rfl

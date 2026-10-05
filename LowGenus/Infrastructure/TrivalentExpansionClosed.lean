@@ -1,6 +1,10 @@
-import Utilities.Subdivision.TrivalentExpansion
-import Utilities.Subdivision.CoreExpansionClosed
-import LowGenus.GenusFiveConfigurations
+module
+
+public import Utilities.Subdivision.TrivalentExpansion
+public import Utilities.Subdivision.CoreExpansionClosed
+public import LowGenus.GenusFiveConfigurations
+
+@[expose] public section
 
 /-!
 # The closed centipede face
@@ -30,8 +34,8 @@ section ClosedFace
 variable {n p : ℕ} (C : Core n p)
 variable (hDeg : ∀ w : Fin n, 3 ≤ slotValence C w)
 
-private abbrev N := 2 * (p - n)
-private abbrev Q := 3 * (p - n)
+abbrev N := 2 * (p - n)
+abbrev Q := 3 * (p - n)
 
 /-- The distinguished first vertex of each centipede fibre. -/
 noncomputable def firstVertex (w : Fin n) : Fin (N (n := n) (p := p)) :=

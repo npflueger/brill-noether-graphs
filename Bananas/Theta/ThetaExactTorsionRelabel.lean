@@ -1,6 +1,10 @@
-import Bananas.Theta.ThetaExactTorsion
-import Bananas.Basics.MarkedIso
-import Utilities.Subdivision.SubdivisionIso
+module
+
+public import Bananas.Theta.ThetaExactTorsion
+public import Bananas.Basics.MarkedIso
+public import Utilities.Subdivision.SubdivisionIso
+
+@[expose] public section
 
 /-!
 # Exact torsion order on arbitrary theta strands

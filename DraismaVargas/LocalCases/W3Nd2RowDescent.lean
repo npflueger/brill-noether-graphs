@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W3Nd2StableLift
+module
+
+public import DraismaVargas.LocalCases.W3Nd2StableLift
+
+@[expose] public section
 
 /-!
 # Reverse row transport for the true Figure 31 coarse resolution
@@ -45,7 +49,7 @@ theorem coarseBackgroundReplace_of_small
     (old : data.SourceEdge) (hTarget : old.1.1 = smallTarget input profile) :
     coarseBackgroundReplace input profile old =
       (coarseCandidate input profile).newSourceEdge old.1.2 := by
-  rw [coarseBackgroundReplace, if_pos hTarget]
+  rw [coarseBackgroundReplace, ite_eq_left hTarget]
 
 theorem coarseBackgroundReplace_of_ne_small
     (input : W3SourceInput data star)
@@ -53,7 +57,7 @@ theorem coarseBackgroundReplace_of_ne_small
     (old : data.SourceEdge) (hTarget : old.1.1 ≠ smallTarget input profile) :
     coarseBackgroundReplace input profile old =
       (coarseCandidate input profile).oldSourceEdge old := by
-  rw [coarseBackgroundReplace, if_neg hTarget]
+  rw [coarseBackgroundReplace, ite_eq_right hTarget]
 
 /-- Replacement preserves and reflects survival and incidence at an
 unramified background source vertex. -/
@@ -363,9 +367,9 @@ theorem coarseNewOldSourceEdge_survives
   classical
   by_cases hSelected : (data.vertexPartition wall).Rel
       input.distinguishedBlock.1 sheet
-  · rw [coarseNewOldSourceEdge, if_pos hSelected]
+  · rw [coarseNewOldSourceEdge, ite_eq_left hSelected]
     exact profile.small_survives
-  · rw [coarseNewOldSourceEdge, if_neg hSelected]
+  · rw [coarseNewOldSourceEdge, ite_eq_right hSelected]
     exact (coarse_background_new_survives_iff_oldSmall input profile sheet hSelected).mp
       hSurvives
 
@@ -449,7 +453,7 @@ noncomputable def coarseRowOfEdge
   have hOld : ∃ other : NonDanglingEdge data,
       retainedEdge (coarseCandidate input profile) input.valid.1 other =
         retainedEdge (coarseCandidate input profile) input.valid.1 old := ⟨old, rfl⟩
-  rw [coarseRowOfEdge, dif_pos hOld]
+  rw [coarseRowOfEdge, dite_eq_left hOld]
   exact congrArg NonDanglingEdge.stablePath
     (retainedEdge_injective _ input.valid.1 (Classical.choose_spec hOld))
 
@@ -463,7 +467,7 @@ theorem coarseRowOfEdge_not_retained
       (coarseNewOldEdge input profile (coarseNewSheet input profile edge hNotOld)
         (coarseNewSheet_survives input profile edge hNotOld)).stablePath := by
   classical
-  exact dif_neg hNotOld
+  exact dite_eq_right hNotOld
 
 theorem coarseNewOldEdge_of_selected
     (input : W3SourceInput data star)
@@ -476,7 +480,7 @@ theorem coarseNewOldEdge_of_selected
       ⟨profile.small.1, profile.small_survives⟩ := by
   apply Subtype.ext
   change coarseNewOldSourceEdge input profile sheet = profile.small.1
-  rw [coarseNewOldSourceEdge, if_pos hSelected]
+  rw [coarseNewOldSourceEdge, ite_eq_left hSelected]
 
 theorem coarseNewOldEdge_of_background
     (input : W3SourceInput data star)
@@ -489,7 +493,7 @@ theorem coarseNewOldEdge_of_background
       data.sourceEdge (smallTarget input profile) sheet := by
   change coarseNewOldSourceEdge input profile sheet =
     data.sourceEdge (smallTarget input profile) sheet
-  rw [coarseNewOldSourceEdge, if_neg hBackground]
+  rw [coarseNewOldSourceEdge, ite_eq_right hBackground]
 
 /-- At a background fresh endpoint, every assigned reverse row has an actual
 old surviving occurrence incident at the original wall vertex, and that old
@@ -522,7 +526,7 @@ theorem coarseRowOfEdge_incident_background
     refine ⟨old, hOldIncident, ?_, ?_⟩
     · rw [coarseBackgroundReplace_of_ne_small input profile old.1 hTarget]
       exact congrArg Subtype.val hEq
-    · rw [coarseRowOfEdge, dif_pos hOld]
+    · rw [coarseRowOfEdge, dite_eq_left hOld]
   · let newSheet := coarseNewSheet input profile edge hOld
     let hNewSurvives := coarseNewSheet_survives input profile edge hOld
     have hEdge := coarseNewSheet_spec input profile edge hOld

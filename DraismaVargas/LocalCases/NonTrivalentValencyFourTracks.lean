@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyFourExitLink
-import DraismaVargas.LocalCases.MovedIncidenceIso
-import DraismaVargas.LocalCases.WallSplitIncidence
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyFourExitLink
+public import DraismaVargas.LocalCases.MovedIncidenceIso
+public import DraismaVargas.LocalCases.WallSplitIncidence
+
+@[expose] public section
 
 /-!
 # The vertex dictionary of the valency-four `K = 0` type change, and (H-IV)
@@ -397,10 +401,10 @@ theorem nonDanglingIncident_ret_subset (x : Fin deg)
     ⟨old, hOldSurv, hAt, hSide, hRel, rfl⟩ | ⟨old, hOldSurv, hAt, hSide, hRel, rfl⟩
   · exact Finset.mem_image.mpr ⟨old,
       mem_block_star cover fd hc hab hOne wallStar hForest anchorBlock hAnchor pairing
-        hOldSurv hAt hRel, by rw [if_pos hSide]⟩
+        hOldSurv hAt hRel, by rw [ite_eq_left hSide]⟩
   · exact Finset.mem_image.mpr ⟨old,
       mem_block_star cover fd hc hab hOne wallStar hForest anchorBlock hAnchor pairing
-        hOldSurv hAt hRel, by rw [if_neg (by rw [hSide]; exact Bool.not_ne_self _)]⟩
+        hOldSurv hAt hRel, by rw [ite_eq_right (by rw [hSide]; exact Bool.not_ne_self _)]⟩
 
 /-- **The retaining endpoint is at most as valent as its block.** -/
 theorem nonDanglingValency_ret_le_block (x : Fin deg)
@@ -526,7 +530,7 @@ theorem nonDanglingValency_endpoint_le_two (x s : Fin deg) (side : Bool)
             exact Finset.mem_filter.mpr ⟨hz,
               NonTrivalentValencyFourRowDictionary.bool_eq_not_of_ne hzSide⟩
           rw [hFilt, Finset.mem_filter] at hzFine
-          rw [if_neg hzSide]
+          rw [ite_eq_right hzSide]
           exact Finset.mem_singleton.mpr hzFine.2.2
         have hLe := Finset.card_le_card hImg
         rw [card_nonDanglingIncident, Finset.card_singleton] at hLe
@@ -674,7 +678,7 @@ theorem exists_branch_endpoint (x : Fin deg)
       intro y hy
       obtain ⟨w, hw, rfl⟩ := Finset.mem_image.mp hy
       by_cases hwS : wallStar.right pairing w.1.1 = wRetSide ((wPart).repr x)
-      · rw [if_pos hwS]
+      · rw [ite_eq_left hwS]
         have hwT : w ∈ (nonDanglingIncident (wGauged)
             ((wGauged).sourceEndpoint wW x)).filter
             (fun v ↦ wallStar.right pairing v.1.1 = wRetSide ((wPart).repr x)) :=
@@ -682,7 +686,7 @@ theorem exists_branch_endpoint (x : Fin deg)
         rw [hzEq, Finset.mem_singleton] at hwT
         rw [hwT]
         exact Finset.mem_insert_self _ _
-      · rw [if_neg hwS]
+      · rw [ite_eq_right hwS]
         have hwF : w ∈ (nonDanglingIncident (wGauged)
             ((wGauged).sourceEndpoint wW x)).filter
             (fun v ↦ wallStar.right pairing v.1.1 = !wRetSide ((wPart).repr x)) :=
@@ -929,7 +933,7 @@ theorem candVertex_wall
           coordinates facet hRows hZeroCoord anchorBlock hAnchor pairing w.1 hw w.2)) := by
   classical
   unfold candVertex
-  rw [dif_pos hw]
+  rw [dite_eq_left hw]
 
 theorem candVertex_away
     (w : {w : BranchVertex (wGauged) //
@@ -940,7 +944,7 @@ theorem candVertex_away
       ResolutionAwayFromWall.retainedVertex (wCand) w.1.1 := by
   classical
   unfold candVertex
-  rw [dif_neg hw]
+  rw [dite_eq_right hw]
 
 theorem nonDanglingValency_candVertex
     (w : {w : BranchVertex (wGauged) //

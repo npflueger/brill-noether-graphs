@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoBaseOneTracks
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoStarCountAll
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoBaseOneTracks
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoStarCountAll
+
+@[expose] public section
 
 /-!
 # The valency-two **Base I** star count, and the Base I link at an actual wall
@@ -776,7 +780,7 @@ theorem incidence_inr_false_retained (hEnds : AnchorEnds m wd anchorBlk p q)
     exact fun h ↦ retainedRow_ne_bridgeRow setup hGauged _ h.symm
   rw [hRHS, NonTrivalentValencyThreeStarCount.filter_moved_base m wd first second hStar,
     Finset.filter_insert,
-    if_neg (Ne.symm
+    ite_eq_right (Ne.symm
       (NonTrivalentValencyThreeStarCount.labelling_row_incomingRow_ne_base m wd r₀)),
     NonTrivalentValencyThreeStarCount.card_filter_pair _ _
       (NonTrivalentValencyThreeStarCount.dart_ne m wd first second hStar)]
@@ -787,7 +791,7 @@ theorem incidence_inr_false_retained (hEnds : AnchorEnds m wd anchorBlk p q)
         thickSheet thinSheet (NonTrivalentValencyTwoTracks.wallValid m wd).1 r₀)) = _
   unfold incidenceCount
   rw [incidentEdges_anchorBranchVertex setup hGauged false, Finset.filter_insert,
-    if_neg hBridgeRow,
+    ite_eq_right hBridgeRow,
     NonTrivalentValencyThreeStarCount.card_filter_pair _ _
       (crossRetained_ne setup hGauged false),
     if_congr (stablePath_crossRetained_iff m wd thickSheet thinSheet setup hGauged false false
@@ -833,7 +837,7 @@ theorem incidence_inr_false_bridge (hEnds : AnchorEnds m wd anchorBlk p q)
   have hR : ((Finset.univ.filter fun d : D ↦ graph.vert (m.perm d) = graph.vert m.base).filter
       fun d ↦ label d = label m.base).card = 1 := by
     rw [NonTrivalentValencyThreeStarCount.filter_moved_base m wd first second hStar,
-      Finset.filter_insert, if_pos rfl, hEmptyD]
+      Finset.filter_insert, ite_eq_left rfl, hEmptyD]
     simp
   rw [hRHS, hR]
   show incidenceCount (validCandidate setup).datum
@@ -852,7 +856,7 @@ theorem incidence_inr_false_bridge (hEnds : AnchorEnds m wd anchorBlk p q)
       exact retainedRow_ne_bridgeRow setup hGauged _
   unfold incidenceCount
   rw [incidentEdges_anchorBranchVertex setup hGauged false, Finset.filter_insert,
-    if_pos (stablePath_bridgeND setup hGauged false), hEmptyC]
+    ite_eq_left (stablePath_bridgeND setup hGauged false), hEmptyC]
   simp
 
 /-! ### The whole star count, and the link -/

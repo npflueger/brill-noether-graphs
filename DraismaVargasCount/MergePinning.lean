@@ -1,5 +1,9 @@
-import DraismaVargasCount.W4WallExhaustion
-import DraismaVargas.LocalCases.W4Bridge
+module
+
+public import DraismaVargasCount.W4WallExhaustion
+public import DraismaVargas.LocalCases.W4Bridge
+
+@[expose] public section
 
 /-!
 # Merge-pinning at an arbitrary wall, without a valency hypothesis

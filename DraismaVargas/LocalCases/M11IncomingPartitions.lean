@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.M11IncomingCoordinates
-import DraismaVargas.LocalCases.FullContractionFibre
+module
+
+public import DraismaVargas.LocalCases.M11IncomingCoordinates
+public import DraismaVargas.LocalCases.FullContractionFibre
+
+@[expose] public section
 
 /-!
 # The selected two-sheet partition census before an M11 contraction

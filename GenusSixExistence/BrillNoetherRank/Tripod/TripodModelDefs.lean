@@ -1,7 +1,11 @@
-import GenusSixExistence.BrillNoetherRank.Tripod.Gadget
-import GenusSixExistence.BrillNoetherRank.Reduction
-import DraismaVargasCount.DegenerateBigDivisor
-import Utilities.Subdivision.CoreCutsAndFlats
+module
+
+public import GenusSixExistence.BrillNoetherRank.Tripod.Gadget
+public import GenusSixExistence.BrillNoetherRank.Reduction
+public import DraismaVargasCount.DegenerateBigDivisor
+public import Utilities.Subdivision.CoreCutsAndFlats
+
+@[expose] public section
 
 /-!
 # The tripod model of a graph with three marks

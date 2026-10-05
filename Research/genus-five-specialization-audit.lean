@@ -1,5 +1,9 @@
-import LowGenus.AtanasovRanganathanExistence
-import LowGenus.GenusFiveTwoPoleClosed
+module
+
+public import LowGenus.AtanasovRanganathanExistence
+public import LowGenus.GenusFiveTwoPoleClosed
+
+@[expose] public section
 
 #print axioms Utilities.CommonOffsetRounding.exists_common_offset
 #print axioms Utilities.abs_script_sub_le_deg_of_le

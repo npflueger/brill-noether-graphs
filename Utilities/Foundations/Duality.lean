@@ -1,5 +1,9 @@
-import Utilities.Foundations.Parameters
-import ChipFiringWithLean.RiemannRoch
+module
+
+public import Utilities.Foundations.Parameters
+public import ChipFiringWithLean.RiemannRoch
+
+@[expose] public section
 
 /-!
 # Riemann--Roch duality for Brill--Noether existence

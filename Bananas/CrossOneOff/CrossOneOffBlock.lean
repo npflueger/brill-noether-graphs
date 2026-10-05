@@ -1,4 +1,8 @@
-import Bananas.CrossOneOff.CrossOneOffTransmission
+module
+
+public import Bananas.CrossOneOff.CrossOneOffTransmission
+
+@[expose] public section
 
 /-!
 # The corrected cross-one-off transmission block

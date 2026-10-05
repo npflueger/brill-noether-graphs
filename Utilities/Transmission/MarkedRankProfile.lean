@@ -1,4 +1,8 @@
-import Utilities.Transmission.TransmissionWedgeSameSide
+module
+
+public import Utilities.Transmission.TransmissionWedgeSameSide
+
+@[expose] public section
 
 /-!
 # Marked rank profiles and attained wedge convolution

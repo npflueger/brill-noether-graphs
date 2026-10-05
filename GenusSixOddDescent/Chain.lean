@@ -1,8 +1,12 @@
-import GenusSixOddDescent.Cost
-import Utilities.Subdivision.SlotPropagation
-import Utilities.Subdivision.CoreCutsAndFlats
-import Utilities.Gonality.LegalFiringChain
-import Utilities.Foundations.RankDeterminingSet
+module
+
+public import GenusSixOddDescent.Cost
+public import Utilities.Subdivision.SlotPropagation
+public import Utilities.Subdivision.CoreCutsAndFlats
+public import Utilities.Gonality.LegalFiringChain
+public import Utilities.Foundations.RankDeterminingSet
+
+@[expose] public section
 
 /-!
 # States, reduced representatives and the pivot lemma
@@ -226,12 +230,12 @@ theorem structure_of_notSelected (hunit : spec.IsUnit) (hodd : Odd N) (h3N : 3 �
     refine Or.inl ⟨v, spec.chipEdges N hN D, hD, hdeg, ?_, hm, ?_⟩
     · intro u
       by_cases huv : u = v
-      · rw [if_pos huv, huv]; exact hv1
-      · rw [if_neg huv]; exact hv0 u (Finset.mem_univ u) huv
+      · rw [ite_eq_left huv, huv]; exact hv1
+      · rw [ite_eq_right huv]; exact hv0 u (Finset.mem_univ u) huv
     · intro e
       by_cases he : e ∈ spec.chipEdges N hN D
-      · rw [if_pos he]; exact heach e he
-      · rw [if_neg he]; exact spec.edgeChipCount_eq_zero_of_not_mem N hN he
+      · rw [ite_eq_left he]; exact heach e he
+      · rw [ite_eq_right he]; exact spec.edgeChipCount_eq_zero_of_not_mem N hN he
   · -- No core chip at all: a non-state.  Which non-state it is — the part that
     -- grows with `N` — is never needed.
     have hc0 : spec.coreChipCount N hN D = 0 := by omega
@@ -423,7 +427,7 @@ theorem pivot (hunit : spec.IsUnit) {D : CFDiv (spec.scale N hN).graph} {v : Fin
       ∀ j ∈ Finset.Ioo 0 N, D (spec.slotPoint N hN g j) = 0 := by
     intro g hg
     refine spec.slotPoint_eq_zero_of_edgeChipCount_zero N hN hunit hDeff ?_
-    rw [hslot g, if_neg hg]
+    rw [hslot g, ite_eq_right hg]
   -- (i) `T` meets the core: otherwise `slotInterior_disjoint_of_chip_le_one`
   -- empties every slot interior.
   have hmeet : ∃ w : Fin n, (spec.scale N hN).coreVertex w ∈ T := by
@@ -446,7 +450,7 @@ theorem pivot (hunit : spec.IsUnit) {D : CFDiv (spec.scale N hN).graph} {v : Fin
     intro w hw
     have hwv : w ≠ v := by rintro rfl; exact hv hw
     have hlegal := hT _ hw
-    rw [hcore w, if_neg hwv] at hlegal
+    rw [hcore w, ite_eq_right hwv] at hlegal
     have hnn := outdeg_S_nonneg (spec.scale N hN).graph T
       ((spec.scale N hN).coreVertex w)
     omega
@@ -455,7 +459,7 @@ theorem pivot (hunit : spec.IsUnit) {D : CFDiv (spec.scale N hN).graph} {v : Fin
   have hle : outdeg_S (spec.scale N hN).graph T ((spec.scale N hN).coreVertex v)
       ≤ 1 := by
     have hlegal := hT _ hvT
-    rwa [hcore v, if_pos rfl] at hlegal
+    rwa [hcore v, ite_eq_left rfl] at hlegal
   have hnn := outdeg_S_nonneg (spec.scale N hN).graph T
     ((spec.scale N hN).coreVertex v)
   by_contra hone
@@ -467,7 +471,7 @@ theorem pivot (hunit : spec.IsUnit) {D : CFDiv (spec.scale N hN).graph} {v : Fin
     by_cases hwv : w = v
     · rw [hwv]; exact hzero
     · have hlegal := hT _ hw
-      rw [hcore w, if_neg hwv] at hlegal
+      rw [hcore w, ite_eq_right hwv] at hlegal
       have hnn' := outdeg_S_nonneg (spec.scale N hN).graph T
         ((spec.scale N hN).coreVertex w)
       omega
@@ -759,14 +763,14 @@ private theorem burn_step (hunit : spec.IsUnit) (h2N : 2 ≤ N)
     intro g z hinc k hk0 hkN
     by_cases hc : spec.core.tail g = z
     · have hother : spec.core.otherEnd g z = spec.core.head g := by
-        unfold ExplicitPotential.Core.otherEnd; rw [if_pos hc]
+        unfold ExplicitPotential.Core.otherEnd; rw [ite_eq_left hc]
       have hside : ∀ l, spec.sidePoint N hN g z l = spec.slotPoint N hN g l :=
         fun l => spec.sidePoint_of_tail N hN g hc l
       rw [hside, hother, hTslot g k hk0 hkN]
       simp only [hside, hc]
     · have hz : spec.core.head g = z := hinc.resolve_left hc
       have hother : spec.core.otherEnd g z = spec.core.tail g := by
-        unfold ExplicitPotential.Core.otherEnd; rw [if_neg hc]
+        unfold ExplicitPotential.Core.otherEnd; rw [ite_eq_right hc]
       have hside : ∀ l, spec.sidePoint N hN g z l = spec.slotPoint N hN g (N - l) :=
         fun l => spec.sidePoint_of_ne N hN g hc l
       rw [hside, hother, hTslot g (N - k) (by omega) (by omega)]
@@ -788,17 +792,17 @@ private theorem burn_step (hunit : spec.IsUnit) (h2N : 2 ≤ N)
       ¬ spec.core.Crosses K g := by
     intro g hall hcr
     have hone : spec.edgeChipCount N hN D g = 1 := by
-      rw [hslotD g, if_pos (hcrossE g hcr)]
+      rw [hslotD g, ite_eq_left (hcrossE g hcr)]
     rw [spec.edgeChipCount_eq_sum_slotPoint N hN hunit D g,
       Finset.sum_congr rfl (fun l hl =>
         hall l (Finset.mem_Ioo.mp hl).1 (Finset.mem_Ioo.mp hl).2)] at hone
     simp at hone
   have hotherTail : ∀ g : Fin p,
       spec.core.otherEnd g (spec.core.tail g) = spec.core.head g := by
-    intro g; unfold ExplicitPotential.Core.otherEnd; rw [if_pos rfl]
+    intro g; unfold ExplicitPotential.Core.otherEnd; rw [ite_eq_left rfl]
   have hotherHead : ∀ g : Fin p,
       spec.core.otherEnd g (spec.core.head g) = spec.core.tail g := by
-    intro g; unfold ExplicitPotential.Core.otherEnd; rw [if_neg (spec.core_loopless g)]
+    intro g; unfold ExplicitPotential.Core.otherEnd; rw [ite_eq_right (spec.core_loopless g)]
   -- **Legality.**
   have hTlegal : legal_set (spec.scale N hN).graph D T := by
     intro x hx
@@ -807,7 +811,7 @@ private theorem burn_step (hunit : spec.IsUnit) (h2N : 2 ≤ N)
       have huv : u ≠ v := by rintro rfl; exact hvK huK
       show outdeg_S (spec.scale N hN).graph T ((spec.scale N hN).coreVertex u)
         ≤ D ((spec.scale N hN).coreVertex u)
-      rw [hcoreD u, if_neg huv]
+      rw [hcoreD u, ite_eq_right huv]
       refine le_of_eq (outdeg_eq_zero_of_nbrs_mem fun y hy => ?_)
       obtain ⟨g, hinc, rfl⟩ := spec.coreVertex_nbhd N hN hunit h2N hy
       exact (hTside g u hinc 1 (by omega) (by omega)).mpr
@@ -837,7 +841,7 @@ private theorem burn_step (hunit : spec.IsUnit) (h2N : 2 ≤ N)
           · rw [h, hlow0]; exact (hTcore _).mpr htK
           · exact (hTslot g (s - 1) h (by omega)).mpr
               (Or.inl ⟨htK, fun l hl1 hl2 => hzero l hl1 (by omega)⟩)
-        rw [if_pos hlow]
+        rw [ite_eq_left hlow]
         by_cases hDs : D (spec.slotPoint N hN g s) = 0
         · have hhigh : spec.slotPoint N hN g (s + 1) ∈ T := by
             rcases Nat.lt_or_ge (s + 1) N with h | h
@@ -856,7 +860,7 @@ private theorem burn_step (hunit : spec.IsUnit) (h2N : 2 ≤ N)
               rw [hotherTail g] at hmem
               rw [show s + 1 = N by omega, hhighN]
               exact (hTcore _).mpr hmem
-          rw [if_pos hhigh]
+          rw [ite_eq_left hhigh]
           omega
         · have hone : 1 ≤ D (spec.slotPoint N hN g s) := by omega
           split_ifs <;> omega
@@ -866,7 +870,7 @@ private theorem burn_step (hunit : spec.IsUnit) (h2N : 2 ≤ N)
           · exact (hTslot g (s + 1) (by omega) h).mpr
               (Or.inr ⟨hhK, fun l hl1 hl2 => hzero l (by omega) hl2⟩)
           · rw [show s + 1 = N by omega, hhighN]; exact (hTcore _).mpr hhK
-        rw [if_pos hhigh]
+        rw [ite_eq_left hhigh]
         by_cases hDs : D (spec.slotPoint N hN g s) = 0
         · have hlow : spec.slotPoint N hN g (s - 1) ∈ T := by
             rcases Nat.eq_zero_or_pos (s - 1) with h | h
@@ -885,7 +889,7 @@ private theorem burn_step (hunit : spec.IsUnit) (h2N : 2 ≤ N)
               rcases Nat.lt_or_ge s l with hls | hls
               · exact hzero l hls hl2
               · rw [show l = s by omega]; exact hDs
-          rw [if_pos hlow]
+          rw [ite_eq_left hlow]
           omega
         · have hone : 1 ≤ D (spec.slotPoint N hN g s) := by omega
           split_ifs <;> omega
@@ -908,7 +912,7 @@ private theorem burn_step (hunit : spec.IsUnit) (h2N : 2 ≤ N)
       (∀ l, 0 < l → l < N → l ≠ t → D (spec.sidePoint N hN g z l) = 0) := by
     intro g z t hcr hinc hzK ht0 htN hDt
     have hone : spec.edgeChipCount N hN D g = 1 := by
-      rw [hslotD g, if_pos (hcrossE g hcr)]
+      rw [hslotD g, ite_eq_left (hcrossE g hcr)]
     obtain ⟨c, hc0, hcN, hc1, hcrest⟩ :=
       spec.exists_chip_offset_side N hN hunit hDeff z hone
     have hct : c = t := by
@@ -965,7 +969,7 @@ private theorem burn_step (hunit : spec.IsUnit) (h2N : 2 ≤ N)
       omega
     · refine two_le_coreChipCount spec N hN hD'eff (v := v) (z := u)
         (Ne.symm huv) hvgain ?_
-      rw [set_firing_apply_of_not_mem _ _ huT, hcoreD u, if_neg huv]
+      rw [set_firing_apply_of_not_mem _ _ huT, hcoreD u, ite_eq_right huv]
       omega
   · -- **No landing: every crossing chip advances one step.**
     right
@@ -1031,7 +1035,7 @@ private theorem lemmaQ_descend (hunit : spec.IsUnit) (h2N : 2 ≤ N)
   | zero =>
       intro D E hDA hDtype hcrossE hbudget
       obtain ⟨t, ht0, htN, ht1, -⟩ := spec.exists_chip_offset_side N hN hunit
-        hDtype.1 z₀ (by rw [hDtype.2.2.2.2 e₀, if_pos (hcrossE e₀ he₀)])
+        hDtype.1 z₀ (by rw [hDtype.2.2.2.2 e₀, ite_eq_left (hcrossE e₀ he₀)])
       have := hbudget t ht0 htN (by omega)
       omega
   | succ s ih =>
@@ -1056,12 +1060,12 @@ private theorem lemmaQ_descend (hunit : spec.IsUnit) (h2N : 2 ≤ N)
         have huv : u = v := by
           by_contra hne
           have := hI.2.2.1 v
-          rw [if_neg (fun hc : v = u => hne hc.symm)] at this
+          rw [ite_eq_right (fun hc : v = u => hne hc.symm)] at this
           omega
         subst huv
         -- The chip of `e₀` has moved one step away from `K`.
         obtain ⟨t₀, ht₀0, ht₀N, ht₀1, -⟩ := spec.exists_chip_offset_side N hN hunit
-          hDtype.1 z₀ (by rw [hDtype.2.2.2.2 e₀, if_pos (hcrossE e₀ he₀)])
+          hDtype.1 z₀ (by rw [hDtype.2.2.2.2 e₀, ite_eq_left (hcrossE e₀ he₀)])
         obtain ⟨ht₀adv, hD'chip⟩ := hadv e₀ z₀ t₀ he₀ hz₀inc hz₀K ht₀0 ht₀N
           (by omega)
         -- Every slot crossing the cut still carries a chip, so it lies in `E'`.
@@ -1070,11 +1074,11 @@ private theorem lemmaQ_descend (hunit : spec.IsUnit) (h2N : 2 ≤ N)
           obtain ⟨z, hzinc, hzK, -⟩ :=
             spec.core.exists_nearEnd (spec.core_loopless g) hg
           obtain ⟨t, ht0, htN, ht1, -⟩ := spec.exists_chip_offset_side N hN hunit
-            hDtype.1 z (by rw [hDtype.2.2.2.2 g, if_pos (hcrossE g hg)])
+            hDtype.1 z (by rw [hDtype.2.2.2.2 g, ite_eq_left (hcrossE g hg)])
           obtain ⟨htadv, hD'g⟩ := hadv g z t hg hzinc hzK ht0 htN (by omega)
           by_contra hgE'
           have hzero : spec.edgeChipCount N hN D' g = 0 := by
-            rw [hI.2.2.2.2 g, if_neg hgE']
+            rw [hI.2.2.2.2 g, ite_eq_right hgE']
           have hpt : D' (spec.sidePoint N hN g z (t + 1)) = 0 :=
             spec.sidePoint_apply_eq_zero_of_chipless N hN g z
               (spec.slotPoint_eq_zero_of_edgeChipCount_zero N hN hunit hD'eff hzero)
@@ -1083,7 +1087,7 @@ private theorem lemmaQ_descend (hunit : spec.IsUnit) (h2N : 2 ≤ N)
         -- The budget drops by one.
         refine ih D' E' hD'A hI hcrossE' (fun t ht0 htN hDt => ?_)
         obtain ⟨c, hc0, hcN, hc1, hcrest⟩ := spec.exists_chip_offset_side N hN hunit
-          hD'eff z₀ (by rw [hI.2.2.2.2 e₀, if_pos (hcrossE' e₀ he₀)])
+          hD'eff z₀ (by rw [hI.2.2.2.2 e₀, ite_eq_left (hcrossE' e₀ he₀)])
         have hct : c = t₀ + 1 := by
           by_contra hne
           have := hcrest (t₀ + 1) (by omega) ht₀adv (Ne.symm hne)
@@ -1180,7 +1184,7 @@ private theorem typeI_of_core_chip (hunit : spec.IsUnit) (hcore : spec.core.Conn
   · have hchip := hI.2.2.1 v
     have hvu : v = u := by
       by_contra hne
-      rw [if_neg hne] at hchip
+      rw [ite_eq_right hne] at hchip
       omega
     subst hvu
     exact ⟨E, hI, spec.lemmaQ N hN hunit hcore hodd h3N hNS hD hDA hI⟩

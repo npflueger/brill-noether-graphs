@@ -1,6 +1,10 @@
-import LowGenus.GenusFourCanonicalClassifier
-import LowGenus.GenusFourPseudocoreCoverage
-import LowGenus.Infrastructure.CoreRelabelingClosed
+module
+
+public import LowGenus.GenusFourCanonicalClassifier
+public import LowGenus.GenusFourPseudocoreCoverage
+public import LowGenus.Infrastructure.CoreRelabelingClosed
+
+@[expose] public section
 
 /-!
 # Closed coverage of the six cubic genus-four rows

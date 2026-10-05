@@ -1,9 +1,13 @@
-import DraismaVargasCount.FacetParityPilot
-import DraismaVargasCount.MemberSeedExists
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoBaseOneLink
-import DraismaVargasCount.SheetLayerMatching
-import DraismaVargasCount.DiagonalClassificationEndgame
-import Utilities.CubicGraphs.CubicDartsTransport
+module
+
+public import DraismaVargasCount.FacetParityPilot
+public import DraismaVargasCount.MemberSeedExists
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoBaseOneLink
+public import DraismaVargasCount.SheetLayerMatching
+public import DraismaVargasCount.DiagonalClassificationEndgame
+public import Utilities.CubicGraphs.CubicDartsTransport
+
+@[expose] public section
 
 /-!
 # The facet adapter, and valency-three uniqueness at the caterpillar step
@@ -736,16 +740,16 @@ theorem blockSwapFun_involutive : Function.Involutive (blockSwapFun P Q) := by
   have hQP : ∀ j, P.repr (Q.repr j) = P.repr j := fun j ↦ (h _ _).mpr (Q.rel_repr_left j)
   unfold blockSwapFun
   by_cases hp : i = P.repr i
-  · rw [if_pos hp]
+  · rw [ite_eq_left hp]
     by_cases hq : Q.repr i = P.repr (Q.repr i)
-    · rw [if_pos hq, Q.repr_idem]
+    · rw [ite_eq_left hq, Q.repr_idem]
       rw [hQP] at hq
       exact hq.trans hp.symm
-    · rw [if_neg hq, if_pos (Q.repr_idem i).symm, hQP, ← hp]
-  · rw [if_neg hp]
+    · rw [ite_eq_right hq, ite_eq_left (Q.repr_idem i).symm, hQP, ← hp]
+  · rw [ite_eq_right hp]
     by_cases hq : i = Q.repr i
-    · rw [if_pos hq, if_pos (P.repr_idem i).symm, hPQ, ← hq]
-    · rw [if_neg hq, if_neg hp, if_neg hq]
+    · rw [ite_eq_left hq, ite_eq_left (P.repr_idem i).symm, hPQ, ← hq]
+    · rw [ite_eq_right hq, ite_eq_right hp, ite_eq_right hq]
 
 /-- The block swap, as a permutation. -/
 def blockSwap : Equiv.Perm (Fin d) := (blockSwapFun_involutive h).toPerm
@@ -761,7 +765,7 @@ theorem relabel_blockSwap : P.relabel (blockSwap h) = Q := by
   have hr : P.repr (blockSwapFun P Q i) = P.repr i := blockSwapFun_rel h i
   rw [hr]
   unfold blockSwapFun
-  rw [if_pos (P.repr_idem i).symm]
+  rw [ite_eq_left (P.repr_idem i).symm]
   exact (h _ _).mp (P.rel_repr_left i)
 
 end BlockSwap
@@ -807,11 +811,11 @@ noncomputable def candidateLimitIso :
     by_cases hv : vertex.1 = a
     · have hvertex : vertex = ⟨a, hab⟩ := Subtype.ext hv
       subst hvertex
-      rw [if_pos rfl, contractVertexPartition_merge, mergePerm, relabel_blockSwap]
+      rw [ite_eq_left rfl, contractVertexPartition_merge, mergePerm, relabel_blockSwap]
       change D.vertexPartition (contractVertex T wall a) = _
       rw [fst_eq hc hcontract]
       rfl
-    · rw [if_neg hv, Transport.DatumIso.relabel_refl, contractVertexPartition_of_ne _ a b hv]
+    · rw [ite_eq_right hv, Transport.DatumIso.relabel_refl, contractVertexPartition_of_ne _ a b hv]
       have hvb : vertex.1 ≠ freshVertex T := by
         rw [← snd_eq hc hcontract]
         exact vertex.2
@@ -832,14 +836,14 @@ noncomputable def candidateLimitIso :
       (W3Nd2IncomingMemberMatching.candidate_edgePartition_old C) edge
   compatible edge vertex _ sheet := by
     by_cases hv : vertex.1 = a
-    · rw [if_pos hv]
+    · rw [ite_eq_left hv]
       show (contractVertexPartition C.datum a b vertex).Rel
         ((mergePerm C hc hcontract).symm sheet) sheet
       have hvertex : vertex = ⟨a, hab⟩ := Subtype.ext hv
       subst hvertex
       rw [contractVertexPartition_merge, mergePerm, blockSwap_symm_apply]
       exact blockSwapFun_rel (candidate_merge_rel C hc hcontract) sheet
-    · rw [if_neg hv]
+    · rw [ite_eq_right hv]
       rfl
 
 end CandidateLimit

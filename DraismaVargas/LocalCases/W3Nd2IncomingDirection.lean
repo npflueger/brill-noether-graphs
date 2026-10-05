@@ -1,7 +1,11 @@
-import DraismaVargas.LocalCases.W3Nd2IncomingTargetPlacement
-import DraismaVargas.LocalCases.DivalentSourceLocal
-import DraismaVargas.LocalCases.WallDegeneration
-import DraismaVargas.LocalCases.M11IncomingTargetNormalization
+module
+
+public import DraismaVargas.LocalCases.W3Nd2IncomingTargetPlacement
+public import DraismaVargas.LocalCases.DivalentSourceLocal
+public import DraismaVargas.LocalCases.WallDegeneration
+public import DraismaVargas.LocalCases.M11IncomingTargetNormalization
+
+@[expose] public section
 
 /-!
 # Source-facing direction of the incoming W3 nd2 contraction

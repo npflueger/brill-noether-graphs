@@ -1,4 +1,8 @@
-import Utilities.Subdivision.CoreVertexCut
+module
+
+public import Utilities.Subdivision.CoreVertexCut
+
+@[expose] public section
 
 /-!
 # Genus of factors cut from a subdivided core

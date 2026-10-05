@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W4IncomingPrunedFibre
+module
+
+public import DraismaVargas.LocalCases.W4IncomingPrunedFibre
+
+@[expose] public section
 
 /-!
 # Side-conditioned actual W4 pruned fibres

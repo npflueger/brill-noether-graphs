@@ -1,9 +1,13 @@
-import DraismaVargas.LocalCases.WallProgress
-import DraismaVargas.LocalCases.W3Nd2PositiveExit
-import DraismaVargas.LocalCases.W3Nd3ArbitraryExit
-import DraismaVargas.LocalCases.W3ShiftClosure
-import DraismaVargas.LocalCases.W3FourStableGraph
-import DraismaVargas.LocalCases.W3FourRegrownColumn
+module
+
+public import DraismaVargas.LocalCases.WallProgress
+public import DraismaVargas.LocalCases.W3Nd2PositiveExit
+public import DraismaVargas.LocalCases.W3Nd3ArbitraryExit
+public import DraismaVargas.LocalCases.W3ShiftClosure
+public import DraismaVargas.LocalCases.W3FourStableGraph
+public import DraismaVargas.LocalCases.W3FourRegrownColumn
+
+@[expose] public section
 
 /-!
 # The trivalent wall's route into `PresentedProgress`

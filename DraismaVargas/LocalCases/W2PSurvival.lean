@@ -1,8 +1,12 @@
-import DraismaVargas.LocalCases.W2PSourceCandidates
-import DraismaVargas.LocalCases.W2MkkStableGraph
-import DraismaVargas.LocalCases.LimitChainCore
-import DraismaVargas.LocalCases.M11JoinedDescentGeometry
-import DraismaVargas.LocalCases.ResolutionAwayFromWall
+module
+
+public import DraismaVargas.LocalCases.W2PSourceCandidates
+public import DraismaVargas.LocalCases.W2MkkStableGraph
+public import DraismaVargas.LocalCases.LimitChainCore
+public import DraismaVargas.LocalCases.M11JoinedDescentGeometry
+public import DraismaVargas.LocalCases.ResolutionAwayFromWall
+
+@[expose] public section
 
 /-!
 # Figure 35's survival census
@@ -1051,14 +1055,14 @@ noncomputable def mergeCensus {profile : W2R2SourceProfile.SourceProfile data st
     fresh_pair := ?_ }
   · intro first second _ hFine
     by_cases h : (mergeShape profile own hOwnExtra).fine.Rel own.1.1.2 first
-    · exact (if_pos h).trans (if_pos (show (mergeShape profile own hOwnExtra).fine.Rel own.1.1.2
+    · exact (ite_eq_left h).trans (ite_eq_left (show (mergeShape profile own hOwnExtra).fine.Rel own.1.1.2
         second from h.trans hFine)).symm
-    · exact (if_neg h).trans (if_neg (show ¬ (mergeShape profile own hOwnExtra).fine.Rel own.1.1.2
+    · exact (ite_eq_right h).trans (ite_eq_right (show ¬ (mergeShape profile own hOwnExtra).fine.Rel own.1.1.2
         second from fun h' ↦ h (h'.trans hFine.symm))).symm
   · intro sheet old hRel hOld hSurvives
     by_cases h : (mergeShape profile own hOwnExtra).fine.Rel own.1.1.2 sheet
     · have hOldEq : old = (⟨own.1, hOwnSurvives⟩ : NonDanglingEdge data) :=
-        hOld.trans (if_pos h)
+        hOld.trans (ite_eq_left h)
       have hEq : (mergeShape profile own hOwnExtra).candidate.newSourceEdge sheet =
           (mergeShape profile own hOwnExtra).candidate.newSourceEdge own.1.1.2 :=
         ((mergeShape profile own hOwnExtra).newSourceEdge_eq_iff_fine sheet own.1.1.2 hRel).mpr
@@ -1066,7 +1070,7 @@ noncomputable def mergeCensus {profile : W2R2SourceProfile.SourceProfile data st
       rw [hOldEq]
       exact Eq.trans (congrArg NonDanglingEdge.stablePath (Subtype.ext hEq)) hNewOwnRow
     · have hOldEq : old = (⟨other.1, hOtherSurvives⟩ : NonDanglingEdge data) :=
-        hOld.trans (if_neg h)
+        hOld.trans (ite_eq_right h)
       rcases hCoverFine sheet hRel with h' | h'
       · exact absurd h' h
       have hEq : (mergeShape profile own hOwnExtra).candidate.newSourceEdge sheet =
@@ -1078,13 +1082,13 @@ noncomputable def mergeCensus {profile : W2R2SourceProfile.SourceProfile data st
   · intro sheet hRel _
     rcases hCoverFine sheet hRel with h | h
     · refine ⟨own.1.1.2, ⟨own.1, hOwnSurvives⟩, hOwnRel,
-        (if_pos (show (mergeShape profile own hOwnExtra).fine.Rel own.1.1.2 own.1.1.2
+        (ite_eq_left (show (mergeShape profile own hOwnExtra).fine.Rel own.1.1.2 own.1.1.2
           from rfl)).symm, ?_⟩
       rw [(mergeShape profile own hOwnExtra).sourceEndpoint_old_eq_of_fine own.1.1.2 sheet hOwnRel
         h] at hStarOwn
       exact hStarOwn
     · refine ⟨other.1.1.2, ⟨other.1, hOtherSurvives⟩, hOtherRel,
-        (if_neg hFineNotOther).symm, ?_⟩
+        (ite_eq_right hFineNotOther).symm, ?_⟩
       rw [(mergeShape profile own hOwnExtra).sourceEndpoint_old_eq_of_fine other.1.1.2 sheet
         hOtherRel h] at hStarOther
       exact hStarOther
@@ -1532,23 +1536,23 @@ theorem thirdShape_fine_cover (shape : Shape profile) (sheet : Fin degree)
 theorem firstCensus_rep_first (shape : Shape profile) (input : W2SourceInput data star) :
     (firstCensus shape input).rep (firstSheet profile) =
       ⟨profile.first.1, profile.first_survives⟩ :=
-  if_pos rfl
+  ite_eq_left rfl
 
 theorem firstCensus_rep_second (shape : Shape profile) (input : W2SourceInput data star) :
     (firstCensus shape input).rep (secondSheet profile) =
       ⟨profile.second.1, profile.second_survives⟩ :=
-  if_neg (mergeShape_fine_not_rel profile.first profile.second (first_extra_separate shape)
+  ite_eq_right (mergeShape_fine_not_rel profile.first profile.second (first_extra_separate shape)
     (second_extra_separate shape) (first_second_separate profile))
 
 theorem secondCensus_rep_second (shape : Shape profile) (input : W2SourceInput data star) :
     (secondCensus shape input).rep (secondSheet profile) =
       ⟨profile.second.1, profile.second_survives⟩ :=
-  if_pos rfl
+  ite_eq_left rfl
 
 theorem secondCensus_rep_first (shape : Shape profile) (input : W2SourceInput data star) :
     (secondCensus shape input).rep (firstSheet profile) =
       ⟨profile.first.1, profile.first_survives⟩ :=
-  if_neg (mergeShape_fine_not_rel profile.second profile.first (second_extra_separate shape)
+  ite_eq_right (mergeShape_fine_not_rel profile.second profile.first (second_extra_separate shape)
     (first_extra_separate shape) (fun h ↦ first_second_separate profile h.symm))
 
 theorem thirdCensus_rep (shape : Shape profile) (input : W2SourceInput data star)

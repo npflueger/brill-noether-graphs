@@ -1,5 +1,9 @@
-import DraismaVargasCount.NonTrivalentCorner
-import DraismaVargasCount.Integrality
+module
+
+public import DraismaVargasCount.NonTrivalentCorner
+public import DraismaVargasCount.Integrality
+
+@[expose] public section
 
 /-!
 # Matrix-intrinsic leaf columns and the normalized non-trivalent corner
@@ -64,7 +68,7 @@ theorem mem_leafColumns_iff_basis_two
     have hPasses : PassesAboveLeaf fd.labelling row := by
       by_contra hAvoid
       have hLe := matrix_le_one_of_not_passesAboveLeaf fd hAvoid col
-      rw [hColumn row, if_pos rfl] at hLe
+      rw [hColumn row, ite_eq_left rfl] at hLe
       norm_num at hLe
     obtain ⟨vertex, hLeaf, hRow⟩ := exists_eq_leafRow_of_passesAboveLeaf fd hPasses
     have hCol : col = fd.labelling.targetEdge.symm (leafEdge hLeaf) := by
@@ -125,19 +129,19 @@ theorem leafCount_add_flag :
     ← leafColumns_card_eq_leafCount_of_fullDimensional fdOut]
   by_cases hIn : col ∈ leafColumns fdIn.labelling.presentation <;>
     by_cases hOut : col ∈ leafColumns fdOut.labelling.presentation
-  · rw [if_pos hIn, if_pos hOut]
+  · rw [ite_eq_left hIn, ite_eq_left hOut]
     have hI := Finset.card_erase_add_one hIn
     have hO := Finset.card_erase_add_one hOut
     omega
-  · rw [if_pos hIn, if_neg hOut]
+  · rw [ite_eq_left hIn, ite_eq_right hOut]
     rw [Finset.erase_eq_of_notMem hOut] at hErase
     have hI := Finset.card_erase_add_one hIn
     omega
-  · rw [if_neg hIn, if_pos hOut]
+  · rw [ite_eq_right hIn, ite_eq_left hOut]
     rw [Finset.erase_eq_of_notMem hIn] at hErase
     have hO := Finset.card_erase_add_one hOut
     omega
-  · rw [if_neg hIn, if_neg hOut]
+  · rw [ite_eq_right hIn, ite_eq_right hOut]
     simpa only [Finset.erase_eq_of_notMem hIn, Finset.erase_eq_of_notMem hOut,
       Nat.add_zero] using hErase
 

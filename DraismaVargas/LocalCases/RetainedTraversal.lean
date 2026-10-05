@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.RetainedCut
+module
+
+public import DraismaVargas.LocalCases.RetainedCut
+
+@[expose] public section
 
 /-!
 # The oriented row at a nonempty expansion forest
@@ -362,12 +366,12 @@ theorem sourceEnds_occurrence_fst (x : SlotIndex iface face) :
   have hb := slotPosition_lt (iface := iface) (face := face) x
   by_cases hc : (candidate.datum.sourceEnds (occurrence x)).1 =
       rowWalk strong iface x.1 (slotPosition (face := face) x)
-  · rw [show reversedAt (strong := strong) x = false from if_pos hc, if_neg (by simp)]
+  · rw [show reversedAt (strong := strong) x = false from ite_eq_left hc, ite_eq_right (by simp)]
     exact hc
-  · rw [show reversedAt (strong := strong) x = true from if_neg hc, if_pos rfl,
+  · rw [show reversedAt (strong := strong) x = true from ite_eq_right hc, ite_eq_left rfl,
       rowWalk_succ hb, ← occurrence_eq_getElem x]
     unfold otherEnd
-    rw [if_neg hc]
+    rw [ite_eq_right hc]
 
 /-- **and the second.** -/
 theorem sourceEnds_occurrence_snd (x : SlotIndex iface face) :
@@ -378,11 +382,11 @@ theorem sourceEnds_occurrence_snd (x : SlotIndex iface face) :
   have hb := slotPosition_lt (iface := iface) (face := face) x
   by_cases hc : (candidate.datum.sourceEnds (occurrence x)).1 =
       rowWalk strong iface x.1 (slotPosition (face := face) x)
-  · rw [show reversedAt (strong := strong) x = false from if_pos hc, if_neg (by simp),
+  · rw [show reversedAt (strong := strong) x = false from ite_eq_left hc, ite_eq_right (by simp),
       rowWalk_succ hb, ← occurrence_eq_getElem x]
     unfold otherEnd
-    rw [if_pos hc]
-  · rw [show reversedAt (strong := strong) x = true from if_neg hc, if_pos rfl]
+    rw [ite_eq_left hc]
+  · rw [show reversedAt (strong := strong) x = true from ite_eq_right hc, ite_eq_left rfl]
     have hInc := rowWalk_incident (strong := strong) (iface := iface) hb
     rw [← occurrence_eq_getElem x] at hInc
     rcases hInc with hCase | hCase

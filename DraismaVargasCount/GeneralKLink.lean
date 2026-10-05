@@ -1,4 +1,8 @@
-import DraismaVargasCount.GeneralKExitSetup
+module
+
+public import DraismaVargasCount.GeneralKExitSetup
+
+@[expose] public section
 
 /-!
 # The general-`K` type-change link at a four-valent wall

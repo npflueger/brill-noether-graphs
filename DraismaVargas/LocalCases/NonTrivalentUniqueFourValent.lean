@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyFourBackground
-import DraismaVargas.LocalCases.W4IncomingPrunedFibre
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyFourBackground
+public import DraismaVargas.LocalCases.W4IncomingPrunedFibre
+
+@[expose] public section
 
 /-!
 # The unique four-valent vertex above a one-row wall

@@ -1,8 +1,12 @@
-import DraismaVargas.LocalCases.W4IncomingGlobalMatching
-import DraismaVargas.LocalCases.M11IncomingOuterPartitions
-import DraismaVargas.LocalCases.W4IncomingTargetNormalization
-import DraismaVargas.LocalCases.GlobalW4
-import DraismaVargas.Infrastructure.PartitionNormalization
+module
+
+public import DraismaVargas.LocalCases.W4IncomingGlobalMatching
+public import DraismaVargas.LocalCases.M11IncomingOuterPartitions
+public import DraismaVargas.LocalCases.W4IncomingTargetNormalization
+public import DraismaVargas.LocalCases.GlobalW4
+public import DraismaVargas.Infrastructure.PartitionNormalization
+
+@[expose] public section
 
 /-!
 # Stored-representative normalization at a four-valent wall
@@ -132,9 +136,9 @@ theorem pairingSide_false_eq_targetIso_symm :
   by_cases hSupport :
       ∀ e ∈ GluingDatum.incidentEdges (target := contract target hab hOne) ⟨a, hab⟩,
         IncomingTargetExpansion.right hc hab hOne e = star.right q e
-  · rw [if_pos hSupport] at hEndpoints ⊢
+  · rw [ite_eq_left hSupport] at hEndpoints ⊢
     exact (congrArg Prod.fst hEndpoints).symm
-  · rw [if_neg hSupport] at hEndpoints ⊢
+  · rw [ite_eq_right hSupport] at hEndpoints ⊢
     exact (congrArg Prod.fst hEndpoints).symm
 
 /-- **The pairing side `true`.** The canonical incoming endpoint carrying pairing
@@ -149,9 +153,9 @@ theorem pairingSide_true_eq_targetIso_symm :
   by_cases hSupport :
       ∀ e ∈ GluingDatum.incidentEdges (target := contract target hab hOne) ⟨a, hab⟩,
         IncomingTargetExpansion.right hc hab hOne e = star.right q e
-  · rw [if_pos hSupport] at hEndpoints ⊢
+  · rw [ite_eq_left hSupport] at hEndpoints ⊢
     exact (congrArg Prod.snd hEndpoints).symm
-  · rw [if_neg hSupport] at hEndpoints ⊢
+  · rw [ite_eq_right hSupport] at hEndpoints ⊢
     exact (congrArg Prod.snd hEndpoints).symm
 
 end Iso

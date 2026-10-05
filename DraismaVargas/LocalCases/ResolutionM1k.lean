@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.ResolutionM11
+module
+
+public import DraismaVargas.LocalCases.ResolutionM11
+
+@[expose] public section
 
 /-!
 # The local resolutions in case `w2-r2-nd3-M-1k`

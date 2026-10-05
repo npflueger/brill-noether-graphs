@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W3FourClosure
+module
+
+public import DraismaVargas.LocalCases.W3FourClosure
+
+@[expose] public section
 
 /-!
 # Figure 28's four members: honest length matrices, and Equation (2) without `hDet`
@@ -337,8 +341,8 @@ theorem gaugePresentation_matrix_some (i : Fin n) (row : Option target.edges)
     rw [gaugePresentation_coefficient_old base transport member oldPath
       newSheets i e (some column)]
     by_cases hEq : column = e.1.1
-    · rw [if_pos hEq, if_pos (congrArg some hEq)]
-    · rw [if_neg hEq, if_neg (fun h ↦ hEq (Option.some.inj h))]
+    · rw [ite_eq_left hEq, ite_eq_left (congrArg some hEq)]
+    · rw [ite_eq_right hEq, ite_eq_right (fun h ↦ hEq (Option.some.inj h))]
   change (((oldPath row).map fun e ↦
       GluingDatum.LengthMatrixPresentation.coefficient
         (gaugePresentation base transport member oldPath newSheets i)
@@ -372,7 +376,7 @@ theorem gaugePresentation_matrix_none (i : Fin n) (row : Option target.edges) :
         ((member i).oldSourceEdge ((transport i).edge e)) none)).sum = 0 := by
     rw [List.map_congr_left (fun e _ ↦ by
       rw [gaugePresentation_coefficient_old base transport member oldPath
-        newSheets i e none, if_neg (by simp)]
+        newSheets i e none, ite_eq_right (by simp)]
       : ∀ e ∈ oldPath row,
         GluingDatum.LengthMatrixPresentation.coefficient
           (gaugePresentation base transport member oldPath newSheets i)
@@ -467,11 +471,11 @@ theorem columnSum_eq (path : List data.SourceEdge) (t : target.edges) :
         List.sum_cons] at ih ⊢
       by_cases hTarget : t = e.1.1
       · by_cases hRel : (data.vertexPartition wall).Rel geometry.growAnchor e.1.2
-        · rw [if_pos hTarget, if_pos ⟨hTarget, hRel⟩, if_neg (by tauto)]
+        · rw [ite_eq_left hTarget, ite_eq_left ⟨hTarget, hRel⟩, ite_eq_right (by tauto)]
           rw [ih]; ring
-        · rw [if_pos hTarget, if_neg (by tauto), if_pos ⟨hTarget, hRel⟩]
+        · rw [ite_eq_left hTarget, ite_eq_right (by tauto), ite_eq_left ⟨hTarget, hRel⟩]
           rw [ih]; ring
-      · rw [if_neg hTarget, if_neg (by tauto), if_neg (by tauto)]
+      · rw [ite_eq_right hTarget, ite_eq_right (by tauto), ite_eq_right (by tauto)]
         rw [ih]; ring
 
 /-- **The background regrown occurrences of a row reproduce its `t` column,
@@ -497,10 +501,10 @@ theorem sum_backgroundSheetsOf (path : List data.SourceEdge) (t : target.edges)
           exact congrArg (fun p ↦ SheetPartition.blockCard p e.1.2)
             (congrArg data.edgePartition hCond.1)
         simp only [backgroundSheetsOf, backgroundSum, List.filterMap_cons,
-          List.map_cons, List.sum_cons, if_pos hCond] at ih ⊢
+          List.map_cons, List.sum_cons, ite_eq_left hCond] at ih ⊢
         rw [hIdx, ih]
       · simp only [backgroundSheetsOf, backgroundSum, List.filterMap_cons,
-          List.map_cons, List.sum_cons, if_neg hCond] at ih ⊢
+          List.map_cons, List.sum_cons, ite_eq_right hCond] at ih ⊢
         rw [ih, zero_add]
 
 end Columns
@@ -1620,58 +1624,58 @@ noncomputable def LimitRows.model (geometry : FourStarGeometry data wall) :
     intro row
     unfold modelOldPath
     by_cases hGrow : row = some geometry.growTarget
-    · rw [if_pos hGrow, if_pos hGrow, selectedSum_singleton,
-        if_pos ⟨rfl, wall_rel_sourceEdge_sheet geometry _ geometry.grow_refines _ rfl⟩,
+    · rw [ite_eq_left hGrow, ite_eq_left hGrow, selectedSum_singleton,
+        ite_eq_left ⟨rfl, wall_rel_sourceEdge_sheet geometry _ geometry.grow_refines _ rfl⟩,
         sourceEdgeIndex_sourceEdge]
-    · rw [if_neg hGrow, if_neg hGrow]
+    · rw [ite_eq_right hGrow, ite_eq_right hGrow]
       by_cases hOther : row = some geometry.otherTarget
-      · rw [if_pos hOther, selectedSum_singleton,
-          if_neg (fun h ↦ geometry.grow_ne_other h.1)]
-      · rw [if_neg hOther]
+      · rw [ite_eq_left hOther, selectedSum_singleton,
+          ite_eq_right (fun h ↦ geometry.grow_ne_other h.1)]
+      · rw [ite_eq_right hOther]
         by_cases hLargest : row = some geometry.largestTarget
-        · rw [if_pos hLargest, selectedSum_singleton,
-            if_neg (fun h ↦ geometry.grow_ne_largest h.1)]
-        · rw [if_neg hLargest, selectedSum_nil]
+        · rw [ite_eq_left hLargest, selectedSum_singleton,
+            ite_eq_right (fun h ↦ geometry.grow_ne_largest h.1)]
+        · rw [ite_eq_right hLargest, selectedSum_nil]
   selected_other := by
     classical
     intro row
     unfold modelOldPath
     by_cases hGrow : row = some geometry.growTarget
-    · rw [if_pos hGrow, selectedSum_singleton,
-        if_neg (fun h ↦ geometry.grow_ne_other h.1.symm),
-        if_neg (fun h ↦ geometry.grow_ne_other
+    · rw [ite_eq_left hGrow, selectedSum_singleton,
+        ite_eq_right (fun h ↦ geometry.grow_ne_other h.1.symm),
+        ite_eq_right (fun h ↦ geometry.grow_ne_other
           (Option.some.inj (hGrow.symm.trans h)))]
-    · rw [if_neg hGrow]
+    · rw [ite_eq_right hGrow]
       by_cases hOther : row = some geometry.otherTarget
-      · rw [if_pos hOther, if_pos hOther, selectedSum_singleton,
-          if_pos ⟨rfl, wall_rel_sourceEdge_sheet geometry _ geometry.other_refines _
+      · rw [ite_eq_left hOther, ite_eq_left hOther, selectedSum_singleton,
+          ite_eq_left ⟨rfl, wall_rel_sourceEdge_sheet geometry _ geometry.other_refines _
             geometry.other_wall_rel⟩, sourceEdgeIndex_sourceEdge]
-      · rw [if_neg hOther, if_neg hOther]
+      · rw [ite_eq_right hOther, ite_eq_right hOther]
         by_cases hLargest : row = some geometry.largestTarget
-        · rw [if_pos hLargest, selectedSum_singleton,
-            if_neg (fun h ↦ geometry.other_ne_largest h.1)]
-        · rw [if_neg hLargest, selectedSum_nil]
+        · rw [ite_eq_left hLargest, selectedSum_singleton,
+            ite_eq_right (fun h ↦ geometry.other_ne_largest h.1)]
+        · rw [ite_eq_right hLargest, selectedSum_nil]
   selected_largest := by
     classical
     intro row
     unfold modelOldPath
     by_cases hGrow : row = some geometry.growTarget
-    · rw [if_pos hGrow, selectedSum_singleton,
-        if_neg (fun h ↦ geometry.grow_ne_largest h.1.symm),
-        if_neg (fun h ↦ geometry.grow_ne_largest
+    · rw [ite_eq_left hGrow, selectedSum_singleton,
+        ite_eq_right (fun h ↦ geometry.grow_ne_largest h.1.symm),
+        ite_eq_right (fun h ↦ geometry.grow_ne_largest
           (Option.some.inj (hGrow.symm.trans h)))]
-    · rw [if_neg hGrow]
+    · rw [ite_eq_right hGrow]
       by_cases hOther : row = some geometry.otherTarget
-      · rw [if_pos hOther, selectedSum_singleton,
-          if_neg (fun h ↦ geometry.other_ne_largest h.1.symm),
-          if_neg (fun h ↦ geometry.other_ne_largest
+      · rw [ite_eq_left hOther, selectedSum_singleton,
+          ite_eq_right (fun h ↦ geometry.other_ne_largest h.1.symm),
+          ite_eq_right (fun h ↦ geometry.other_ne_largest
             (Option.some.inj (hOther.symm.trans h)))]
-      · rw [if_neg hOther]
+      · rw [ite_eq_right hOther]
         by_cases hLargest : row = some geometry.largestTarget
-        · rw [if_pos hLargest, if_pos hLargest, selectedSum_singleton,
-            if_pos ⟨rfl, wall_rel_sourceEdge_sheet geometry _ geometry.largest_refines
+        · rw [ite_eq_left hLargest, ite_eq_left hLargest, selectedSum_singleton,
+            ite_eq_left ⟨rfl, wall_rel_sourceEdge_sheet geometry _ geometry.largest_refines
               _ geometry.largest_wall_rel⟩, sourceEdgeIndex_sourceEdge]
-        · rw [if_neg hLargest, selectedSum_nil, if_neg hLargest]
+        · rw [ite_eq_right hLargest, selectedSum_nil, ite_eq_right hLargest]
 
 end Model
 

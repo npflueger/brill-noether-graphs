@@ -1,4 +1,8 @@
-import Bananas.Examples.MechanicalAPIAudit
+module
+
+public import Bananas.Examples.MechanicalAPIAudit
+
+@[expose] public section
 
 /-!
 # Bounded mechanical audit: evenly marked theta transmission

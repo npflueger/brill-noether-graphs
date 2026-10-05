@@ -1,7 +1,11 @@
-import LowGenus.Generated.G4Row096
-import LowGenus.Generated.G4Row099
-import LowGenus.Generated.G4Row100
-import LowGenus.GenusFiveConfigurations
+module
+
+public import LowGenus.Generated.G4Row096
+public import LowGenus.Generated.G4Row099
+public import LowGenus.Generated.G4Row100
+public import LowGenus.GenusFiveConfigurations
+
+@[expose] public section
 
 /-!
 # Generated closed-face checks for genus-four cubic rows

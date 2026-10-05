@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.StableLocalProperties
+module
+
+public import DraismaVargas.LocalCases.StableLocalProperties
+
+@[expose] public section
 
 /-!
 # The literal stable-source matrix, including rectangular wall matrices

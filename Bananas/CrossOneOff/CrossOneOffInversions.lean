@@ -1,5 +1,9 @@
-import Bananas.CrossOneOff.CrossOneOffBlock
-import Bananas.SameStrand.EndpointCardinality
+module
+
+public import Bananas.CrossOneOff.CrossOneOffBlock
+public import Bananas.SameStrand.EndpointCardinality
+
+@[expose] public section
 
 /-!
 # A rigorously separated inversion block for cross-one-off markings

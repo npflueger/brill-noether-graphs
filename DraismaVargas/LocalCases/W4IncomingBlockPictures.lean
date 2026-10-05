@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.W4IncomingSheetClasses
-import DraismaVargas.LocalCases.W4IncomingBlockRelations
-import DraismaVargas.LocalCases.W4IncomingInternalRelations
+module
+
+public import DraismaVargas.LocalCases.W4IncomingSheetClasses
+public import DraismaVargas.LocalCases.W4IncomingBlockRelations
+public import DraismaVargas.LocalCases.W4IncomingInternalRelations
+
+@[expose] public section
 
 /-!
 # Actual auxiliary pictures determine incoming W4 block patterns

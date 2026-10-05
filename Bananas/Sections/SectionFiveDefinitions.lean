@@ -1,5 +1,9 @@
-import Bananas.Transmission.TransmissionBasics
-import Utilities.Iso.GraphIso
+module
+
+public import Bananas.Transmission.TransmissionBasics
+public import Utilities.Iso.GraphIso
+
+@[expose] public section
 
 /-!
 # Shared definitions for Section 5

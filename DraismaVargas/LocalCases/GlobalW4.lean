@@ -1,7 +1,11 @@
-import DraismaVargas.Infrastructure.Change
-import DraismaVargas.LocalCases.BalancedGlobal
-import DraismaVargas.LocalCases.W4Assembly
-import DraismaVargas.LocalCases.GlobalBookends
+module
+
+public import DraismaVargas.Infrastructure.Change
+public import DraismaVargas.LocalCases.BalancedGlobal
+public import DraismaVargas.LocalCases.W4Assembly
+public import DraismaVargas.LocalCases.GlobalBookends
+
+@[expose] public section
 
 /-!
 # Global candidates for the four-valent wall case
@@ -230,9 +234,9 @@ theorem exterior {data : GluingDatum target degree}
             rw [hOpposite]
             cases hFirstSide :
                 W4TargetPairings.Pairing.labelRight pairing block.first
-            · simp only [hFirstSide, Bool.not_false, if_true] at hEndpoint ⊢
+            · simp only [hFirstSide, Bool.not_false, ite_true] at hEndpoint ⊢
               exact hEndpoint
-            · simp only [hFirstSide, Bool.not_true, if_true] at hEndpoint ⊢
+            · simp only [hFirstSide, Bool.not_true, ite_true] at hEndpoint ⊢
               exact hEndpoint
           rw [hEndpoint']
           exact profile.nd2_dangling anchor block hPattern label hFirst
@@ -245,7 +249,7 @@ theorem exterior {data : GluingDatum target degree}
         · simp only [Bool.false_eq, hEndpoints.1]
           exact (star.edgePartition_refines_wall data label).refinesOnBlock
             anchor
-        · simp only [if_true, hEndpoints.2]
+        · simp only [ite_true, hEndpoints.2]
           exact (star.edgePartition_refines_wall data label).refinesOnBlock
             anchor
   | nd3 block =>
@@ -2133,7 +2137,23 @@ noncomputable def occurrenceReceiptNd2OfCanonicalPaths
       W4TargetPairings.Pairing.labelRight pairing block.first ≠
         W4TargetPairings.Pairing.labelRight pairing block.second →
       newRow pairing = oldRow block.first)
-    (old_row : oldRow block.first = oldRow block.second) := by
+    (old_row : oldRow block.first = oldRow block.second) :
+    OccurrenceReceipt
+      (fun pairing ↦
+        w4TaggedBlockColumnOccurrences
+          (candidatesOfCounts data star pattern counts) (canonicalPresentationOfPaths counts oldPath newSheets)
+          (fun pairing ↦
+            WallBlock.ofSourceEdge data wall (counts pairing).candidate.datum)
+          sourceBlock none pairing)
+      (GluingDatum.LengthMatrixPresentation.blockColumnsOccurrences
+        ((canonicalPresentationOfPaths counts oldPath newSheets) 0)
+        (WallBlock.ofSourceEdge data wall (counts 0).candidate.datum)
+        sourceBlock (canonicalW4OldColumns star))
+      (w4CandidateOccurrenceWeight
+        (candidatesOfCounts data star pattern counts) (canonicalPresentationOfPaths counts oldPath newSheets) none)
+      (w4WallOccurrenceWeight
+        (candidatesOfCounts data star pattern counts) (canonicalPresentationOfPaths counts oldPath newSheets) none)
+      (.nd2 block) := by
   apply occurrenceReceiptNd2OfCounts data star pattern profile counts
     (canonicalPresentationOfPaths counts oldPath newSheets)
     sourceBlock none (canonicalW4OldColumns star) block hPattern newRow oldRow
@@ -2186,7 +2206,23 @@ noncomputable def occurrenceReceiptNd3OfCanonicalPaths
           data.sourceEdge (star.edge block.third) (activeSheet block.third))} =
         canonicalOldPathOccurrences star sourceBlock oldPath)
     (new_row : ∀ pairing,
-      newRow pairing = oldRow (block.singletonLabel pairing)) := by
+      newRow pairing = oldRow (block.singletonLabel pairing)) :
+    OccurrenceReceipt
+      (fun pairing ↦
+        w4TaggedBlockColumnOccurrences
+          (candidatesOfCounts data star pattern counts) (canonicalPresentationOfPaths counts oldPath newSheets)
+          (fun pairing ↦
+            WallBlock.ofSourceEdge data wall (counts pairing).candidate.datum)
+          sourceBlock none pairing)
+      (GluingDatum.LengthMatrixPresentation.blockColumnsOccurrences
+        ((canonicalPresentationOfPaths counts oldPath newSheets) 0)
+        (WallBlock.ofSourceEdge data wall (counts 0).candidate.datum)
+        sourceBlock (canonicalW4OldColumns star))
+      (w4CandidateOccurrenceWeight
+        (candidatesOfCounts data star pattern counts) (canonicalPresentationOfPaths counts oldPath newSheets) none)
+      (w4WallOccurrenceWeight
+        (candidatesOfCounts data star pattern counts) (canonicalPresentationOfPaths counts oldPath newSheets) none)
+      (.nd3 block) := by
   apply occurrenceReceiptNd3OfCounts data star pattern counts
     (canonicalPresentationOfPaths counts oldPath newSheets)
     sourceBlock none (canonicalW4OldColumns star) block hPattern

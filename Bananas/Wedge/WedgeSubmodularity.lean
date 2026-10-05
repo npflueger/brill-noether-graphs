@@ -1,7 +1,11 @@
-import Bananas.Transmission.TransmissionBridge
-import Bananas.Transmission.TransmissionBasics
-import Utilities.Transmission.MarkedRankProfile
-import Utilities.Transmission.TransmissionWedgeDemazure
+module
+
+public import Bananas.Transmission.TransmissionBridge
+public import Bananas.Transmission.TransmissionBasics
+public import Utilities.Transmission.MarkedRankProfile
+public import Utilities.Transmission.TransmissionWedgeDemazure
+
+@[expose] public section
 
 /-!
 # Exact transmission and submodularity across a vertex wedge

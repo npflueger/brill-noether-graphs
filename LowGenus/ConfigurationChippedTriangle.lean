@@ -1,4 +1,8 @@
-import LowGenus.ConfigurationMarkedThree
+module
+
+public import LowGenus.ConfigurationMarkedThree
+
+@[expose] public section
 
 /-!
 # The chipped triangle
@@ -85,7 +89,7 @@ theorem lend_nonneg (r hc be : ℕ) : 0 ≤ lend r hc be := by
 
 theorem lend_eq_one {r hc be : ℕ} (hr : r = 0) (hlt : hc < be) :
     lend r hc be = 1 := by
-  unfold lend; rw [if_pos ⟨hr, hlt⟩]
+  unfold lend; rw [ite_eq_left ⟨hr, hlt⟩]
 
 theorem lend_cases (r hc be : ℕ) : lend r hc be = 0 ∨ lend r hc be = 1 := by
   unfold lend; split_ifs <;> simp
@@ -94,7 +98,7 @@ theorem eq_of_lend_eq_one {r hc be : ℕ} (h : lend r hc be = 1) :
     r = 0 ∧ hc < be := by
   by_cases hcond : r = 0 ∧ hc < be
   · exact hcond
-  · rw [lend, if_neg hcond] at h
+  · rw [lend, ite_eq_right hcond] at h
     exact absurd h (by norm_num)
 
 /-! ## The arithmetic of the four minima

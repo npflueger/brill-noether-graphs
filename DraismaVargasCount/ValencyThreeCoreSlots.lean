@@ -1,5 +1,9 @@
-import DraismaVargasCount.ValencyThreeResolutionMatch
-import DraismaVargasCount.ValencyThreeTypeMatch
+module
+
+public import DraismaVargasCount.ValencyThreeResolutionMatch
+public import DraismaVargasCount.ValencyThreeTypeMatch
+
+@[expose] public section
 
 set_option autoImplicit false
 

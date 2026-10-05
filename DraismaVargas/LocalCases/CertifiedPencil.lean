@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.ClassInjectivity
-import DraismaVargas.LocalCases.TerminalExhausts
+module
+
+public import DraismaVargas.LocalCases.ClassInjectivity
+public import DraismaVargas.LocalCases.TerminalExhausts
+
+@[expose] public section
 
 /-!
 # The certified march payload

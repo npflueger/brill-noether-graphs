@@ -1,7 +1,11 @@
-import DraismaVargasCount.GeometricTransport
-import DraismaVargas.Infrastructure.GluingContraction
-import DraismaVargas.Infrastructure.SheetJoin
-import DraismaVargas.Infrastructure.TargetExpansion
+module
+
+public import DraismaVargasCount.GeometricTransport
+public import DraismaVargas.Infrastructure.GluingContraction
+public import DraismaVargas.Infrastructure.SheetJoin
+public import DraismaVargas.Infrastructure.TargetExpansion
+
+@[expose] public section
 
 /-!
 # Contracting the regrown occurrence of a target expansion

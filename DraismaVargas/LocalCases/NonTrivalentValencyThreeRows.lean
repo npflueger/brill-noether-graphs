@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyThreeCandidate
-import DraismaVargas.LocalCases.NonTrivalentValencyFourRows
-import DraismaVargas.LocalCases.NonTrivalentUniqueFourValent
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyThreeCandidate
+public import DraismaVargas.LocalCases.NonTrivalentValencyFourRows
+public import DraismaVargas.LocalCases.NonTrivalentUniqueFourValent
+
+@[expose] public section
 
 /-!
 # Stable rows of the prescribed candidate above a three-valent wall
@@ -316,7 +320,7 @@ theorem mem_incidentEdges_endpoint_new (sideValue : Bool) :
 
 section Survivors
 
-private theorem exists_simple_survivor (label : Fin 3)
+theorem exists_simple_survivor (label : Fin 3)
     (hLabel : label ≠ Prescribed.doubled source) :
     ∃ edge, directionSurvivors data star anchor label = {edge} :=
   Finset.card_eq_one.mp (source.distribution.other_count label hLabel)
@@ -332,7 +336,7 @@ noncomputable def simpleSurvivor (label : Fin 3) :
 theorem directionSurvivors_simple_eq (label : Fin 3)
     (hLabel : label ≠ Prescribed.doubled source) :
     directionSurvivors data star anchor label = {simpleSurvivor source label} := by
-  rw [simpleSurvivor, dif_pos hLabel]
+  rw [simpleSurvivor, dite_eq_left hLabel]
   exact Classical.choose_spec (exists_simple_survivor source label hLabel)
 
 theorem simpleSurvivor_mem (label : Fin 3)

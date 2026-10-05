@@ -1,4 +1,8 @@
-import LowGenus.GenusFourRow095
+module
+
+public import LowGenus.GenusFourRow095
+
+@[expose] public section
 
 /-!
 # Core 095, first Atanasov--Ranganathan chamber

@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.WallDatumPathEnds
-import DraismaVargas.LocalCases.NonTrivalentValencyThreeExit
+module
+
+public import DraismaVargas.LocalCases.WallDatumPathEnds
+public import DraismaVargas.LocalCases.NonTrivalentValencyThreeExit
+
+@[expose] public section
 
 /-!
 # `HasPathEnds` of the valency-three Type III candidate, and the finished link

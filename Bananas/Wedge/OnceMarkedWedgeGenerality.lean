@@ -1,7 +1,11 @@
-import Bananas.Sections.SectionSixDefinitions
-import Bananas.Basics.Definitions
-import Utilities.Iso.GraphContractionFibreTree
-import Utilities.Gluing.VertexWedgeRankFormula
+module
+
+public import Bananas.Sections.SectionSixDefinitions
+public import Bananas.Basics.Definitions
+public import Utilities.Iso.GraphContractionFibreTree
+public import Utilities.Gluing.VertexWedgeRankFormula
+
+@[expose] public section
 
 /-!
 # Once-marked Brill--Noether generality under vertex gluing
@@ -28,7 +32,7 @@ universe u v
 /-- A sufficiently positive twist of a divisor on a connected graph has any
 prescribed nonnegative rank.  The twist is normalized so that its degree is
 the natural number being searched over. -/
-private theorem exists_normalized_twist_rank_ge
+theorem exists_normalized_twist_rank_ge
     (G : CFGraph.{u}) (hG : graph_connected G) (D : CFDiv G) (q : G.V)
     (i : ℕ) :
     ∃ n : ℕ,

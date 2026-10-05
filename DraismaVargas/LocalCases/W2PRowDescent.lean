@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W2PStableLift
+module
+
+public import DraismaVargas.LocalCases.W2PStableLift
+
+@[expose] public section
 
 /-!
 # Descending Figure 35's occurrences to old stable rows

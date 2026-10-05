@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W4SourceClassification
-import Mathlib.Algebra.Order.Group.Multiset
+module
+
+public import DraismaVargas.LocalCases.W4SourceClassification
+public import Mathlib.Algebra.Order.Group.Multiset
+
+@[expose] public section
 
 /-!
 # Stable-path occurrence census for W4
@@ -294,19 +298,19 @@ theorem newSheetOccurrences
   rcases occurrence with ⟨row, sheet⟩
   rw [count_canonicalNewSheetOccurrences]
   by_cases hBlock : WallBlock.ofSheet data wall sheet = sourceBlock
-  · rw [if_pos hBlock, census.new_sheet_count pairing row sheet hBlock]
+  · rw [ite_eq_left hBlock, census.new_sheet_count pairing row sheet hBlock]
     by_cases hSame :
         W4TargetPairings.Pairing.labelRight pairing block.first =
           W4TargetPairings.Pairing.labelRight pairing block.second
     · simp [hSame]
-    · rw [if_neg hSame, Multiset.count_singleton]
+    · rw [ite_eq_right hSame, Multiset.count_singleton]
       by_cases hRow : row = census.newRow pairing
       · by_cases hSheet : sheet = sourceBlock.1
         · simp [hRow, hSheet]
           exact hSame
         · simp [hRow, hSheet]
       · simp [hRow]
-  · rw [if_neg hBlock]
+  · rw [ite_eq_right hBlock]
     by_cases hSame :
         W4TargetPairings.Pairing.labelRight pairing block.first =
           W4TargetPairings.Pairing.labelRight pairing block.second
@@ -340,9 +344,9 @@ theorem oldPathOccurrences
   rw [count_canonicalOldPathOccurrences]
   by_cases hBlock : WallBlock.ofSheet data wall edge.1.2 = sourceBlock
   · by_cases hColumn : some edge.1.1 ∈ canonicalW4OldColumns star
-    · rw [if_pos ⟨hBlock, hColumn⟩]
+    · rw [ite_eq_left ⟨hBlock, hColumn⟩]
       exact (census.old_path_count row edge hBlock hColumn).symm
-    · rw [if_neg (fun h ↦ hColumn h.2)]
+    · rw [ite_eq_right (fun h ↦ hColumn h.2)]
       have hFirst :
           edge ≠ data.sourceEdge (star.edge block.first) sourceBlock.1 := by
         intro hEq
@@ -354,7 +358,7 @@ theorem oldPathOccurrences
         subst edge
         exact hColumn (sourceEdge_column_mem star block.second)
       simp [hFirst, hSecond]
-  · rw [if_neg (fun h ↦ hBlock h.1)]
+  · rw [ite_eq_right (fun h ↦ hBlock h.1)]
     have hFirst :
         edge ≠ data.sourceEdge (star.edge block.first) sourceBlock.1 := by
       intro hEq
@@ -455,7 +459,7 @@ theorem newSheetOccurrences
   rcases occurrence with ⟨row, sheet⟩
   rw [count_canonicalNewSheetOccurrences]
   by_cases hBlock : WallBlock.ofSheet data wall sheet = sourceBlock
-  · rw [if_pos hBlock, census.new_sheet_count pairing row sheet hBlock]
+  · rw [ite_eq_left hBlock, census.new_sheet_count pairing row sheet hBlock]
     rw [Multiset.count_singleton]
     by_cases hRow : row = census.newRow pairing
     · by_cases hSheet :
@@ -463,7 +467,7 @@ theorem newSheetOccurrences
       · simp [hRow, hSheet]
       · simp [hRow, hSheet]
     · simp [hRow]
-  · rw [if_neg hBlock]
+  · rw [ite_eq_right hBlock]
     have hActive := census.active_sheet (block.singletonLabel pairing)
       (block.singletonLabel_mem_activeLabels pairing)
     have hSelectedBlock :
@@ -507,9 +511,9 @@ theorem oldPathOccurrences
   rw [count_canonicalOldPathOccurrences]
   by_cases hBlock : WallBlock.ofSheet data wall edge.1.2 = sourceBlock
   · by_cases hColumn : some edge.1.1 ∈ canonicalW4OldColumns star
-    · rw [if_pos ⟨hBlock, hColumn⟩]
+    · rw [ite_eq_left ⟨hBlock, hColumn⟩]
       exact (census.old_path_count row edge hBlock hColumn).symm
-    · rw [if_neg (fun h ↦ hColumn h.2)]
+    · rw [ite_eq_right (fun h ↦ hColumn h.2)]
       have hFirst :
           edge ≠ data.sourceEdge (star.edge block.first)
             (census.activeSheet block.first) := by
@@ -529,7 +533,7 @@ theorem oldPathOccurrences
         subst edge
         exact hColumn (sourceEdge_column_mem star block.third)
       simp [hFirst, hSecond, hThird]
-  · rw [if_neg (fun h ↦ hBlock h.1)]
+  · rw [ite_eq_right (fun h ↦ hBlock h.1)]
     have hFirstBlock := wallBlock_sourceEdge_of_rel data star sourceBlock
       block.first (census.activeSheet block.first)
       (census.active_sheet block.first (by simp [Nd3Block.activeLabels]))

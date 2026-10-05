@@ -1,4 +1,8 @@
-import DraismaVargasCount.GeometricTransport
+module
+
+public import DraismaVargasCount.GeometricTransport
+
+@[expose] public section
 
 /-!
 # Geometric transport of the stable source and its matrix

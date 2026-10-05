@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.A04MoreTags
-import DraismaVargas.LocalCases.W3ShiftStableIncidence
-import DraismaVargas.LocalCases.W3WallInput
+module
+
+public import DraismaVargas.LocalCases.A04MoreTags
+public import DraismaVargas.LocalCases.W3ShiftStableIncidence
+public import DraismaVargas.LocalCases.W3WallInput
+
+@[expose] public section
 
 /-!
 # Routed walls at the `w3Shift` tag

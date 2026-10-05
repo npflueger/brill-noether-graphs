@@ -1,6 +1,10 @@
-import Utilities.Segments.SegmentReflection
-import Utilities.Foundations.RankOne
-import Utilities.Foundations.RankInvariance
+module
+
+public import Utilities.Segments.SegmentReflection
+public import Utilities.Foundations.RankOne
+public import Utilities.Foundations.RankInvariance
+
+@[expose] public section
 
 /-!
 # The endpoint pencil on a two-vertex subdivision core (light half)
@@ -67,7 +71,7 @@ theorem bnExists_one_two_of_coreVertexCount_eq_two
       have hPosition :
           spec.pathVertex edge position = spec.interiorVertex edge offset := by
         unfold Spec.pathVertex
-        rw [dif_neg (by simp [position]), dif_neg (by
+        rw [dite_eq_right (by simp [position]), dite_eq_right (by
           have := offset.isLt
           simp only [position]
           omega)]

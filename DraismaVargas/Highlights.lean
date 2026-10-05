@@ -1,4 +1,8 @@
-import DraismaVargas.Statement
+module
+
+public import DraismaVargas.Statement
+
+@[expose] public section
 
 /-!
 # Highlights: Draisma--Vargas Part I

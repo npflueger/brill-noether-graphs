@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.ZeroForestPreservation
-import DraismaVargas.LocalCases.ZeroFreeTerminalFace
+module
+
+public import DraismaVargas.LocalCases.ZeroForestPreservation
+public import DraismaVargas.LocalCases.ZeroFreeTerminalFace
+
+@[expose] public section
 
 /-!
 # Where the terminal face's forest receipt can and cannot come from

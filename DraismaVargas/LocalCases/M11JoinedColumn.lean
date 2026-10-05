@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.M11JoinedBackground
-import DraismaVargas.LocalCases.StableSourceMatrix
+module
+
+public import DraismaVargas.LocalCases.M11JoinedBackground
+public import DraismaVargas.LocalCases.StableSourceMatrix
+
+@[expose] public section
 
 /-!
 # The joined M11 new column: the third row divided by two plus background
@@ -107,12 +111,12 @@ theorem joined_matrix_new_column (input : W2SourceInput data star)
       (1 : ℚ) / candidate.datum.sourceEdgeIndex (candidate.newSourceEdge block.1) =
       StableSourceMatrix.matrix candidate.datum path (occurrenceEquiv target wall candidate.right none) at hSum
     rw [hIndex] at hSum
-    rw [if_pos hRow]
+    rw [ite_eq_left hRow]
     exact hSum.symm.trans (add_comm _ _)
   · have hNot : candidate.newSourceEdge block.1 ∉ occurrences :=
       fun h ↦ hRow ((distinguished_mem_occurrences_iff input profile hCard path).mp h)
     have hErase := Finset.erase_eq_of_notMem hNot
-    rw [if_neg hRow, zero_add]
+    rw [ite_eq_right hRow, zero_add]
     change (∑ edge ∈ occurrences, (1 : ℚ) / candidate.datum.sourceEdgeIndex edge) =
       ∑ edge ∈ occurrences.erase (candidate.newSourceEdge block.1), (1 : ℚ) / candidate.datum.sourceEdgeIndex edge
     rw [hErase]

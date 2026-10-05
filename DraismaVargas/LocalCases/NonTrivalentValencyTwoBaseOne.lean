@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoCandidate
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoCandidate
+
+@[expose] public section
 
 /-!
 # Part II, valency two, Configuration A: the **Base I** candidates
@@ -161,23 +165,23 @@ def refineOnBlock (coarse fine : SheetPartition d) (anchor : Fin d)
     by_cases hSheet : coarse.Rel anchor sheet
     · have hInside : coarse.Rel anchor (fine.repr sheet) :=
         hSheet.trans (hRefines.rel (fine.rel_repr_right sheet))
-      simp only [if_pos hSheet, if_pos hInside, fine.repr_idem]
+      simp only [ite_eq_left hSheet, ite_eq_left hInside, fine.repr_idem]
     · have hOutside : ¬coarse.Rel anchor (coarse.repr sheet) := by
         intro hRel
         exact hSheet (hRel.trans (coarse.repr_idem sheet))
-      simp only [if_neg hSheet, if_neg hOutside, coarse.repr_idem]
+      simp only [ite_eq_right hSheet, ite_eq_right hOutside, coarse.repr_idem]
 
 @[simp] theorem refineOnBlock_repr_of_rel (coarse fine : SheetPartition d)
     (anchor sheet : Fin d) (hRefines : fine.Refines coarse)
     (hSheet : coarse.Rel anchor sheet) :
     (refineOnBlock coarse fine anchor hRefines).repr sheet = fine.repr sheet :=
-  if_pos hSheet
+  ite_eq_left hSheet
 
 @[simp] theorem refineOnBlock_repr_of_not_rel (coarse fine : SheetPartition d)
     (anchor sheet : Fin d) (hRefines : fine.Refines coarse)
     (hSheet : ¬coarse.Rel anchor sheet) :
     (refineOnBlock coarse fine anchor hRefines).repr sheet = coarse.repr sheet :=
-  if_neg hSheet
+  ite_eq_right hSheet
 
 /-- The refined partition still refines the original one. -/
 theorem refineOnBlock_refines (coarse fine : SheetPartition d) (anchor : Fin d)

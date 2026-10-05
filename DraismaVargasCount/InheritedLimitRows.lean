@@ -1,7 +1,11 @@
-import DraismaVargasCount.StarMetricCompatibility
-import DraismaVargasCount.GeometricStableTransport
-import DraismaVargas.LocalCases.WallAdmissibilityStable
-import DraismaVargas.LocalCases.IncomingNormalizationRows
+module
+
+public import DraismaVargasCount.StarMetricCompatibility
+public import DraismaVargasCount.GeometricStableTransport
+public import DraismaVargas.LocalCases.WallAdmissibilityStable
+public import DraismaVargas.LocalCases.IncomingNormalizationRows
+
+@[expose] public section
 
 /-!
 # Inherited rows and rectangular matrices at positive-request limits

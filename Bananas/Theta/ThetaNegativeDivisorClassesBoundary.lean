@@ -1,4 +1,8 @@
-import Bananas.Theta.ThetaNegativeDivisorClasses
+module
+
+public import Bananas.Theta.ThetaNegativeDivisorClasses
+
+@[expose] public section
 
 /-!
 # Boundary negative divisor classes on theta graphs

@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W3FourRegrownColumn
+module
+
+public import DraismaVargas.LocalCases.W3FourRegrownColumn
+
+@[expose] public section
 
 /-!
 # Equation (2) on the honest matrices

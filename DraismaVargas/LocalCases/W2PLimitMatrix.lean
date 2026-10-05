@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W2PRowDescent
-import DraismaVargas.LocalCases.W2PCommonBalance
+module
+
+public import DraismaVargas.LocalCases.W2PRowDescent
+public import DraismaVargas.LocalCases.W2PCommonBalance
+
+@[expose] public section
 
 /-!
 # Figure 35's limit matrices, and an inhabitant of `LimitColumns`

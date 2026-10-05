@@ -1,5 +1,9 @@
-import DraismaVargasCount.W3FourStarCensusProof
-import DraismaVargasCount.W3ShiftSixMemberMultiplicity
+module
+
+public import DraismaVargasCount.W3FourStarCensusProof
+public import DraismaVargasCount.W3ShiftSixMemberMultiplicity
+
+@[expose] public section
 
 /-!
 # W3Shift star census: Equation (3)'s six members as star classes
@@ -503,7 +507,7 @@ theorem not_rel_same_direction (d : Fin 3) (h0 : S.Nonsingular hy (d, 0))
   have hq : (S.pairs d).anchor.G.row ((S.pairs d).anchor.G.row.symm q) = q :=
     Equiv.apply_symm_apply _ _
   simp only [hq] at hNew
-  rw [h0', h1', if_pos rfl, if_pos rfl] at hNew
+  rw [h0', h1', ite_eq_left rfl, ite_eq_left rfl] at hNew
   have hk := (S.P d).gaugeShift.two_le_moving
   have hkq : (2 : ℚ) ≤ (W3ShiftMultiplicityBalance.incomingIndex
       (shift := (S.P d).gaugeShift) : ℚ) := by exact_mod_cast hk

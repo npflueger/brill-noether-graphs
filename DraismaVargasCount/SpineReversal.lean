@@ -1,4 +1,8 @@
-import DraismaVargasCount.BallotStabiliserReduction
+module
+
+public import DraismaVargasCount.BallotStabiliserReduction
+
+@[expose] public section
 
 /-!
 # The spine reversal of the caterpillar core, constructed
@@ -216,72 +220,72 @@ theorem headIdx_eq (m e : ℕ) :
   unfold headIdx tailIdx branchIdx; split_ifs <;> omega
 
 theorem tailIdx_three (k : ℕ) : tailIdx (3 * k) = 2 * k := by
-  rw [tailIdx_eq, if_neg (by omega)]; omega
+  rw [tailIdx_eq, ite_eq_right (by omega)]; omega
 
 theorem tailIdx_three_one (k : ℕ) : tailIdx (3 * k + 1) = 2 * k - 1 := by
-  rw [tailIdx_eq, if_pos (by omega)]; omega
+  rw [tailIdx_eq, ite_eq_left (by omega)]; omega
 
 theorem tailIdx_three_two (k : ℕ) : tailIdx (3 * k + 2) = 2 * k + 1 := by
-  rw [tailIdx_eq, if_neg (by omega)]; omega
+  rw [tailIdx_eq, ite_eq_right (by omega)]; omega
 
 theorem headIdx_three (m k : ℕ) : headIdx m (3 * k) = 2 * k := by
-  rw [headIdx_eq, if_pos (Or.inl (by omega)), tailIdx_three]
+  rw [headIdx_eq, ite_eq_left (Or.inl (by omega)), tailIdx_three]
 
 theorem headIdx_three_one (m k : ℕ) : headIdx m (3 * k + 1) = 2 * k + 1 := by
-  rw [headIdx_eq, if_neg (by rintro (h | h) <;> omega)]; omega
+  rw [headIdx_eq, ite_eq_right (by rintro (h | h) <;> omega)]; omega
 
 theorem headIdx_three_two (m k : ℕ) (h : 3 * k + 2 ≠ 6 * m + 2) :
     headIdx m (3 * k + 2) = 2 * k + 2 := by
-  rw [headIdx_eq, if_neg (by rintro (h' | h') <;> omega)]; omega
+  rw [headIdx_eq, ite_eq_right (by rintro (h' | h') <;> omega)]; omega
 
 theorem tailIdx_zero : tailIdx 0 = 0 := by
-  rw [tailIdx_eq, if_neg (by omega)]
+  rw [tailIdx_eq, ite_eq_right (by omega)]
 
 theorem headIdx_zero (m : ℕ) : headIdx m 0 = 0 := by
-  rw [headIdx_eq, if_pos (Or.inl (by omega)), tailIdx_zero]
+  rw [headIdx_eq, ite_eq_left (Or.inl (by omega)), tailIdx_zero]
 
 theorem tailIdx_last (m : ℕ) : tailIdx (6 * m + 2) = 4 * m + 1 := by
-  rw [tailIdx_eq, if_neg (by omega)]; omega
+  rw [tailIdx_eq, ite_eq_right (by omega)]; omega
 
 theorem headIdx_last (m : ℕ) : headIdx m (6 * m + 2) = 4 * m + 1 := by
-  rw [headIdx_eq, if_pos (Or.inr rfl), tailIdx_last]
+  rw [headIdx_eq, ite_eq_left (Or.inr rfl), tailIdx_last]
 
 /-! revSlotVal closed forms -/
 
 theorem revSlotVal_zero (m : ℕ) : revSlotVal m 0 = 6 * m + 2 := by
-  unfold revSlotVal; rw [if_pos rfl]
+  unfold revSlotVal; rw [ite_eq_left rfl]
 
 theorem revSlotVal_last (m : ℕ) : revSlotVal m (6 * m + 2) = 0 := by
-  unfold revSlotVal; rw [if_neg (by omega), if_pos rfl]
+  unfold revSlotVal; rw [ite_eq_right (by omega), ite_eq_left rfl]
 
 theorem revSlotVal_three_one (m k : ℕ) (hk : k ≤ 2 * m) :
     revSlotVal m (3 * k + 1) = 3 * (2 * m - k) + 1 := by
-  unfold revSlotVal; rw [if_neg (by omega), if_neg (by omega), if_pos (by omega)]; omega
+  unfold revSlotVal; rw [ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_left (by omega)]; omega
 
 theorem revSlotVal_three_two (m k : ℕ) (hk : k < 2 * m) :
     revSlotVal m (3 * k + 2) = 3 * (2 * m - 1 - k) + 2 := by
   unfold revSlotVal
-  rw [if_neg (by omega), if_neg (by omega), if_neg (by omega), if_pos (by omega)]; omega
+  rw [ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_left (by omega)]; omega
 
 theorem revSlotVal_three (m k : ℕ) (h1 : 1 ≤ k) (h2 : k ≤ 2 * m) :
     revSlotVal m (3 * k) = 3 * (2 * m + 1 - k) := by
   unfold revSlotVal
-  rw [if_neg (by omega), if_neg (by omega), if_neg (by omega), if_neg (by omega)]; omega
+  rw [ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_right (by omega)]; omega
 
 /-! revVtxVal closed forms -/
 
 theorem revVtxVal_odd (m j : ℕ) (hj : j < 2 * m) : revVtxVal m (2 * j + 1) = 4 * m - 2 * j - 1 := by
-  unfold revVtxVal; rw [if_neg (by omega), if_neg (by omega), if_pos (by omega)]; omega
+  unfold revVtxVal; rw [ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_left (by omega)]; omega
 
 theorem revVtxVal_even (m j : ℕ) (h1 : 1 ≤ j) :
     revVtxVal m (2 * j) = 4 * m + 2 - 2 * j := by
-  unfold revVtxVal; rw [if_neg (by omega), if_neg (by omega), if_neg (by omega)]
+  unfold revVtxVal; rw [ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_right (by omega)]
 
 theorem revVtxVal_zero (m : ℕ) : revVtxVal m 0 = 4 * m + 1 := by
-  unfold revVtxVal; rw [if_pos rfl]
+  unfold revVtxVal; rw [ite_eq_left rfl]
 
 theorem revVtxVal_top (m : ℕ) : revVtxVal m (4 * m + 1) = 0 := by
-  unfold revVtxVal; rw [if_neg (by omega), if_pos rfl]
+  unfold revVtxVal; rw [ite_eq_right (by omega), ite_eq_left rfl]
 
 /-! The two ends, transported -/
 
@@ -340,8 +344,8 @@ theorem catCore_head_idx (m : ℕ) (e : Fin (6 * m + 3)) :
     ((catCore m).head e).val = headIdx m e.val := by
   rw [SlopeRigidity.catCore_head_val]
   by_cases hleaf : IsLeafEdge m e
-  · rw [catHeadVal, if_pos hleaf, headIdx, if_pos (by exact hleaf)]
-  · rw [catHeadVal, if_neg hleaf, headIdx, if_neg (by exact hleaf)]
+  · rw [catHeadVal, ite_eq_left hleaf, headIdx, ite_eq_left (by exact hleaf)]
+  · rw [catHeadVal, ite_eq_right hleaf, headIdx, ite_eq_right (by exact hleaf)]
 
 theorem tailIdx_lt (m : ℕ) (e : Fin (6 * m + 3)) : tailIdx e.val < 4 * m + 2 := by
   rw [← catCore_tail_idx m e]; exact ((catCore m).tail e).isLt
@@ -535,10 +539,10 @@ theorem innerIndex_comp (m : ℕ) (d d' : Relabel (catCore m) (catCore m)) {k : 
   omega
 
 theorem revSlotVal_one (m : ℕ) : revSlotVal m 1 = 6 * m + 1 := by
-  unfold revSlotVal; rw [if_neg (by omega), if_neg (by omega), if_pos (by omega)]; omega
+  unfold revSlotVal; rw [ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_left (by omega)]; omega
 
 theorem revSlotVal_far (m : ℕ) : revSlotVal m (6 * m + 1) = 1 := by
-  unfold revSlotVal; rw [if_neg (by omega), if_neg (by omega), if_pos (by omega)]; omega
+  unfold revSlotVal; rw [ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_left (by omega)]; omega
 
 /-- **The reversal branch is `spineReversal` times the identity branch.**
 Composing with the reversal on the left carries the reversal branch into the
@@ -604,9 +608,9 @@ theorem cum_add_dn_le_self (s : Slopes g) : ∀ i : ℕ, 1 ≤ i → s.cum i + s
     intro _
     rcases Nat.eq_zero_or_pos i with rfl | hi
     · rw [Slopes.cum_succ, Slopes.dn_succ, Slopes.cum_zero, Slopes.dn_zero,
-        if_neg (show ¬ (s.slope (0 + 1) = s.slope 0 + 1) by
+        ite_eq_right (show ¬ (s.slope (0 + 1) = s.slope 0 + 1) by
           rw [show (0 : ℕ) + 1 = 1 from rfl, Slopes.slope_zero]; omega),
-        if_neg (show ¬ (s.slope 0 = s.slope (0 + 1) + 1) by
+        ite_eq_right (show ¬ (s.slope 0 = s.slope (0 + 1) + 1) by
           rw [show (0 : ℕ) + 1 = 1 from rfl, Slopes.slope_zero]; omega)]
     · have := ih hi
       rw [Slopes.cum_succ, Slopes.dn_succ]

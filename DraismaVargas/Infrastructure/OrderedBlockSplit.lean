@@ -1,4 +1,8 @@
-import Utilities.Subdivision.PathSplitRefinement
+module
+
+public import Utilities.Subdivision.PathSplitRefinement
+
+@[expose] public section
 
 /-!
 # Cutting an ordered list of occurrence lengths into blocks of prescribed sums
@@ -61,11 +65,11 @@ def splitSum : List ℕ → ℕ → List ℕ × List ℕ
 theorem splitSum_cons_of_le {x a : ℕ} (rest : List ℕ) (h : x ≤ a) :
     splitSum (x :: rest) a =
       (x :: (splitSum rest (a - x)).1, (splitSum rest (a - x)).2) := by
-  simp only [splitSum, if_pos h]
+  simp only [splitSum, ite_eq_left h]
 
 theorem splitSum_cons_of_gt {x a : ℕ} (rest : List ℕ) (h : ¬ x ≤ a) :
     splitSum (x :: rest) a = ([a], (x - a) :: rest) := by
-  simp only [splitSum, if_neg h]
+  simp only [splitSum, ite_eq_right h]
 
 /-- **The two parts always recombine.** -/
 theorem sum_splitSum_add (l : List ℕ) (a : ℕ) :

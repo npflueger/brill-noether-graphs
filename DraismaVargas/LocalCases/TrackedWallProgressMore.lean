@@ -1,8 +1,12 @@
-import DraismaVargas.LocalCases.TrackedWallProgress
-import DraismaVargas.LocalCases.A04M1kWiring
-import DraismaVargas.LocalCases.W2M1kGraphTracking
-import DraismaVargas.LocalCases.W2MkkGraphTracking
-import DraismaVargas.LocalCases.W3TrackedExit
+module
+
+public import DraismaVargas.LocalCases.TrackedWallProgress
+public import DraismaVargas.LocalCases.A04M1kWiring
+public import DraismaVargas.LocalCases.W2M1kGraphTracking
+public import DraismaVargas.LocalCases.W2MkkGraphTracking
+public import DraismaVargas.LocalCases.W3TrackedExit
+
+@[expose] public section
 
 /-!
 # The last three tags of the tracked march, and the all-tags dispatch

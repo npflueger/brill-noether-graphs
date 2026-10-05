@@ -1,4 +1,8 @@
-import DraismaVargasCount.FacetCommonMultiplicity
+module
+
+public import DraismaVargasCount.FacetCommonMultiplicity
+
+@[expose] public section
 
 /-!
 # The census consumers of the type-change step
@@ -278,7 +282,7 @@ variable {c c' : Core n p} {y₀ : Fin p → ℚ}
 noncomputable def equivOfIndex {α β ι : Type*} (τL : α → ι) (τR : β → ι)
     (hL : Function.Injective τL) (hR : Function.Injective τR)
     (hrange : Set.range τL = Set.range τR) : α ≃ β :=
-  (Equiv.ofInjective τL hL).trans ((Equiv.setCongr hrange).trans (Equiv.ofInjective τR hR).symm)
+  (Equiv.ofInjective τL hL).trans ((Set.equivOfEq hrange).trans (Equiv.ofInjective τR hR).symm)
 
 /-- **The metric form of `FacetParityPilot.facetParity_of_injective_index`**: the odd classes
 at each metric limit are labelled injectively by one index type on both sides, with equal

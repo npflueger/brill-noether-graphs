@@ -1,5 +1,9 @@
-import DraismaVargasCount.UnitWeightBalance
-import DraismaVargas.LocalCases.W3FourRegrownColumnSeam
+module
+
+public import DraismaVargasCount.UnitWeightBalance
+public import DraismaVargas.LocalCases.W3FourRegrownColumnSeam
+
+@[expose] public section
 
 /-!
 # Equation (2): arithmetic assembly on Figure 28's honest matrices
@@ -226,11 +230,11 @@ theorem denominatorProduct_perturbed (position : Fin 3)
         (by fin_cases position <;> simp [correctionSign])
         (by change _ ∣ rowDen receipts _; rw [hSharp])
         (by change Nat.Coprime _ (rowDen receipts _); rw [hSharp]; exact factor_coprime position)
-    · simp only [if_neg h, add_zero, one_mul]
+    · simp only [ite_eq_right h, add_zero, one_mul]
       exact lcm_den_eq_right (oldEntry_den_dvd receipts row _)
   rw [Finset.prod_congr rfl fun row _ ↦ hTerm row, Finset.prod_mul_distrib,
     Finset.prod_ite_eq' Finset.univ (affectedRow receipts position)
-      (fun _ ↦ factor (geometry := geometry) position), if_pos (Finset.mem_univ _)]
+      (fun _ ↦ factor (geometry := geometry) position), ite_eq_left (Finset.mem_univ _)]
   rfl
 
 noncomputable def weight : Fin 4 → ℕ :=

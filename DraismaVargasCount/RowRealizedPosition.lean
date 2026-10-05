@@ -1,5 +1,9 @@
-import DraismaVargasCount.RowHairpinPosition
-import DraismaVargas.Infrastructure.NonnegativeRationalRealization
+module
+
+public import DraismaVargasCount.RowHairpinPosition
+public import DraismaVargas.Infrastructure.NonnegativeRationalRealization
+
+@[expose] public section
 
 /-!
 # Literal integral prefixes of a closed-cone source row
@@ -115,7 +119,7 @@ theorem member_collisionCoefficient_mem {n p : ℕ}
   intro i _
   by_cases hOffset : integralPrefix member.fullDim (memberRealization member hClosed)
       (member.ident.row.symm slot) (i.val + 1) = offset
-  · simp only [if_pos hOffset]
+  · simp only [ite_eq_left hOffset]
     have hScale : (memberScale member : ℚ) ≠ 0 := by
       exact_mod_cast (Nat.ne_of_gt (memberScale_pos member))
     have hPosition := member_integralPrefix_cast member hClosed slot (i.val + 1)
@@ -128,7 +132,7 @@ theorem member_collisionCoefficient_mem {n p : ℕ}
     apply RowHairpinPosition.member_weighted_prefix_mem y member hOdd slot hInternal
     have hi := i.isLt
     omega
-  · simp only [if_neg hOffset, Int.cast_zero, zero_mul]
+  · simp only [ite_eq_right hOffset, Int.cast_zero, zero_mul]
     exact oddDenominatorSubring.zero_mem
 
 /-- The interior part of the literal row-position pushforward, on the actual

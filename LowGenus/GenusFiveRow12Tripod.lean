@@ -1,4 +1,8 @@
-import LowGenus.ConfigurationTwo
+module
+
+public import LowGenus.ConfigurationTwo
+
+@[expose] public section
 
 /-!
 # The tripod part of the Atanasov--Ranganathan construction on row 12

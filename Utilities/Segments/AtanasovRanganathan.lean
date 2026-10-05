@@ -1,6 +1,10 @@
-import Utilities.Subdivision.StrongSeparator
-import Utilities.Foundations.RankOne
-import Mathlib.Tactic
+module
+
+public import Utilities.Subdivision.StrongSeparator
+public import Utilities.Foundations.RankOne
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # Atanasov--Ranganathan rank-one reductions

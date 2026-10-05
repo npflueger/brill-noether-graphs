@@ -1,7 +1,11 @@
-import DraismaVargas.LocalCases.GlobalResolution
-import DraismaVargas.LocalCases.ResolutionMkk
-import DraismaVargas.LocalCases.W3FourDisjointness
-import DraismaVargas.Infrastructure.TargetSeparation
+module
+
+public import DraismaVargas.LocalCases.GlobalResolution
+public import DraismaVargas.LocalCases.ResolutionMkk
+public import DraismaVargas.LocalCases.W3FourDisjointness
+public import DraismaVargas.Infrastructure.TargetSeparation
+
+@[expose] public section
 
 /-!
 # The Position II.b shrink member: a genus count and a gauge

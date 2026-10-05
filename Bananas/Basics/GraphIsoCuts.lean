@@ -1,5 +1,9 @@
-import Utilities.Iso.GraphIso
-import Utilities.Gluing.TwoEdgeConnectedRigidity
+module
+
+public import Utilities.Iso.GraphIso
+public import Utilities.Gluing.TwoEdgeConnectedRigidity
+
+@[expose] public section
 
 /-!
 # Cut conditions under graph isomorphism

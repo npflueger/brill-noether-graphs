@@ -1,8 +1,12 @@
-import DraismaVargas.LocalCases.SemanticAtlasMarch
-import DraismaVargas.LocalCases.InteriorGraphTracking
-import DraismaVargas.LocalCases.TrivalenceClosure
-import DraismaVargas.LocalCases.StableSourceWhiteheadChain
-import DraismaVargas.LocalCases.CaterpillarGenericSeed
+module
+
+public import DraismaVargas.LocalCases.SemanticAtlasMarch
+public import DraismaVargas.LocalCases.InteriorGraphTracking
+public import DraismaVargas.LocalCases.TrivalenceClosure
+public import DraismaVargas.LocalCases.StableSourceWhiteheadChain
+public import DraismaVargas.LocalCases.CaterpillarGenericSeed
+
+@[expose] public section
 
 /-!
 # The march payload with its row-labelled graph attached

@@ -1,8 +1,12 @@
-import DraismaVargasCount.ResolutionExpansion
-import DraismaVargasCount.W4WallExhaustion
-import DraismaVargasCount.MergePinning
-import DraismaVargas.LocalCases.M11IncomingOuterPartitions
-import DraismaVargas.LocalCases.SecondEquation
+module
+
+public import DraismaVargasCount.ResolutionExpansion
+public import DraismaVargasCount.W4WallExhaustion
+public import DraismaVargasCount.MergePinning
+public import DraismaVargas.LocalCases.M11IncomingOuterPartitions
+public import DraismaVargas.LocalCases.SecondEquation
+
+@[expose] public section
 
 /-!
 # Exhaustion of the labelled geometric star at a divalent `w2-r2-nd3-M-11` wall
@@ -394,13 +398,13 @@ noncomputable def divalentPlacement (hab : a ≠ b) (hOne : num_edges target a b
 @[simp] theorem divalentPlacement_true (hab : a ≠ b) (hOne : num_edges target a b = 1)
     (star : TwoStar (contract target hab hOne) ⟨a, hab⟩) :
     divalentPlacement hab hOne star true = star.right := by
-  rw [divalentPlacement, if_pos rfl]
+  rw [divalentPlacement, ite_eq_left rfl]
 
 @[simp] theorem divalentPlacement_false (hab : a ≠ b) (hOne : num_edges target a b = 1)
     (star : TwoStar (contract target hab hOne) ⟨a, hab⟩) :
     divalentPlacement hab hOne star false = fun _ ↦ true := by
   rw [divalentPlacement]
-  exact if_neg (by decide)
+  exact ite_eq_right (by decide)
 
 include hc hab hOne star in
 /-- **The divalent placement census.**  An arbitrary full-dimensional regrowth

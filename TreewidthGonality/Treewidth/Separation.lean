@@ -1,5 +1,9 @@
-import TreewidthGonality.Treewidth.TreePath
-import TreewidthGonality.Treewidth.Bramble
+module
+
+public import TreewidthGonality.Treewidth.TreePath
+public import TreewidthGonality.Treewidth.Bramble
+
+@[expose] public section
 
 /-!
 # Separation: Bellenbaum--Diestel's Lemma 1 and Lemma 4, and components

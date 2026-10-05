@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.CaterpillarDatum
-import DraismaVargas.LocalCases.CycleRows
-import DraismaVargas.LocalCases.DanglingSideStructure
+module
+
+public import DraismaVargas.LocalCases.CaterpillarDatum
+public import DraismaVargas.LocalCases.CycleRows
+public import DraismaVargas.LocalCases.DanglingSideStructure
+
+@[expose] public section
 
 /-!
 # Pruning the caterpillar source
@@ -78,9 +82,9 @@ theorem blockCard_pairPart_other (m j : ℕ) (s : Fin (m + 2))
   have hBlock : (pairPart m j).block s = {s} := by
     ext t
     rw [SheetPartition.mem_block_iff, SheetPartition.rel_iff,
-      pairPart_repr, pairPart_repr, if_neg hsj]
+      pairPart_repr, pairPart_repr, ite_eq_right hsj]
     by_cases ht : t.val = j
-    · rw [if_pos ht, Finset.mem_singleton]
+    · rw [ite_eq_left ht, Finset.mem_singleton]
       constructor
       · intro h
         have : s.val = 0 := by simpa using congrArg Fin.val h
@@ -88,7 +92,7 @@ theorem blockCard_pairPart_other (m j : ℕ) (s : Fin (m + 2))
       · intro h
         have : s.val = j := by simpa [h] using ht
         exact (hsj this).elim
-    · rw [if_neg ht, Finset.mem_singleton]
+    · rw [ite_eq_right ht, Finset.mem_singleton]
       exact ⟨fun h ↦ h.symm, fun h ↦ h.symm⟩
   rw [SheetPartition.blockCard, hBlock, Finset.card_singleton]
 
@@ -761,7 +765,7 @@ theorem stemJunction_reaches_previousLoop {m : ℕ}
       simp only
       change parentIndex (i.val + 1) = 2
       have hMod : (i.val + 1) % 3 ≠ 2 := by omega
-      simp only [parentIndex, if_neg hMod]
+      simp only [parentIndex, ite_eq_right hMod]
       omega
     have hAnchor : loopBaseVertex m (previousLeafIndex m i hStem) =
         coreVertex m (catParent m spine) := by
@@ -799,7 +803,7 @@ theorem stemJunction_reaches_previousLoop {m : ℕ}
       change parentIndex (i.val + 1) = i.val - 1 + 1
       have hiMod : i.val % 3 = 2 := hStem.1
       have hMod : (i.val + 1) % 3 ≠ 2 := by omega
-      simp only [parentIndex, if_neg hMod]
+      simp only [parentIndex, ite_eq_right hMod]
       omega
     have hMiddle : coreVertex m (catParent m spine) =
         coreVertex m (catParent m previousStem) := by
@@ -809,7 +813,7 @@ theorem stemJunction_reaches_previousLoop {m : ℕ}
       have hiMod : i.val % 3 = 2 := hStem.1
       have hSpineMod : (i.val - 1 + 1) % 3 = 2 := by omega
       have hPreviousMod : (i.val - 3 + 1) % 3 ≠ 2 := by omega
-      simp only [parentIndex, if_pos hSpineMod, if_neg hPreviousMod]
+      simp only [parentIndex, ite_eq_left hSpineMod, ite_eq_right hPreviousMod]
       omega
     have hAnchor : loopBaseVertex m (previousLeafIndex m i hStem) =
         coreVertex m previousStem.succ := by
@@ -820,7 +824,7 @@ theorem stemJunction_reaches_previousLoop {m : ℕ}
       change parentIndex (i.val - 2 + 1) = i.val - 3 + 1
       have hiMod : i.val % 3 = 2 := hStem.1
       have hMod : (i.val - 2 + 1) % 3 ≠ 2 := by omega
-      simp only [parentIndex, if_neg hMod]
+      simp only [parentIndex, ite_eq_right hMod]
       omega
     have hMiddleNe : coreVertex m (catParent m spine) ≠
         stemTipVertex m i 0 := by
@@ -831,7 +835,7 @@ theorem stemJunction_reaches_previousLoop {m : ℕ}
       simp only [catParent_val, spine, stemTarget_val] at hTarget
       have hiMod : i.val % 3 = 2 := hStem.1
       have hMod : (i.val - 1 + 1) % 3 = 2 := by omega
-      simp only [parentIndex, if_pos hMod] at hTarget
+      simp only [parentIndex, ite_eq_left hMod] at hTarget
       omega
     have hAnchorNe : coreVertex m previousStem.succ ≠
         stemTipVertex m i 0 := by

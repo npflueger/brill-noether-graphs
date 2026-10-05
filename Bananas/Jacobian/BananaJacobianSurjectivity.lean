@@ -1,4 +1,8 @@
-import Bananas.Jacobian.BananaJacobianDiagonal
+module
+
+public import Bananas.Jacobian.BananaJacobianDiagonal
+
+@[expose] public section
 
 /-!
 # Surjectivity of the banana coordinate map in degree zero

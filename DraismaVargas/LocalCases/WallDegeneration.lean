@@ -1,5 +1,9 @@
-import DraismaVargas.Infrastructure.ContractionFibre
-import DraismaVargas.LocalCases.FullDimensionalSource
+module
+
+public import DraismaVargas.Infrastructure.ContractionFibre
+public import DraismaVargas.LocalCases.FullDimensionalSource
+
+@[expose] public section
 
 /-!
 # The codimension-one bridge: what a contraction supplies, and what it does not
@@ -361,7 +365,7 @@ theorem sourceEdge_unique_of_num_edges_eq_one (data : GluingDatum target degree)
       ≤ ∑ f : data.SourceEdge,
         if data.sourceEnds f = (x, y) ∨ data.sourceEnds f = (y, x) then 1 else 0 :=
     Finset.sum_le_sum_of_subset (Finset.subset_univ _)
-  rw [Finset.sum_pair hne, if_pos h₁, if_pos h₂] at hLe
+  rw [Finset.sum_pair hne, ite_eq_left h₁, ite_eq_left h₂] at hLe
   omega
 
 /-- A step through the contracted target occurrence cannot cross the cut of a

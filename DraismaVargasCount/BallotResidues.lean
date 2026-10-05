@@ -1,7 +1,11 @@
-import DraismaVargasCount.BallotSpineReversalSheetIso
-import DraismaVargasCount.SlopesGeometric
-import DraismaVargasCount.BranchSharedDirection
-import DraismaVargasCount.LoopAdjacentDiagonal
+module
+
+public import DraismaVargasCount.BallotSpineReversalSheetIso
+public import DraismaVargasCount.SlopesGeometric
+public import DraismaVargasCount.BranchSharedDirection
+public import DraismaVargasCount.LoopAdjacentDiagonal
+
+@[expose] public section
 
 /-!
 # The residues of the genus-six exhaustion package, and `hSpine` at every genus
@@ -304,11 +308,11 @@ theorem exists_slopeStepRel_spineVertex
   have hv2 : (spineSlot m (i + 1) (by omega)).val = 3 * (i + 1) - 2 := rfl
   have hv3 : (stemSlot m i hi2).val = 3 * i - 1 := rfl
   obtain ⟨e1, hI1, hr1⟩ := exists_incident_of_coreIncidence_pos member c
-    (spineSlot m i (by omega)) (by rw [hInc, if_pos (by rw [hv1]; omega)]; norm_num)
+    (spineSlot m i (by omega)) (by rw [hInc, ite_eq_left (by rw [hv1]; omega)]; norm_num)
   obtain ⟨e2, hI2, hr2⟩ := exists_incident_of_coreIncidence_pos member c
-    (spineSlot m (i + 1) (by omega)) (by rw [hInc, if_pos (by rw [hv2]; omega)]; norm_num)
+    (spineSlot m (i + 1) (by omega)) (by rw [hInc, ite_eq_left (by rw [hv2]; omega)]; norm_num)
   obtain ⟨e3, hI3, hr3⟩ := exists_incident_of_coreIncidence_pos member c
-    (stemSlot m i hi2) (by rw [hInc, if_pos (by rw [hv3]; omega)]; norm_num)
+    (stemSlot m i hi2) (by rw [hInc, ite_eq_left (by rw [hv3]; omega)]; norm_num)
   set X := (member.ident.vertex.symm c).1 with hX
   -- the three occurrences are distinct, because their slots are
   have h12 : e1 ≠ e2 := by
@@ -416,7 +420,7 @@ noncomputable def slopeFun (member : FibreMember (catCore m) request (m + 2)) (i
 theorem slopeFun_eq {member : FibreMember (catCore m) request (m + 2)} {i : ℕ}
     (h : i ≤ 2 * m + 1) {k : ℕ} (hk : member.coreDiag (spineSlot m i h) = 1 / (k : ℚ)) :
     slopeFun member i = k := by
-  rw [slopeFun, dif_pos h, hk, one_div, inv_inv, Nat.floor_natCast]
+  rw [slopeFun, dite_eq_left h, hk, one_div, inv_inv, Nat.floor_natCast]
 
 /-- The two extreme spine slots read `1 / 2`. -/
 theorem coreDiag_spineSlot_end (member : FibreMember (catCore m) request (m + 2))

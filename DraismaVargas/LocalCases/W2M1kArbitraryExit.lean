@@ -1,7 +1,11 @@
-import DraismaVargas.LocalCases.W2M1kLimitColumns
-import DraismaVargas.LocalCases.W2M1kLeafStableGraph
-import DraismaVargas.LocalCases.SheetRelabelIncidence
-import DraismaVargas.LocalCases.FiniteAtlasMarch
+module
+
+public import DraismaVargas.LocalCases.W2M1kLimitColumns
+public import DraismaVargas.LocalCases.W2M1kLeafStableGraph
+public import DraismaVargas.LocalCases.SheetRelabelIncidence
+public import DraismaVargas.LocalCases.FiniteAtlasMarch
+
+@[expose] public section
 
 /-!
 # Figure 33's certified exit, at the receipt level

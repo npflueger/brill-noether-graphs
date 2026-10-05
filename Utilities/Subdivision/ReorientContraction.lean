@@ -1,5 +1,9 @@
-import Utilities.Subdivision.ClosedContraction
-import Utilities.Subdivision.SubdivisionIso
+module
+
+public import Utilities.Subdivision.ClosedContraction
+public import Utilities.Subdivision.SubdivisionIso
+
+@[expose] public section
 
 /-!
 # Contraction up to slot reversal
@@ -55,9 +59,9 @@ theorem Core.reorient_loopless {core : ExplicitPotential.Core n p}
     (Core.reorient core rev).tail e ≠ (Core.reorient core rev).head e := by
   simp only [Core.reorient_tail, Core.reorient_head]
   by_cases hr : rev e
-  · simp only [hr, if_pos]
+  · simp only [hr, ite_eq_left]
     exact fun hEq => h e hEq.symm
-  · simp only [hr, if_neg, Bool.false_eq_true, not_false_eq_true]
+  · simp only [hr, ite_eq_right, Bool.false_eq_true, not_false_eq_true]
     exact h e
 
 /-- The same subdivision, with a chosen set of slots read backwards. -/

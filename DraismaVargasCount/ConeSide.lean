@@ -1,4 +1,8 @@
-import DraismaVargasCount.SegmentWalls
+module
+
+public import DraismaVargasCount.SegmentWalls
+
+@[expose] public section
 
 /-!
 # Side = sign: the wall coordinate of a member is a common numerator over its determinant

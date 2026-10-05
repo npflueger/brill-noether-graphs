@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W3WallInput
-import DraismaVargas.LocalCases.W4PositiveExit
+module
+
+public import DraismaVargas.LocalCases.W3WallInput
+public import DraismaVargas.LocalCases.W4PositiveExit
+
+@[expose] public section
 
 /-!
 # The full-dimensional supply at a wall, for the tags with a stable-incidence dictionary

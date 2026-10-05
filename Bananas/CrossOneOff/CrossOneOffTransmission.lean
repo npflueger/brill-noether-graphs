@@ -1,4 +1,8 @@
-import Bananas.CrossOneOff.CrossOneOffResidueDelta
+module
+
+public import Bananas.CrossOneOff.CrossOneOffResidueDelta
+
+@[expose] public section
 
 /-!
 # Transmission rows forced by cross-one-off rank differences

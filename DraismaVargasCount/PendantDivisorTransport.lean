@@ -1,5 +1,9 @@
-import Utilities.Foundations.PendantDeletion
-import Utilities.Iso.GraphContraction
+module
+
+public import Utilities.Foundations.PendantDeletion
+public import Utilities.Iso.GraphContraction
+
+@[expose] public section
 
 /-!
 # Chosen-divisor transport through pendant deletion
@@ -85,7 +89,7 @@ noncomputable def leafMap (G : CFGraph.{u}) (leaf : G.V)
 theorem leafMap_of_ne (G : CFGraph.{u}) (leaf : G.V)
     (hDegree : vertex_degree G leaf = 1) (x : G.V) (hx : x ≠ leaf) :
     leafMap G leaf hDegree x = prune G leaf hDegree hx := by
-  exact dif_neg hx
+  exact dite_eq_right hx
 
 theorem leafMap_leaf (G : CFGraph.{u}) (leaf : G.V)
     (hDegree : vertex_degree G leaf = 1) :
@@ -119,17 +123,17 @@ theorem push_leafMap (G : CFGraph.{u}) (leaf : G.V)
     have h := Finset.sum_eq_single (s := Finset.univ)
       (f := fun x : LeafPruning.Remaining G leaf ↦
         if leafMap G leaf hDegree x.val = v then D x.val else 0) v
-      (fun x _ hx ↦ if_neg (fun hEq ↦ hx ((hSome x).symm.trans hEq)))
+      (fun x _ hx ↦ ite_eq_right (fun hEq ↦ hx ((hSome x).symm.trans hEq)))
       (fun h ↦ False.elim (h (Finset.mem_univ (v : LeafPruning.Remaining G leaf))))
-    exact h.trans (if_pos (hSome v))
+    exact h.trans (ite_eq_left (hSome v))
   rw [hSum]
   change (if LeafPruning.rootInDeleteLeaf G leaf hDegree = v then D leaf else 0) +
     D v.val = D v.val + if v = LeafPruning.rootInDeleteLeaf G leaf hDegree then D leaf else 0
   apply Eq.trans (add_comm _ _)
   apply congrArg (fun z : ℤ ↦ D v.val + z)
   by_cases hv : v = LeafPruning.rootInDeleteLeaf G leaf hDegree
-  · exact (if_pos hv.symm).trans (if_pos hv).symm
-  · exact (if_neg (Ne.symm hv)).trans (if_neg hv).symm
+  · exact (ite_eq_left hv.symm).trans (ite_eq_left hv).symm
+  · exact (ite_eq_right (Ne.symm hv)).trans (ite_eq_right hv).symm
 
 theorem rank_push_leafMap (G : CFGraph.{u}) (leaf : G.V)
     (hDegree : vertex_degree G leaf = 1) (D : CFDiv G) :

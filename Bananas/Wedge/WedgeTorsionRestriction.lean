@@ -1,9 +1,13 @@
-import Utilities.Gluing.VertexWedgeGenusOne
-import Utilities.Transmission.TransmissionWedge
-import Bananas.Basics.Definitions
-import Bananas.Transmission.ExactTorsionAPI
-import Bananas.Transmission.EqualTorsionKGeneral
-import Bananas.Transmission.TorsionOrderExact
+module
+
+public import Utilities.Gluing.VertexWedgeGenusOne
+public import Utilities.Transmission.TransmissionWedge
+public import Bananas.Basics.Definitions
+public import Bananas.Transmission.ExactTorsionAPI
+public import Bananas.Transmission.EqualTorsionKGeneral
+public import Bananas.Transmission.TorsionOrderExact
+
+@[expose] public section
 
 /-!
 # Restricting torsion from an opposite-side vertex wedge

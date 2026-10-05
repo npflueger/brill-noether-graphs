@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.ResolutionAwayFromWall
-import DraismaVargas.LocalCases.StableGraphIncidence
+module
+
+public import DraismaVargas.LocalCases.ResolutionAwayFromWall
+public import DraismaVargas.LocalCases.StableGraphIncidence
+
+@[expose] public section
 
 /-!
 # Off-wall stable incidence transport for a resolution

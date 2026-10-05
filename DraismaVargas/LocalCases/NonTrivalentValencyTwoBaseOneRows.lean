@@ -1,8 +1,12 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoGauge
-import DraismaVargas.LocalCases.NonTrivalentValencyFourRows
-import DraismaVargas.LocalCases.NonTrivalentUniqueFourValent
-import DraismaVargas.LocalCases.NonTrivalentAnchorValency
-import DraismaVargas.LocalCases.W2M1kSourceCandidates
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoGauge
+public import DraismaVargas.LocalCases.NonTrivalentValencyFourRows
+public import DraismaVargas.LocalCases.NonTrivalentUniqueFourValent
+public import DraismaVargas.LocalCases.NonTrivalentAnchorValency
+public import DraismaVargas.LocalCases.W2M1kSourceCandidates
+
+@[expose] public section
 
 /-!
 # Genus and the endpoint census of the valency-two **Base I** candidates
@@ -269,7 +273,7 @@ theorem not_isDangling_of_third (datum : GluingDatum G n)
     · have hCross := cut.cross_num_edges p r hPmem hRmem
       rw [hSnd] at hCross
       have hZero : num_edges datum.sourceGraph p r = 0 := by
-        rw [hCross, if_neg (by
+        rw [hCross, ite_eq_right (by
           rintro ⟨-, hEq⟩
           exact hQR hEq)]
       have hPos : 0 < num_edges datum.sourceGraph p r := by

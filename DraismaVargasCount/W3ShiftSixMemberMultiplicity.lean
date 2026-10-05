@@ -1,4 +1,8 @@
-import DraismaVargasCount.W3ShiftSixMemberMatrices
+module
+
+public import DraismaVargasCount.W3ShiftSixMemberMatrices
+
+@[expose] public section
 
 /-!
 # Equation (3): the six-member signed-multiplicity balance

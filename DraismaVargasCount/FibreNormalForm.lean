@@ -1,5 +1,9 @@
-import DraismaVargasCount.TargetNormalForm
-import DraismaVargasCount.TransportMultiplicity
+module
+
+public import DraismaVargasCount.TargetNormalForm
+public import DraismaVargasCount.TransportMultiplicity
+
+@[expose] public section
 
 /-!
 # Finiteness of the labelled fibre, from the normal form and the transport
@@ -210,7 +214,7 @@ theorem matchesRaw_family {core : Core n p} {y : Fin p → ℚ} {degree : ℕ}
     MatchesRaw r (family base r) := by
   unfold family
   by_cases hcase : ∃ member : FibreMember core y degree, MatchesRaw r member
-  · rw [dif_pos hcase]
+  · rw [dite_eq_left hcase]
     exact hcase.choose_spec
   · exact absurd h hcase
 

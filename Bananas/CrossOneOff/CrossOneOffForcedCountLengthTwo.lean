@@ -1,5 +1,9 @@
-import Bananas.CrossOneOff.CrossOneOffFiniteRows
-import Bananas.SameStrand.EndpointCardinality
+module
+
+public import Bananas.CrossOneOff.CrossOneOffFiniteRows
+public import Bananas.SameStrand.EndpointCardinality
+
+@[expose] public section
 
 /-!
 # The length-two part of the corrected cross-one-off finite count

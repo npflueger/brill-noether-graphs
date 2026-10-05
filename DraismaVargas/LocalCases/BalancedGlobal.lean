@@ -1,7 +1,11 @@
-import DraismaVargas.LocalCases.BalancingValencyTwo
-import DraismaVargas.LocalCases.GlobalAssembly
-import DraismaVargas.Infrastructure.RationalRealization
-import DraismaVargas.Infrastructure.TargetTreePotential
+module
+
+public import DraismaVargas.LocalCases.BalancingValencyTwo
+public import DraismaVargas.LocalCases.GlobalAssembly
+public import DraismaVargas.Infrastructure.RationalRealization
+public import DraismaVargas.Infrastructure.TargetTreePotential
+
+@[expose] public section
 
 /-!
 # Balanced families of global wall resolutions

@@ -1,11 +1,15 @@
-import GenusSixExistence.BrillNoetherRank.Tripod.Classification
-import GenusSixExistence.BrillNoetherRank.Tripod.TripodModelDefs
-import GenusSixExistence.BrillNoetherRank.Tripod.TripodModelProof
-import GenusSixExistence.BrillNoetherRank.Tripod.ClosureFrame
-import GenusSixExistence.BrillNoetherRank.Tripod.BridgeLift
-import GenusSixExistence.BrillNoetherRank.Reduction
-import DraismaVargasCount.DegenerateBigDivisor
-import Utilities.Subdivision.CoreCutsAndFlats
+module
+
+public import GenusSixExistence.BrillNoetherRank.Tripod.Classification
+public import GenusSixExistence.BrillNoetherRank.Tripod.TripodModelDefs
+public import GenusSixExistence.BrillNoetherRank.Tripod.TripodModelProof
+public import GenusSixExistence.BrillNoetherRank.Tripod.ClosureFrame
+public import GenusSixExistence.BrillNoetherRank.Tripod.BridgeLift
+public import GenusSixExistence.BrillNoetherRank.Reduction
+public import DraismaVargasCount.DegenerateBigDivisor
+public import Utilities.Subdivision.CoreCutsAndFlats
+
+@[expose] public section
 
 /-!
 # From the generic long-leg locus to the actual point

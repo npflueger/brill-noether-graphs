@@ -1,6 +1,10 @@
-import Tricycle.Core
-import Utilities.Subdivision.SpecBurning
-import Mathlib.Tactic
+module
+
+public import Tricycle.Core
+public import Utilities.Subdivision.SpecBurning
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # Lemma 3.5 of van Dobben de Bruyn–Smit–van der Wegen

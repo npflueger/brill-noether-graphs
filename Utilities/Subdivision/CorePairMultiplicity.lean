@@ -1,6 +1,10 @@
-import Utilities.Subdivision.CubicCore
-import Utilities.Subdivision.SubdivisionConnectivity
-import Mathlib.Tactic
+module
+
+public import Utilities.Subdivision.CubicCore
+public import Utilities.Subdivision.SubdivisionConnectivity
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # Unordered pair multiplicities of an ordered core (light half)

@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoSplitRows
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoRowEquiv
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoSplitRows
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoRowEquiv
+
+@[expose] public section
 
 /-!
 # The row dictionary of the Base II **split** candidate above a two-valent wall
@@ -150,7 +154,7 @@ theorem splitAnchorWitness_piece {x : Fin degree}
       some ⟨ra.deltaEdge.1,
         NonTrivalentValencyTwoRows.survivor_not_isDangling ra.delta_mem⟩ := by
   classical
-  rw [splitAnchorWitness, if_pos hRel]
+  rw [splitAnchorWitness, ite_eq_left hRel]
 
 theorem splitAnchorWitness_pass {x : Fin degree}
     (hNot : ¬ (meetP).Rel (occurrenceSheet ra.deltaEdge) x)
@@ -159,7 +163,7 @@ theorem splitAnchorWitness_pass {x : Fin degree}
       some ⟨ra.betaEdge.1,
         NonTrivalentValencyTwoRows.survivor_not_isDangling ra.beta_mem⟩ := by
   classical
-  rw [splitAnchorWitness, if_neg hNot, if_pos hRel]
+  rw [splitAnchorWitness, ite_eq_right hNot, ite_eq_left hRel]
 
 theorem splitAnchorWitness_bridge {x : Fin degree}
     (hRel : (meetP).Rel (occurrenceSheet ra.alphaEdge) x) :
@@ -173,7 +177,7 @@ theorem splitAnchorWitness_bridge {x : Fin degree}
     intro hBeta
     exact ra.not_thick_rel_alpha_beta
       ((meet_rel_iff _ _ _ _).mp (hRel.trans hBeta.symm)).1
-  rw [splitAnchorWitness, if_neg hNotDelta, if_neg hNotBeta]
+  rw [splitAnchorWitness, ite_eq_right hNotDelta, ite_eq_right hNotBeta]
 
 /-- A chosen survivor on the continuing side of an ordinary block. -/
 noncomputable def ordinaryWitness (data : GluingDatum target degree)
@@ -195,7 +199,7 @@ theorem ordinaryWitness_eq {x : Fin degree}
   refine ⟨⟨Classical.choose h,
     ((mem_ordinaryStar (Classical.choose h)).mp (Classical.choose_spec h)).1.1⟩, ?_,
     Classical.choose_spec h⟩
-  rw [ordinaryWitness, dif_pos h]
+  rw [ordinaryWitness, dite_eq_left h]
 
 /-- The old survivor whose stable row carries the new occurrence of the sheet
 `x`, when there is one.  At the anchor's bridge class there is none. -/
@@ -208,13 +212,13 @@ theorem newWitness_of_anchor {x : Fin degree}
     (hAnchor : (data.vertexPartition wall).Rel anchor.1 x) :
     newWitness ra x = splitAnchorWitness ra x := by
   classical
-  rw [newWitness, if_pos hAnchor]
+  rw [newWitness, ite_eq_left hAnchor]
 
 theorem newWitness_of_ordinary {x : Fin degree}
     (hX : ¬ (data.vertexPartition wall).Rel anchor.1 x) :
     newWitness ra x = ordinaryWitness data star anchor x := by
   classical
-  rw [newWitness, if_neg hX]
+  rw [newWitness, ite_eq_right hX]
 
 /-! ## 2.  The canonical sheet of a new occurrence -/
 
@@ -321,14 +325,14 @@ theorem rowOfEdge_pos (hValid : data.Valid) (e : NonDanglingEdge (cand).datum)
       ResolutionAwayFromWall.retainedEdge (cand) hValid.1 old = e) :
     rowOfEdge ra hValid e = some (Classical.choose h).stablePath := by
   classical
-  rw [rowOfEdge, dif_pos h]
+  rw [rowOfEdge, dite_eq_left h]
 
 theorem rowOfEdge_neg (hValid : data.Valid) (e : NonDanglingEdge (cand).datum)
     (h : ¬ ∃ old : NonDanglingEdge data,
       ResolutionAwayFromWall.retainedEdge (cand) hValid.1 old = e) :
     rowOfEdge ra hValid e = (newWitness ra e.1.1.2).map NonDanglingEdge.stablePath := by
   classical
-  rw [rowOfEdge, dif_neg h]
+  rw [rowOfEdge, dite_eq_right h]
 
 theorem rowOfEdge_retained (hValid : data.Valid) (old : NonDanglingEdge data) :
     rowOfEdge ra hValid (ResolutionAwayFromWall.retainedEdge (cand) hValid.1 old) =

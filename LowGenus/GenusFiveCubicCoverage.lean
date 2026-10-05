@@ -1,6 +1,10 @@
-import LowGenus.GenusFiveCanonicalClassifier
-import LowGenus.GenusFiveConstructions
-import LowGenus.Infrastructure.CoreRelabelingClosed
+module
+
+public import LowGenus.GenusFiveCanonicalClassifier
+public import LowGenus.GenusFiveConstructions
+public import LowGenus.Infrastructure.CoreRelabelingClosed
+
+@[expose] public section
 
 /-!
 # Closed construction coverage of the cubic genus-five atlas

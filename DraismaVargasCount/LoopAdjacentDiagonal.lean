@@ -1,5 +1,9 @@
-import DraismaVargasCount.ExtractGenusTwo
-import DraismaVargasCount.BallotOrbitStability
+module
+
+public import DraismaVargasCount.ExtractGenusTwo
+public import DraismaVargasCount.BallotOrbitStability
+
+@[expose] public section
 
 /-!
 # A diagonal member is pinned on every loop-adjacent slot
@@ -207,9 +211,9 @@ theorem incident_loopVertex_eq (m : ℕ) {t e : Fin (6 * m + 3)} (ht : IsLeafEdg
     by_cases hA : branchIdx (catTailVal m e) = branchIdx t.val
     · exact Or.inl hA
     · refine Or.inr ?_
-      rw [if_neg hA] at hi
+      rw [ite_eq_right hA] at hi
       by_contra hB
-      rw [if_neg hB] at hi
+      rw [ite_eq_right hB] at hi
       omega
   unfold catTailVal catHeadVal branchIdx parentIndex IsLeafEdge at hor
   split_ifs at hor ⊢ <;> omega
@@ -246,11 +250,11 @@ theorem coreDiag_eq_half_of_loopAdjacent (member : FibreMember (catCore m) reque
         0 < coreIncidence (catCore m) ((catCore m).tail t) e := by
     rcases hAdj with ⟨t, ht1, ht2⟩ | ⟨t, ht1, ht2⟩
     · refine ⟨t, ht1.trans ht2.symm, ?_⟩
-      rw [coreIncidence, if_pos ht1.symm]
+      rw [coreIncidence, ite_eq_left ht1.symm]
       omega
     · refine ⟨t, ht1.trans ht2.symm, ?_⟩
       rw [coreIncidence,
-        if_pos (show (catCore m).head e = (catCore m).tail t from ht1.symm)]
+        ite_eq_left (show (catCore m).head e = (catCore m).tail t from ht1.symm)]
       omega
   have htLeaf : IsLeafEdge m t := (catCore_tail_eq_head_iff m t).mp htail
   have hne : e ≠ t := fun h ↦ hLeaf (h ▸ htLeaf)
@@ -264,8 +268,8 @@ theorem coreDiag_apply_of_loopAdjacent (member : FibreMember (catCore m) request
     (hD : member.Diagonal) {e : Fin (6 * m + 3)} (hAdj : LoopAdjacent (catCore m) e) :
     member.coreDiag e = if IsLeafEdge m e then 2 else 1 / 2 := by
   by_cases hLeaf : IsLeafEdge m e
-  · rw [if_pos hLeaf, ExtractGenusTwo.coreDiag_eq_two_of_isLeafEdge member hD hLeaf]
-  · rw [if_neg hLeaf, coreDiag_eq_half_of_loopAdjacent member hD hAdj hLeaf]
+  · rw [ite_eq_left hLeaf, ExtractGenusTwo.coreDiag_eq_two_of_isLeafEdge member hD hLeaf]
+  · rw [ite_eq_right hLeaf, coreDiag_eq_half_of_loopAdjacent member hD hAdj hLeaf]
 
 /-- **On the loop-adjacent slots a diagonal member already agrees with every
 ballot diagonal.**  The ballot side is

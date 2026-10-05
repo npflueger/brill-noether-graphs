@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyThreeRows
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyThreeRows
+
+@[expose] public section
 
 /-!
 # The ordinary-block census and the retained-row descent at a three-valent wall

@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.W3FourFamilyMatching
-import DraismaVargas.LocalCases.W3FourSelectedCensus
-import DraismaVargas.Infrastructure.TargetSeparation
+module
+
+public import DraismaVargas.LocalCases.W3FourFamilyMatching
+public import DraismaVargas.LocalCases.W3FourSelectedCensus
+public import DraismaVargas.Infrastructure.TargetSeparation
+
+@[expose] public section
 
 /-!
 # The `w3Four` closure: the incoming sheet is the family sheet

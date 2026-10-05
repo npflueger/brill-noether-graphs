@@ -1,4 +1,8 @@
-import Utilities.Subdivision.ClosedRowProof.RichLeafSound
+module
+
+public import Utilities.Subdivision.ClosedRowProof.RichLeafSound
+
+@[expose] public section
 
 /-!
 # W5 aggregation on a contracted core class

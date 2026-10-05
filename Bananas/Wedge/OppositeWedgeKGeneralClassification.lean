@@ -1,6 +1,10 @@
-import Bananas.Wedge.OppositeWedgeRigidity
-import Bananas.Wedge.WedgeKGeneralSymmetric
-import Bananas.Wedge.WedgeTorsionRestriction
+module
+
+public import Bananas.Wedge.OppositeWedgeRigidity
+public import Bananas.Wedge.WedgeKGeneralSymmetric
+public import Bananas.Wedge.WedgeTorsionRestriction
+
+@[expose] public section
 
 /-!
 # The distinct-factor branch of the genus-two wedge classification

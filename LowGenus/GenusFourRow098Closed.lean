@@ -1,6 +1,10 @@
-import LowGenus.GenusFourCubicAtlas
-import LowGenus.GenusFiveConfigurations
-import Utilities.Subdivision.DegenerateCoreVertexCut
+module
+
+public import LowGenus.GenusFourCubicAtlas
+public import LowGenus.GenusFiveConfigurations
+public import Utilities.Subdivision.DegenerateCoreVertexCut
+
+@[expose] public section
 
 /-!
 # Closed genus-four row 098 from its separating vertex

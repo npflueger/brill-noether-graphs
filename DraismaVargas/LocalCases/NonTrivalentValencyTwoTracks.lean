@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.WallDatumPathEnds
-import DraismaVargas.LocalCases.MovedIncidenceIso
-import DraismaVargas.LocalCases.WallSplitIncidence
+module
+
+public import DraismaVargas.LocalCases.WallDatumPathEnds
+public import DraismaVargas.LocalCases.MovedIncidenceIso
+public import DraismaVargas.LocalCases.WallSplitIncidence
+
+@[expose] public section
 
 /-!
 # The vertex dictionary of the valency-two Base II type change, and (H-II)
@@ -808,14 +812,14 @@ theorem candVertex_wall (w : (contractDatum wd.cover wd.hc wd.hab wd.hOne).Sourc
       NonTrivalentValencyTwoRows.endpointVertex sel (branchSide m wd (anchorBlk := anchorBlk)
         (wallStar := wallStar) w.1.2) w.1.2 := by
   unfold candVertex
-  rw [if_pos hw]
+  rw [ite_eq_left hw]
 
 theorem candVertex_away (w : (contractDatum wd.cover wd.hc wd.hab wd.hOne).SourceVertex)
     (hw : w.1.1 ≠ (⟨wd.a, wd.hab⟩ : GraphContraction.Vertex wd.coverTarget wd.b)) :
     candVertex m wd sel w =
       ResolutionAwayFromWall.retainedVertex (Prescribed.validCandidate sel) w := by
   unfold candVertex
-  rw [if_neg hw]
+  rw [ite_eq_right hw]
 
 theorem endpointVertex_target (side : Bool) (y : Fin degree) :
     (NonTrivalentValencyTwoRows.endpointVertex sel side y).1.1 =

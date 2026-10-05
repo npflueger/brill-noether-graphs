@@ -1,5 +1,9 @@
-import DraismaVargasCount.LollipopLeafRow
-import DraismaVargasCount.RowPosition
+module
+
+public import DraismaVargasCount.LollipopLeafRow
+public import DraismaVargasCount.RowPosition
+
+@[expose] public section
 
 /-!
 # The hairpin: a loop row leaves and returns in one direction

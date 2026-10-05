@@ -1,5 +1,9 @@
-import DraismaVargas.Infrastructure.OccurrenceCut
-import DraismaVargas.LocalCases.RetainedRelabeling
+module
+
+public import DraismaVargas.Infrastructure.OccurrenceCut
+public import DraismaVargas.LocalCases.RetainedRelabeling
+
+@[expose] public section
 
 /-!
 # The canonical cut of the pruned contracted source
@@ -244,7 +248,7 @@ def cutOffsetAt (face : ClearedFace candidate strong.toPresentation coordinates)
 theorem cutOffsetAt_coe (face : ClearedFace candidate strong.toPresentation coordinates)
     (idx : RetainedIndex spec F small) (e : {i : Fin p // i ∉ F}) :
     cutOffsetAt face idx ↑e = (Retained.blockTotals face idx e).headD 0 := by
-  rw [cutOffsetAt, dif_neg e.2]
+  rw [cutOffsetAt, dite_eq_right e.2]
 
 /-- **The pieces of one kept slot.**  The occurrence carrying the refined slot
 `x`, cut at the marker if the marker falls strictly inside it. -/

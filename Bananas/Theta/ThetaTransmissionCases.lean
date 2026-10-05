@@ -1,6 +1,10 @@
-import Bananas.Classification.GenusTwoDegreeTwo
-import Bananas.CrossOneOff.CrossOneOffTransmission
-import Bananas.Transmission.GenericFarWitness
+module
+
+public import Bananas.Classification.GenusTwoDegreeTwo
+public import Bananas.CrossOneOff.CrossOneOffTransmission
+public import Bananas.Transmission.GenericFarWitness
+
+@[expose] public section
 
 /-!
 # Elementary rows in the theta transmission case table

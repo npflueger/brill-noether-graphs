@@ -1,6 +1,10 @@
-import DraismaVargasCount.SpineReversal
-import DraismaVargasCount.BallotEndSwapSheetIso
-import DraismaVargasCount.BallotFarEndSwap
+module
+
+public import DraismaVargasCount.SpineReversal
+public import DraismaVargasCount.BallotEndSwapSheetIso
+public import DraismaVargasCount.BallotFarEndSwap
+
+@[expose] public section
 
 /-!
 # The spine reversal is a self-isomorphism of every palindromic ballot datum
@@ -184,36 +188,36 @@ def revTgtVal (m v : ℕ) : ℕ :=
   else 6 * m + 1 - v
 
 theorem revTgtVal_zero (m : ℕ) : revTgtVal m 0 = 6 * m + 2 := by
-  unfold revTgtVal; rw [if_pos rfl]
+  unfold revTgtVal; rw [ite_eq_left rfl]
 
 theorem revTgtVal_top (m : ℕ) : revTgtVal m (6 * m + 2) = 0 := by
-  unfold revTgtVal; rw [if_neg (by omega), if_pos rfl]
+  unfold revTgtVal; rw [ite_eq_right (by omega), ite_eq_left rfl]
 
 theorem revTgtVal_one (m : ℕ) : revTgtVal m 1 = 6 * m + 3 := by
-  unfold revTgtVal; rw [if_neg (by omega), if_neg (by omega), if_pos rfl]
+  unfold revTgtVal; rw [ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_left rfl]
 
 theorem revTgtVal_topLeaf (m : ℕ) : revTgtVal m (6 * m + 3) = 1 := by
-  unfold revTgtVal; rw [if_neg (by omega), if_neg (by omega), if_neg (by omega), if_pos rfl]
+  unfold revTgtVal; rw [ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_left rfl]
 
 /-- The interior stem tips `u_k`. -/
 theorem revTgtVal_three {m v : ℕ} (h : v % 3 = 0) (h0 : v ≠ 0) (h1 : v ≠ 6 * m + 3) :
     revTgtVal m v = 6 * m + 3 - v := by
   unfold revTgtVal
-  rw [if_neg h0, if_neg (by omega), if_neg (by omega), if_neg h1, if_pos h]
+  rw [ite_eq_right h0, ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_right h1, ite_eq_left h]
 
 /-- The interior folded tips `v_k`. -/
 theorem revTgtVal_three_one {m v : ℕ} (h : v % 3 = 1) (h1 : v ≠ 1) :
     revTgtVal m v = 6 * m + 5 - v := by
   unfold revTgtVal
-  rw [if_neg (by omega), if_neg (by omega), if_neg h1, if_neg (by omega), if_neg (by omega),
-    if_pos h]
+  rw [ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_right h1, ite_eq_right (by omega), ite_eq_right (by omega),
+    ite_eq_left h]
 
 /-- The interior spine vertices `p_k`. -/
 theorem revTgtVal_three_two {m v : ℕ} (h : v % 3 = 2) (h1 : v ≠ 6 * m + 2) :
     revTgtVal m v = 6 * m + 1 - v := by
   unfold revTgtVal
-  rw [if_neg (by omega), if_neg h1, if_neg (by omega), if_neg (by omega), if_neg (by omega),
-    if_neg (by omega)]
+  rw [ite_eq_right (by omega), ite_eq_right h1, ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_right (by omega),
+    ite_eq_right (by omega)]
 
 theorem revTgtVal_lt {m v : ℕ} (hv : v < 6 * m + 4) : revTgtVal m v < 6 * m + 4 := by
   unfold revTgtVal; split_ifs <;> omega
@@ -542,9 +546,9 @@ an interior lollipop, the mirror everywhere else. -/
 def sheetAt (v : ℕ) : Equiv.Perm (Fin (m + 2)) :=
   if IsLolli m v then lolliPerm s (lolli v) else mirror m
 
-theorem sheetAt_lolli {v : ℕ} (h : IsLolli m v) : sheetAt s v = lolliPerm s (lolli v) := if_pos h
+theorem sheetAt_lolli {v : ℕ} (h : IsLolli m v) : sheetAt s v = lolliPerm s (lolli v) := ite_eq_left h
 
-theorem sheetAt_mirror {v : ℕ} (h : ¬ IsLolli m v) : sheetAt s v = mirror m := if_neg h
+theorem sheetAt_mirror {v : ℕ} (h : ¬ IsLolli m v) : sheetAt s v = mirror m := ite_eq_right h
 
 theorem sheetAt_zero (v : ℕ) : sheetAt s v 0 = 0 := by
   unfold sheetAt; split_ifs

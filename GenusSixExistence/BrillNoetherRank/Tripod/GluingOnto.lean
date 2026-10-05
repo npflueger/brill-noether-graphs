@@ -1,5 +1,9 @@
-import GenusSixExistence.BrillNoetherRank.Tripod.GluingOntoOpen
-import GenusSixExistence.BrillNoetherRank.Tripod.GluingOntoShape
+module
+
+public import GenusSixExistence.BrillNoetherRank.Tripod.GluingOntoOpen
+public import GenusSixExistence.BrillNoetherRank.Tripod.GluingOntoShape
+
+@[expose] public section
 
 /-!
 # Onto: every open glued member over the gadget is a gluing
@@ -156,9 +160,9 @@ theorem riemannHurwitz_of_leafDatum (D : GluingDatum T d) (u : T.V) (a b : Fin d
     or_false] at hw
   rw [card_incidentEdges_eq_sum, sum_incidentEdges_eq, sum_incidentEdges_eq]
   by_cases huw : u = w
-  · simp only [huw, if_true] at hw
+  · simp only [huw, ite_true] at hw
     nlinarith
-  · simp only [huw, if_false] at hw
+  · simp only [huw, ite_false] at hw
     linarith
 
 /-- **Riemann--Hurwitz for `D`** from that of the glued datum, stage by stage. -/
@@ -281,9 +285,9 @@ theorem nonleg_cover_bare {p : ℕ} (hD : D.Connected) (hT : graph_connected T)
     intro k
     have h := matrix_armColumn D π L hG k (hairpin_not_isDangling D π hD hT k).1
       (hairpin_not_isDangling D π hD hT k).2 (legRow k)
-    rw [harm, if_pos rfl] at h
+    rw [harm, ite_eq_left rfl] at h
     by_contra hne
-    rw [if_neg hne] at h
+    rw [ite_eq_right hne] at h
     norm_num at h
   have hnl : ∀ z, L.row (g z) ∉ Set.range legRow := by
     rintro z ⟨k, hk⟩
@@ -420,12 +424,12 @@ theorem exists_refinementChain_bare {p : ℕ} (hD : D.Connected) (hT : graph_con
         rw [hγ]
         exact π.liftE₃_injective.eq_iff
       by_cases hc : lab (g z) = Equiv.ofBijective β hβ i ∧ z.1.1.1 = col₃ ((e.trans γ) j)
-      · rw [if_pos ((and_congr hrow hcol).mpr hc), if_pos hc]
+      · rw [ite_eq_left ((and_congr hrow hcol).mpr hc), ite_eq_left hc]
         show (1 : ℚ) / ((glueDatum D π).sourceEdgeIndex (liftSE D π z.1) : ℚ) = _
         rw [CutPaths.sourceEdgeIndex_liftSE z.1]
-      · rw [if_neg (fun h ↦ hc ((and_congr hrow hcol).mp h)), if_neg hc]
+      · rw [ite_eq_right (fun h ↦ hc ((and_congr hrow hcol).mp h)), ite_eq_right hc]
     · intro x hx
-      rw [if_neg]
+      rw [ite_eq_right]
       rintro ⟨hrow, -⟩
       obtain ⟨z, hz⟩ := hcover i.1 i.2
       rw [← hz] at hrow

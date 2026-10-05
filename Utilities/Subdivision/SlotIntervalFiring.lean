@@ -1,6 +1,10 @@
-import Utilities.Gonality.LegalFiringChain
-import Utilities.Gonality.GonalityTransport
-import Utilities.Subdivision.SubdivisionSeparator
+module
+
+public import Utilities.Gonality.LegalFiringChain
+public import Utilities.Gonality.GonalityTransport
+public import Utilities.Subdivision.SubdivisionSeparator
+
+@[expose] public section
 
 /-!
 # Slot points, interval firing and confinement
@@ -80,14 +84,14 @@ private theorem pathVertex_of_val_zero {m q : ℕ} (sp : Spec m q) {e : Fin q}
     (P : sp.PathPosition e) (hP : P.val = 0) :
     sp.pathVertex e P = sp.coreVertex (sp.core.tail e) := by
   unfold pathVertex
-  rw [dif_pos hP]
+  rw [dite_eq_left hP]
 
 private theorem pathVertex_of_val_length {m q : ℕ} (sp : Spec m q) {e : Fin q}
     (P : sp.PathPosition e) (hP : P.val = sp.length e) :
     sp.pathVertex e P = sp.coreVertex (sp.core.head e) := by
   have hpos := sp.length_pos e
   unfold pathVertex
-  rw [dif_neg (by omega), dif_pos hP]
+  rw [dite_eq_right (by omega), dite_eq_left hP]
 
 private theorem coreVertex_ne_interiorVertex {m q : ℕ} (sp : Spec m q) (u : Fin m)
     (e : Fin q) (j : Fin (sp.length e - 1)) :
@@ -303,7 +307,7 @@ theorem vertex_degree_slotPoint (hunit : spec.IsUnit) (g : Fin p) {t : ℕ}
     vertex_degree (spec.scale N hN).graph (spec.slotPoint N hN g t) = 2 := by
   have h := spec.outdeg_slotPoint N hN hunit (∅ : Finset (spec.scale N hN).graph.V)
     g h0 ht
-  simp only [Finset.notMem_empty, if_false] at h
+  simp only [Finset.notMem_empty, ite_false] at h
   rw [show vertex_degree (spec.scale N hN).graph (spec.slotPoint N hN g t)
       = outdeg_S (spec.scale N hN).graph ∅ (spec.slotPoint N hN g t) by
     simp [vertex_degree, outdeg_S]]
@@ -367,23 +371,23 @@ theorem interval_firing (hunit : spec.IsUnit)
     rw [spec.outdeg_slotPoint N hN hunit _ g hj0 hjN]
     by_cases h1 : spec.slotPoint N hN g (j - 1) ∈ spec.slotInterval N hN g s t
     · by_cases h2 : spec.slotPoint N hN g (j + 1) ∈ spec.slotInterval N hN g s t
-      · rw [if_pos h1, if_pos h2]
+      · rw [ite_eq_left h1, ite_eq_left h2]
         omega
       · -- the top of the run: `j = t`
-        rw [if_pos h1, if_neg h2]
+        rw [ite_eq_left h1, ite_eq_right h2]
         have hnot : ¬(s ≤ j + 1 ∧ j + 1 ≤ t) := fun hc => h2 (hhi.mpr hc)
         have hjt : j = t := by omega
         subst hjt
         omega
     · by_cases h2 : spec.slotPoint N hN g (j + 1) ∈ spec.slotInterval N hN g s t
       · -- the bottom of the run: `j = s`
-        rw [if_neg h1, if_pos h2]
+        rw [ite_eq_right h1, ite_eq_left h2]
         have hnot : ¬(s ≤ j - 1 ∧ j - 1 ≤ t) := fun hc => h1 (hlo.mpr hc)
         have hjs : j = s := by omega
         subst hjs
         omega
       · -- a one-point run: `s = j = t`, and the doubled chip pays for it
-        rw [if_neg h1, if_neg h2]
+        rw [ite_eq_right h1, ite_eq_right h2]
         have hnot1 : ¬(s ≤ j - 1 ∧ j - 1 ≤ t) := fun hc => h1 (hlo.mpr hc)
         have hnot2 : ¬(s ≤ j + 1 ∧ j + 1 ≤ t) := fun hc => h2 (hhi.mpr hc)
         have hjs : j = s := by omega

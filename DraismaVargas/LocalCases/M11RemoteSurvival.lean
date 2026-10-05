@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.M11RemotePruning
+module
+
+public import DraismaVargas.LocalCases.M11RemotePruning
+
+@[expose] public section
 
 /-!
 # Survival and the natural retained row of the remote M11 split
@@ -132,7 +136,7 @@ theorem secondSplit_new_survives (input : W2SourceInput data star)
     (hIncident chosen (swappedDeleted_sheet_rel profile hCard)) _ hDangling
   rw [vertex_degree_sourceGraph_eq_card_incidentSourceEdge]
   have hTwo := secondSplit_left_card input profile hCard block.1
-  rw [if_pos (show (data.vertexPartition wall).Rel block.1 block.1 from rfl), hCard] at hTwo
+  rw [ite_eq_left (show (data.vertexPartition wall).Rel block.1 block.1 from rfl), hCard] at hTwo
   exact_mod_cast hTwo
 
 /-- Exact survival criterion, including arbitrary-size background blocks. -/

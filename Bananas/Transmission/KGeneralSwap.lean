@@ -1,5 +1,9 @@
-import Bananas.Theta.ThetaInversionFiniteSum
-import Bananas.Transmission.TransmissionAPI
+module
+
+public import Bananas.Theta.ThetaInversionFiniteSum
+public import Bananas.Transmission.TransmissionAPI
+
+@[expose] public section
 
 /-!
 # Swapping the marks of a graph with general transmission

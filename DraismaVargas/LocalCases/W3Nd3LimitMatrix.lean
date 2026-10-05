@@ -1,11 +1,15 @@
-import DraismaVargas.LocalCases.W3Nd3StableGraph
-import DraismaVargas.LocalCases.W3Nd2Background
-import DraismaVargas.LocalCases.ResolutionAwayFromWall
-import DraismaVargas.LocalCases.DivalentSourceLocal
-import DraismaVargas.LocalCases.StableSourceMatrix
-import DraismaVargas.LocalCases.ResolutionStableIncidence
-import DraismaVargas.LocalCases.StableGraphIncidence
-import DraismaVargas.LocalCases.W3FourRowDescent
+module
+
+public import DraismaVargas.LocalCases.W3Nd3StableGraph
+public import DraismaVargas.LocalCases.W3Nd2Background
+public import DraismaVargas.LocalCases.ResolutionAwayFromWall
+public import DraismaVargas.LocalCases.DivalentSourceLocal
+public import DraismaVargas.LocalCases.StableSourceMatrix
+public import DraismaVargas.LocalCases.ResolutionStableIncidence
+public import DraismaVargas.LocalCases.StableGraphIncidence
+public import DraismaVargas.LocalCases.W3FourRowDescent
+
+@[expose] public section
 
 /-!
 # Retained and new columns of the two Figure 30 members
@@ -1290,7 +1294,7 @@ theorem coarseBackgroundReplace_of_doubled
     (old : data.SourceEdge) (hTarget : old.1.1 = profile.first.1.1.1) :
     coarseBackgroundReplace input profile hSame old =
       (coarseCandidate input profile hSame).newSourceEdge old.1.2 := by
-  rw [coarseBackgroundReplace, if_pos hTarget]
+  rw [coarseBackgroundReplace, ite_eq_left hTarget]
 
 theorem coarseBackgroundReplace_of_ne_doubled
     (input : W3SourceInput data star)
@@ -1299,7 +1303,7 @@ theorem coarseBackgroundReplace_of_ne_doubled
     (old : data.SourceEdge) (hTarget : old.1.1 ≠ profile.first.1.1.1) :
     coarseBackgroundReplace input profile hSame old =
       (coarseCandidate input profile hSame).oldSourceEdge old := by
-  rw [coarseBackgroundReplace, if_neg hTarget]
+  rw [coarseBackgroundReplace, ite_eq_right hTarget]
 
 theorem coarseBackgroundReplace_mem_iff
     (input : W3SourceInput data star)
@@ -1543,7 +1547,7 @@ theorem fineBackgroundReplace_of_largest
     (old : data.SourceEdge) (hTarget : old.1.1 = (largestTarget input profile)) :
     fineBackgroundReplace input profile hSame old =
       (fineCandidate input profile hSame).newSourceEdge old.1.2 := by
-  rw [fineBackgroundReplace, if_pos hTarget]
+  rw [fineBackgroundReplace, ite_eq_left hTarget]
 
 theorem fineBackgroundReplace_of_ne_largest
     (input : W3SourceInput data star)
@@ -1552,7 +1556,7 @@ theorem fineBackgroundReplace_of_ne_largest
     (old : data.SourceEdge) (hTarget : old.1.1 ≠ (largestTarget input profile)) :
     fineBackgroundReplace input profile hSame old =
       (fineCandidate input profile hSame).oldSourceEdge old := by
-  rw [fineBackgroundReplace, if_neg hTarget]
+  rw [fineBackgroundReplace, ite_eq_right hTarget]
 
 theorem fineBackgroundReplace_mem_iff
     (input : W3SourceInput data star)
@@ -1798,9 +1802,9 @@ theorem coarseNewOldSourceEdge_survives
   classical
   by_cases hSelected : (data.vertexPartition wall).Rel
       input.distinguishedBlock.1 sheet
-  · rw [coarseNewOldSourceEdge, if_pos hSelected]
+  · rw [coarseNewOldSourceEdge, ite_eq_left hSelected]
     exact largest_survives input profile
-  · rw [coarseNewOldSourceEdge, if_neg hSelected]
+  · rw [coarseNewOldSourceEdge, ite_eq_right hSelected]
     exact (coarse_background_new_survives_iff_doubled input profile hSame sheet
       hSelected).mp hSurvives
 
@@ -1894,7 +1898,7 @@ noncomputable def coarseRowOfEdge
       retainedEdge (coarseCandidate input profile hSame) input.valid.1 other =
         retainedEdge (coarseCandidate input profile hSame) input.valid.1 old :=
     ⟨old, rfl⟩
-  rw [coarseRowOfEdge, dif_pos hOld]
+  rw [coarseRowOfEdge, dite_eq_left hOld]
   exact congrArg NonDanglingEdge.stablePath
     (retainedEdge_injective _ input.valid.1 (Classical.choose_spec hOld))
 
@@ -1910,7 +1914,7 @@ theorem coarseRowOfEdge_not_retained
         (coarseNewSheet input profile hSame edge hNotOld)
         (coarseNewSheet_survives input profile hSame edge hNotOld)).stablePath := by
   classical
-  exact dif_neg hNotOld
+  exact dite_eq_right hNotOld
 
 theorem coarseNewOldEdge_of_selected
     (input : W3SourceInput data star)
@@ -1923,7 +1927,7 @@ theorem coarseNewOldEdge_of_selected
       ⟨profile.largest.1, largest_survives input profile⟩ := by
   apply Subtype.ext
   change coarseNewOldSourceEdge input profile sheet = profile.largest.1
-  rw [coarseNewOldSourceEdge, if_pos hSelected]
+  rw [coarseNewOldSourceEdge, ite_eq_left hSelected]
 
 theorem coarseNewOldEdge_of_background
     (input : W3SourceInput data star)
@@ -1937,7 +1941,7 @@ theorem coarseNewOldEdge_of_background
       data.sourceEdge profile.first.1.1.1 sheet := by
   change coarseNewOldSourceEdge input profile sheet =
     data.sourceEdge profile.first.1.1.1 sheet
-  rw [coarseNewOldSourceEdge, if_neg hBackground]
+  rw [coarseNewOldSourceEdge, ite_eq_right hBackground]
 
 theorem coarseRowOfEdge_incident_background
     (input : W3SourceInput data star)
@@ -1968,7 +1972,7 @@ theorem coarseRowOfEdge_incident_background
     refine ⟨old, hOldIncident, ?_, ?_⟩
     · rw [coarseBackgroundReplace_of_ne_doubled input profile hSame old.1 hTarget]
       exact congrArg Subtype.val hEq
-    · rw [coarseRowOfEdge, dif_pos hOld]
+    · rw [coarseRowOfEdge, dite_eq_left hOld]
   · let newSheet := coarseNewSheet input profile hSame edge hOld
     let hNewSurvives := coarseNewSheet_survives input profile hSame edge hOld
     have hEdge := coarseNewSheet_spec input profile hSame edge hOld
@@ -2511,9 +2515,9 @@ theorem fineNewOldSourceEdge_survives
   classical
   by_cases hSelected : (data.vertexPartition wall).Rel
       input.distinguishedBlock.1 sheet
-  · rw [fineNewOldSourceEdge, if_pos hSelected]
+  · rw [fineNewOldSourceEdge, ite_eq_left hSelected]
     exact doubled_sourceEdge_survives input profile hSame sheet hSelected
-  · rw [fineNewOldSourceEdge, if_neg hSelected]
+  · rw [fineNewOldSourceEdge, ite_eq_right hSelected]
     exact (fine_background_new_survives_iff_largest input profile hSame sheet
       hSelected).mp hSurvives
 
@@ -2607,7 +2611,7 @@ noncomputable def fineRowOfEdge
       retainedEdge (fineCandidate input profile hSame) input.valid.1 other =
         retainedEdge (fineCandidate input profile hSame) input.valid.1 old :=
     ⟨old, rfl⟩
-  rw [fineRowOfEdge, dif_pos hOld]
+  rw [fineRowOfEdge, dite_eq_left hOld]
   exact congrArg NonDanglingEdge.stablePath
     (retainedEdge_injective _ input.valid.1 (Classical.choose_spec hOld))
 
@@ -2623,7 +2627,7 @@ theorem fineRowOfEdge_not_retained
         (fineNewSheet input profile hSame edge hNotOld)
         (fineNewSheet_survives input profile hSame edge hNotOld)).stablePath := by
   classical
-  exact dif_neg hNotOld
+  exact dite_eq_right hNotOld
 
 theorem fineNewOldEdge_of_selected
     (input : W3SourceInput data star)
@@ -2636,7 +2640,7 @@ theorem fineNewOldEdge_of_selected
       data.sourceEdge profile.first.1.1.1 sheet := by
   change fineNewOldSourceEdge input profile sheet =
     data.sourceEdge profile.first.1.1.1 sheet
-  rw [fineNewOldSourceEdge, if_pos hSelected]
+  rw [fineNewOldSourceEdge, ite_eq_left hSelected]
 
 theorem fineNewOldEdge_of_background
     (input : W3SourceInput data star)
@@ -2650,7 +2654,7 @@ theorem fineNewOldEdge_of_background
       data.sourceEdge (largestTarget input profile) sheet := by
   change fineNewOldSourceEdge input profile sheet =
     data.sourceEdge (largestTarget input profile) sheet
-  rw [fineNewOldSourceEdge, if_neg hBackground]
+  rw [fineNewOldSourceEdge, ite_eq_right hBackground]
 
 theorem fineRowOfEdge_incident_background
     (input : W3SourceInput data star)
@@ -2681,7 +2685,7 @@ theorem fineRowOfEdge_incident_background
     refine ⟨old, hOldIncident, ?_, ?_⟩
     · rw [fineBackgroundReplace_of_ne_largest input profile hSame old.1 hTarget]
       exact congrArg Subtype.val hEq
-    · rw [fineRowOfEdge, dif_pos hOld]
+    · rw [fineRowOfEdge, dite_eq_left hOld]
   · let newSheet := fineNewSheet input profile hSame edge hOld
     let hNewSurvives := fineNewSheet_survives input profile hSame edge hOld
     have hEdge := fineNewSheet_spec input profile hSame edge hOld
@@ -3384,7 +3388,7 @@ theorem coarse_matrix_new (input : W3SourceInput data star)
       (1 : ℚ) / candidate.datum.sourceEdgeIndex selected =
         matrix candidate.datum path
           (occurrenceEquiv target wall candidate.right none) at hSum
-    rw [if_pos hRow]
+    rw [ite_eq_left hRow]
     rw [← hSum, add_comm]
     congr 1
     rw [hIndex]
@@ -3393,7 +3397,7 @@ theorem coarse_matrix_new (input : W3SourceInput data star)
   · have hNot : selected ∉ fibre :=
       fun h ↦ hRow ((coarse_selected_mem_occurrences_iff input profile hSame path).mp h)
     have hErase := Finset.erase_eq_of_notMem hNot
-    rw [if_neg hRow, zero_add]
+    rw [ite_eq_right hRow, zero_add]
     change (∑ edge ∈ fibre, (1 : ℚ) / candidate.datum.sourceEdgeIndex edge) =
       ∑ edge ∈ fibre.erase selected,
         (1 : ℚ) / candidate.datum.sourceEdgeIndex edge
@@ -3846,24 +3850,24 @@ theorem fine_matrix_new (input : W3SourceInput data star)
           Finset.mem_erase.mpr ⟨fun h ↦ hNe h.symm, hB⟩
         have hOne := Finset.sum_erase_add fibre weight hA
         have hTwo := Finset.sum_erase_add (fibre.erase first) weight hSecondErase
-        rw [if_pos hA, if_pos hB, ← hOne, ← hTwo]
+        rw [ite_eq_left hA, ite_eq_left hB, ← hOne, ← hTwo]
         ring
       · have hNotErase : second ∉ fibre.erase first :=
           fun h ↦ hB (Finset.mem_of_mem_erase h)
         have hOne := Finset.sum_erase_add fibre weight hA
-        rw [if_pos hA, if_neg hB, Finset.erase_eq_of_notMem hNotErase, ← hOne]
+        rw [ite_eq_left hA, ite_eq_right hB, Finset.erase_eq_of_notMem hNotErase, ← hOne]
         ring
     · by_cases hB : second ∈ fibre
       · have hEraseFirst : fibre.erase first = fibre :=
           Finset.erase_eq_of_notMem hA
         have hThree := Finset.sum_erase_add fibre weight hB
-        rw [if_neg hA, if_pos hB, hEraseFirst, ← hThree]
+        rw [ite_eq_right hA, ite_eq_left hB, hEraseFirst, ← hThree]
         ring
       · have hEraseFirst : fibre.erase first = fibre :=
           Finset.erase_eq_of_notMem hA
         have hNotErase : second ∉ fibre.erase first := by
           rw [hEraseFirst]; exact hB
-        rw [if_neg hA, if_neg hB, Finset.erase_eq_of_notMem hNotErase, hEraseFirst]
+        rw [ite_eq_right hA, ite_eq_right hB, Finset.erase_eq_of_notMem hNotErase, hEraseFirst]
         ring
   have hGoal : matrix candidate.datum path
       (occurrenceEquiv target wall candidate.right none) =
@@ -3875,10 +3879,10 @@ theorem fine_matrix_new (input : W3SourceInput data star)
         (1 : ℚ) / data.sourceEdgeIndex profile.first.1 else 0) by
     by_cases hRow : path = (fineNew input profile hSame profile.first.1.1.2
         (incident_wall_rel input profile.first)).stablePath
-    · rw [if_pos hRow, if_pos
+    · rw [ite_eq_left hRow, ite_eq_left
         ((fine_selected_first_mem_occurrences_iff input profile hSame path).mpr hRow),
         hFirstIndex]
-    · rw [if_neg hRow, if_neg (fun h ↦ hRow
+    · rw [ite_eq_right hRow, ite_eq_right (fun h ↦ hRow
         ((fine_selected_first_mem_occurrences_iff input profile hSame path).mp h))]]
   rw [show (if second ∈ fibre then weight second else 0) =
       (if path = (fineNew input profile hSame profile.second.1.1.2
@@ -3886,10 +3890,10 @@ theorem fine_matrix_new (input : W3SourceInput data star)
         (1 : ℚ) / data.sourceEdgeIndex profile.second.1 else 0) by
     by_cases hRow : path = (fineNew input profile hSame profile.second.1.1.2
         (incident_wall_rel input profile.second)).stablePath
-    · rw [if_pos hRow, if_pos
+    · rw [ite_eq_left hRow, ite_eq_left
         ((fine_selected_second_mem_occurrences_iff input profile hSame path).mpr hRow),
         hSecondIndex]
-    · rw [if_neg hRow, if_neg (fun h ↦ hRow
+    · rw [ite_eq_right hRow, ite_eq_right (fun h ↦ hRow
         ((fine_selected_second_mem_occurrences_iff input profile hSame path).mp h))]]
   rfl
 
@@ -4324,7 +4328,7 @@ theorem coarseBranchVertexMap_of_selected (input : W3SourceInput data star)
         (oldVertex target wall) vertex.1.1.2 := by
   classical
   unfold coarseBranchVertexMap
-  rw [dif_pos hAt, dif_pos hSelected]
+  rw [dite_eq_left hAt, dite_eq_left hSelected]
   rfl
 
 theorem coarseBranchVertexMap_of_background (input : W3SourceInput data star)
@@ -4338,7 +4342,7 @@ theorem coarseBranchVertexMap_of_background (input : W3SourceInput data star)
         (freshVertex target) vertex.1.1.2 := by
   classical
   unfold coarseBranchVertexMap
-  rw [dif_pos hAt, dif_neg hBackground]
+  rw [dite_eq_left hAt, dite_eq_right hBackground]
   rfl
 
 theorem coarseBranchVertexMap_of_away (input : W3SourceInput data star)
@@ -4349,7 +4353,7 @@ theorem coarseBranchVertexMap_of_away (input : W3SourceInput data star)
       retainedVertex (coarseCandidate input profile hSame) vertex.1 := by
   classical
   unfold coarseBranchVertexMap
-  rw [dif_neg hAway]
+  rw [dite_eq_right hAway]
   rfl
 
 theorem coarse_fresh_endpoint_reflects_background (input : W3SourceInput data star)
@@ -4747,7 +4751,7 @@ theorem coarseSelectedFlag_of_largest (input : W3SourceInput data star)
     coarseSelectedFlag input profile hSame edge =
       coarseAnchorNew input profile hSame := by
   classical
-  rw [coarseSelectedFlag, if_pos hLargest]
+  rw [coarseSelectedFlag, ite_eq_left hLargest]
 
 theorem coarseSelectedFlag_of_ne (input : W3SourceInput data star)
     (profile : Nd3Profile data input.distinguishedBlock)
@@ -4756,7 +4760,7 @@ theorem coarseSelectedFlag_of_ne (input : W3SourceInput data star)
     coarseSelectedFlag input profile hSame edge =
       retainedEdge (coarseCandidate input profile hSame) input.valid.1 edge := by
   classical
-  rw [coarseSelectedFlag, if_neg hLargest]
+  rw [coarseSelectedFlag, ite_eq_right hLargest]
 
 theorem coarseSelectedFlag_incident (input : W3SourceInput data star)
     (profile : Nd3Profile data input.distinguishedBlock)
@@ -5035,7 +5039,7 @@ theorem fineBranchVertexMap_of_selected (input : W3SourceInput data star)
         (oldVertex target wall) vertex.1.1.2 := by
   classical
   unfold fineBranchVertexMap
-  rw [dif_pos hAt, dif_pos hSelected]
+  rw [dite_eq_left hAt, dite_eq_left hSelected]
   rfl
 
 theorem fineBranchVertexMap_of_background (input : W3SourceInput data star)
@@ -5049,7 +5053,7 @@ theorem fineBranchVertexMap_of_background (input : W3SourceInput data star)
         (freshVertex target) vertex.1.1.2 := by
   classical
   unfold fineBranchVertexMap
-  rw [dif_pos hAt, dif_neg hBackground]
+  rw [dite_eq_left hAt, dite_eq_right hBackground]
   rfl
 
 theorem fineBranchVertexMap_of_away (input : W3SourceInput data star)
@@ -5060,7 +5064,7 @@ theorem fineBranchVertexMap_of_away (input : W3SourceInput data star)
       retainedVertex (fineCandidate input profile hSame) vertex.1 := by
   classical
   unfold fineBranchVertexMap
-  rw [dif_neg hAway]
+  rw [dite_eq_right hAway]
   rfl
 
 theorem fine_fresh_endpoint_reflects_background (input : W3SourceInput data star)
@@ -5465,7 +5469,7 @@ theorem fineSelectedFlag_of_first (input : W3SourceInput data star)
       fineNew input profile hSame profile.first.1.1.2
         (incident_wall_rel input profile.first) := by
   classical
-  rw [fineSelectedFlag, if_pos hFirst]
+  rw [fineSelectedFlag, ite_eq_left hFirst]
 
 theorem fineSelectedFlag_of_second (input : W3SourceInput data star)
     (profile : Nd3Profile data input.distinguishedBlock)
@@ -5476,7 +5480,7 @@ theorem fineSelectedFlag_of_second (input : W3SourceInput data star)
       fineNew input profile hSame profile.second.1.1.2
         (incident_wall_rel input profile.second) := by
   classical
-  rw [fineSelectedFlag, if_neg hFirst, if_pos hSecond]
+  rw [fineSelectedFlag, ite_eq_right hFirst, ite_eq_left hSecond]
 
 theorem fineSelectedFlag_of_ne (input : W3SourceInput data star)
     (profile : Nd3Profile data input.distinguishedBlock)
@@ -5486,7 +5490,7 @@ theorem fineSelectedFlag_of_ne (input : W3SourceInput data star)
     fineSelectedFlag input profile hSame edge =
       retainedEdge (fineCandidate input profile hSame) input.valid.1 edge := by
   classical
-  rw [fineSelectedFlag, if_neg hFirst, if_neg hSecond]
+  rw [fineSelectedFlag, ite_eq_right hFirst, ite_eq_right hSecond]
 
 theorem fineSelectedFlag_incident (input : W3SourceInput data star)
     (profile : Nd3Profile data input.distinguishedBlock)

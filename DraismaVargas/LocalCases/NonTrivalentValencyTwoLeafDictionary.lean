@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoRowDictionary
-import DraismaVargas.LocalCases.LeafFacetNoReturn
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoRowDictionary
+public import DraismaVargas.LocalCases.LeafFacetNoReturn
+
+@[expose] public section
 
 /-!
 # The `1+3` sub-case of the valency-two common-minor identity, and the dispatcher

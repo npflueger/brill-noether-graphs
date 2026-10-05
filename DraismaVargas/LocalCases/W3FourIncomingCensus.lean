@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W3FourRowDescent
-import DraismaVargas.LocalCases.W3ShiftIncomingMatching
+module
+
+public import DraismaVargas.LocalCases.W3FourRowDescent
+public import DraismaVargas.LocalCases.W3ShiftIncomingMatching
+
+@[expose] public section
 
 /-!
 # The incoming census at a `w3Four`-classified wall

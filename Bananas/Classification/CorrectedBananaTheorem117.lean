@@ -1,5 +1,9 @@
-import Bananas.Classification.CorrectedBananaTorsion
-import Bananas.Sections.SectionSixBananaCorollary
+module
+
+public import Bananas.Classification.CorrectedBananaTorsion
+public import Bananas.Sections.SectionSixBananaCorollary
+
+@[expose] public section
 
 /-!
 # The corrected torsion classification and Theorem 1.17

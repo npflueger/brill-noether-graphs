@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.TargetRelabelStable
-import DraismaVargas.LocalCases.StableGraphFullDimensional
-import Utilities.Subdivision.GraphIsoLaplacianEquiv
+module
+
+public import DraismaVargas.LocalCases.TargetRelabelStable
+public import DraismaVargas.LocalCases.StableGraphFullDimensional
+public import Utilities.Subdivision.GraphIsoLaplacianEquiv
+
+@[expose] public section
 
 /-!
 # Full-dimensional presentations under actual target and sheet relabelling

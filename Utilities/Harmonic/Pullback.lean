@@ -1,4 +1,8 @@
-import Utilities.Harmonic.Basic
+module
+
+public import Utilities.Harmonic.Basic
+
+@[expose] public section
 
 /-!
 # Rank and transmission transport along harmonic pullback

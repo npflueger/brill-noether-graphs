@@ -1,7 +1,11 @@
-import LowGenus.GenusFiveRow04CoverBase
-import LowGenus.GenusFiveRow04CoverCells0
-import LowGenus.GenusFiveRow04CoverCells1
-import LowGenus.GenusFiveRow04Symmetry
+module
+
+public import LowGenus.GenusFiveRow04CoverBase
+public import LowGenus.GenusFiveRow04CoverCells0
+public import LowGenus.GenusFiveRow04CoverCells1
+public import LowGenus.GenusFiveRow04Symmetry
+
+@[expose] public section
 
 /-! **Independent generated check.** This module provides an additional generated proof of row 04 and is not imported by the main `LowGenus` root.
 

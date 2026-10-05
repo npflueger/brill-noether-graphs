@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.TargetRelabelStable
-import DraismaVargas.LocalCases.CaterpillarDatum
+module
+
+public import DraismaVargas.LocalCases.TargetRelabelStable
+public import DraismaVargas.LocalCases.CaterpillarDatum
+
+@[expose] public section
 
 /-!
 # Transport of a gluing datum along an isomorphism, and the induced stable dictionary
@@ -905,8 +909,8 @@ theorem pairPart_relabel_swap_ne (m j : ℕ) (hj : 1 ≤ j) (hjlt : j < m + 2) :
   by_cases hOne : j = 1
   · subst hOne
     have hStep := hApplyAt 0
-    rw [Equiv.swap_apply_left, pairPart_repr, if_pos (by simp), Equiv.swap_apply_left,
-      pairPart_repr, if_neg (by simp)] at hStep
+    rw [Equiv.swap_apply_left, pairPart_repr, ite_eq_left (by simp), Equiv.swap_apply_left,
+      pairPart_repr, ite_eq_right (by simp)] at hStep
     exact zero_ne_one m hStep.symm
   · have hTwo : 2 ≤ j := by omega
     have hNeZero : (⟨j, hjlt⟩ : Fin (m + 2)) ≠ 0 := by
@@ -922,7 +926,7 @@ theorem pairPart_relabel_swap_ne (m j : ℕ) (hj : 1 ≤ j) (hjlt : j < m + 2) :
       change j = 1 at hVal
       omega
     have hStep := hApplyAt ⟨j, hjlt⟩
-    rw [Equiv.swap_apply_of_ne_of_ne hNeZero hNeOne, pairPart_repr, if_pos rfl,
+    rw [Equiv.swap_apply_of_ne_of_ne hNeZero hNeOne, pairPart_repr, ite_eq_left rfl,
       Equiv.swap_apply_left] at hStep
     exact zero_ne_one m hStep.symm
 

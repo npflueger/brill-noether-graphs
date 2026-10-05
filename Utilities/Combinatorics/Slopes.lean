@@ -1,4 +1,8 @@
-import Utilities.Combinatorics.Ballot
+module
+
+public import Utilities.Combinatorics.Ballot
+
+@[expose] public section
 
 /-!
 # Slope sequences of a caterpillar of loops, and their bijection with ballot sequences
@@ -208,7 +212,7 @@ theorem mem_scanl_self (a : ℕ) (m : List DyckStep) : a ∈ List.scanl slopeSte
 theorem scanl_eq_cons (a : ℕ) (m : List DyckStep) :
     ∃ t, List.scanl slopeStep a m = a :: t := by
   cases m with
-  | nil => exact ⟨[], rfl⟩
+  | nil => exact ⟨[], List.scanl_nil⟩
   | cons x m => exact ⟨_, List.scanl_cons⟩
 
 /-- **Round trip, votes first**: accumulating a vote list and then reading off
@@ -474,7 +478,7 @@ theorem prefix_le_votesOfSlopes (s : Slopes g) (i : ℕ) :
     | succ j =>
       rw [List.take_succ_cons]
       simp only [List.count_cons]
-      simp only [beq_iff_eq, reduceCtorEq, if_false, if_true, Nat.add_zero]
+      simp only [beq_iff_eq, reduceCtorEq, ite_false, ite_true, Nat.add_zero]
       by_cases hj : j ≤ (interiorVotes s.slopes).length
       · rw [List.take_append_of_le_length hj]
         have := take_count_interior s hne j
@@ -698,7 +702,7 @@ private theorem getElem_of_scanl (m : List DyckStep) (L : List ℕ)
     rw [List.length_scanl] at this
     omega
   have hopt : L[i]? = some (List.foldl slopeStep 2 (m.take i)) := by
-    rw [← hscan, List.getElem?_scanl, if_pos hilen]
+    rw [← hscan, List.getElem?_scanl, ite_eq_left hilen]
   rw [List.getElem?_eq_getElem hi] at hopt
   exact Option.some.inj hopt
 

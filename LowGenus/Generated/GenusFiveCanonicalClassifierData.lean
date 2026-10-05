@@ -1,4 +1,8 @@
-import Utilities.Certificate.CubicMatrixCanonical
+module
+
+public import Utilities.Certificate.CubicMatrixCanonical
+
+@[expose] public section
 
 /-!
 # Generated data for the pruned cubic classifier at n = 8

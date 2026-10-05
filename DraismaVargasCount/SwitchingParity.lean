@@ -1,5 +1,9 @@
-import DraismaVargasCount.CountTransportLink
-import DraismaVargasCount.W4WallExhaustion
+module
+
+public import DraismaVargasCount.CountTransportLink
+public import DraismaVargasCount.W4WallExhaustion
+
+@[expose] public section
 
 /-!
 # What evenness of `switchingCount` actually consumes

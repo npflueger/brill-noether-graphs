@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.ResolutionPruning
+module
+
+public import DraismaVargas.LocalCases.ResolutionPruning
+
+@[expose] public section
 
 /-!
 # Stable-path incidences away from the resolved wall

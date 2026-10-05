@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.TargetRelabelPruning
-import DraismaVargas.LocalCases.StableGraphIncidence
+module
+
+public import DraismaVargas.LocalCases.TargetRelabelPruning
+public import DraismaVargas.LocalCases.StableGraphIncidence
+
+@[expose] public section
 
 /-!
 # Induced stable rows, matrix entries and branch flags under target relabelling

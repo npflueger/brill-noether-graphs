@@ -1,7 +1,11 @@
-import Bananas.Transmission.KGeneralSwap
-import Bananas.Transmission.LengthTwoTorsion
-import Bananas.CrossOneOff.LengthTwoCrossMonotonicity
-import Bananas.Transmission.TorsionOrderTwoGeneral
+module
+
+public import Bananas.Transmission.KGeneralSwap
+public import Bananas.Transmission.LengthTwoTorsion
+public import Bananas.CrossOneOff.LengthTwoCrossMonotonicity
+public import Bananas.Transmission.TorsionOrderTwoGeneral
+
+@[expose] public section
 
 /-!
 # Corrected high-genus midpoint exceptions

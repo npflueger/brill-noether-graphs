@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.M11IncomingJoinedMatching
-import DraismaVargas.LocalCases.M11IncomingSplitMatching
-import DraismaVargas.LocalCases.IncomingNormalizationRows
+module
+
+public import DraismaVargas.LocalCases.M11IncomingJoinedMatching
+public import DraismaVargas.LocalCases.M11IncomingSplitMatching
+public import DraismaVargas.LocalCases.IncomingNormalizationRows
+
+@[expose] public section
 
 /-!
 # Actual M11 incoming matching with induced rows

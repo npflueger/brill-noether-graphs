@@ -1,8 +1,12 @@
-import DraismaVargasCount.ValencyFourSplit
-import DraismaVargasCount.ValencyThreeCoreSlots
-import DraismaVargasCount.RowGeodesic
-import DraismaVargasCount.Integrality
-import DraismaVargasCount.CensusAssembly
+module
+
+public import DraismaVargasCount.ValencyFourSplit
+public import DraismaVargasCount.ValencyThreeCoreSlots
+public import DraismaVargasCount.RowGeodesic
+public import DraismaVargasCount.Integrality
+public import DraismaVargasCount.CensusAssembly
+
+@[expose] public section
 
 set_option autoImplicit false
 
@@ -256,8 +260,8 @@ def pendantIsoW (hP : Pendant M wall root hRoot D) (π : Equiv.Perm (Fin degree)
     unfold branchPerm
     by_cases he : edgeMoved wall root hRoot e = true <;>
       by_cases hvm : vertexMoved wall root hRoot v = true
-    · rw [if_pos he, if_pos hvm, Equiv.symm_apply_apply]; rfl
-    · rw [if_pos he, if_neg hvm]
+    · rw [ite_eq_left he, ite_eq_left hvm, Equiv.symm_apply_apply]; rfl
+    · rw [ite_eq_left he, ite_eq_right hvm]
       have hWall : v = wall := by
         rcases hv with h | h
         · subst h
@@ -275,7 +279,7 @@ def pendantIsoW (hP : Pendant M wall root hRoot D) (π : Equiv.Perm (Fin degree)
       rcases hv with h | h
       · rw [h, hvm]; simp
       · rw [h, hvm]; simp
-    · rw [if_neg he, if_neg hvm]
+    · rw [ite_eq_right he, ite_eq_right hvm]
       rfl
 
 end PendantW
@@ -525,7 +529,7 @@ theorem transportFree_of_shape (right : target₁.edges → Bool) (right' : targ
     have hAg : W.Rel (τ.symm (ψ.edgePerm e s)) s :=
       agree_symm_apply ψ τ (ψ.edgePerm e) hτW (edgePerm_agree ψ hWall e hInc') s
     by_cases hr : right e = true
-    · rw [if_pos hr, if_pos hr, H.right]
+    · rw [ite_eq_left hr, ite_eq_left hr, H.right]
       obtain ⟨h1, h2⟩ := hEndR e hInc hr s
       by_cases ha : actR s
       · refine Or.inr ⟨hAg, ?_, ha⟩
@@ -535,7 +539,7 @@ theorem transportFree_of_shape (right : target₁.edges → Bool) (right' : targ
       · left
         rw [h1 ha, Equiv.symm_apply_apply]
     · have hr' : right e = false := by simpa using hr
-      rw [if_neg hr, if_neg hr, H.left]
+      rw [ite_eq_right hr, ite_eq_right hr, H.left]
       obtain ⟨h1, h2⟩ := hEndL e hInc hr' s
       by_cases ha : actL s
       · refine Or.inr ⟨hAg, ?_, ha⟩
@@ -1803,7 +1807,7 @@ theorem exists_rho (W' : SheetPartition d) (ν σ τ : Equiv.Perm (Fin d))
     intro x y hx hy hxy
     simp only [f] at hxy
     by_cases hDx : D' (σ x) <;> by_cases hDy : D' (σ y) <;>
-      simp only [hDx, hDy, if_true, if_false] at hxy
+      simp only [hDx, hDy, ite_true, ite_false] at hxy
     · exact τ.injective hxy
     · -- `x` inactive in `D'`, `y` off `D'`
       have hax : ¬ act x := by rcases hx with h | h; exact absurd hDx h; exact h
@@ -1834,7 +1838,7 @@ theorem exists_rho (W' : SheetPartition d) (ν σ τ : Equiv.Perm (Fin d))
   obtain ⟨π, hπP, hπc⟩ := exists_perm_extend2 (fun x ↦ W'.repr (ν x)) W'.repr hcard P f hinj hf
   refine ⟨π, fun s hs ↦ ?_, fun s ↦ hπc s, fun s hs ↦ ?_, fun s hs ↦ ?_⟩
   · rw [hπP s (Or.inl hs)]
-    simp only [f, if_neg hs]
+    simp only [f, ite_eq_right hs]
   · rw [hπP s (Or.inr hs)]
     simp only [f]
     split_ifs with hD
@@ -1859,7 +1863,7 @@ theorem exists_rho (W' : SheetPartition d) (ν σ τ : Equiv.Perm (Fin d))
       rw [hxs] at hs'
       exact hs' hs
     · rw [hπP s (Or.inl hD)]
-      simp only [f, if_neg hD]
+      simp only [f, ite_eq_right hD]
       exact hSurv s hD hs
 
 end Rho
@@ -3850,7 +3854,7 @@ theorem not_loopAtEnd_of_anchor4 (w : Regrowth core y degree) {block}
     rw [Equiv.apply_symm_apply, hvX] at h
     rw [← h]
     unfold coreIncidence
-    rw [if_pos rfl, if_pos hloop.symm]
+    rw [ite_eq_left rfl, ite_eq_left hloop.symm]
   unfold StablePathCount.incidenceCount at hc2
   obtain ⟨g, hg, g', hg', hgg⟩ := Finset.one_lt_card.mp (by rw [hc2]; norm_num)
   obtain ⟨hgi, hgp⟩ := Finset.mem_filter.mp hg

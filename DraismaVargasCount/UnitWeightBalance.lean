@@ -1,4 +1,8 @@
-import DraismaVargasCount.TrivalentWeight
+module
+
+public import DraismaVargasCount.TrivalentWeight
+
+@[expose] public section
 
 /-!
 # The unit-weight trivalent balance, case-independently

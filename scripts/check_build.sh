@@ -27,6 +27,7 @@
 #      `Palomar/*/Challenge.lean` -- are deliberately stated with `sorry`
 #      bodies and are listed separately; anywhere else a `sorry` is a failure;
 #   3. runs `scripts/check_layering.py` (import arrows and root coverage).
+#   4. checks module headers in project Lean sources.
 #
 # Usage:  bash scripts/check_build.sh [target ...]
 #         (no arguments = every `[[lean_lib]]` of lakefile.toml)
@@ -177,6 +178,55 @@ PY
 echo
 echo "layering:"
 python3 scripts/check_layering.py 2>&1 | sed 's/^/  /' || fail=1
+
+echo
+echo "module headers:"
+python3 - <<'PY_MODULES' 2>&1 | sed 's/^/  /' || fail=1
+from pathlib import Path
+import re
+import subprocess
+import sys
+
+ROOT = Path.cwd()
+
+
+def first_command(text):
+    """Skip whitespace and nested leading comments before the module header."""
+    depth = 0
+    while text:
+        text = text.lstrip()
+        if depth:
+            match = re.search(r"/-|-/", text)
+            if match is None:
+                return ""
+            depth += 1 if match[0] == "/-" else -1
+            text = text[match.end():]
+        elif text.startswith("/-"):
+            depth = 1
+            text = text[2:]
+        elif text.startswith("--"):
+            text = text.partition("\n")[2]
+        else:
+            return text.splitlines()[0]
+    return ""
+
+
+def main():
+    result = subprocess.run(
+        ["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard", "--", "*.lean"],
+        cwd=ROOT, check=True, capture_output=True,
+    )
+    paths = sorted(set(p.decode() for p in result.stdout.split(b"\0") if p))
+    invalid = [p for p in paths if first_command((ROOT / p).read_text()) != "module"]
+    for path in invalid:
+        print(f"missing module header: {path}")
+    print(f"Module headers: {len(paths) - len(invalid)}/{len(paths)}")
+    return bool(invalid)
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+PY_MODULES
 
 echo
 if [ "$fail" -eq 0 ]; then

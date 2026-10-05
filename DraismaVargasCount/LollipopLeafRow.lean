@@ -1,5 +1,9 @@
-import DraismaVargasCount.RowGeodesic
-import DraismaVargasCount.Integrality
+module
+
+public import DraismaVargasCount.RowGeodesic
+public import DraismaVargasCount.Integrality
+
+@[expose] public section
 
 /-!
 # A stable row that returns to its own branch vertex passes above a leaf
@@ -349,7 +353,7 @@ theorem incidenceCount_eq_two_of_core_loop (member : FibreMember core y degree)
       (member.ident.row.symm slot) = 2 := by
   have hInc := member.ident.incidence (member.ident.vertex.symm (core.tail slot)) slot
   rw [Equiv.apply_symm_apply] at hInc
-  rw [hInc, coreIncidence, if_pos rfl, if_pos hLoop.symm]
+  rw [hInc, coreIncidence, ite_eq_left rfl, ite_eq_left hLoop.symm]
 
 /-- **`φ(C)` is a leaf, for every member over a core with a self-loop.**  The
 stable row of a self-loop slot is the leaf row `h(v)` of a leaf `v` of that
@@ -462,9 +466,9 @@ theorem catCore_tail_eq_head_iff (m : ℕ) (slot : Fin (6 * m + 3)) :
   rw [branchIdx_inj (catTailVal_mod m slot) (catHeadVal_mod m slot)]
   unfold catTailVal catHeadVal
   by_cases hLeaf : IsLeafEdge m slot
-  · rw [if_pos hLeaf]
+  · rw [ite_eq_left hLeaf]
     simp [hLeaf]
-  · rw [if_neg hLeaf]
+  · rw [ite_eq_right hLeaf]
     have hPred := parentIndex_le_pred (slot.val + 1)
     simp only [hLeaf, iff_false]
     omega

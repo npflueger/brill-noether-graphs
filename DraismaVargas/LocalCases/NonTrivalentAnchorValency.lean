@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.NonTrivalentUniqueFourValent
-import DraismaVargas.LocalCases.NonTrivalentValencyThreeRigidity
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoRigidity
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentUniqueFourValent
+public import DraismaVargas.LocalCases.NonTrivalentValencyThreeRigidity
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoRigidity
+
+@[expose] public section
 
 /-!
 # The anchor is four-valent at a valency-three and at a valency-two wall

@@ -1,6 +1,10 @@
-import Utilities.Gluing.GenusFourVertexCut
-import Utilities.Subdivision.CoreVertexCutTwoRegular
-import Utilities.Subdivision.SpanningTreeConnectivity
+module
+
+public import Utilities.Gluing.GenusFourVertexCut
+public import Utilities.Subdivision.CoreVertexCutTwoRegular
+public import Utilities.Subdivision.SpanningTreeConnectivity
+
+@[expose] public section
 
 /-!
 # Checked genus-four rank-one core cuts

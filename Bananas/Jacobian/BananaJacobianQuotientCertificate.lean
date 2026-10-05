@@ -1,4 +1,8 @@
-import Bananas.Jacobian.BananaJacobianLatticeReduction
+module
+
+public import Bananas.Jacobian.BananaJacobianLatticeReduction
+
+@[expose] public section
 
 /-!
 # Quotient certificates for the displayed banana relation lattice

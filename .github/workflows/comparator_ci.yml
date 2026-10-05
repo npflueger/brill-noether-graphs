@@ -35,6 +35,12 @@ jobs:
           ruby scripts/validate-formalization.rb
           Palomar/BNChains/formalization.yaml
 
+      - name: Validate genus-six metadata
+        if: ${{ hashFiles('Palomar/GenusSix/formalization.yaml') != '' }}
+        run: >-
+          ruby scripts/validate-formalization.rb
+          Palomar/GenusSix/formalization.yaml
+
   comparator:
     name: Compare statements with proved solutions
     runs-on: ubuntu-latest

@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.ResolutionStableIncidence
-import DraismaVargas.LocalCases.StableSourceMatrix
-import DraismaVargas.LocalCases.M11SplitSurvival
+module
+
+public import DraismaVargas.LocalCases.ResolutionStableIncidence
+public import DraismaVargas.LocalCases.StableSourceMatrix
+public import DraismaVargas.LocalCases.M11SplitSurvival
+
+@[expose] public section
 
 /-!
 # The generic limit-matrix chain
@@ -1298,11 +1302,11 @@ noncomputable def replace (shape : BackgroundShape data wall)
 
 theorem replace_of_target {edge : data.SourceEdge}
     (hTarget : edge.1.1 = shape.retainedTarget) :
-    replace shape edge = shape.candidate.newSourceEdge edge.1.2 := if_pos hTarget
+    replace shape edge = shape.candidate.newSourceEdge edge.1.2 := ite_eq_left hTarget
 
 theorem replace_of_target_ne {edge : data.SourceEdge}
     (hTarget : edge.1.1 ≠ shape.retainedTarget) :
-    replace shape edge = shape.candidate.oldSourceEdge edge := if_neg hTarget
+    replace shape edge = shape.candidate.oldSourceEdge edge := ite_eq_right hTarget
 
 theorem replace_survives (hValid : data.Valid) {sheet : Fin degree}
     (hSheet : ¬ (data.vertexPartition wall).Rel shape.selected sheet)
@@ -1725,12 +1729,12 @@ noncomputable def newOldSourceEdge (sheet : Fin degree) :
 
 theorem newOldSourceEdge_selected {sheet : Fin degree}
     (hSheet : (data.vertexPartition wall).Rel rd.selected sheet) :
-    rd.newOldSourceEdge sheet = rd.selectedRep sheet := if_pos hSheet
+    rd.newOldSourceEdge sheet = rd.selectedRep sheet := ite_eq_left hSheet
 
 theorem newOldSourceEdge_background {sheet : Fin degree}
     (hSheet : ¬ (data.vertexPartition wall).Rel rd.selected sheet) :
     rd.newOldSourceEdge sheet =
-      data.sourceEdge rd.retainedTarget sheet := if_neg hSheet
+      data.sourceEdge rd.retainedTarget sheet := ite_eq_right hSheet
 
 theorem newOldSourceEdge_survives (sheet : Fin degree)
     (hSurvives : ¬ IsDangling rd.candidate.datum
@@ -1882,7 +1886,7 @@ noncomputable def rowOfEdge (edge : NonDanglingEdge rd.candidate.datum) :
   have hOld : ∃ other : NonDanglingEdge data,
       retainedEdge rd.candidate rd.valid.1 other =
         retainedEdge rd.candidate rd.valid.1 old := ⟨old, rfl⟩
-  rw [rowOfEdge, dif_pos hOld]
+  rw [rowOfEdge, dite_eq_left hOld]
   exact congrArg NonDanglingEdge.stablePath
     (retainedEdge_injective rd.candidate rd.valid.1
       (Classical.choose_spec hOld))
@@ -1903,7 +1907,7 @@ theorem rowOfEdge_not_retained (edge : NonDanglingEdge rd.candidate.datum)
       (rd.newOldEdge (rd.newSheet edge hNotOld)
         (rd.newSheet_survives edge hNotOld)).stablePath := by
   classical
-  exact dif_neg hNotOld
+  exact dite_eq_right hNotOld
 
 theorem rowOfEdge_new (sheet : Fin degree)
     (hSurvives : ¬ IsDangling rd.candidate.datum
@@ -2510,14 +2514,14 @@ noncomputable def branchImage (vertex : data.SourceVertex) :
 theorem branchImage_away {vertex : data.SourceVertex} (hAway : vertex.1.1 ≠ wall) :
     rd.branchImage vertex = retainedVertex rd.candidate vertex := by
   classical
-  exact if_neg hAway
+  exact ite_eq_right hAway
 
 theorem branchImage_selected {vertex : data.SourceVertex} (hAt : vertex.1.1 = wall)
     (hSelected : (data.vertexPartition wall).Rel rd.selected
       vertex.1.2) :
     rd.branchImage vertex = rd.branchVertex := by
   classical
-  exact (if_pos hAt).trans (if_pos hSelected)
+  exact (ite_eq_left hAt).trans (ite_eq_left hSelected)
 
 theorem branchImage_background {vertex : data.SourceVertex}
     (hAt : vertex.1.1 = wall)
@@ -2526,7 +2530,7 @@ theorem branchImage_background {vertex : data.SourceVertex}
     rd.branchImage vertex =
       rd.candidate.datum.sourceEndpoint (freshVertex target) vertex.1.2 := by
   classical
-  exact (if_pos hAt).trans (if_neg hBackground)
+  exact (ite_eq_left hAt).trans (ite_eq_right hBackground)
 
 /-- The member's branch vertex has the incoming distinguished valency. -/
 theorem nonDanglingValency_branchVertex :

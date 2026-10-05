@@ -1,7 +1,11 @@
-import DraismaVargas.LocalCases.W2M1kLeafLimitMatrix
-import DraismaVargas.LocalCases.W2M1kStableIncidence
-import DraismaVargas.LocalCases.ResolutionStableIncidence
-import DraismaVargas.LocalCases.M11JoinedIncidence
+module
+
+public import DraismaVargas.LocalCases.W2M1kLeafLimitMatrix
+public import DraismaVargas.LocalCases.W2M1kStableIncidence
+public import DraismaVargas.LocalCases.ResolutionStableIncidence
+public import DraismaVargas.LocalCases.M11JoinedIncidence
+
+@[expose] public section
 
 /-!
 # Figure 33's leaf member: its branch dictionary and its certified exit
@@ -213,14 +217,14 @@ theorem leafBranchImage_away (input : W2SourceInput data star) (shape : Shape pr
     leafBranchImage input shape pair vertex =
       retainedVertex (LeafPair.candidate input shape pair) vertex := by
   classical
-  exact if_neg hAway
+  exact ite_eq_right hAway
 
 theorem leafBranchImage_selected (input : W2SourceInput data star) (shape : Shape profile)
     (pair : LeafPair profile) {vertex : data.SourceVertex} (hAt : vertex.1.1 = wall)
     (hSelected : (data.vertexPartition wall).Rel (pinSheet profile 0) vertex.1.2) :
     leafBranchImage input shape pair vertex = leafBranchVertex input shape pair := by
   classical
-  exact (if_pos hAt).trans (if_pos hSelected)
+  exact (ite_eq_left hAt).trans (ite_eq_left hSelected)
 
 theorem leafBranchImage_background (input : W2SourceInput data star) (shape : Shape profile)
     (pair : LeafPair profile) {vertex : data.SourceVertex} (hAt : vertex.1.1 = wall)
@@ -229,7 +233,7 @@ theorem leafBranchImage_background (input : W2SourceInput data star) (shape : Sh
       (LeafPair.candidate input shape pair).datum.sourceEndpoint
         (freshVertex target) vertex.1.2 := by
   classical
-  exact (if_pos hAt).trans (if_neg hBackground)
+  exact (ite_eq_left hAt).trans (ite_eq_right hBackground)
 
 /-- Off `A₀` the fresh endpoints of two sheets of one incoming wall block
 agree: there the member installs `M11SourceCandidates.backgroundResolution`,

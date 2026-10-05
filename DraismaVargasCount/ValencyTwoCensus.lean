@@ -1,5 +1,9 @@
-import DraismaVargasCount.ValencyTwoResolutionMatch
-import DraismaVargasCount.CensusAssembly
+module
+
+public import DraismaVargasCount.ValencyTwoResolutionMatch
+public import DraismaVargasCount.CensusAssembly
+
+@[expose] public section
 
 /-!
 # Valency-two census clause at a resolved datum

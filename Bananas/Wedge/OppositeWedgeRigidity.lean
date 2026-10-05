@@ -1,6 +1,10 @@
-import Bananas.Transmission.ChainTwoLoopsSameLeft
-import Bananas.Classification.GenusTwoDegreeTwo
-import Utilities.Gluing.VertexWedgeRankFormula
+module
+
+public import Bananas.Transmission.ChainTwoLoopsSameLeft
+public import Bananas.Classification.GenusTwoDegreeTwo
+public import Utilities.Gluing.VertexWedgeRankFormula
+
+@[expose] public section
 
 /-!
 # Rigidity of opposite-factor marks on a genus-one wedge

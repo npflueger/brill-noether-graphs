@@ -1,4 +1,8 @@
-import DraismaVargasCount.AttachmentFibre
+module
+
+public import DraismaVargasCount.AttachmentFibre
+
+@[expose] public section
 
 /-!
 # Actual pendant retraction and fibre aggregation
@@ -175,7 +179,7 @@ theorem retractVertex_eq_iff
           have hPos := num_edges_pos_of_sourceEnds data hEnds
           have hPair : before = item.inner ∧ next = item.outer := by
             by_contra hNot
-            exact (Nat.ne_of_gt hPos) (hCross.trans (if_neg hNot))
+            exact (Nat.ne_of_gt hPos) (hCross.trans (ite_eq_right hNot))
           exact Or.inl (hPair.2.trans hOuter)
   · rintro (rfl | ⟨edge, hPoint⟩)
     · rfl

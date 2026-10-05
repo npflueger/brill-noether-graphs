@@ -1,4 +1,8 @@
-import DraismaVargasCount.RowLeafAvoidingPosition
+module
+
+public import DraismaVargasCount.RowLeafAvoidingPosition
+
+@[expose] public section
 
 /-!
 # Hairpin positions by a telescoping leaf correction
@@ -79,15 +83,15 @@ theorem adjusted_step_mem
       exact ⟨first, hFirst, by simpa only [StableLengthMatrixLabelling.presentation,
         Equiv.apply_symm_apply] using hFirstInc⟩
     have hDouble : 2 * z (fd.labelling.targetEdge.symm edge) ∈ oddDenominatorSubring := by
-      simpa only [OddDenominator.leafAdjustedCoords, if_pos hColumn,
+      simpa only [OddDenominator.leafAdjustedCoords, ite_eq_left hColumn,
         mem_oddDenominatorSubring] using hAdjusted
-    simp only [leafPotential, dif_neg hSecond, dif_pos hFirst, sub_zero]
+    simp only [leafPotential, dite_eq_right hSecond, dite_eq_left hFirst, sub_zero]
     rw [← hEdge]
     convert hDouble using 1
     ring
   · by_cases hSecond : IsLeafVertex target second
     · have hEdge := eq_leafEdge_of_mem hSecond hSecondInc
-      simp only [leafPotential, dif_pos hSecond, dif_neg hFirst, add_zero]
+      simp only [leafPotential, dite_eq_left hSecond, dite_eq_right hFirst, add_zero]
       rw [← hEdge, sub_self]
       exact oddDenominatorSubring.zero_mem
     · have hColumn : fd.labelling.targetEdge.symm edge ∉ leafColumns fd.labelling.presentation := by
@@ -103,8 +107,8 @@ theorem adjusted_step_mem
         · rcases hEndpoint with h | h
           · exact hSecond (Eq.mp (congrArg (IsLeafVertex target) h.symm) hLeaf)
           · exact hFirst (Eq.mp (congrArg (IsLeafVertex target) h.symm) hLeaf)
-      simp only [leafPotential, dif_neg hSecond, dif_neg hFirst, sub_zero, add_zero]
-      simpa only [OddDenominator.leafAdjustedCoords, if_neg hColumn,
+      simp only [leafPotential, dite_eq_right hSecond, dite_eq_right hFirst, sub_zero, add_zero]
+      simpa only [OddDenominator.leafAdjustedCoords, ite_eq_right hColumn,
         mem_oddDenominatorSubring] using hAdjusted
 
 /-- The endpoints of a source traversal step project to the endpoints of
@@ -188,7 +192,7 @@ theorem corrected_prefix_mem_of_unit
   induction j with
   | zero =>
     simp only [prefixPosition, List.take_zero, List.map_nil, List.sum_nil,
-      leafPotential, dif_neg (start_not_leaf fd path), sub_zero]
+      leafPotential, dite_eq_right (start_not_leaf fd path), sub_zero]
     exact oddDenominatorSubring.zero_mem
   | succ i ih =>
     have hi : i < (orderedRow fd.pathEnds path).length := by omega
@@ -220,7 +224,7 @@ theorem weighted_prefix_mem_of_unit
     rw [coefficient_of_ramification_two fd hValency hRam hInternal, Int.cast_zero, zero_mul]
     exact oddDenominatorSubring.zero_mem
   · have hPos := corrected_prefix_mem_of_unit fd y z hSystem hOdd hUnit (i + 1) hi.le
-    simp only [leafPotential, dif_neg hLeaf, sub_zero] at hPos
+    simp only [leafPotential, dite_eq_right hLeaf, sub_zero] at hPos
     exact oddDenominatorSubring.mul_mem (intCast_mem _ _) hPos
 
 /-- The hairpin case. Unit indices follow from the actual failure of leaf

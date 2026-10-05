@@ -1,5 +1,9 @@
-import DraismaVargasCount.M11StarParityFree
-import DraismaVargas.LocalCases.M11CertifiedOpposite
+module
+
+public import DraismaVargasCount.M11StarParityFree
+public import DraismaVargas.LocalCases.M11CertifiedOpposite
+
+@[expose] public section
 
 /-!
 # Loop walls are not M-11 walls of a full-dimensional member

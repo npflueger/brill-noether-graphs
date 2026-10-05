@@ -1,4 +1,8 @@
-import Bananas.SameStrand.SameStrand
+module
+
+public import Bananas.SameStrand.SameStrand
+
+@[expose] public section
 
 /-!
 # Cross-strand reduced negative-rank witness

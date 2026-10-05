@@ -1,6 +1,10 @@
-import DraismaVargasCount.ConeSide
-import DraismaVargasCount.GeometricSegmentWalls
-import DraismaVargasCount.InheritedLimitRows
+module
+
+public import DraismaVargasCount.ConeSide
+public import DraismaVargasCount.GeometricSegmentWalls
+public import DraismaVargasCount.InheritedLimitRows
+
+@[expose] public section
 
 /-!
 # Request-free column rigidity for frame isomorphisms

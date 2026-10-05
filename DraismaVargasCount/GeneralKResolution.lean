@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyFourKZero
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyFourKZero
+
+@[expose] public section
 
 /-!
 # The general-`K` local wall resolution at a four-valent wall

@@ -1,6 +1,10 @@
-import Utilities.Subdivision.SubdivisionConnectivity
-import Utilities.Subdivision.SubdivisionSeparator
-import Mathlib.Tactic
+module
+
+public import Utilities.Subdivision.SubdivisionConnectivity
+public import Utilities.Subdivision.SubdivisionSeparator
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # The tricycle core

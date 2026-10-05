@@ -1,8 +1,12 @@
-import Utilities.Iso.Fossil
-import Utilities.Iso.GraphContractionFibreTree
-import Utilities.Gonality.DivisorialGonality
-import ChipFiringWithLean.RiemannRoch
-import Mathlib.Tactic
+module
+
+public import Utilities.Iso.Fossil
+public import Utilities.Iso.GraphContractionFibreTree
+public import Utilities.Gonality.DivisorialGonality
+public import ChipFiringWithLean.RiemannRoch
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # Topology and gonality of the fossil

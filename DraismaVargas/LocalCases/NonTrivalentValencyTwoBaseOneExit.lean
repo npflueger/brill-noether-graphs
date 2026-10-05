@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoBaseOneRowDictionary
-import DraismaVargas.LocalCases.WallDatumPathEnds
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoBaseOneRowDictionary
+public import DraismaVargas.LocalCases.WallDatumPathEnds
+
+@[expose] public section
 
 /-!
 # The valency-two **Base I** exit: the outgoing full-dimensional presentation

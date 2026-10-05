@@ -1,5 +1,9 @@
-import Utilities.Transmission.Transmission
-import Utilities.Gluing.VertexWedgeRankFormula
+module
+
+public import Utilities.Transmission.Transmission
+public import Utilities.Gluing.VertexWedgeRankFormula
+
+@[expose] public section
 
 /-!
 # Transmission across a vertex wedge

@@ -1,8 +1,12 @@
-import LowGenus.AtanasovRanganathanProgram
-import Utilities.Segments.AtanasovRanganathanConfigurations
-import Utilities.Subdivision.ContractionForestCensusGeneral
-import Utilities.Subdivision.ClosedFaceCensus
-import Utilities.Subdivision.DegenerateSpec
+module
+
+public import LowGenus.AtanasovRanganathanProgram
+public import Utilities.Segments.AtanasovRanganathanConfigurations
+public import Utilities.Subdivision.ContractionForestCensusGeneral
+public import Utilities.Subdivision.ClosedFaceCensus
+public import Utilities.Subdivision.DegenerateSpec
+
+@[expose] public section
 
 /-!
 # Genus-five Atanasov--Ranganathan configuration infrastructure

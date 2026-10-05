@@ -1,4 +1,8 @@
-import Bananas.Theta.ThetaInversionCount
+module
+
+public import Bananas.Theta.ThetaInversionCount
+
+@[expose] public section
 
 /-!
 # Counting a collision of crossing affine inversions

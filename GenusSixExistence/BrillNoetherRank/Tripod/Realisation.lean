@@ -1,5 +1,9 @@
-import GenusSixExistence.BrillNoetherRank.Tripod.Closure
-import GenusSixExistence.BrillNoetherRank.Tripod.RealisationProof
+module
+
+public import GenusSixExistence.BrillNoetherRank.Tripod.Closure
+public import GenusSixExistence.BrillNoetherRank.Tripod.RealisationProof
+
+@[expose] public section
 
 /-!
 # Realisation of a closed claw member at an odd scale

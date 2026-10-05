@@ -1,4 +1,8 @@
-import DraismaVargasCount.FacetAdapterPilot
+module
+
+public import DraismaVargasCount.FacetAdapterPilot
+
+@[expose] public section
 
 /-!
 # Exporting `LinkLimitReceipt` through the type-change dispatchers

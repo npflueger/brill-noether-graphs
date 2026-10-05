@@ -1,5 +1,9 @@
-import DraismaVargasCount.M11StarExhaustionProof
-import DraismaVargasCount.W3Nd2StarCensusProof
+module
+
+public import DraismaVargasCount.M11StarExhaustionProof
+public import DraismaVargasCount.W3Nd2StarCensusProof
+
+@[expose] public section
 
 /-!
 # W3 nd2 star exhaustion: the `w3Nd2CoarseFine` clause with no hypothesis
@@ -398,7 +402,7 @@ noncomputable def piecewisePerm (p q : Fin d → Prop) [DecidablePred p]
     Equiv.Perm (Fin d) :=
   Equiv.ofBijective (fun x ↦ if p x then σ x else ρ x) (Finite.injective_iff_bijective.mp (by
     intro x y hxy
-    by_cases hx : p x <;> by_cases hy : p y <;> simp only [hx, hy, if_true, if_false] at hxy
+    by_cases hx : p x <;> by_cases hy : p y <;> simp only [hx, hy, ite_true, ite_false] at hxy
     · exact σ.injective hxy
     · exact ((hρ y hy) (hxy ▸ hσ x hx)).elim
     · exact ((hρ x hx) (hxy.symm ▸ hσ y hy)).elim
@@ -408,13 +412,13 @@ theorem piecewisePerm_of_pos {p q : Fin d → Prop} [DecidablePred p]
     {σ ρ : Equiv.Perm (Fin d)} {hσ : ∀ x, p x → q (σ x)} {hρ : ∀ x, ¬ p x → ¬ q (ρ x)}
     {x : Fin d} (hx : p x) : piecewisePerm p q σ ρ hσ hρ x = σ x := by
   change (if p x then σ x else ρ x) = σ x
-  rw [if_pos hx]
+  rw [ite_eq_left hx]
 
 theorem piecewisePerm_of_neg {p q : Fin d → Prop} [DecidablePred p]
     {σ ρ : Equiv.Perm (Fin d)} {hσ : ∀ x, p x → q (σ x)} {hρ : ∀ x, ¬ p x → ¬ q (ρ x)}
     {x : Fin d} (hx : ¬ p x) : piecewisePerm p q σ ρ hσ hρ x = ρ x := by
   change (if p x then σ x else ρ x) = ρ x
-  rw [if_neg hx]
+  rw [ite_eq_right hx]
 
 theorem rightOf_pullback {T₁ T₂ : CFGraph} (f : T₁.edges ≃ T₂.edges) (e₂ : T₂.edges)
     (edge : T₁.edges) : rightOf e₂ (f edge) = rightOf (f.symm e₂) edge := by
@@ -545,10 +549,10 @@ theorem nonempty_transportFree_coarse (right : target₁.edges → Bool)
   · intro edge hInc s
     have hInc' := (incident_iff iso hWall edge).mp hInc
     by_cases hr : right edge = true
-    · rw [if_pos hr, if_pos hr]
+    · rw [ite_eq_left hr, ite_eq_left hr]
       have hAg := agree_symm_apply iso τ _ hτ (edgePerm_agree iso hWall edge hInc') s
       exact (hRight _ _).mpr ⟨hAg, fun _ ↦ hAg, fun _ ↦ hAg⟩
-    · rw [if_neg hr, if_neg hr]
+    · rw [ite_eq_right hr, ite_eq_right hr]
       have hEq : iso.targetEdge edge = L :=
         rightOf_eq_false (by rw [hSide edge]; simpa using hr)
       have hEdge : edge = iso.targetEdge.symm L := (Equiv.eq_symm_apply _).mpr hEq
@@ -654,7 +658,7 @@ theorem nonempty_transportFree_fine (right : target₁.edges → Bool)
   · intro edge hInc s
     have hInc' := (incident_iff iso hWall edge).mp hInc
     by_cases hr : right edge = true
-    · rw [if_pos hr, if_pos hr]
+    · rw [ite_eq_left hr, ite_eq_left hr]
       have hNotG : edge ≠ iso.targetEdge.symm G := by
         rintro rfl
         rw [← hSide, Equiv.apply_symm_apply] at hr
@@ -671,7 +675,7 @@ theorem nonempty_transportFree_fine (right : target₁.edges → Bool)
           exact hCoh s hs
         · exact hRight.rel_of_off (SheetPartition.Refines.refl _)
             (fun h ↦ hs (h.trans hAg)) hAg
-    · rw [if_neg hr, if_neg hr]
+    · rw [ite_eq_right hr, ite_eq_right hr]
       have hEq : iso.targetEdge edge = G :=
         rightOf_eq_false (by rw [hSide edge]; simpa using hr)
       have hEdge : edge = iso.targetEdge.symm G := (Equiv.eq_symm_apply _).mpr hEq
@@ -699,8 +703,8 @@ theorem coherent_of_transportFree (hTG : T ≠ G) (hLG : L ≠ G) (right : targe
     rw [incident_iff iso hWall, Equiv.apply_symm_apply]; exact he
   have hT := t.endpoint_compatible _ (hInc _ (mem_T L G T hEdges)) s
   have hS := t.endpoint_compatible _ (hInc _ (mem_L L G T hEdges)) s
-  rw [if_pos (hRightOf _ hTG), if_pos (hRightOf _ hTG)] at hT
-  rw [if_pos (hRightOf _ hLG), if_pos (hRightOf _ hLG)] at hS
+  rw [ite_eq_left (hRightOf _ hTG), ite_eq_left (hRightOf _ hTG)] at hT
+  rw [ite_eq_left (hRightOf _ hLG), ite_eq_left (hRightOf _ hLG)] at hS
   have hRel : res'.right.Rel (iso.edgePerm (iso.targetEdge.symm T) s)
       (iso.edgePerm (iso.targetEdge.symm L) s) := by
     rw [t.right_relabel, M11StarExhaustionProof.relabel_rel_iff']
@@ -1199,8 +1203,8 @@ def pendantIso (hP : Pendant M wall root hRoot D)
     unfold branchPerm
     by_cases he : edgeMoved wall root hRoot e = true <;>
       by_cases hvm : vertexMoved wall root hRoot v = true
-    · rw [if_pos he, if_pos hvm, Equiv.symm_apply_apply]; rfl
-    · rw [if_pos he, if_neg hvm]
+    · rw [ite_eq_left he, ite_eq_left hvm, Equiv.symm_apply_apply]; rfl
+    · rw [ite_eq_left he, ite_eq_right hvm]
       have hWall : v = wall := by
         rcases hv with h | h
         · subst h
@@ -1218,7 +1222,7 @@ def pendantIso (hP : Pendant M wall root hRoot D)
       rcases hv with h | h
       · rw [h, hvm]; simp
       · rw [h, hvm]; simp
-    · rw [if_neg he, if_neg hvm]
+    · rw [ite_eq_right he, ite_eq_right hvm]
       rfl
 
 theorem pendantIso_sourceVertexEquiv_eq (hP : Pendant M wall root hRoot D)
@@ -1319,8 +1323,8 @@ theorem farEnd_ends {wall : T.V} {e : T.edges}
     (e : T.V × T.V) = (wall, farEnd wall e) ∨ (e : T.V × T.V) = (farEnd wall e, wall) := by
   unfold farEnd
   by_cases h : (e : T.V × T.V).1 = wall
-  · rw [if_pos h]; exact Or.inl (Prod.ext h rfl)
-  · rw [if_neg h]; exact Or.inr (Prod.ext rfl (hInc.resolve_left h))
+  · rw [ite_eq_left h]; exact Or.inl (Prod.ext h rfl)
+  · rw [ite_eq_right h]; exact Or.inr (Prod.ext rfl (hInc.resolve_left h))
 
 theorem farEnd_ne {wall : T.V} {e : T.edges}
     (hInc : (e : T.V × T.V).1 = wall ∨ (e : T.V × T.V).2 = wall) : farEnd wall e ≠ wall := by
@@ -1662,8 +1666,8 @@ theorem exists_coherent (w : Regrowth core y degree) (hy : Nondegenerate y)
   rw [Equiv.apply_symm_apply, edgeMoved_other (W4StarParity.limitTarget_connected w)
     (W4StarParity.limitTarget_genus w) hIncT hIncL hLT] at hLmap
   unfold branchPerm at hTmap hLmap
-  rw [if_pos rfl] at hTmap
-  rw [if_neg Bool.false_ne_true] at hLmap
+  rw [ite_eq_left rfl] at hTmap
+  rw [ite_eq_right Bool.false_ne_true] at hLmap
   have hτ' := edgePerm_agree_symm iso' hW' T hT
   have hSel := (sel_iff iso' hW' b _ hτ' s).mp hs
   rw [hTmap] at hSel

@@ -1,5 +1,9 @@
-import Bananas.Basics.Definitions
-import Utilities.Segments.SegmentReflection
+module
+
+public import Bananas.Basics.Definitions
+public import Utilities.Segments.SegmentReflection
+
+@[expose] public section
 
 /-!
 # Elementary geometry of normalized banana coordinates

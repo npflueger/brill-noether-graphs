@@ -1,5 +1,9 @@
-import DraismaVargasCount.BallotCoreIdentification
-import DraismaVargasCount.EndSwapRealized
+module
+
+public import DraismaVargasCount.BallotCoreIdentification
+public import DraismaVargasCount.EndSwapRealized
+
+@[expose] public section
 
 /-!
 # The end swap is a self-isomorphism of the ballot gluing datum at genus six
@@ -156,10 +160,10 @@ theorem catStar_relabel_eq {m : ℕ} (P Q : ℕ → Prop) [DecidablePred P] [Dec
   show σ ((catStar m P).repr (σ.symm i)) = (catStar m Q).repr i
   rw [catStar_repr, catStar_repr]
   by_cases hP : P (σ.symm i).val
-  · rw [if_pos hP, hσ, if_pos]
+  · rw [ite_eq_left hP, hσ, ite_eq_left]
     have hQ := (h (σ.symm i)).mp hP
     rwa [Equiv.apply_symm_apply] at hQ
-  · rw [if_neg hP, Equiv.apply_symm_apply, if_neg]
+  · rw [ite_eq_right hP, Equiv.apply_symm_apply, ite_eq_right]
     intro hQ
     exact hP ((h (σ.symm i)).mpr (by rwa [Equiv.apply_symm_apply]))
 
@@ -353,11 +357,11 @@ def bEdgePerm (e : (catTree 2).edges) : Equiv.Perm (Fin (2 + 2)) :=
 
 theorem bVertexPerm_moved {v : (catTree 2).V}
     (h : v.val = 0 ∨ v.val = 1 ∨ v.val = 3 ∨ v.val = 4) :
-    bVertexPerm s v = bSwap s := if_pos h
+    bVertexPerm s v = bSwap s := ite_eq_left h
 
 theorem bVertexPerm_fixed {v : (catTree 2).V}
     (h : ¬ (v.val = 0 ∨ v.val = 1 ∨ v.val = 3 ∨ v.val = 4)) :
-    bVertexPerm s v = Equiv.refl _ := if_neg h
+    bVertexPerm s v = Equiv.refl _ := ite_eq_right h
 
 theorem bEdgePerm_occ (i : Fin (6 * 2 + 3)) :
     bEdgePerm s (occ 2 i) = if i.val < 4 then bSwap s else Equiv.refl _ := by
@@ -436,18 +440,18 @@ noncomputable def bEndSwapDatumIso :
           if v.val = 0 then 3 else if v.val = 1 then 4 else if v.val = 3 then 0
             else if v.val = 4 then 1 else v.val := rfl
       rcases hmoved with h | h | h | h
-      · rw [ballotVertexPart_of_val s (show (endSwapTgtEquiv 1 v).val = 3 by rw [htgt, if_pos h]),
+      · rw [ballotVertexPart_of_val s (show (endSwapTgtEquiv 1 v).val = 3 by rw [htgt, ite_eq_left h]),
           ballotVertexPart_of_val s h, vertPart_relabel_zero_three]
       · rw [ballotVertexPart_of_val s
-            (show (endSwapTgtEquiv 1 v).val = 4 by rw [htgt, if_neg (by omega), if_pos h]),
+            (show (endSwapTgtEquiv 1 v).val = 4 by rw [htgt, ite_eq_right (by omega), ite_eq_left h]),
           ballotVertexPart_of_val s h, vertPart_relabel_one_four]
       · rw [ballotVertexPart_of_val s
             (show (endSwapTgtEquiv 1 v).val = 0 by
-              rw [htgt, if_neg (by omega), if_neg (by omega), if_pos h]),
+              rw [htgt, ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_left h]),
           ballotVertexPart_of_val s h, vertPart_relabel_three_zero]
       · rw [ballotVertexPart_of_val s
             (show (endSwapTgtEquiv 1 v).val = 1 by
-              rw [htgt, if_neg (by omega), if_neg (by omega), if_neg (by omega), if_pos h]),
+              rw [htgt, ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_left h]),
           ballotVertexPart_of_val s h, vertPart_relabel_four_one]
     · rw [bVertexPerm_fixed s hmoved, Transport.DatumIso.relabel_refl,
         show endSwapTgtEquiv 1 v = v from endSwapTgtFun_fix 1 v (by tauto) (by tauto)
@@ -463,24 +467,24 @@ noncomputable def bEndSwapDatumIso :
           else if i.val = 3 then 0 else i.val := endSwap_slot_val 1 i
     rcases (show i.val = 0 ∨ i.val = 1 ∨ i.val = 2 ∨ i.val = 3 ∨ 4 ≤ i.val by omega)
       with h | h | h | h | h
-    · rw [if_pos (by omega),
-        ballotEdgePart_occ_of_val s (show ((endSwap 1).slot i).val = 3 by rw [hslot, if_pos h]),
+    · rw [ite_eq_left (by omega),
+        ballotEdgePart_occ_of_val s (show ((endSwap 1).slot i).val = 3 by rw [hslot, ite_eq_left h]),
         ballotEdgePart_occ_of_val s h, edgePart_relabel_zero_three]
-    · rw [if_pos (by omega),
+    · rw [ite_eq_left (by omega),
         ballotEdgePart_occ_of_val s
-          (show ((endSwap 1).slot i).val = 2 by rw [hslot, if_neg (by omega), if_pos h]),
+          (show ((endSwap 1).slot i).val = 2 by rw [hslot, ite_eq_right (by omega), ite_eq_left h]),
         ballotEdgePart_occ_of_val s h, edgePart_relabel_one_two]
-    · rw [if_pos (by omega),
+    · rw [ite_eq_left (by omega),
         ballotEdgePart_occ_of_val s
           (show ((endSwap 1).slot i).val = 1 by
-            rw [hslot, if_neg (by omega), if_neg (by omega), if_pos h]),
+            rw [hslot, ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_left h]),
         ballotEdgePart_occ_of_val s h, edgePart_relabel_two_one]
-    · rw [if_pos (by omega),
+    · rw [ite_eq_left (by omega),
         ballotEdgePart_occ_of_val s
           (show ((endSwap 1).slot i).val = 0 by
-            rw [hslot, if_neg (by omega), if_neg (by omega), if_neg (by omega), if_pos h]),
+            rw [hslot, ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_left h]),
         ballotEdgePart_occ_of_val s h, edgePart_relabel_three_zero]
-    · rw [if_neg (by omega), Transport.DatumIso.relabel_refl,
+    · rw [ite_eq_right (by omega), Transport.DatumIso.relabel_refl,
         endSwap_slot_of_four_le 1 i h]
   compatible edge vertex hv sheet := by
     obtain ⟨i, rfl⟩ := occ_surj 2 edge
@@ -493,13 +497,13 @@ noncomputable def bEndSwapDatumIso :
     · have hfix : ¬ (vertex.val = 0 ∨ vertex.val = 1 ∨ vertex.val = 3 ∨ vertex.val = 4) := by
         have hp := parentIndex_not_moved (v := i.val + 1) (by omega)
         omega
-      rw [bEdgePerm_occ, if_neg (by omega), bVertexPerm_fixed s hfix]
+      rw [bEdgePerm_occ, ite_eq_right (by omega), bVertexPerm_fixed s hfix]
       rfl
     · have hval : vertex.val = 0 ∨ vertex.val = 1 ∨ vertex.val = 2 ∨ vertex.val = 3 ∨
           vertex.val = 4 := by
         unfold parentIndex at hends
         split_ifs at hends <;> omega
-      rw [bEdgePerm_occ, if_pos (by omega)]
+      rw [bEdgePerm_occ, ite_eq_left (by omega)]
       by_cases hmoved : vertex.val = 0 ∨ vertex.val = 1 ∨ vertex.val = 3 ∨ vertex.val = 4
       · rw [bVertexPerm_moved s hmoved, Equiv.symm_apply_apply]
         rfl

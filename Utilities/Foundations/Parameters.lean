@@ -1,4 +1,8 @@
-import ChipFiringWithLean.Rank
+module
+
+public import ChipFiringWithLean.Rank
+
+@[expose] public section
 
 /-!
 # Brill--Noether parameters

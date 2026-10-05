@@ -1,4 +1,8 @@
-import DraismaVargasCount.PendantFibre
+module
+
+public import DraismaVargasCount.PendantFibre
+
+@[expose] public section
 
 /-!
 # The target branch is exactly the image of an actual pendant side
@@ -87,7 +91,7 @@ theorem exists_in_side_of_target_reach
     have hCut := cut.cross_num_edges vertex lifted hVertex hOutside
     have hPair : vertex = inner ∧ lifted = outer := by
       by_contra hNot
-      exact (Nat.ne_of_gt hAdj) (hCut.trans (if_neg hNot))
+      exact (Nat.ne_of_gt hAdj) (hCut.trans (ite_eq_right hNot))
     exact hStep.2 (congrArg (fun v : data.SourceVertex ↦ v.1.1) hPair.2)
 
 /-- The quotient-source target projection preserves adjacency. -/

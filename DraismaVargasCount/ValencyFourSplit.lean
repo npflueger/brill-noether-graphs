@@ -1,6 +1,10 @@
-import DraismaVargasCount.ValencyThreeTypeMatch
-import DraismaVargas.LocalCases.NonTrivalentUniqueFourValent
-import DraismaVargasCount.FacetCensus
+module
+
+public import DraismaVargasCount.ValencyThreeTypeMatch
+public import DraismaVargas.LocalCases.NonTrivalentUniqueFourValent
+public import DraismaVargasCount.FacetCensus
+
+@[expose] public section
 
 set_option autoImplicit false
 

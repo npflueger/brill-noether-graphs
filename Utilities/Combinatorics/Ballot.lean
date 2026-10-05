@@ -1,4 +1,8 @@
-import Mathlib.Combinatorics.Enumerative.DyckWord
+module
+
+public import Mathlib.Combinatorics.Enumerative.DyckWord
+
+@[expose] public section
 
 /-!
 # Ballot sequences and the Catalan count

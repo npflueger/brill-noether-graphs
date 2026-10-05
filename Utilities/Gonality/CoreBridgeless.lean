@@ -1,8 +1,12 @@
-import Utilities.Subdivision.CoreCutsAndFlats
-import Utilities.Subdivision.SlotIntervalFiring
-import Utilities.Gluing.TwoEdgeConnectedRigidity
-import Utilities.Gluing.VertexCutWedge
-import Utilities.Pseudocore.PseudocorePresentation
+module
+
+public import Utilities.Subdivision.CoreCutsAndFlats
+public import Utilities.Subdivision.SlotIntervalFiring
+public import Utilities.Gluing.TwoEdgeConnectedRigidity
+public import Utilities.Gluing.VertexCutWedge
+public import Utilities.Pseudocore.PseudocorePresentation
+
+@[expose] public section
 
 /-!
 # Bridgelessness of a graph's unit-presentation core
@@ -242,13 +246,13 @@ private theorem no_bridge_aux (G : CFGraph)
       have hterm : ∀ y ∈ S, (num_edges G u y : ℤ) = if y = v then 1 else 0 := by
         intro y hy
         by_cases hyv : y = v
-        · rw [if_pos hyv, num_edges_symmetric G u y, hyv, hvu]
+        · rw [ite_eq_left hyv, num_edges_symmetric G u y, hyv, hvu]
           norm_num
-        · rw [if_neg hyv, num_edges_symmetric G u y,
+        · rw [ite_eq_right hyv, num_edges_symmetric G u y,
             hzero y hy u hu fun h => hyv h.1]
           norm_num
       rw [Finset.sum_congr rfl hterm,
-        Finset.sum_ite_eq' S v fun _ => (1 : ℤ), if_pos hv]
+        Finset.sum_ite_eq' S v fun _ => (1 : ℤ), ite_eq_left hv]
     have hdecomp : (∑ y ∈ S, (num_edges G u y : ℤ))
         + (∑ y ∈ (Sᶜ : Finset G.V), (num_edges G u y : ℤ))
         = vertex_degree G u := by
@@ -438,7 +442,7 @@ theorem core_bridgeless_of_twoEdgeCutCondition (G : CFGraph)
     intro x hx
     by_cases hxv : x = v
     · subst hxv
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       unfold outdeg_S
       refine (Finset.sum_eq_single_of_mem u huniv ?_).trans ?_
       · intro y hy hyu
@@ -446,7 +450,7 @@ theorem core_bridgeless_of_twoEdgeCutCondition (G : CFGraph)
         rw [hzero x hx y hy' fun h => hyu h.2]
         norm_num
       · rw [hvu]; norm_num
-    · rw [if_neg hxv]
+    · rw [ite_eq_right hxv]
       unfold outdeg_S
       refine Finset.sum_eq_zero ?_
       intro y hy
@@ -456,7 +460,7 @@ theorem core_bridgeless_of_twoEdgeCutCondition (G : CFGraph)
   have hval : cutMultiplicity G S = 1 := by
     unfold cutMultiplicity
     rw [Finset.sum_congr rfl hterm,
-      Finset.sum_ite_eq' S v fun _ => (1 : ℤ), if_pos hv]
+      Finset.sum_ite_eq' S v fun _ => (1 : ℤ), ite_eq_left hv]
   have hcut := h2 S hne hproper
   rw [hval] at hcut
   omega

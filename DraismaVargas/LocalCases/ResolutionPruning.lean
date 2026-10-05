@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.ResolutionSurvival
+module
+
+public import DraismaVargas.LocalCases.ResolutionSurvival
+
+@[expose] public section
 
 /-!
 # Old dangling branches remain pruned in a genus-preserving resolution
@@ -130,10 +134,10 @@ noncomputable def liftedCut
   rw [GluingDatum.SheetRelabeling.num_edges_sourceGraph_eq_sum candidate.datum first second,
     Finset.sum_eq_single (candidate.oldSourceEdge edge)]
   · by_cases h : first = left ∧ second = right
-    · exact (if_pos (hPositions.mpr h)).trans (if_pos h).symm
-    · exact (if_neg (fun hPair ↦ h (hPositions.mp hPair))).trans (if_neg h).symm
+    · exact (ite_eq_left (hPositions.mpr h)).trans (ite_eq_left h).symm
+    · exact (ite_eq_right (fun hPair ↦ h (hPositions.mp hPair))).trans (ite_eq_right h).symm
   · intro other _ hOther
-    apply if_neg
+    apply ite_eq_right
     intro hPair
     apply hOther
     apply crossing_sourceEdge_eq candidate cut edge hEnds other
@@ -145,7 +149,7 @@ noncomputable def liftedCut
     · exact Or.inr ⟨hInside, hOutside⟩
   · simp
 
-private theorem side_connected_of_cut {G : CFGraph} (hConnected : graph_connected G)
+theorem side_connected_of_cut {G : CFGraph} (hConnected : graph_connected G)
     {left right : G.V} (cut : Utilities.SeparatingEdgeCut G left right) :
     graph_connected (Utilities.inducedSubgraph G cut.side ⟨left, cut.left_mem⟩) := by
   classical
@@ -161,8 +165,8 @@ private theorem side_connected_of_cut {G : CFGraph} (hConnected : graph_connecte
       exact hb (Finset.mem_sdiff.mpr ⟨Finset.mem_univ _, h⟩)
     rw [num_edges_symmetric G a b, cut.cross_num_edges b a hbMem haNot]
     by_cases h : a = right ∧ b = left
-    · exact (if_pos h.symm).trans (if_pos h).symm
-    · exact (if_neg (fun hPair ↦ h hPair.symm)).trans (if_neg h).symm
+    · exact (ite_eq_left h.symm).trans (ite_eq_left h).symm
+    · exact (ite_eq_right (fun hPair ↦ h hPair.symm)).trans (ite_eq_right h).symm
   simpa using NonDanglingValency.complement_connected_of_unique_cross
     hConnected (Finset.univ \ cut.side) hOutside hCross
 

@@ -1,4 +1,8 @@
-import DraismaVargasCount.GeneralKExitSetup
+module
+
+public import DraismaVargasCount.GeneralKExitSetup
+
+@[expose] public section
 
 /-!
 # A generic row dictionary for a wall resolution with star-shaped ordinary blocks

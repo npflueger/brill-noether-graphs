@@ -1,5 +1,9 @@
-import Bananas.SameStrand.NSMClassification
-import Bananas.SameStrand.SameStrandEndpointNegative
+module
+
+public import Bananas.SameStrand.NSMClassification
+public import Bananas.SameStrand.SameStrandEndpointNegative
+
+@[expose] public section
 
 /-!
 # Endpoint-aware classification for Theorem 3.9

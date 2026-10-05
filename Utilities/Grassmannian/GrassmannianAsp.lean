@@ -1,5 +1,9 @@
-import Utilities.Grassmannian.OnceMarked
-import Demazure.InvSet
+module
+
+public import Utilities.Grassmannian.OnceMarked
+public import Demazure.InvSet
+
+@[expose] public section
 
 /-!
 # Grassmannian ASP permutations from Young diagrams

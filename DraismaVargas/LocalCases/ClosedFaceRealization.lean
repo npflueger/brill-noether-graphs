@@ -1,5 +1,9 @@
-import DraismaVargas.Infrastructure.NonnegativeRationalRealization
-import DraismaVargas.LocalCases.BalancedGlobal
+module
+
+public import DraismaVargas.Infrastructure.NonnegativeRationalRealization
+public import DraismaVargas.LocalCases.BalancedGlobal
+
+@[expose] public section
 
 /-!
 # Nonnegative closed-face realizations of global candidates

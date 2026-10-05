@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.W3Nd2CoarseLimitMatrix
-import DraismaVargas.LocalCases.W3Nd2FineLimitMatrix
-import Utilities.IntegralGeometry.WallColumnDeterminant
+module
+
+public import DraismaVargas.LocalCases.W3Nd2CoarseLimitMatrix
+public import DraismaVargas.LocalCases.W3Nd2FineLimitMatrix
+public import Utilities.IntegralGeometry.WallColumnDeterminant
+
+@[expose] public section
 
 /-!
 # Figure 31 common cofactors and Equation (5)

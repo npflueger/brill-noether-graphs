@@ -1,5 +1,9 @@
-import Mathlib.Data.Int.Lemmas
-import Mathlib.Tactic
+module
+
+public import Mathlib.Data.Int.Lemmas
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # Integer interpolation along a subdivided edge

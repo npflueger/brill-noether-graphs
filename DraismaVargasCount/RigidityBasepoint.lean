@@ -1,6 +1,10 @@
-import DraismaVargasCount.DiagonalRigidityObligation
-import DraismaVargasCount.BaseCountParity
-import DraismaVargasCount.ExtractGenusTwo
+module
+
+public import DraismaVargasCount.DiagonalRigidityObligation
+public import DraismaVargasCount.BaseCountParity
+public import DraismaVargasCount.ExtractGenusTwo
+
+@[expose] public section
 
 /-!
 # Rigidity through a base point

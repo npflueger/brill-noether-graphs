@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.StableSourceMatrix
-import DraismaVargas.LocalCases.W2R2Nd2SourceProfile
+module
+
+public import DraismaVargas.LocalCases.StableSourceMatrix
+public import DraismaVargas.LocalCases.W2R2Nd2SourceProfile
+
+@[expose] public section
 
 /-!
 # The actual P wall columns differ only in the distinguished stable row

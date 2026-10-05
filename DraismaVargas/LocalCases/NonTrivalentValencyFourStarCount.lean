@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyFourTracks
-import DraismaVargas.LocalCases.NonTrivalentValencyThreeStarCount
-import DraismaVargas.LocalCases.W4IncomingPrunedFibre
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyFourTracks
+public import DraismaVargas.LocalCases.NonTrivalentValencyThreeStarCount
+public import DraismaVargas.LocalCases.W4IncomingPrunedFibre
+
+@[expose] public section
 
 /-!
 # The valency-four `K = 0` star count, and the link under (H-IV)
@@ -346,10 +350,10 @@ theorem blockEdgeMap_survives (x : Fin deg)
   have hRepr : (wPart).repr e.1.1.2 = (wPart).repr x := hzR.symm
   unfold blockEdgeMap
   by_cases hs : wallStar.right pairing e.1.1.1 = wRetSide ((wPart).repr x)
-  · rw [if_pos hs]
+  · rw [ite_eq_left hs]
     exact ResolutionSurvival.not_isDangling_oldSourceEdge (wCand)
       (gaugedData_valid wSrc pairing wNG wRam wVal).1 e.1 e.2
-  · rw [if_neg hs]
+  · rw [ite_eq_right hs]
     exact (NonTrivalentValencyFourRowEquiv.newSourceEdge_survives_of_unique_fine_survivor
       wSrc pairing wNG wRam wProf wConn wGen wVal (fun hBad ↦ hb (hBad.trans hzR.symm))
       hzS hzA (by rw [hRepr]; exact NonTrivalentValencyFourRowDictionary.bool_eq_not_of_ne hs)
@@ -390,7 +394,7 @@ theorem incidenceCount_block_unique (x : Fin deg)
     · have hVal : blockEdgeMap cover fd hc hab hOne wallStar hForest coordinates facet
           hRows hZeroCoord anchorBlock hAnchor pairing x e.1 = (wCand).oldSourceEdge e.1 := by
         unfold blockEdgeMap
-        rw [if_pos hs]
+        rw [ite_eq_left hs]
       show Incident (wCand).datum (blockEdgeMap cover fd hc hab hOne wallStar hForest
         coordinates facet hRows hZeroCoord anchorBlock hAnchor pairing x e.1) _
       rw [hVal]
@@ -400,7 +404,7 @@ theorem incidenceCount_block_unique (x : Fin deg)
           hRows hZeroCoord anchorBlock hAnchor pairing x e.1 =
           (wCand).newSourceEdge e.1.1.2 := by
         unfold blockEdgeMap
-        rw [if_neg hs]
+        rw [ite_eq_right hs]
       show Incident (wCand).datum (blockEdgeMap cover fd hc hab hOne wallStar hForest
         coordinates facet hRows hZeroCoord anchorBlock hAnchor pairing x e.1) _
       rw [hVal]
@@ -419,7 +423,7 @@ theorem incidenceCount_block_unique (x : Fin deg)
       show blockEdgeMap cover fd hc hab hOne wallStar hForest coordinates facet hRows
         hZeroCoord anchorBlock hAnchor pairing x e.1 = (wCand).oldSourceEdge e.1
       unfold blockEdgeMap
-      rw [if_pos hs]
+      rw [ite_eq_left hs]
     · refine Eq.trans (congrArg NonDanglingEdge.stablePath (Subtype.ext ?_))
         (NonTrivalentValencyFourRowEquiv.stablePath_newSourceEdge_eq wSrc pairing wNG wRam
           wProf wConn wGen wVal (fun hBad ↦ hb (hBad.trans hzR.symm)) e.2 hzA
@@ -431,7 +435,7 @@ theorem incidenceCount_block_unique (x : Fin deg)
       show blockEdgeMap cover fd hc hab hOne wallStar hForest coordinates facet hRows
         hZeroCoord anchorBlock hAnchor pairing x e.1 = (wCand).newSourceEdge e.1.1.2
       unfold blockEdgeMap
-      rw [if_neg hs]
+      rw [ite_eq_right hs]
   · intro e₁ e₂ he₁ he₂ hEq
     have hVal : blockEdgeMap cover fd hc hab hOne wallStar hForest coordinates facet hRows
         hZeroCoord anchorBlock hAnchor pairing x e₁.1 =
@@ -440,15 +444,15 @@ theorem incidenceCount_block_unique (x : Fin deg)
     unfold blockEdgeMap at hVal
     by_cases hs₁ : wallStar.right pairing e₁.1.1.1 = wRetSide ((wPart).repr x) <;>
       by_cases hs₂ : wallStar.right pairing e₂.1.1.1 = wRetSide ((wPart).repr x)
-    · rw [if_pos hs₁, if_pos hs₂] at hVal
+    · rw [ite_eq_left hs₁, ite_eq_left hs₂] at hVal
       exact Subtype.ext (ResolutionCut.oldSourceEdge_injective (wCand) hVal)
-    · rw [if_pos hs₁, if_neg hs₂] at hVal
+    · rw [ite_eq_left hs₁, ite_eq_right hs₂] at hVal
       exact absurd hVal (NonTrivalentValencyFourRowDictionary.new_ne_old wSrc pairing wNG
         wRam wProf wConn wGen wVal e₂.1.1.2 e₁.1)
-    · rw [if_neg hs₁, if_pos hs₂] at hVal
+    · rw [ite_eq_right hs₁, ite_eq_left hs₂] at hVal
       exact absurd hVal.symm (NonTrivalentValencyFourRowDictionary.new_ne_old wSrc pairing
         wNG wRam wProf wConn wGen wVal e₁.1.1.2 e₂.1)
-    · rw [if_neg hs₁, if_neg hs₂] at hVal
+    · rw [ite_eq_right hs₁, ite_eq_right hs₂] at hVal
       have hMem₁ := mem_block_star_of_incidentEdges cover fd hc hab hOne wallStar hForest
         anchorBlock hAnchor pairing x e₁ he₁
       obtain ⟨h₁S, h₁A, h₁R⟩ := block_star_mem cover fd hc hab hOne wallStar hForest
@@ -617,9 +621,9 @@ theorem block_pair_transport (x : Fin deg)
     intro e _
     unfold blockEdgePairMap
     by_cases hs : wallStar.right pairing e.1.1.1 = wRetSide ((wPart).repr x)
-    · rw [if_pos hs]
+    · rw [ite_eq_left hs]
       exact hNewSurv
-    · rw [if_neg hs]
+    · rw [ite_eq_right hs]
       exact ResolutionSurvival.not_isDangling_oldSourceEdge (wCand)
         (gaugedData_valid wSrc pairing wNG wRam wVal).1 e.1 e.2
   have hΦmem : ∀ (e : NonDanglingEdge (wGauged))
@@ -637,7 +641,7 @@ theorem block_pair_transport (x : Fin deg)
           hRows hZeroCoord anchorBlock hAnchor pairing x f₁.1.2 e.1 =
           (wCand).newSourceEdge f₁.1.2 := by
         unfold blockEdgePairMap
-        rw [if_pos hs]
+        rw [ite_eq_left hs]
       show Incident (wCand).datum (blockEdgePairMap cover fd hc hab hOne wallStar hForest
         coordinates facet hRows hZeroCoord anchorBlock hAnchor pairing x f₁.1.2 e.1) _
       rw [hVal]
@@ -647,7 +651,7 @@ theorem block_pair_transport (x : Fin deg)
           hRows hZeroCoord anchorBlock hAnchor pairing x f₁.1.2 e.1 =
           (wCand).oldSourceEdge e.1 := by
         unfold blockEdgePairMap
-        rw [if_neg hs]
+        rw [ite_eq_right hs]
       show Incident (wCand).datum (blockEdgePairMap cover fd hc hab hOne wallStar hForest
         coordinates facet hRows hZeroCoord anchorBlock hAnchor pairing x f₁.1.2 e.1) _
       rw [hVal]
@@ -697,13 +701,13 @@ theorem block_pair_transport (x : Fin deg)
           hForest anchorBlock hAnchor pairing x e₂ he₂, hs₂⟩
       rw [hzEq, Finset.mem_singleton] at hMem₁ hMem₂
       exact Subtype.ext (hMem₁.trans hMem₂.symm)
-    · rw [if_pos hs₁, if_neg hs₂] at hVal
+    · rw [ite_eq_left hs₁, ite_eq_right hs₂] at hVal
       exact absurd hVal.symm (NonTrivalentValencyFourRowDictionary.new_ne_old wSrc pairing
         wNG wRam wProf wConn wGen wVal f₁.1.2 e₂.1)
-    · rw [if_neg hs₁, if_pos hs₂] at hVal
+    · rw [ite_eq_right hs₁, ite_eq_left hs₂] at hVal
       exact absurd hVal (NonTrivalentValencyFourRowDictionary.new_ne_old wSrc pairing wNG
         wRam wProf wConn wGen wVal f₁.1.2 e₁.1)
-    · rw [if_neg hs₁, if_neg hs₂] at hVal
+    · rw [ite_eq_right hs₁, ite_eq_right hs₂] at hVal
       exact Subtype.ext (ResolutionCut.oldSourceEdge_injective (wCand) hVal)
   have hThree : nonDanglingValency (wCand).datum
       (wEpv (!wRetSide ((wPart).repr x)) f₁.1.2) = 3 := by
@@ -736,7 +740,7 @@ theorem block_pair_transport (x : Fin deg)
         hRows hZeroCoord anchorBlock hAnchor pairing x f₁.1.2 e.1 =
         (wCand).newSourceEdge f₁.1.2 := by
       unfold blockEdgePairMap
-      rw [if_pos hs]
+      rw [ite_eq_left hs]
     refine Eq.trans (congrArg NonDanglingEdge.stablePath
       (Subtype.ext hVal : (⟨blockEdgePairMap cover fd hc hab hOne wallStar hForest
         coordinates facet hRows hZeroCoord anchorBlock hAnchor pairing x f₁.1.2 e.1,
@@ -755,7 +759,7 @@ theorem block_pair_transport (x : Fin deg)
     show blockEdgePairMap cover fd hc hab hOne wallStar hForest coordinates facet hRows
       hZeroCoord anchorBlock hAnchor pairing x f₁.1.2 e.1 = (wCand).oldSourceEdge e.1
     unfold blockEdgePairMap
-    rw [if_neg hs]
+    rw [ite_eq_right hs]
 
 /-! ### (T1) at every branch vertex of the gauged wall datum -/
 
@@ -1246,14 +1250,14 @@ theorem incidence_inr_false_retained
       vNG vRam vProf vConn vGen vVal _ h.symm
   rw [hRHS, NonTrivalentValencyThreeStarCount.filter_moved_base m wd first second hStar,
     Finset.filter_insert,
-    if_neg (Ne.symm (labelling_row_incomingRow_ne_base m wd p)),
+    ite_eq_right (Ne.symm (labelling_row_incomingRow_ne_base m wd p)),
     NonTrivalentValencyThreeStarCount.card_filter_pair _ _
       (NonTrivalentValencyThreeStarCount.dart_ne m wd first second hStar)]
   show incidenceCount (vCand).datum ((vEpv) false (selectedRepresentative vSrc pairing))
     ((vRetRow) (gaugedRow m wd wallStar anchorBlock hAnchor pairing p)) = _
   unfold incidenceCount
   rw [incidentEdges_endpointVertex_false m wd wallStar anchorBlock hAnchor pairing,
-    Finset.filter_insert, if_neg hBridgeRow,
+    Finset.filter_insert, ite_eq_right hBridgeRow,
     NonTrivalentValencyThreeStarCount.card_filter_pair _ _
       (selectedCandEdge_ne m wd wallStar anchorBlock hAnchor pairing),
     if_congr (stablePath_selectedCandEdge_iff m wd wallStar anchorBlock hAnchor pairing
@@ -1297,7 +1301,7 @@ theorem incidence_inr_false_bridge
   have hR : ((Finset.univ.filter fun d : D ↦ graph.vert (m.perm d) = graph.vert m.base).filter
       fun d ↦ label d = label m.base).card = 1 := by
     rw [NonTrivalentValencyThreeStarCount.filter_moved_base m wd first second hStar,
-      Finset.filter_insert, if_pos rfl, hEmptyD]
+      Finset.filter_insert, ite_eq_left rfl, hEmptyD]
     simp
   rw [hRHS, hR]
   show incidenceCount (vCand).datum ((vEpv) false (selectedRepresentative vSrc pairing))
@@ -1319,7 +1323,7 @@ theorem incidence_inr_false_bridge
   unfold incidenceCount
   rw [incidentEdges_endpointVertex_false m wd wallStar anchorBlock hAnchor pairing,
     Finset.filter_insert,
-    if_pos (stablePath_bridgeND m wd wallStar anchorBlock hAnchor pairing), hEmptyC]
+    ite_eq_left (stablePath_bridgeND m wd wallStar anchorBlock hAnchor pairing), hEmptyC]
   simp
 
 /-! ## 4.  Away from the anchor -/

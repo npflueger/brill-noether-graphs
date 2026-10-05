@@ -1,7 +1,11 @@
-import LowGenus.Generated.GenusFiveCanonicalClassifierData
-import LowGenus.GenusFiveCubicAtlas
-import Utilities.Certificate.CubicMatrixCanonical
-import Utilities.Subdivision.CoreRelabeling
+module
+
+public import LowGenus.Generated.GenusFiveCanonicalClassifierData
+public import LowGenus.GenusFiveCubicAtlas
+public import Utilities.Certificate.CubicMatrixCanonical
+public import Utilities.Subdivision.CoreRelabeling
+
+@[expose] public section
 
 /-!
 # The genus-five cubic classifier, without a replay tree

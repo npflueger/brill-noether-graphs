@@ -1,4 +1,8 @@
-import DraismaVargasCount.LollipopDivalent
+module
+
+public import DraismaVargasCount.LollipopDivalent
+
+@[expose] public section
 
 /-!
 # The fibres above a lollipop's two target occurrences

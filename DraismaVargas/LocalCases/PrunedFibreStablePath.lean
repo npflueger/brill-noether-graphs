@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.PrunedFibreTree
+module
+
+public import DraismaVargas.LocalCases.PrunedFibreTree
+
+@[expose] public section
 
 /-!
 # Stable-path transport through a divalent pruned fibre

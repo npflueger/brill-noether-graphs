@@ -1,8 +1,12 @@
-import DraismaVargas.LocalCases.W4StablePathAssignment
-import DraismaVargas.Infrastructure.GluingRelabel
-import Utilities.Foundations.InducedSubgraph
-import Utilities.Gluing.SeparatingEdgeCut
-import Utilities.Subdivision.LeafReduction
+module
+
+public import DraismaVargas.LocalCases.W4StablePathAssignment
+public import DraismaVargas.Infrastructure.GluingRelabel
+public import Utilities.Foundations.InducedSubgraph
+public import Utilities.Gluing.SeparatingEdgeCut
+public import Utilities.Subdivision.LeafReduction
+
+@[expose] public section
 
 /-!
 # The stable source underlying W4
@@ -814,7 +818,7 @@ theorem vertex_degree_sourceGraph_eq_card_incidentSourceEdge
       exact data.sourceGraph.loopless (data.sourceEnds edge).1
         (hLoop ▸ sourceEnds_mem_sourceGraph_edges data edge)
     by_cases hIncident : Incident data edge vertex
-    · rw [if_pos hIncident]
+    · rw [ite_eq_left hIncident]
       rcases hIncident with hLeft | hRight
       · rw [Finset.sum_eq_single (data.sourceEnds edge).2]
         · have hPair : data.sourceEnds edge =
@@ -822,7 +826,7 @@ theorem vertex_degree_sourceGraph_eq_card_incidentSourceEdge
             apply Prod.ext
             · exact hLeft
             · rfl
-          rw [if_pos (Or.inl hPair)]
+          rw [ite_eq_left (Or.inl hPair)]
         · intro neighbor _ hNeighbor
           have hNoPair :
               ¬ (data.sourceEnds edge = (vertex, neighbor) ∨
@@ -832,7 +836,7 @@ theorem vertex_degree_sourceGraph_eq_card_incidentSourceEdge
                 (congrArg Prod.snd hPair).symm
             · have hSecond := congrArg Prod.snd hPair
               exact hEndsNe (hLeft.trans hSecond.symm)
-          rw [if_neg hNoPair]
+          rw [ite_eq_right hNoPair]
         · intro hNotMem
           exact (hNotMem (Finset.mem_univ _)).elim
       · rw [Finset.sum_eq_single (data.sourceEnds edge).1]
@@ -841,7 +845,7 @@ theorem vertex_degree_sourceGraph_eq_card_incidentSourceEdge
             apply Prod.ext
             · rfl
             · exact hRight
-          rw [if_pos (Or.inr hPair)]
+          rw [ite_eq_left (Or.inr hPair)]
         · intro neighbor _ hNeighbor
           have hNoPair :
               ¬ (data.sourceEnds edge = (vertex, neighbor) ∨
@@ -851,10 +855,10 @@ theorem vertex_degree_sourceGraph_eq_card_incidentSourceEdge
               exact hEndsNe (hFirst.trans hRight.symm)
             · exact hNeighbor
                 (congrArg Prod.fst hPair).symm
-          rw [if_neg hNoPair]
+          rw [ite_eq_right hNoPair]
         · intro hNotMem
           exact (hNotMem (Finset.mem_univ _)).elim
-    · rw [if_neg hIncident]
+    · rw [ite_eq_right hIncident]
       apply Finset.sum_eq_zero
       intro neighbor _
       have hNoPair :
@@ -867,7 +871,7 @@ theorem vertex_degree_sourceGraph_eq_card_incidentSourceEdge
         · apply hIncident
           right
           exact congrArg Prod.snd hPair
-      rw [if_neg hNoPair]
+      rw [ite_eq_right hNoPair]
   calc
     vertex_degree data.sourceGraph vertex =
         ∑ neighbor : data.SourceVertex,
@@ -2009,7 +2013,7 @@ noncomputable def StablePathLabelling.oldRowOf
     (labelling : StablePathLabelling data) (edge : NonDanglingEdge data) :
     labelling.oldRowOf edge.1 = some (labelling.row edge.stablePath) := by
   classical
-  simp only [oldRowOf, dif_neg edge.2]
+  simp only [oldRowOf, dite_eq_right edge.2]
   congr 2
 
 theorem StablePathLabelling.oldRowOf_eq_of_consecutive
@@ -2422,7 +2426,7 @@ theorem chosenSheet_rel
     (label : Fin 4) (hLabel : label ∈ block.activeLabels) :
     (data.vertexPartition wall).Rel sourceBlock.1
       (chosenSheet hActive label) := by
-  simp only [chosenSheet, dif_pos hLabel]
+  simp only [chosenSheet, dite_eq_left hLabel]
   apply activeSheet_rel
 
 theorem chosenSheet_survives
@@ -2433,7 +2437,7 @@ theorem chosenSheet_survives
     (label : Fin 4) (hLabel : label ∈ block.activeLabels) :
     ¬ IsDangling data
       (data.sourceEdge (star.edge label) (chosenSheet hActive label)) := by
-  simp only [chosenSheet, dif_pos hLabel]
+  simp only [chosenSheet, dite_eq_left hLabel]
   apply activeSheet_survives
 
 /-- Build the auxiliary nd3 picture from the literal active-label definition
@@ -2503,7 +2507,7 @@ theorem oldRow_active
     picture.oldRow labelling label =
       labelling.row (picture.activeEdge label hActive).stablePath := by
   unfold oldRow
-  rw [dif_pos hActive]
+  rw [dite_eq_left hActive]
 
 theorem oldRowOf_active
     {data : GluingDatum target degree}
@@ -3530,7 +3534,7 @@ private theorem nonempty_danglingSide_insert
   have hOutside : outside ∉ cut.side := cut.right_not_mem
   have hEndpointsOne : num_edges G inside outside = 1 := by
     have hCross := cut.cross_num_edges inside outside hInside hOutside
-    rwa [if_pos ⟨rfl, rfl⟩] at hCross
+    rwa [ite_eq_left ⟨rfl, rfl⟩] at hCross
   have hFarNotMem : far ∉ cut.side := by
     intro hFar
     have hCross := cut.cross_num_edges far outside hFar hOutside
@@ -3540,7 +3544,7 @@ private theorem nonempty_danglingSide_insert
     by_cases hCase : far = inside
     · have := hMultiplicity hCase.symm
       omega
-    · rw [if_neg fun h ↦ hCase h.1] at hCross
+    · rw [ite_eq_right fun h ↦ hCase h.1] at hCross
       omega
   have hFarNeOutside : far ≠ outside := by
     intro hEqual
@@ -3558,9 +3562,9 @@ private theorem nonempty_danglingSide_insert
         (num_edges G outside item : ℤ) = if item = inside then 1 else 0 := by
       intro item hItem
       by_cases hCase : item = inside
-      · rw [if_pos hCase, hCase, hLocal.1]
+      · rw [ite_eq_left hCase, hCase, hLocal.1]
         norm_num
-      · rw [if_neg hCase,
+      · rw [ite_eq_right hCase,
           hLocal.2.2 item hCase fun h ↦ hFarNotMem (by
             rw [← h]; exact hItem)]
         norm_num
@@ -3602,9 +3606,9 @@ private theorem nonempty_danglingSide_insert
         have hTwoNeOutside : two ≠ outside := fun h ↦ hTwo (by
           rw [h]; exact Finset.mem_insert_self outside cut.side)
         by_cases hPair : one = outside ∧ two = far
-        · rw [if_pos hPair, hPair.1, hPair.2]
+        · rw [ite_eq_left hPair, hPair.1, hPair.2]
           exact hLocal.2.1
-        · rw [if_neg hPair]
+        · rw [ite_eq_right hPair]
           by_cases hOneOutside : one = outside
           · have hTwoNeFar : two ≠ far := fun h ↦ hPair ⟨hOneOutside, h⟩
             have hTwoNeInside : two ≠ inside := fun h ↦ hTwo (by
@@ -3616,7 +3620,7 @@ private theorem nonempty_danglingSide_insert
             have hTwoSide : two ∉ cut.side := fun h ↦
               hTwo (Finset.mem_insert_of_mem h)
             have hCross := cut.cross_num_edges one two hOneSide hTwoSide
-            rwa [if_neg fun h ↦ hTwoNeOutside h.2] at hCross
+            rwa [ite_eq_right fun h ↦ hTwoNeOutside h.2] at hCross
       side_connected := hSidePendant.2.mp cut.side_connected
       complement_connected := hComplementPendant.2.mpr cut.complement_connected
       side_genus_zero := hSidePendant.1.symm.trans cut.side_genus_zero }⟩
@@ -3636,14 +3640,14 @@ private theorem nonempty_danglingSide_erase
   have hOutside : outside ∉ cut.side := cut.right_not_mem
   have hEndpointsOne : num_edges G inside outside = 1 := by
     have hCross := cut.cross_num_edges inside outside hInside hOutside
-    rwa [if_pos ⟨rfl, rfl⟩] at hCross
+    rwa [ite_eq_left ⟨rfl, rfl⟩] at hCross
   have hFarMem : far ∈ cut.side := by
     by_contra hFarNot
     have hCross := cut.cross_num_edges inside far hInside hFarNot
     by_cases hCase : far = outside
     · have := hMultiplicity hCase
       omega
-    · rw [if_neg fun h ↦ hCase h.2] at hCross
+    · rw [ite_eq_right fun h ↦ hCase h.2] at hCross
       omega
   have hFarNeInside : far ≠ inside := by
     intro hEqual
@@ -3660,9 +3664,9 @@ private theorem nonempty_danglingSide_erase
         (num_edges G inside item : ℤ) = if item = far then 1 else 0 := by
       intro item hItem
       by_cases hCase : item = far
-      · rw [if_pos hCase, hCase, hLocal.2.1]
+      · rw [ite_eq_left hCase, hCase, hLocal.2.1]
         norm_num
-      · rw [if_neg hCase,
+      · rw [ite_eq_right hCase,
           hLocal.2.2 item (fun h ↦ hOutside (h ▸ hItem)) hCase]
         norm_num
     rw [Finset.sum_congr rfl hTerms]
@@ -3725,10 +3729,10 @@ private theorem nonempty_danglingSide_erase
         have hOneNeInside : one ≠ inside := (Finset.mem_erase.mp hOne).1
         have hOneSide : one ∈ cut.side := (Finset.mem_erase.mp hOne).2
         by_cases hPair : one = far ∧ two = inside
-        · rw [if_pos hPair, hPair.1, hPair.2,
+        · rw [ite_eq_left hPair, hPair.1, hPair.2,
             num_edges_symmetric G far inside]
           exact hLocal.2.1
-        · rw [if_neg hPair]
+        · rw [ite_eq_right hPair]
           by_cases hTwoInside : two = inside
           · have hOneNeFar : one ≠ far := fun h ↦ hPair ⟨h, hTwoInside⟩
             have hOneNeOutside : one ≠ outside := fun h ↦
@@ -3738,7 +3742,7 @@ private theorem nonempty_danglingSide_erase
           · have hTwoSide : two ∉ cut.side := fun h ↦
               hTwo (Finset.mem_erase.mpr ⟨hTwoInside, h⟩)
             have hCross := cut.cross_num_edges one two hOneSide hTwoSide
-            rwa [if_neg fun h ↦ hOneNeInside h.1] at hCross
+            rwa [ite_eq_right fun h ↦ hOneNeInside h.1] at hCross
       side_connected := hSidePendant.2.mpr cut.side_connected
       complement_connected := hComplementPendant.2.mp cut.complement_connected
       side_genus_zero := hSidePendant.1.trans cut.side_genus_zero }⟩
@@ -4201,10 +4205,10 @@ theorem StableLengthMatrixLabelling.matrix_column_eq_of_divalent_targetChange_ze
           apply Finset.sum_congr rfl
           intro edge _
           by_cases hCase : edge.1.1 = item
-          · rw [if_pos hCase]
+          · rw [ite_eq_left hCase]
             simp [GluingDatum.LengthMatrixPresentation.coefficient,
               StableLengthMatrixLabelling.presentation, hCase]
-          · rw [if_neg hCase]
+          · rw [ite_eq_right hCase]
             apply GluingDatum.LengthMatrixPresentation.coefficient_eq_zero_of_target_ne
             simp only [StableLengthMatrixLabelling.presentation,
               Equiv.apply_symm_apply]
@@ -4534,7 +4538,7 @@ theorem eq_or_eq_otherEnd (data : GluingDatum target degree)
 
 /-! ### The traversal -/
 
-private theorem card_sdiff_insert_lt (data : GluingDatum target degree)
+theorem card_sdiff_insert_lt (data : GluingDatum target degree)
     {visited : Finset data.SourceEdge} {edge : data.SourceEdge}
     (hEdge : edge ∉ visited) :
     ((Finset.univ : Finset data.SourceEdge) \ insert edge visited).card <
@@ -4567,14 +4571,14 @@ theorem traverse_of_mem (data : GluingDatum target degree)
     {visited : Finset data.SourceEdge} {edge : data.SourceEdge}
     (vertex : data.SourceVertex) (hVisited : edge ∈ visited) :
     traverse data visited edge vertex = [] := by
-  rw [traverse.eq_def, dif_pos hVisited]
+  rw [traverse.eq_def, dite_eq_left hVisited]
 
 theorem traverse_of_valency_ne (data : GluingDatum target degree)
     {visited : Finset data.SourceEdge} {edge : data.SourceEdge}
     {vertex : data.SourceVertex} (hVisited : edge ∉ visited)
     (hValency : nonDanglingValency data (otherEnd data edge vertex) ≠ 2) :
     traverse data visited edge vertex = [edge] := by
-  rw [traverse.eq_def, dif_neg hVisited, dif_neg hValency]
+  rw [traverse.eq_def, dite_eq_right hVisited, dite_eq_right hValency]
 
 theorem traverse_of_valency_eq (data : GluingDatum target degree)
     {visited : Finset data.SourceEdge} {edge : data.SourceEdge}
@@ -4583,7 +4587,7 @@ theorem traverse_of_valency_eq (data : GluingDatum target degree)
     traverse data visited edge vertex =
       edge :: traverse data (insert edge visited) (stepEdge data hValency edge)
         (otherEnd data edge vertex) := by
-  rw [traverse.eq_def, dif_neg hVisited, dif_pos hValency]
+  rw [traverse.eq_def, dite_eq_right hVisited, dite_eq_left hValency]
 
 /-- The recursion principle matching `traverse`. -/
 theorem traverse_rec {data : GluingDatum target degree}

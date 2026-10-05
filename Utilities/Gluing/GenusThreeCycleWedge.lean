@@ -1,5 +1,9 @@
-import Utilities.Foundations.CanonicalSlackPair
-import Utilities.Gluing.VertexWedgeGenusOne
+module
+
+public import Utilities.Foundations.CanonicalSlackPair
+public import Utilities.Gluing.VertexWedgeGenusOne
+
+@[expose] public section
 
 /-!
 # A rigid genus-one wedge on a genus-three graph

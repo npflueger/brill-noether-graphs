@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W4IncomingPrunedFibre
+module
+
+public import DraismaVargas.LocalCases.W4IncomingPrunedFibre
+
+@[expose] public section
 
 /-!
 # The literal non-dangling sheet union in an incoming W4 fibre

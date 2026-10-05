@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoBaseOneRowEquiv
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoLeafDictionary
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoExit
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoBaseOneRowEquiv
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoLeafDictionary
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoExit
+
+@[expose] public section
 
 /-!
 # The valency-two **Base I** `AgreeOffColumn` / common-minor identity

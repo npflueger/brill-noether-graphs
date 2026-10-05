@@ -1,5 +1,9 @@
-import DraismaVargasCount.RowSingleColumnProof
-import DraismaVargasCount.LollipopDivalentWitness
+module
+
+public import DraismaVargasCount.RowSingleColumnProof
+public import DraismaVargasCount.LollipopDivalentWitness
+
+@[expose] public section
 
 /-!
 # The lollipop half of the single-column property, localised at the branch vertex

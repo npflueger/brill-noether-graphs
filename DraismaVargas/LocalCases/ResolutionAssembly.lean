@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.ResolutionM11
+module
+
+public import DraismaVargas.LocalCases.ResolutionM11
+
+@[expose] public section
 
 /-!
 # Assembling local resolutions across wall blocks

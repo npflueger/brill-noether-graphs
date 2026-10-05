@@ -1,4 +1,8 @@
-import Bananas.Theta.ThetaMoment
+module
+
+public import Bananas.Theta.ThetaMoment
+
+@[expose] public section
 
 namespace Bananas
 
@@ -195,7 +199,7 @@ theorem interiorMoment_prin
     intro r hr
     have hrange : r < B.length α - 1 := Finset.mem_range.mp hr
     have hrlt : r + 1 < B.length α := by omega
-    rw [dif_pos hrlt]
+    rw [dite_eq_left hrlt]
     rw [prin_normalized_interior B script α ⟨r, hrange⟩]
   rw [hsum]
   have htel := weighted_step_difference_telescope

@@ -1,8 +1,12 @@
-import Utilities.Subdivision.OneEdgeSplitRefinement
-import Utilities.Subdivision.MovingPosition
-import Utilities.Iso.GraphIso
-import Utilities.Transmission.TransmissionExistence
-import Mathlib.Tactic
+module
+
+public import Utilities.Subdivision.OneEdgeSplitRefinement
+public import Utilities.Subdivision.MovingPosition
+public import Utilities.Iso.GraphIso
+public import Utilities.Transmission.TransmissionExistence
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # Relabeling subdivided core graphs

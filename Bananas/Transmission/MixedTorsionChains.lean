@@ -1,6 +1,10 @@
-import Bananas.Wedge.KGeneralWedgeGenerality
-import Bananas.Wedge.WedgeSubmodularity
-import Utilities.Gluing.ChainGluing
+module
+
+public import Bananas.Wedge.KGeneralWedgeGenerality
+public import Bananas.Wedge.WedgeSubmodularity
+public import Utilities.Gluing.ChainGluing
+
+@[expose] public section
 
 /-!
 # Chains with mixed torsion orders

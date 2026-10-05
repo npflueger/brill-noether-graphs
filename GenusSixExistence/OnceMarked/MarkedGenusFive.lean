@@ -1,6 +1,10 @@
-import Utilities.Foundations.ConditionalInduction
-import Utilities.Foundations.CommonComplement
-import Utilities.Transmission.TransmissionCorner
+module
+
+public import Utilities.Foundations.ConditionalInduction
+public import Utilities.Foundations.CommonComplement
+public import Utilities.Transmission.TransmissionCorner
+
+@[expose] public section
 
 /-!
 # The marked genus-five transmission profile

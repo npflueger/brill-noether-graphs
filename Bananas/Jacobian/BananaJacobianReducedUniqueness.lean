@@ -1,5 +1,9 @@
-import Bananas.Jacobian.BananaJacobianReducedBridge
-import Bananas.Jacobian.BananaJacobianLatticeReduction
+module
+
+public import Bananas.Jacobian.BananaJacobianReducedBridge
+public import Bananas.Jacobian.BananaJacobianLatticeReduction
+
+@[expose] public section
 
 /-!
 # Uniqueness of the paper's reduced banana coordinates
@@ -117,13 +121,13 @@ theorem positionCoordinate_eq_of_interior_of_divisor_eq
     (paperCoordinateChips_eq_of_positionCoordinateDivisor_eq B p q hDiv) alpha
   rw [show paperCoordinateChips B p alpha =
       some (normalizedInteriorOffset B alpha (p alpha) hpInterior) by
-    simp only [paperCoordinateChips, dif_pos hpInterior]] at hChips
+    simp only [paperCoordinateChips, dite_eq_left hpInterior]] at hChips
   by_cases hqInterior : IsPaperInteriorCoordinate B q alpha
   · change 0 < (q alpha).val ∧
       (q alpha).val < B.length alpha at hqInterior
     rw [show paperCoordinateChips B q alpha =
         some (normalizedInteriorOffset B alpha (q alpha) hqInterior) by
-      simp only [paperCoordinateChips, dif_pos hqInterior]] at hChips
+      simp only [paperCoordinateChips, dite_eq_left hqInterior]] at hChips
     have hOffset := Option.some.inj hChips
     apply strandVertex_injective B alpha
     rw [strandVertex_eq_interiorVertex_normalizedInteriorOffset B alpha
@@ -133,7 +137,7 @@ theorem positionCoordinate_eq_of_interior_of_divisor_eq
   · change ¬ (0 < (q alpha).val ∧
       (q alpha).val < B.length alpha) at hqInterior
     rw [show paperCoordinateChips B q alpha = none by
-        simp only [paperCoordinateChips, dif_neg hqInterior]] at hChips
+        simp only [paperCoordinateChips, dite_eq_right hqInterior]] at hChips
     contradiction
 
 private def paperTerminalSlots {g : ℕ} (B : Banana g)

@@ -1,5 +1,9 @@
-import Bananas.CrossOneOff.OneOffMultipleRows
-import Bananas.SameStrand.NSMCrossWitness
+module
+
+public import Bananas.CrossOneOff.OneOffMultipleRows
+public import Bananas.SameStrand.NSMCrossWitness
+
+@[expose] public section
 
 /-!
 # Positive interior-residue rows for the same-strand one-off marking

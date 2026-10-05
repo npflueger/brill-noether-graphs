@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyFourStarCount
-import DraismaVargas.LocalCases.IncomingPairing
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyFourStarCount
+public import DraismaVargas.LocalCases.IncomingPairing
+
+@[expose] public section
 
 /-!
 # The valency-four move-to-pairing dispatcher: `TypeChangeLink m wd` for every move

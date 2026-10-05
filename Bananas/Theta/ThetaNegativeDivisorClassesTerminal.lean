@@ -1,4 +1,8 @@
-import Bananas.Theta.ThetaNegativeDivisorClassesBoundary
+module
+
+public import Bananas.Theta.ThetaNegativeDivisorClassesBoundary
+
+@[expose] public section
 
 /-!
 # Terminal-endpoint negative divisor classes on theta graphs

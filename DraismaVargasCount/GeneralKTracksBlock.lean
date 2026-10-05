@@ -1,6 +1,10 @@
-import DraismaVargasCount.GeneralKLink
-import DraismaVargasCount.GeneralKRowStar
-import DraismaVargas.LocalCases.NonTrivalentValencyFourStarCount
+module
+
+public import DraismaVargasCount.GeneralKLink
+public import DraismaVargasCount.GeneralKRowStar
+public import DraismaVargas.LocalCases.NonTrivalentValencyFourStarCount
+
+@[expose] public section
 
 /-!
 # The branch vertices over a star-shaped wall block, for an arbitrary candidate
@@ -230,10 +234,10 @@ theorem ndI_ret_subset {y : Fin degree} (hy : (G.vertexPartition wall).Rel x y) 
           else C.newSourceEdge o.1.2) := by
   intro f hf
   rcases ndI_ret_cases hValid hGenus hS hy hf with ⟨o, ho, hSide, rfl⟩ | ⟨t, ht, hSt, rfl⟩
-  · exact Finset.mem_image.mpr ⟨o, (mem_ndI_G_iff o x).mpr ho, by rw [if_pos hSide]⟩
+  · exact Finset.mem_image.mpr ⟨o, (mem_ndI_G_iff o x).mpr ho, by rw [ite_eq_left hSide]⟩
   · obtain ⟨o, ho, hSide, hN⟩ := exists_fineIn_of_survives hValid hGenus hS ht hSt
     refine Finset.mem_image.mpr ⟨o, (mem_ndI_G_iff o x).mpr ho, ?_⟩
-    rw [if_neg (by rw [hSide]; exact not_ne_self' _)]
+    rw [ite_eq_right (by rw [hSide]; exact not_ne_self' _)]
     exact ((newSourceEdge_eq_iff C _ _).mpr hN).symm
 
 theorem nd_ret_le {y : Fin degree} (hy : (G.vertexPartition wall).Rel x y) :
@@ -405,7 +409,7 @@ theorem retMap_injOn (hL : Lonely C x) {o₁ o₂ : G.SourceEdge} (h₁ : IsSurv
   classical
   unfold retMap at hEq
   by_cases hr₁ : C.right o₁.1.1 = ret C x <;> by_cases hr₂ : C.right o₂.1.1 = ret C x <;>
-    simp only [hr₁, hr₂, if_true, if_false] at hEq
+    simp only [hr₁, hr₂, ite_true, ite_false] at hEq
   · exact ResolutionCut.oldSourceEdge_injective C hEq
   · exact absurd hEq.symm (new_ne_old C _ _)
   · exact absurd hEq (new_ne_old C _ _)
@@ -595,10 +599,10 @@ theorem ndI_ret_subset_of_paired :
   have hMem := ndI_ret_subset hValid hGenus hS (rfl : (G.vertexPartition wall).Rel x x) hf
   obtain ⟨o, ho, rfl⟩ := Finset.mem_image.mp hMem
   by_cases hr : C.right o.1.1 = ret C x
-  · rw [if_pos hr]
+  · rw [ite_eq_left hr]
     exact Finset.mem_insert_of_mem (Finset.mem_image.mpr
       ⟨o, Finset.mem_filter.mpr ⟨ho, hr⟩, rfl⟩)
-  · rw [if_neg hr]
+  · rw [ite_eq_right hr]
     have hr' : C.right o.1.1 = !ret C x := by
       rcases bool_eq_or_eq_not (C.right o.1.1) (ret C x) with h | h
       · exact absurd h hr
@@ -762,7 +766,7 @@ theorem stablePath_retMap_of_lonely (hL : Lonely C x) {e : NonDanglingEdge G}
     apply Subtype.ext
     show retMap C x e.1 = C.oldSourceEdge e.1
     unfold retMap
-    rw [if_pos hr]
+    rw [ite_eq_left hr]
   · have hr' := eq_not_of_ne hr
     have hEq : (⟨retMap C x e.1,
         ((mem_nonDanglingIncident _ _ _).mp (retMap_mem hValid hGenus hS hL he)).1⟩ :
@@ -772,7 +776,7 @@ theorem stablePath_retMap_of_lonely (hL : Lonely C x) {e : NonDanglingEdge G}
       apply Subtype.ext
       show retMap C x e.1 = C.newSourceEdge e.1.1.2
       unfold retMap
-      rw [if_neg hr]
+      rw [ite_eq_right hr]
     rw [hEq, stablePath_new_of_unique hValid hGenus hS he hr' (lonely_unique hL he hr')]
     rfl
 
@@ -818,9 +822,9 @@ theorem census_branch (h3 : nonDanglingValency G (G.sourceEndpoint wall x) = 3) 
           nonDanglingIncident C.datum (epv C (!ret C x) o₁.1.2) := by
       intro o ho
       by_cases h : o = o₃
-      · rw [if_pos h]
+      · rw [ite_eq_left h]
         exact new_mem_ndI hValid hGenus ((fine_rel' hS hx1 o₁.1.2).mpr rfl) hNewS
-      · rw [if_neg h]
+      · rw [ite_eq_right h]
         rcases hAll o ho with rfl | rfl | rfl
         · exact old_fine_mem hValid hGenus hS hP.2.1 hP.2.2.2.1 hx1 rfl
         · exact old_fine_mem hValid hGenus hS hP.2.2.1 hP.2.2.2.2.1 hx1 hP.2.2.2.2.2
@@ -847,7 +851,7 @@ theorem census_branch (h3 : nonDanglingValency G (G.sourceEndpoint wall x) = 3) 
         simp only at hv
         apply Subtype.ext
         by_cases k₁ : e₁.1 = o₃ <;> by_cases k₂ : e₂.1 = o₃ <;>
-          simp only [k₁, k₂, if_true, if_false] at hv
+          simp only [k₁, k₂, ite_true, ite_false] at hv
         · exact k₁.trans k₂.symm
         · exact absurd hv (new_ne_old C _ _)
         · exact absurd hv.symm (new_ne_old C _ _)
@@ -862,7 +866,7 @@ theorem census_branch (h3 : nonDanglingValency G (G.sourceEndpoint wall x) = 3) 
           simp
         · congr 1
           apply Subtype.ext
-          simp only [k, if_false]
+          simp only [k, ite_false]
           rfl
 
 end Census3

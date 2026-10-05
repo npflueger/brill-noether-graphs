@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoExit
-import DraismaVargas.LocalCases.NonTrivalentValencyThreeRowDictionary
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoExit
+public import DraismaVargas.LocalCases.NonTrivalentValencyThreeRowDictionary
+
+@[expose] public section
 
 /-!
 # The valency-three Type III exit: the outgoing full-dimensional presentation

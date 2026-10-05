@@ -1,6 +1,10 @@
-import DraismaVargas.Infrastructure.TargetSeparation
-import DraismaVargas.LocalCases.GlobalM11Arbitrary
-import DraismaVargas.LocalCases.ResolutionMkk
+module
+
+public import DraismaVargas.Infrastructure.TargetSeparation
+public import DraismaVargas.LocalCases.GlobalM11Arbitrary
+public import DraismaVargas.LocalCases.ResolutionMkk
+
+@[expose] public section
 
 /-!
 # Global arbitrary-degree continuation in case M-kk

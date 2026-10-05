@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.RowsMeetEndsOnly
-import DraismaVargas.LocalCases.OuterWalkInterior
-import DraismaVargas.LocalCases.TerminalIdentification
+module
+
+public import DraismaVargas.LocalCases.RowsMeetEndsOnly
+public import DraismaVargas.LocalCases.OuterWalkInterior
+public import DraismaVargas.LocalCases.TerminalIdentification
+
+@[expose] public section
 
 /-!
 # From `DraismaVargas.Statement`'s hypotheses to the type-change link

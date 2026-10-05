@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W3Nd2IncomingSelectedCensus
+module
+
+public import DraismaVargas.LocalCases.W3Nd2IncomingSelectedCensus
+
+@[expose] public section
 
 /-!
 # Figure 31 sheet classes at the selected incoming W3 nd2 fibre

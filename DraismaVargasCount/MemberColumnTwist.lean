@@ -1,5 +1,9 @@
-import DraismaVargasCount.SpineOffDiagonal
-import DraismaVargasCount.BallotSlopeSeparation
+module
+
+public import DraismaVargasCount.SpineOffDiagonal
+public import DraismaVargasCount.BallotSlopeSeparation
+
+@[expose] public section
 
 /-!
 # Re-indexing a member's columns, and why diagonality is not a class invariant
@@ -116,8 +120,8 @@ theorem twistLabelling_coefficient (labelling : StableLengthMatrixLabelling data
       σ.symm ((labelling.presentation.targetEdge).symm edge.1.1) := rfl
   simp only [LengthMatrixPresentation.coefficient]
   by_cases hc : σ column = (labelling.presentation.targetEdge).symm edge.1.1
-  · rw [if_pos hc, if_pos (by rw [hsymm, ← hc, Equiv.symm_apply_apply])]
-  · refine (if_neg ?_).trans (if_neg hc).symm
+  · rw [ite_eq_left hc, ite_eq_left (by rw [hsymm, ← hc, Equiv.symm_apply_apply])]
+  · refine (ite_eq_right ?_).trans (ite_eq_right hc).symm
     intro h
     exact hc (by rw [h, hsymm, Equiv.apply_symm_apply])
 

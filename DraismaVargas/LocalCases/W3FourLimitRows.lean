@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W3FourStableGraph
+module
+
+public import DraismaVargas.LocalCases.W3FourStableGraph
+
+@[expose] public section
 
 /-!
 # Figure 28's stable-row census, derived from the limit's own stable source
@@ -211,8 +215,8 @@ theorem columnSum_stableRowPath (row : Option target.edges) (t : target.edges) :
     ← Finset.sum_subset hSubset (fun edge hEdge hNot ↦ ?_),
     StableSourceMatrix.matrix]
   · refine Finset.sum_congr rfl fun edge hEdge ↦ ?_
-    exact if_pos ((StableSourceMatrix.mem_occurrences _ t edge).mp hEdge).2.symm
-  · refine if_neg fun hTarget ↦ hNot ?_
+    exact ite_eq_left ((StableSourceMatrix.mem_occurrences _ t edge).mp hEdge).2.symm
+  · refine ite_eq_right fun hTarget ↦ hNot ?_
     obtain ⟨hSurvives, hPath⟩ := (oldRowOf_eq_some_iff labelling edge row).mp
       ((mem_rowOccurrences labelling row edge).mp hEdge)
     exact (StableSourceMatrix.mem_occurrences _ t edge).mpr
@@ -251,7 +255,7 @@ theorem selectedSum_stableRowPath (geometry : FourStarGeometry data wall)
           (data.vertexPartition wall).Rel geometry.growAnchor edge.1.2 then
         (1 : ℚ) / data.sourceEdgeIndex edge else 0) = 0 := by
     intro edge hEdge hNe
-    refine if_neg fun hCond ↦ hNe ?_
+    refine ite_eq_right fun hCond ↦ hNe ?_
     obtain ⟨hEdgeSurvives, _⟩ := (oldRowOf_eq_some_iff labelling edge row).mp
       ((mem_rowOccurrences labelling row edge).mp hEdge)
     exact hUnique edge hEdgeSurvives hCond.1 hCond.2
@@ -264,9 +268,9 @@ theorem selectedSum_stableRowPath (geometry : FourStarGeometry data wall)
         (by rw [hRow]
             exact labelling.oldRowOf_eq_some
               (⟨selected, hSurvives⟩ : NonDanglingEdge data))
-    rw [Finset.sum_eq_single_of_mem selected hMem hZero, if_pos hRow,
-      if_pos ⟨hTarget, hRel⟩]
-  · rw [if_neg hRow]
+    rw [Finset.sum_eq_single_of_mem selected hMem hZero, ite_eq_left hRow,
+      ite_eq_left ⟨hTarget, hRel⟩]
+  · rw [ite_eq_right hRow]
     refine Finset.sum_eq_zero fun edge hEdge ↦ ?_
     by_cases hNe : edge = selected
     · refine absurd ?_ hRow

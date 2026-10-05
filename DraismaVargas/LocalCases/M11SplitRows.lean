@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.M11SplitLeaves
+module
+
+public import DraismaVargas.LocalCases.M11SplitLeaves
+
+@[expose] public section
 
 /-!
 # The common stable row of surviving M11 split occurrences
@@ -117,7 +121,7 @@ theorem firstSplit_new_stablePath_eq (input : W2SourceInput data star)
   · exact Or.inl ((newSourceEdge_fst _ second).trans
       (left_endpoint_eq_of_split _ block.1 second (fun _ ↦ rfl) (hSelected second hSecond)))
   · exact (firstSplit_left_card input profile hCard block.1).trans
-      ((if_pos (show (data.vertexPartition wall).Rel block.1 block.1 from rfl)).trans hCard)
+      ((ite_eq_left (show (data.vertexPartition wall).Rel block.1 block.1 from rfl)).trans hCard)
 
 theorem secondSplit_new_stablePath_eq (input : W2SourceInput data star)
     {block : WallBlock data wall} (profile : W2R2SourceProfile.SourceProfile data star block)
@@ -145,7 +149,7 @@ theorem secondSplit_new_stablePath_eq (input : W2SourceInput data star)
   · exact Or.inl ((newSourceEdge_fst _ second).trans
       (left_endpoint_eq_of_split _ block.1 second (fun _ ↦ rfl) (hSelected second hSecond)))
   · exact (secondSplit_left_card input profile hCard block.1).trans
-      ((if_pos (show (data.vertexPartition wall).Rel block.1 block.1 from rfl)).trans hCard)
+      ((ite_eq_left (show (data.vertexPartition wall).Rel block.1 block.1 from rfl)).trans hCard)
 
 /-- A sheetwise equality applies to arbitrary surviving occurrences in the
 literal new target fibre, with no proposed row enumeration. -/

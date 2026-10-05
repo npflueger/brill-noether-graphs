@@ -1,4 +1,8 @@
-import DraismaVargasCount.GeneralKBackground
+module
+
+public import DraismaVargasCount.GeneralKBackground
+
+@[expose] public section
 
 /-!
 # Source facts of the general-`K` candidate at a four-valent wall
@@ -668,11 +672,11 @@ theorem mem_bridgeSheets_of (b : Bool) {u : Fin degree} (h1 : u ∈ endSheets po
   unfold GeneralKResolution.SplitData.bridgeSheets
   by_cases hb : b = side
   · subst hb
-    rw [if_pos rfl] at h1
-    rw [if_neg (by cases b <;> simp)] at h2
+    rw [ite_eq_left rfl] at h1
+    rw [ite_eq_right (by cases b <;> simp)] at h2
     exact Finset.mem_inter.mpr ⟨h1, h2⟩
-  · rw [if_neg hb] at h1
-    rw [if_pos (by cases b <;> cases side <;> simp_all)] at h2
+  · rw [ite_eq_right hb] at h1
+    rw [ite_eq_left (by cases b <;> cases side <;> simp_all)] at h2
     exact Finset.mem_inter.mpr ⟨h2, h1⟩
 
 theorem endSheets_subset_wall (b : Bool) :
@@ -894,14 +898,14 @@ theorem newEdge_isDangling_off_bridge' (sheet : Fin degree)
     apply newSourceEdge_isDangling_of_not_mem position hConnected hGenus hNoGlue geometry hValid
       hGenusC (!side)
     · unfold endSheets
-      rw [if_neg (Ne.symm hNot)]
+      rw [ite_eq_right (Ne.symm hNot)]
       exact hPlus
     · exact ((data.vertexPartition wall).mem_block_iff _ _).mp (position.split.minus_subset hMinus)
   · obtain ⟨hPlus, hMinus⟩ := Finset.mem_sdiff.mp h
     apply newSourceEdge_isDangling_of_not_mem position hConnected hGenus hNoGlue geometry hValid
       hGenusC side
     · unfold endSheets
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       exact hMinus
     · exact ((data.vertexPartition wall).mem_block_iff _ _).mp (position.split.plus_subset hPlus)
 
@@ -1054,12 +1058,12 @@ theorem retSide_endpoint (b : Fin degree) :
   by_cases hLeft : (blockRes b).left = coarse
   · have hR : retSide (gData := gData) (star := star) (pairing := pairing) pattern b = false := by
       unfold retSide
-      rw [if_pos hLeft]
+      rw [ite_eq_left hLeft]
     rw [hR]
     exact hLeft
   · have hR : retSide (gData := gData) (star := star) (pairing := pairing) pattern b = true := by
       unfold retSide
-      rw [if_neg hLeft]
+      rw [ite_eq_right hLeft]
     rw [hR]
     rcases NonTrivalentValencyFourRows.isStar_blockwiseResolution (data := gData) (star := star)
       pairing pattern b with ⟨hl, _⟩ | ⟨hr, _⟩
@@ -1074,7 +1078,7 @@ theorem retSide_other (b : Fin degree) :
   by_cases hLeft : (blockRes b).left = coarse
   · have hR : retSide (gData := gData) (star := star) (pairing := pairing) pattern b = false := by
       unfold retSide
-      rw [if_pos hLeft]
+      rw [ite_eq_left hLeft]
     rw [hR]
     rcases NonTrivalentValencyFourRows.isStar_blockwiseResolution (data := gData) (star := star)
       pairing pattern b with ⟨_, hn⟩ | ⟨hr, hn⟩
@@ -1083,7 +1087,7 @@ theorem retSide_other (b : Fin degree) :
       exact hr
   · have hR : retSide (gData := gData) (star := star) (pairing := pairing) pattern b = true := by
       unfold retSide
-      rw [if_neg hLeft]
+      rw [ite_eq_right hLeft]
     rw [hR]
     rcases NonTrivalentValencyFourRows.isStar_blockwiseResolution (data := gData) (star := star)
       pairing pattern b with ⟨hl, _⟩ | ⟨_, hn⟩
@@ -1382,9 +1386,9 @@ theorem nonDanglingValency_ret_le (hGValid : gData.Valid)
       hSurv hInc with
       ⟨old, hOldSurv, hAt, hSide, hRel, rfl⟩ | ⟨old, hOldSurv, hAt, hSide, hRel, rfl⟩
     · refine Finset.mem_image.mpr ⟨old, mem_nonDanglingIncident_block hOldSurv hAt hRel, ?_⟩
-      rw [if_pos hSide]
+      rw [ite_eq_left hSide]
     · refine Finset.mem_image.mpr ⟨old, mem_nonDanglingIncident_block hOldSurv hAt hRel, ?_⟩
-      rw [if_neg (by rw [hSide]; exact Bool.not_ne_self _)]
+      rw [ite_eq_right (by rw [hSide]; exact Bool.not_ne_self _)]
   rw [← card_nonDanglingIncident]
   refine le_trans (Finset.card_le_card hSub) (le_trans Finset.card_image_le ?_)
   rw [card_nonDanglingIncident]
@@ -2270,11 +2274,11 @@ theorem nonDanglingValency_ret_eq_three_of_unique {x : Fin degree}
     have hbz : ¬(coarse).Rel anchorSheet z.1.2 := fun hBad ↦ hb (hBad.trans hzR.symm)
     have hReprZ : (coarse).repr z.1.2 = (coarse).repr x := hzR.symm
     by_cases hSide : star.right pairing z.1.1 = rs ((coarse).repr x)
-    · simp only [if_pos hSide]
+    · simp only [ite_eq_left hSide]
       exact (mem_nonDanglingIncident _ _ _).mpr
         ⟨ResolutionSurvival.not_isDangling_oldSourceEdge C hGValid.1 _ hzS,
           oldSourceEdge_incident_ret C hRight pattern anchorSheet hRes hb hzA hzR hSide⟩
-    · simp only [if_neg hSide]
+    · simp only [ite_eq_right hSide]
       have hSurv := (newSourceEdge_survives_of_unique_fine_survivor C hRight pattern anchorSheet
         hRes hGValid hGenusC hbz hzS hzA (by rw [hReprZ]; exact bool_ne_iff_eq_not.mp hSide) rfl
         (by
@@ -2290,14 +2294,14 @@ theorem nonDanglingValency_ret_eq_three_of_unique {x : Fin degree}
     obtain ⟨hzS, hzA, hzR⟩ := block_star_mem hz
     by_cases hSide : star.right pairing z.1.1 = rs ((coarse).repr x)
     · by_cases hSide' : star.right pairing z'.1.1 = rs ((coarse).repr x)
-      · rw [if_pos hSide, if_pos hSide'] at hEq
+      · rw [ite_eq_left hSide, ite_eq_left hSide'] at hEq
         exact ResolutionCut.oldSourceEdge_injective C hEq
-      · rw [if_pos hSide, if_neg hSide'] at hEq
+      · rw [ite_eq_left hSide, ite_eq_right hSide'] at hEq
         exact absurd hEq.symm (new_ne_old C z'.1.2 z)
     · by_cases hSide' : star.right pairing z'.1.1 = rs ((coarse).repr x)
-      · rw [if_neg hSide, if_pos hSide'] at hEq
+      · rw [ite_eq_right hSide, ite_eq_left hSide'] at hEq
         exact absurd hEq (new_ne_old C z.1.2 z')
-      · rw [if_neg hSide, if_neg hSide'] at hEq
+      · rw [ite_eq_right hSide, ite_eq_right hSide'] at hEq
         have hbz : ¬(coarse).Rel anchorSheet z.1.2 := fun hBad ↦ hb (hBad.trans hzR.symm)
         have hReprZ : (coarse).repr z.1.2 = (coarse).repr x := hzR.symm
         have hRel := (candidate_newEdge_rel_block C pattern anchorSheet hRes hbz z'.1.2).mp

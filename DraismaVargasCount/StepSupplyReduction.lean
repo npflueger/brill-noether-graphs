@@ -1,4 +1,8 @@
-import DraismaVargasCount.CoreRelabelInvariance
+module
+
+public import DraismaVargasCount.CoreRelabelInvariance
+
+@[expose] public section
 
 /-!
 # General requests

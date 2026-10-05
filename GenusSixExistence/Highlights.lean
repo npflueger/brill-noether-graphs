@@ -1,5 +1,9 @@
-import GenusSixExistence.Existence
-import GenusSixExistence.OnceMarked
+module
+
+public import GenusSixExistence.Existence
+public import GenusSixExistence.OnceMarked
+
+@[expose] public section
 
 /-!
 # Highlights: Brill--Noether existence in genus six

@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.NonDanglingValency
-import DraismaVargas.LocalCases.PresentationDecomposition
+module
+
+public import DraismaVargas.LocalCases.NonDanglingValency
+public import DraismaVargas.LocalCases.PresentationDecomposition
+
+@[expose] public section
 
 /-!
 # One full-dimensional stable-source presentation

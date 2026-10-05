@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyFourRowEquivFinal
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyFourRowEquivFinal
+
+@[expose] public section
 
 /-!
 # Injectivity of the retained-row map at a four-valent `K = 0` wall
@@ -111,7 +115,7 @@ theorem pickWith_left {α β : Type*} (m : α → β) (P Q : α → Prop) {a : �
     (ha : P a) (hUnique : ∀ b, P b → b = a) : pickWith m P Q = some (m a) := by
   classical
   have hP : ∃ c, P c ∧ ∀ b, P b → b = c := ⟨a, ha, hUnique⟩
-  rw [pickWith, dif_pos hP]
+  rw [pickWith, dite_eq_left hP]
   exact congrArg (fun c ↦ some (m c)) (hUnique _ hP.choose_spec.1)
 
 theorem pickWith_right {α β : Type*} (m : α → β) (P Q : α → Prop)
@@ -119,7 +123,7 @@ theorem pickWith_right {α β : Type*} (m : α → β) (P Q : α → Prop)
     (ha : Q a) (hUnique : ∀ b, Q b → b = a) : pickWith m P Q = some (m a) := by
   classical
   have hQ : ∃ c, Q c ∧ ∀ b, Q b → b = c := ⟨a, ha, hUnique⟩
-  rw [pickWith, dif_neg hP, dif_pos hQ]
+  rw [pickWith, dite_eq_right hP, dite_eq_left hQ]
   exact congrArg (fun c ↦ some (m c)) (hUnique _ hQ.choose_spec.1)
 
 
@@ -478,7 +482,7 @@ noncomputable def rowOfEdge (e : NonDanglingEdge (cand).datum) :
         ResolutionAwayFromWall.retainedEdge (cand)
           (gaugedData_valid source pairing hNoGlue hRamification hValid).1 old :=
     ⟨old, rfl⟩
-  rw [rowOfEdge, dif_pos hOld]
+  rw [rowOfEdge, dite_eq_left hOld]
   exact congrArg (fun c : NonDanglingEdge (gauged) ↦ some c.stablePath)
     (ResolutionAwayFromWall.retainedEdge_injective _ _
       (Classical.choose_spec hOld))
@@ -500,7 +504,7 @@ theorem rowOfEdge_newSourceEdge {s : Fin degree}
   have hEq : rowOfEdge source pairing hNoGlue hRamification profile hConnected
       hGenus hValid ⟨(cand).newSourceEdge s, hs⟩ =
       newRow source pairing hNoGlue hRamification profile
-        ((cand).newSourceEdge s).1.2 := dif_neg hNot
+        ((cand).newSourceEdge s).1.2 := dite_eq_right hNot
   rw [hEq]
   refine (newRow_congr source pairing hNoGlue hRamification profile ?_).symm
   rw [← candidate_newEdge_rel_block source pairing hNoGlue hRamification profile

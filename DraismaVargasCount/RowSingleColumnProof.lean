@@ -1,4 +1,8 @@
-import DraismaVargasCount.SpineOffDiagonal
+module
+
+public import DraismaVargasCount.SpineOffDiagonal
+
+@[expose] public section
 
 /-!
 # What `RowSingleColumn` actually asks for: a census of surviving occurrences
@@ -223,7 +227,7 @@ theorem rowSingleColumn_leafRow_iff (hLeaf : IsLeafVertex target leaf) :
         (fd.labelling.targetEdge.symm (leafEdge hLeaf)) ↔
       (rowEdges fd.labelling (leafRow fd hLeaf)).card = 2 := by
   rw [rowSingleColumn_iff_rowEdges_eq_rowFibre, Equiv.apply_symm_apply,
-    rowFibre_leafEdge fd hLeaf, if_pos rfl]
+    rowFibre_leafEdge fd hLeaf, ite_eq_left rfl]
   constructor
   · intro hEq
     rw [hEq]

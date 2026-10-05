@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.WallProgress
+module
+
+public import DraismaVargas.LocalCases.WallProgress
+
+@[expose] public section
 
 /-!
 # A checked unramified instance of stable-path transport through contraction

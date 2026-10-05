@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.GlobalResolution
-import DraismaVargas.LocalCases.ResolutionAssembly
+module
+
+public import DraismaVargas.LocalCases.GlobalResolution
+public import DraismaVargas.LocalCases.ResolutionAssembly
+
+@[expose] public section
 
 /-!
 # Global assembly of blockwise local resolutions
@@ -42,7 +46,7 @@ theorem blockwiseCompatible (data : GluingDatum target degree)
   intro edge hIncident
   cases hSide : right edge with
   | false =>
-      simp only [Bool.false_eq_true, if_false]
+      simp only [Bool.false_eq_true, ite_false]
       intro first second hRelation
       change (LocalResolution.pasteLeft (data.vertexPartition wall)
         resolution hContracts).Rel first second
@@ -58,7 +62,7 @@ theorem blockwiseCompatible (data : GluingDatum target degree)
       exact hRefines.rel ((data.vertexPartition wall).rel_repr_left first)
         hRelation
   | true =>
-      simp only [if_true]
+      simp only [ite_true]
       intro first second hRelation
       change (LocalResolution.pasteRight (data.vertexPartition wall)
         resolution hContracts).Rel first second

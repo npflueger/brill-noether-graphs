@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.SheetRelabelStable
-import DraismaVargas.LocalCases.M11RemotePruning
-import DraismaVargas.LocalCases.M11SplitLimitMatrix
+module
+
+public import DraismaVargas.LocalCases.SheetRelabelStable
+public import DraismaVargas.LocalCases.M11RemotePruning
+public import DraismaVargas.LocalCases.M11SplitLimitMatrix
+
+@[expose] public section
 
 /-!
 # The remote M11 member is the first split of its relabelled source

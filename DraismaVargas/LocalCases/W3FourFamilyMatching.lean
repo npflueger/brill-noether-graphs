@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W3FourHonestReceipts
+module
+
+public import DraismaVargas.LocalCases.W3FourHonestReceipts
+
+@[expose] public section
 
 /-!
 # Figure 28's family matching at the `t₄` index

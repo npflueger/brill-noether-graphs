@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W3Nd2FineRefinement
-import DraismaVargas.LocalCases.M11SourceGenus
+module
+
+public import DraismaVargas.LocalCases.W3Nd2FineRefinement
+public import DraismaVargas.LocalCases.M11SourceGenus
+
+@[expose] public section
 
 /-!
 # The true W3 nd2 fine candidate
@@ -88,7 +92,7 @@ theorem selectedFine_rel_iff_of_selected (input : W3SourceInput data star)
   have hRepresentative : (data.vertexPartition wall).Rel
       input.distinguishedBlock.1 ((data.vertexPartition wall).repr first) :=
     hFirst.trans ((data.vertexPartition wall).rel_repr_right first)
-  rw [if_pos hRepresentative]
+  rw [ite_eq_left hRepresentative]
 
 theorem selectedFine_rel_iff_of_background (input : W3SourceInput data star)
     (profile : Nd2Profile data input.distinguishedBlock)
@@ -102,7 +106,7 @@ theorem selectedFine_rel_iff_of_background (input : W3SourceInput data star)
       input.distinguishedBlock.1 ((data.vertexPartition wall).repr first) := by
     intro hRel
     exact hFirst (hRel.trans ((data.vertexPartition wall).rel_repr_left first))
-  rw [if_neg hRepresentative]
+  rw [ite_eq_right hRepresentative]
 
 theorem selectedFine_block_eq_fine (input : W3SourceInput data star)
     (profile : Nd2Profile data input.distinguishedBlock) (sheet : Fin degree)
@@ -215,7 +219,7 @@ noncomputable def fineBackground (input : W3SourceInput data star)
       exact SheetPartition.Refines.refl fine
     · have hRight : rightOf (largeTarget input profile) edge = true := by
         simp [rightOf, hEq]
-      rw [hRight, if_pos rfl]
+      rw [hRight, ite_eq_left rfl]
       change (data.edgePartition edge).Refines (data.vertexPartition wall)
       exact refines_of_mem_incidentEdges data hAt
   · rw [wallEdgesAssigned_false orientation]
@@ -270,7 +274,7 @@ noncomputable def fineBackground (input : W3SourceInput data star)
       simpa [fine, largePartition, Nat.add_comm] using hTotalNat'
     exact hTotalNat.ge
 
-private theorem small_blockCountWithin_selectedFine
+theorem small_blockCountWithin_selectedFine
     (input : W3SourceInput data star)
     (profile : Nd2Profile data input.distinguishedBlock) (sheet : Fin degree)
     (hSheet : (data.vertexPartition wall).Rel input.distinguishedBlock.1 sheet) :
@@ -280,7 +284,7 @@ private theorem small_blockCountWithin_selectedFine
   rw [selectedFine_block_eq_fine input profile sheet hSheet]
   exact SheetPartition.blockCountWithin_self (finePartition input profile) sheet
 
-private theorem third_blockCountWithin_selectedFine
+theorem third_blockCountWithin_selectedFine
     (input : W3SourceInput data star)
     (profile : Nd2Profile data input.distinguishedBlock) (sheet : Fin degree)
     (hSheet : (data.vertexPartition wall).Rel input.distinguishedBlock.1 sheet) :
@@ -311,7 +315,7 @@ noncomputable def fineCandidate (input : W3SourceInput data star)
       exact refines_of_mem_incidentEdges data hAt
     · have hRight : rightOf (largeTarget input profile) edge = true := by
         simp [rightOf, hLarge]
-      simp only [background, fineBackground, hRight, if_true, selected,
+      simp only [background, fineBackground, hRight, ite_true, selected,
         selectedResolution, LocalResolution.reverse_right, fineResolution]
       have hCases : edge = smallTarget input profile ∨
           edge = thirdTarget input profile := by

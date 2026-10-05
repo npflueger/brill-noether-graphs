@@ -1,4 +1,8 @@
-import DraismaVargasCount.MemberColumnTwist
+module
+
+public import DraismaVargasCount.MemberColumnTwist
+
+@[expose] public section
 
 /-!
 # The exhaustion package over diagonal representatives: `DiagonalClassification`

@@ -1,5 +1,9 @@
-import DraismaVargasCount.SharpRowDenominator
-import DraismaVargasCount.LollipopLeafRow
+module
+
+public import DraismaVargasCount.SharpRowDenominator
+public import DraismaVargasCount.LollipopLeafRow
+
+@[expose] public section
 
 /-!
 # `A_φ` is a monomial matrix: the off-diagonal half of diagonality

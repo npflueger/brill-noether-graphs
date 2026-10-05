@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.M11JoinedBranchClassification
-import DraismaVargas.LocalCases.M11JoinedIncidence
-import DraismaVargas.LocalCases.ResolutionStableIncidence
+module
+
+public import DraismaVargas.LocalCases.M11JoinedBranchClassification
+public import DraismaVargas.LocalCases.M11JoinedIncidence
+public import DraismaVargas.LocalCases.ResolutionStableIncidence
+
+@[expose] public section
 
 /-!
 # The actual stable incidence equivalence for joined M11

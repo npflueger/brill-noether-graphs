@@ -1,4 +1,8 @@
-import DraismaVargasCount.FacetMachine
+module
+
+public import DraismaVargasCount.FacetMachine
+
+@[expose] public section
 
 /-!
 # `FacetParity`: the weaker consumer and the per-limit shapes

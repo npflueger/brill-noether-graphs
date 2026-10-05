@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W3ShiftIncomingMatching
+module
+
+public import DraismaVargas.LocalCases.W3ShiftIncomingMatching
+
+@[expose] public section
 
 namespace DraismaVargas.LocalCases.W3ShiftSelectedCensus
 

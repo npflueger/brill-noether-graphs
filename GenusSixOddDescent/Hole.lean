@@ -1,5 +1,9 @@
-import Utilities.Subdivision.SlotIntervalFiring
-import Utilities.Gonality.LegalFiringChain
+module
+
+public import Utilities.Subdivision.SlotIntervalFiring
+public import Utilities.Gonality.LegalFiringChain
+
+@[expose] public section
 
 /-!
 # The hole branch at a general scale: the two moves and their bookkeeping
@@ -106,9 +110,9 @@ private theorem one_chip_slot (hunit : spec.IsUnit) (g : Fin p) {a b : ℕ}
     (one_chip (spec.slotPoint N hN g a) : CFDiv (spec.scale N hN).graph)
         (spec.slotPoint N hN g b) = if b = a then 1 else 0 := by
   by_cases h : b = a
-  · rw [if_pos h, h]
+  · rw [ite_eq_left h, h]
     exact one_chip_apply_v _
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     exact one_chip_apply_other' _ _ (spec.slotPoint_ne N hN hunit g hb ha h)
 
 /-- Two slot points at non-consecutive offsets are non-adjacent. -/
@@ -171,8 +175,8 @@ private theorem outdeg_compl_slotInterval (hunit : spec.IsUnit) (g : Fin p)
       norm_num
     have hone := spec.num_edges_slotPoint_succ N hN hunit h2N g (t := s - 1) (by omega)
     rw [show s - 1 + 1 = s by omega] at hone
-    rw [if_pos rfl,
-      if_neg (spec.slotPoint_ne N hN hunit g (by omega) (by omega) (by omega)), hsum,
+    rw [ite_eq_left rfl,
+      ite_eq_right (spec.slotPoint_ne N hN hunit g (by omega) (by omega) (by omega)), hsum,
       Finset.sum_eq_single_of_mem s (Finset.mem_Icc.mpr ⟨le_rfl, hst⟩) hzero, hone]
     norm_num
   · by_cases h2 : v = spec.slotPoint N hN g (t' + 1)
@@ -187,10 +191,10 @@ private theorem outdeg_compl_slotInterval (hunit : spec.IsUnit) (g : Fin p)
         norm_num
       have hone := spec.num_edges_slotPoint_succ N hN hunit h2N g (t := t') ht'
       rw [num_edges_symmetric] at hone
-      rw [if_neg h1, if_pos rfl, hsum,
+      rw [ite_eq_right h1, ite_eq_left rfl, hsum,
         Finset.sum_eq_single_of_mem t' (Finset.mem_Icc.mpr ⟨hst, le_rfl⟩) hzero, hone]
       norm_num
-    · rw [if_neg h1, if_neg h2, hsum]
+    · rw [ite_eq_right h1, ite_eq_right h2, hsum]
       refine (Finset.sum_eq_zero fun j hj => ?_).trans (by norm_num)
       rw [Finset.mem_Icc] at hj
       have hz : num_edges (spec.scale N hN).graph v (spec.slotPoint N hN g j) = 0 := by
@@ -335,7 +339,7 @@ theorem offsetSum_holeDiv (hunit : spec.IsUnit) (g : Fin p) {t j : ℕ}
     · refine (Finset.sum_eq_zero fun i hi => ?_).trans (by norm_num)
       rw [Finset.mem_Ioo] at hi
       rw [one_chip_slot spec N hN hunit g (a := 0) (b := i) (by omega) (by omega),
-        if_neg (by omega)]
+        ite_eq_right (by omega)]
       simp
     · have hzero : ∀ b ∈ Finset.Ioo 0 N, b ≠ k →
           b • (one_chip (spec.slotPoint N hN g k) : CFDiv (spec.scale N hN).graph)
@@ -343,11 +347,11 @@ theorem offsetSum_holeDiv (hunit : spec.IsUnit) (g : Fin p) {t j : ℕ}
         intro b hb hbk
         rw [Finset.mem_Ioo] at hb
         rw [one_chip_slot spec N hN hunit g (a := k) (b := b) (by omega) (by omega),
-          if_neg hbk]
+          ite_eq_right hbk]
         simp
       rw [Finset.sum_eq_single_of_mem k (Finset.mem_Ioo.mpr ⟨hk0, hkN⟩) hzero,
         one_chip_slot spec N hN hunit g (a := k) (b := k) (by omega) (by omega),
-        if_pos rfl]
+        ite_eq_left rfl]
       simp
   have hsplit : ∀ i ∈ Finset.Ioo 0 N,
       i • spec.holeDiv N hN g t R j (spec.slotPoint N hN g i)
@@ -381,21 +385,21 @@ theorem legal_backSet (hunit : spec.IsUnit) (g : Fin p) {t j : ℕ} (hj : 1 ≤ 
   have hlo : spec.holeDiv N hN g t R j (spec.slotPoint N hN g j)
       = 1 + (if j = t - j then 1 else 0) + R (spec.slotPoint N hN g j) := by
     simp only [holeDiv, Pi.add_apply]
-    rw [one_chip_slot spec N hN hunit g (a := j) (b := j) (by omega) (by omega), if_pos rfl,
+    rw [one_chip_slot spec N hN hunit g (a := j) (b := j) (by omega) (by omega), ite_eq_left rfl,
       one_chip_slot spec N hN hunit g (a := t - j) (b := j) (by omega) (by omega)]
   have hhi : spec.holeDiv N hN g t R j (spec.slotPoint N hN g (t - j))
       = (if t - j = j then 1 else 0) + 1 + R (spec.slotPoint N hN g (t - j)) := by
     simp only [holeDiv, Pi.add_apply]
     rw [one_chip_slot spec N hN hunit g (a := j) (b := t - j) (by omega) (by omega),
       one_chip_slot spec N hN hunit g (a := t - j) (b := t - j) (by omega) (by omega),
-      if_pos rfl]
+      ite_eq_left rfl]
   simp only [backSet]
   refine (spec.interval_firing N hN hunit (spec.effective_holeDiv N hN g t hR j) g hj
     (by omega) (by omega) ?_ ?_ ?_).1
   · rw [hlo]; split_ifs <;> omega
   · rw [hhi]; split_ifs <;> omega
   · intro heq
-    rw [hlo, if_pos heq]
+    rw [hlo, ite_eq_left heq]
     omega
 
 /-- **Lemma H2 (back step), target.**  Firing `Back_j` steps the hole inwards by

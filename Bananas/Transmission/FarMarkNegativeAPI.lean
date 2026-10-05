@@ -1,4 +1,8 @@
-import Bananas.CrossOneOff.CrossStrandNegative
+module
+
+public import Bananas.CrossOneOff.CrossStrandNegative
+
+@[expose] public section
 
 /-! Normalized-coordinate adapter for the verified cross-strand negative-rank
 calculation. -/

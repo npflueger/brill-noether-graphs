@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.StablePathCount
-import DraismaVargas.LocalCases.DanglingBetti
-import DraismaVargas.LocalCases.FullDimensionalSource
+module
+
+public import DraismaVargas.LocalCases.StablePathCount
+public import DraismaVargas.LocalCases.DanglingBetti
+public import DraismaVargas.LocalCases.FullDimensionalSource
+
+@[expose] public section
 
 /-!
 # Trivalence is exactly the Brill--Noether equality

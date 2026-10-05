@@ -1,6 +1,10 @@
-import Utilities.Subdivision.SubdivisionChipDescent
-import Utilities.Foundations.BlockSlopeRounding
-import Mathlib.Tactic
+module
+
+public import Utilities.Subdivision.SubdivisionChipDescent
+public import Utilities.Foundations.BlockSlopeRounding
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # The step inequality for chip descent
@@ -61,8 +65,8 @@ private theorem chip_fineVertex_eq_interior (c : spec.Chip N) (e : Fin p) (o : �
         show N * c.step + c.offset - 1 < N * spec.length c.edge - 1
         omega⟩ := by
     unfold Chip.fineVertex pathVertex
-    rw [dif_neg (by show ¬ N * c.step + c.offset = 0; omega),
-      dif_neg (by show ¬ N * c.step + c.offset = N * spec.length c.edge; omega)]
+    rw [dite_eq_right (by show ¬ N * c.step + c.offset = 0; omega),
+      dite_eq_right (by show ¬ N * c.step + c.offset = N * spec.length c.edge; omega)]
     rfl
   rw [hfv]
   constructor
@@ -187,8 +191,8 @@ theorem step_bounds {ι : Type*} [Fintype ι] (chips : ι → spec.Chip N) (D₀
         intro i
         simp only [one_chip]
         by_cases h : (chips i).fineVertex hN = v
-        · rw [if_pos h.symm, if_pos h]
-        · rw [if_neg (fun hh => h hh.symm), if_neg h]
+        · rw [ite_eq_left h.symm, ite_eq_left h]
+        · rw [ite_eq_right (fun hh => h hh.symm), ite_eq_right h]
       have hsum : spec.fineChips N hN chips v
           = ∑ i : ι, (if (chips i).fineVertex hN = v then (1 : ℤ) else 0) := by
         unfold fineChips

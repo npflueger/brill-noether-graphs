@@ -1,4 +1,8 @@
-import Bananas.Theta.ThetaInversionFiniteSum
+module
+
+public import Bananas.Theta.ThetaInversionFiniteSum
+
+@[expose] public section
 
 /-!
 # Degree-twist deletion identities

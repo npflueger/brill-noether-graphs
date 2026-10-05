@@ -1,5 +1,9 @@
-import Utilities.Gluing.VertexCutConnectivity
-import Utilities.Subdivision.CoreVertexCut
+module
+
+public import Utilities.Gluing.VertexCutConnectivity
+public import Utilities.Subdivision.CoreVertexCut
+
+@[expose] public section
 
 /-!
 # Restricting a one-vertex cut through another cut

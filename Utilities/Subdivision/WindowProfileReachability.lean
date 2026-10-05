@@ -1,5 +1,9 @@
-import Utilities.Subdivision.WindowProfile
-import Utilities.Subdivision.StrongSeparator
+module
+
+public import Utilities.Subdivision.WindowProfile
+public import Utilities.Subdivision.StrongSeparator
+
+@[expose] public section
 
 /-!
 # Reachability consequences of signed window profiles

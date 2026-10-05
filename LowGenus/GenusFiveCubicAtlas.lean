@@ -1,6 +1,10 @@
-import LowGenus.GenusFiveCoreAtlas
-import Utilities.Subdivision.CubicCore
-import Mathlib.Tactic
+module
+
+public import LowGenus.GenusFiveCoreAtlas
+public import Utilities.Subdivision.CubicCore
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # The twenty loopless cubic genus-five core types
@@ -31,7 +35,7 @@ structure Row where
 below.  The sixteen AR rows all cite `GenusFiveCoreAtlas`'s own
 `rowNN_connected` instead; six of them used to re-prove it here, which is where
 six of the nine duplicated kernel connectivity reductions lived. -/
-private theorem connected (core : ExplicitPotential.Core 8 12) :
+theorem connected (core : ExplicitPotential.Core 8 12) :
     core.connectedCheckFast = true → core.Connected :=
   fun h => ExplicitPotential.Core.connected_of_connectedCheckFast h
 
@@ -76,32 +80,32 @@ def doubleMatchingCore : ExplicitPotential.Core 8 12 where
   tail := ![0, 0, 1, 1, 0, 3, 3, 4, 4, 5, 5, 6]
   head := ![1, 2, 2, 2, 3, 4, 5, 6, 6, 7, 7, 7]
 
-private theorem rootDouble_loopless :
+theorem rootDouble_loopless :
     ∀ edge : Fin 12, rootDoubleCore.tail edge ≠ rootDoubleCore.head edge := by
   intro edge; fin_cases edge <;> decide
 
-private theorem oneChord_loopless :
+theorem oneChord_loopless :
     ∀ edge : Fin 12, oneChordCore.tail edge ≠ oneChordCore.head edge := by
   intro edge; fin_cases edge <;> decide
 
-private theorem square_loopless :
+theorem square_loopless :
     ∀ edge : Fin 12, squareCore.tail edge ≠ squareCore.head edge := by
   intro edge; fin_cases edge <;> decide
 
-private theorem doubleMatching_loopless :
+theorem doubleMatching_loopless :
     ∀ edge : Fin 12, doubleMatchingCore.tail edge ≠ doubleMatchingCore.head edge := by
   intro edge; fin_cases edge <;> decide
 
-private theorem rootDouble_cubic : rootDoubleCore.Cubic := by
+theorem rootDouble_cubic : rootDoubleCore.Cubic := by
   intro vertex; fin_cases vertex <;> decide
 
-private theorem oneChord_cubic : oneChordCore.Cubic := by
+theorem oneChord_cubic : oneChordCore.Cubic := by
   intro vertex; fin_cases vertex <;> decide
 
-private theorem square_cubic : squareCore.Cubic := by
+theorem square_cubic : squareCore.Cubic := by
   intro vertex; fin_cases vertex <;> decide
 
-private theorem doubleMatching_cubic : doubleMatchingCore.Cubic := by
+theorem doubleMatching_cubic : doubleMatchingCore.Cubic := by
   intro vertex; fin_cases vertex <;> decide
 
 def rootDouble : Row := ⟨rootDoubleCore, rootDouble_loopless,

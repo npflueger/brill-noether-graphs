@@ -1,5 +1,9 @@
-import DraismaVargasCount.RowPosition
-import DraismaVargasCount.RowGeodesic
+module
+
+public import DraismaVargasCount.RowPosition
+public import DraismaVargasCount.RowGeodesic
+
+@[expose] public section
 
 /-!
 # Actual transition segments and positions

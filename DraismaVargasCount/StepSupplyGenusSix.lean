@@ -1,6 +1,10 @@
-import DraismaVargasCount.StepSupplyReduction
-import DraismaVargasCount.CaterpillarBallotCount
-import DraismaVargasCount.MemberCertifiedPencil
+module
+
+public import DraismaVargasCount.StepSupplyReduction
+public import DraismaVargasCount.CaterpillarBallotCount
+public import DraismaVargasCount.MemberCertifiedPencil
+
+@[expose] public section
 
 /-!
 # Genus-six cores: their indices, and the caterpillar as a base core

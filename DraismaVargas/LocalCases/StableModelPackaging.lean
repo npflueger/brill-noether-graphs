@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.BridgeReduction
-import Utilities.Pseudocore.PseudocorePresentation
-import Utilities.Subdivision.OneEdgeSplitRefinement
+module
+
+public import DraismaVargas.LocalCases.BridgeReduction
+public import Utilities.Pseudocore.PseudocorePresentation
+public import Utilities.Subdivision.OneEdgeSplitRefinement
+
+@[expose] public section
 
 /-!
 # The cubic stable model of an arbitrary connected specification
@@ -184,30 +188,30 @@ theorem isBridge_of_reverseCore {C : Core n p} {rev : Fin p → Bool} {e : Fin p
   simp only [reverseCore_tail, reverseCore_head] at hTail hHead
   by_cases hr : rev e = true
   · refine ⟨Sᶜ, ?_, ?_, ?_⟩
-    · rw [if_pos hr] at hHead
+    · rw [ite_eq_left hr] at hHead
       simpa using hHead
-    · rw [if_pos hr] at hTail
+    · rw [ite_eq_left hr] at hTail
       simpa using hTail
     · intro k hk
       have := hOther k hk
       simp only [reverseCore_tail, reverseCore_head] at this
       by_cases hrk : rev k = true
-      · rw [if_pos hrk, if_pos hrk] at this
+      · rw [ite_eq_left hrk, ite_eq_left hrk] at this
         simp only [Finset.mem_compl]
         exact not_congr this.symm
-      · rw [if_neg hrk, if_neg hrk] at this
+      · rw [ite_eq_right hrk, ite_eq_right hrk] at this
         simp only [Finset.mem_compl]
         exact not_congr this
   · refine ⟨S, ?_, ?_, ?_⟩
-    · rwa [if_neg hr] at hTail
-    · rwa [if_neg hr] at hHead
+    · rwa [ite_eq_right hr] at hTail
+    · rwa [ite_eq_right hr] at hHead
     · intro k hk
       have := hOther k hk
       simp only [reverseCore_tail, reverseCore_head] at this
       by_cases hrk : rev k = true
-      · rw [if_pos hrk, if_pos hrk] at this
+      · rw [ite_eq_left hrk, ite_eq_left hrk] at this
         exact this.symm
-      · rw [if_neg hrk, if_neg hrk] at this
+      · rw [ite_eq_right hrk, ite_eq_right hrk] at this
         exact this
 
 theorem bridgeless_reverseCore {C : Core n p} (rev : Fin p → Bool) (h : Bridgeless C) :
@@ -221,9 +225,9 @@ theorem connected_reverseCore {C : Core n p} (rev : Fin p → Bool) (h : C.Conne
   refine ⟨k, ?_⟩
   simp only [reverseCore_tail, reverseCore_head]
   by_cases hrk : rev k = true
-  · rw [if_pos hrk, if_pos hrk]
+  · rw [ite_eq_left hrk, ite_eq_left hrk]
     exact hk.symm
-  · rw [if_neg hrk, if_neg hrk]
+  · rw [ite_eq_right hrk, ite_eq_right hrk]
     exact hk
 
 /-- The specification with the flagged slots reversed. -/
@@ -383,11 +387,11 @@ theorem first_vertex (data : MergeData C) :
   cases hs : data.first.2 with
   | true =>
       rw [hs] at h
-      simp only [if_true] at h
+      simp only [ite_true] at h
       exact Or.inl ⟨h, by simp [farEnd, hs]⟩
   | false =>
       rw [hs] at h
-      simp only [Bool.false_eq_true, if_false] at h
+      simp only [Bool.false_eq_true, ite_false] at h
       exact Or.inr ⟨h, by simp [farEnd, hs]⟩
 
 theorem second_vertex (data : MergeData C) :
@@ -397,11 +401,11 @@ theorem second_vertex (data : MergeData C) :
   cases hs : data.second.2 with
   | true =>
       rw [hs] at h
-      simp only [if_true] at h
+      simp only [ite_true] at h
       exact Or.inl ⟨h, by simp [farEnd, hs]⟩
   | false =>
       rw [hs] at h
-      simp only [Bool.false_eq_true, if_false] at h
+      simp only [Bool.false_eq_true, ite_false] at h
       exact Or.inr ⟨h, by simp [farEnd, hs]⟩
 
 theorem farFirst_ne_vertex (hL : ∀ e : Fin (p + 1), C.tail e ≠ C.head e)
@@ -488,9 +492,9 @@ def mergedSpec (hn : 0 < n) (hp : 0 < p) (spec : Spec (n + 1) (p + 1))
   length_pos := by
     intro e
     by_cases he : e = splitSlot hp data
-    · rw [if_pos he]
+    · rw [ite_eq_left he]
       exact Nat.add_pos_left (spec.length_pos _) _
-    · rw [if_neg he]
+    · rw [ite_eq_right he]
       exact spec.length_pos _
 
 @[simp] theorem mergedSpec_core (hn : 0 < n) (hp : 0 < p) (spec : Spec (n + 1) (p + 1))
@@ -517,7 +521,7 @@ def rev (data : MergeData C) (E : Fin (p + 1)) : Bool :=
 theorem rev_of_avoid (hL : ∀ e : Fin (p + 1), C.tail e ≠ C.head e) (data : MergeData C)
     {E : Fin (p + 1)} (h1 : E ≠ data.first.1) (h2 : E ≠ data.second.1) :
     rev data E = false := by
-  simp only [rev, if_neg h2, decide_eq_false_iff_not]
+  simp only [rev, ite_eq_right h2, decide_eq_false_iff_not]
   exact (avoid hL data h1 h2).1
 
 theorem firstPair (hL : ∀ e : Fin (p + 1), C.tail e ≠ C.head e) (data : MergeData C) :
@@ -526,7 +530,7 @@ theorem firstPair (hL : ∀ e : Fin (p + 1), C.tail e ≠ C.head e) (data : Merg
       (if rev data data.first.1 then vSwap data (C.tail data.first.1)
         else vSwap data (C.head data.first.1)) = Fin.last n := by
   have hrev : rev data data.first.1 = decide (C.tail data.first.1 = data.vertex) := by
-    simp only [rev, if_neg data.slots_ne]
+    simp only [rev, ite_eq_right data.slots_ne]
   by_cases hcase : C.tail data.first.1 = data.vertex
   · have hflag : rev data data.first.1 = true := by rw [hrev, hcase]; simp
     have hfar : farEnd C data.first = C.head data.first.1 := by
@@ -639,7 +643,7 @@ def mergeRelabeling (data : MergeData spec.core) :
         rw [← castSucc_smap hp data h2, splitTarget_length_castSucc]
         simp [splitSlot]
       · rw [← castSucc_smap hp data h2, splitTarget_length_castSucc,
-          if_neg (fun h => h1 ((smap_eq_splitSlot_iff hp data h2).mp h)),
+          ite_eq_right (fun h => h1 ((smap_eq_splitSlot_iff hp data h2).mp h)),
           mergedSpec_length_of_ne hn hp spec data
             (fun h => h1 ((smap_eq_splitSlot_iff hp data h2).mp h)),
           pre_smap hp data h2]
@@ -674,11 +678,11 @@ def mergeRelabeling (data : MergeData spec.core) :
       · subst h1
         rw [← castSucc_smap hp data h2, splitTarget_head_castSucc]
         have hsplit : smap hp data data.first.1 = splitSlot hp data := rfl
-        rw [hsplit, if_pos rfl]
+        rw [hsplit, ite_eq_left rfl]
         exact (firstPair spec.core_loopless data).2.symm
       · have hne : smap hp data E ≠ splitSlot hp data :=
           fun h => h1 ((smap_eq_splitSlot_iff hp data h2).mp h)
-        rw [← castSucc_smap hp data h2, splitTarget_head_castSucc, if_neg hne,
+        rw [← castSucc_smap hp data h2, splitTarget_head_castSucc, ite_eq_right hne,
           mergedCore_head_of_ne hn hp data hne, pre_smap hp data h2,
           castSucc_vmap hn data (avoid spec.core_loopless data h1 h2).2,
           rev_of_avoid spec.core_loopless data h1 h2]
@@ -930,7 +934,7 @@ theorem otherSlot_spec (hcard : (incidentSlots C w).card = 2) {j : Fin P}
   have hzmem : z ∈ (incidentSlots C w).erase j := by rw [hz]; simp
   have hne : ((incidentSlots C w).erase j).Nonempty := ⟨z, hzmem⟩
   have hmem : otherSlot C j w ∈ (incidentSlots C w).erase j := by
-    rw [otherSlot, dif_pos hne]
+    rw [otherSlot, dite_eq_left hne]
     exact Finset.min'_mem _ _
   have hos : otherSlot C j w = z := by
     rw [hz, Finset.mem_singleton] at hmem
@@ -1015,9 +1019,9 @@ theorem mem_incidentSlots_of_head {j : Fin P} {w : Fin N}
   rw [mem_incidentSlots]
   have hh : (if markerRev shape j then spec.core.tail j else spec.core.head j) = w := h
   by_cases hr : markerRev shape j = true
-  · rw [if_pos hr] at hh
+  · rw [ite_eq_left hr] at hh
     exact Or.inl hh
-  · rw [if_neg hr] at hh
+  · rw [ite_eq_right hr] at hh
     exact Or.inr hh
 
 theorem mem_incidentSlots_of_tail {j : Fin P} {w : Fin N}
@@ -1025,9 +1029,9 @@ theorem mem_incidentSlots_of_tail {j : Fin P} {w : Fin N}
   rw [mem_incidentSlots]
   have hh : (if markerRev shape j then spec.core.head j else spec.core.tail j) = w := h
   by_cases hr : markerRev shape j = true
-  · rw [if_pos hr] at hh
+  · rw [ite_eq_left hr] at hh
     exact Or.inr hh
-  · rw [if_neg hr] at hh
+  · rw [ite_eq_right hr] at hh
     exact Or.inl hh
 
 theorem oriented_of_isLo {w : Fin N} (hw : shape.isMarker w = true) {j : Fin P}
@@ -1041,16 +1045,16 @@ theorem oriented_of_isLo {w : Fin N} (hw : shape.isMarker w = true) {j : Fin P}
     have hrev : markerRev shape j = true := by simp [markerRev, ht, hh, hw, hpb, hlo]
     constructor
     · show (if markerRev shape j then spec.core.tail j else spec.core.head j) = w
-      rw [if_pos hrev, ht]
+      rw [ite_eq_left hrev, ht]
     · show (if markerRev shape j then spec.core.head j else spec.core.tail j) = shape.partner w
-      rw [if_pos hrev, hh]
+      rw [ite_eq_left hrev, hh]
   · have ht : spec.core.tail j = shape.partner w := shape.tail_eq_partner w hw j hh
     have hrev : markerRev shape j = false := by simp [markerRev, ht, hh, hw, hpb, hlo]
     constructor
     · show (if markerRev shape j then spec.core.tail j else spec.core.head j) = w
-      rw [if_neg (by rw [hrev]; simp), hh]
+      rw [ite_eq_right (by rw [hrev]; simp), hh]
     · show (if markerRev shape j then spec.core.head j else spec.core.tail j) = shape.partner w
-      rw [if_neg (by rw [hrev]; simp), ht]
+      rw [ite_eq_right (by rw [hrev]; simp), ht]
 
 theorem oriented_of_not_isLo {w : Fin N} (hw : shape.isMarker w = true) {j : Fin P}
     (hj : j ∈ incidentSlots spec.core w) (hlo : isLo spec.core j w = false) :
@@ -1063,16 +1067,16 @@ theorem oriented_of_not_isLo {w : Fin N} (hw : shape.isMarker w = true) {j : Fin
     have hrev : markerRev shape j = false := by simp [markerRev, ht, hh, hw, hpb, hlo]
     constructor
     · show (if markerRev shape j then spec.core.head j else spec.core.tail j) = w
-      rw [if_neg (by rw [hrev]; simp), ht]
+      rw [ite_eq_right (by rw [hrev]; simp), ht]
     · show (if markerRev shape j then spec.core.tail j else spec.core.head j) = shape.partner w
-      rw [if_neg (by rw [hrev]; simp), hh]
+      rw [ite_eq_right (by rw [hrev]; simp), hh]
   · have ht : spec.core.tail j = shape.partner w := shape.tail_eq_partner w hw j hh
     have hrev : markerRev shape j = true := by simp [markerRev, ht, hh, hw, hpb, hlo]
     constructor
     · show (if markerRev shape j then spec.core.head j else spec.core.tail j) = w
-      rw [if_pos hrev, hh]
+      rw [ite_eq_left hrev, hh]
     · show (if markerRev shape j then spec.core.tail j else spec.core.head j) = shape.partner w
-      rw [if_pos hrev, ht]
+      rw [ite_eq_left hrev, ht]
 
 /-- The outgoing half of a loop: the slot whose head is a marker and which is
 the lower of the two slots there. -/
@@ -1111,7 +1115,7 @@ theorem first_bundle {j : Fin P} (hj : orientedFirst shape j = true) :
   have hjmem : j ∈ incidentSlots spec.core w := mem_incidentSlots_of_head shape rfl
   have hcard := marker_card shape hw
   have hmate : orientedMate shape j = otherSlot spec.core j w := by
-    rw [orientedMate, ← hwdef, if_pos hw]
+    rw [orientedMate, ← hwdef, ite_eq_left hw]
   set m := otherSlot spec.core j w with hmdef
   have hmmem : m ∈ incidentSlots spec.core w := otherSlot_mem hcard hjmem
   have hmlo : isLo spec.core m w = false := by
@@ -1125,7 +1129,7 @@ theorem first_bundle {j : Fin P} (hj : orientedFirst shape j = true) :
   have hpne : shape.partner w ≠ w := shape.partner_ne w hw
   have hpb : shape.isMarker (shape.partner w) = false := shape.partner_base w hw
   have hmate_m : orientedMate shape m = j := by
-    rw [orientedMate, hmhead, if_neg (by rw [hpb]; simp), hmtail]
+    rw [orientedMate, hmhead, ite_eq_right (by rw [hpb]; simp), hmtail]
     exact otherSlot_otherSlot hcard hjmem
   have hsecond_m : orientedSecond shape m = true := by
     rw [orientedSecond, hmtail, hw, hmlo]
@@ -1164,7 +1168,7 @@ theorem second_bundle {j : Fin P} (hj : orientedSecond shape j = true) :
   have hpb : shape.isMarker (shape.partner w) = false := shape.partner_base w hw
   obtain ⟨hjtail, hjhead⟩ := oriented_of_not_isLo shape hw hjmem hlo
   have hmate : orientedMate shape j = otherSlot spec.core j w := by
-    rw [orientedMate, hjhead, if_neg (by rw [hpb]; simp), hjtail]
+    rw [orientedMate, hjhead, ite_eq_right (by rw [hpb]; simp), hjtail]
   set m := otherSlot spec.core j w with hmdef
   have hmmem : m ∈ incidentSlots spec.core w := otherSlot_mem hcard hjmem
   have hmlo : isLo spec.core m w = true := (isLo_otherSlot hcard hjmem).mpr hlo
@@ -1173,7 +1177,7 @@ theorem second_bundle {j : Fin P} (hj : orientedSecond shape j = true) :
     rw [orientedFirst, hmhead, hw, hmlo]
     simp
   have hmate_m : orientedMate shape m = j := by
-    rw [orientedMate, hmhead, if_pos hw]
+    rw [orientedMate, hmhead, ite_eq_left hw]
     exact otherSlot_otherSlot hcard hjmem
   exact ⟨by rw [hmate]; exact hfirst_m, by rw [hmate]; exact hmate_m⟩
 

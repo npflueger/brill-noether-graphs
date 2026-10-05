@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.SourceFibreForest
-import DraismaVargas.LocalCases.W2IncomingClassification
-import DraismaVargas.LocalCases.W3IncomingClassification
+module
+
+public import DraismaVargas.LocalCases.SourceFibreForest
+public import DraismaVargas.LocalCases.W2IncomingClassification
+public import DraismaVargas.LocalCases.W3IncomingClassification
+
+@[expose] public section
 
 /-!
 # Exhaustive incoming source-case selection

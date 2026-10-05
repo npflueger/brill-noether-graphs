@@ -1,4 +1,8 @@
-import DraismaVargasCount.TrivalentWeight
+module
+
+public import DraismaVargasCount.TrivalentWeight
+
+@[expose] public section
 
 /-!
 # The lower half of `lemma-edge-deno` (b) on the two distinguished incoming rows
@@ -227,15 +231,15 @@ theorem k_dvd_incomingRowDenominator_secondRow (input : W2SourceInput data star)
     shape.k ∣ incomingRowDenominator data (secondRow profile) := by
   have hk : 0 < shape.k := Nat.lt_of_lt_of_le Nat.zero_lt_one (le_of_lt shape.one_lt_k)
   have hDiff := double_sub_single_eq profile input shape (secondRow profile)
-  rw [if_pos rfl, if_neg hRows] at hDiff
+  rw [ite_eq_left rfl, ite_eq_right hRows] at hDiff
   by_cases hFirst : secondRow profile = firstRow profile
-  · rw [if_pos hFirst] at hDiff
+  · rw [ite_eq_left hFirst] at hDiff
     refine dvd_incomingRowDenominator_of_columns_sub (c := 1) (e := 1) _
       (star.edge profile.doubleLabel) (star.edge profile.singleLabel) hk (Or.inl rfl) ?_
     rw [hDiff]
     push_cast
     ring
-  · rw [if_neg hFirst] at hDiff
+  · rw [ite_eq_right hFirst] at hDiff
     refine dvd_incomingRowDenominator_of_columns_sub (c := 0) (e := 1) _
       (star.edge profile.doubleLabel) (star.edge profile.singleLabel) hk (Or.inl rfl) ?_
     rw [hDiff]
@@ -249,15 +253,15 @@ theorem k_dvd_incomingRowDenominator_thirdRow (input : W2SourceInput data star)
     shape.k ∣ incomingRowDenominator data (thirdRow profile) := by
   have hk : 0 < shape.k := Nat.lt_of_lt_of_le Nat.zero_lt_one (le_of_lt shape.one_lt_k)
   have hDiff := double_sub_single_eq profile input shape (thirdRow profile)
-  rw [if_pos rfl, if_neg (Ne.symm hRows)] at hDiff
+  rw [ite_eq_left rfl, ite_eq_right (Ne.symm hRows)] at hDiff
   by_cases hFirst : thirdRow profile = firstRow profile
-  · rw [if_pos hFirst] at hDiff
+  · rw [ite_eq_left hFirst] at hDiff
     refine dvd_incomingRowDenominator_of_columns_sub (c := 1) (e := -1) _
       (star.edge profile.doubleLabel) (star.edge profile.singleLabel) hk (Or.inr rfl) ?_
     rw [hDiff]
     push_cast
     ring
-  · rw [if_neg hFirst] at hDiff
+  · rw [ite_eq_right hFirst] at hDiff
     refine dvd_incomingRowDenominator_of_columns_sub (c := 0) (e := -1) _
       (star.edge profile.doubleLabel) (star.edge profile.singleLabel) hk (Or.inr rfl) ?_
     rw [hDiff]
@@ -420,16 +424,16 @@ theorem k_dvd_incomingRowDenominator_secondRow_of_background (shape : Shape prof
   have hk0 : (shape.k : ℚ) ≠ 0 := by
     exact_mod_cast hk.ne'
   have hCol := double_matrix_decomposition profile (secondRow profile)
-  rw [if_pos rfl, first_index_cast profile shape, second_index_cast profile shape,
+  rw [ite_eq_left rfl, first_index_cast profile shape, second_index_cast profile shape,
     backgroundColumn_eq_zero (secondRow profile) profile.doubleLabel hBackground] at hCol
   by_cases hFirst : secondRow profile = firstRow profile
-  · rw [if_pos hFirst] at hCol
+  · rw [ite_eq_left hFirst] at hCol
     refine dvd_incomingRowDenominator_of_column (c := 1) (e := 1) _
       (star.edge profile.doubleLabel) hk (Or.inl rfl) ?_
     rw [hCol]
     push_cast
     ring
-  · rw [if_neg hFirst] at hCol
+  · rw [ite_eq_right hFirst] at hCol
     refine dvd_incomingRowDenominator_of_column (c := 0) (e := 1) _
       (star.edge profile.doubleLabel) hk (Or.inl rfl) ?_
     rw [hCol]
@@ -445,7 +449,7 @@ theorem k_dvd_incomingRowDenominator_thirdRow_of_background (shape : Shape profi
   have hk0 : (shape.k : ℚ) ≠ 0 := by
     exact_mod_cast hk.ne'
   have hCol := single_matrix_decomposition profile (thirdRow profile)
-  rw [if_pos rfl, third_index_cast profile shape,
+  rw [ite_eq_left rfl, third_index_cast profile shape,
     backgroundColumn_eq_zero (thirdRow profile) profile.singleLabel hBackground] at hCol
   refine dvd_incomingRowDenominator_of_column (c := 0) (e := 1) _
     (star.edge profile.singleLabel) hk (Or.inl rfl) ?_

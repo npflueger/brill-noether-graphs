@@ -1,5 +1,9 @@
-import DraismaVargas.Infrastructure.Change
-import DraismaVargas.Infrastructure.GluingContraction
+module
+
+public import DraismaVargas.Infrastructure.Change
+public import DraismaVargas.Infrastructure.GluingContraction
+
+@[expose] public section
 
 /-!
 # Ramification is additive under contraction

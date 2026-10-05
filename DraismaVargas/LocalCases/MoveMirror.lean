@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.OuterWalk
+module
+
+public import DraismaVargas.LocalCases.OuterWalk
+
+@[expose] public section
 
 /-!
 # The mirror of a Whitehead move, and the transport of a type-change link

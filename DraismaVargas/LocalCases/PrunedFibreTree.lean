@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.PrunedFibreValency
-import DraismaVargas.Infrastructure.IteratedContraction
-import DraismaVargas.LocalCases.FullContractionFibre
+module
+
+public import DraismaVargas.LocalCases.PrunedFibreValency
+public import DraismaVargas.Infrastructure.IteratedContraction
+public import DraismaVargas.LocalCases.FullContractionFibre
+
+@[expose] public section
 
 /-!
 # The induced-subtree count used by the pruned source fibre

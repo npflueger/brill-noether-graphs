@@ -1,7 +1,11 @@
-import DraismaVargas.Infrastructure.GluingDatum
-import DraismaVargas.Infrastructure.GraphContraction
-import Utilities.Iso.GraphIso
-import Mathlib.Data.Sym.Sym2
+module
+
+public import DraismaVargas.Infrastructure.GluingDatum
+public import DraismaVargas.Infrastructure.GraphContraction
+public import Utilities.Iso.GraphIso
+public import Mathlib.Data.Sym.Sym2
+
+@[expose] public section
 
 /-!
 # Transporting a gluing datum along an isomorphism of target graphs

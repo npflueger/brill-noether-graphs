@@ -1,5 +1,9 @@
-import DraismaVargasCount.W2MkkStarCensusProof
-import DraismaVargasCount.W2M1kStarExhaustionProof
+module
+
+public import DraismaVargasCount.W2MkkStarCensusProof
+public import DraismaVargasCount.W2M1kStarExhaustionProof
+
+@[expose] public section
 
 /-!
 # M-kk star exhaustion: the `w2Mkk` clause with no hypothesis
@@ -255,11 +259,11 @@ theorem transport_detach (iso : GeometricDatumIso first second) {wall : target�
   · intro edge hInc s
     rcases eq_edge_of_incident star₁ edge hInc with rfl | rfl
     · rw [TwoStar.right_edge_zero]
-      simp only [Bool.false_eq_true, if_false]
+      simp only [Bool.false_eq_true, ite_false]
       rw [Equiv.symm_apply_apply, hL]
       rfl
     · rw [TwoStar.right_edge_one]
-      simp only [if_true]
+      simp only [ite_true]
       rw [Equiv.symm_apply_apply, hR]
       exact detach_refl _ _ _
 
@@ -565,7 +569,7 @@ theorem limitAnchor_first_iff
     F _ (limitAnchor input shape detach distinguished j) ↔
       F _ (firstAnchor input shape distinguished ⟨detach, hPin⟩ j) := by
   unfold limitAnchor
-  rw [dif_pos hPin]
+  rw [dite_eq_left hPin]
   exact anchorOf_iff shape _ _ j F
 
 /-- In the Base II.2.2.M orientation, likewise. -/
@@ -576,7 +580,7 @@ theorem limitAnchor_second_iff
       F _ (secondAnchor input shape distinguished
         ⟨detach, (pinSheet_mem shape).resolve_left hPin⟩ j) := by
   unfold limitAnchor
-  rw [dif_neg hPin]
+  rw [dite_eq_right hPin]
   exact anchorOf_iff shape _ _ j F
 
 /-- **Every star member presents a transport onto the position of its own kind.** -/

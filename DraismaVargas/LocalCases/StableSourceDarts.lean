@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.StableGraphIncidence
-import DraismaVargas.LocalCases.ClassInjectivity
-import Utilities.CubicGraphs.CubicDarts
+module
+
+public import DraismaVargas.LocalCases.StableGraphIncidence
+public import DraismaVargas.LocalCases.ClassInjectivity
+public import Utilities.CubicGraphs.CubicDarts
+
+@[expose] public section
 
 /-!
 # The actual stable source as a cubic dart graph

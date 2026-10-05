@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W3TrackedAnchoring
+module
+
+public import DraismaVargas.LocalCases.W3TrackedAnchoring
+
+@[expose] public section
 
 /-!
 # Source census anchoring with literal Figure 28 row dictionaries

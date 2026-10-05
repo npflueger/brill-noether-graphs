@@ -1,7 +1,11 @@
-import Utilities.Foundations.ElementaryExistence
-import Utilities.Foundations.Duality
-import Utilities.Gonality.GonalityTransport
-import Utilities.Iso.FossilTopology
+module
+
+public import Utilities.Foundations.ElementaryExistence
+public import Utilities.Foundations.Duality
+public import Utilities.Gonality.GonalityTransport
+public import Utilities.Iso.FossilTopology
+
+@[expose] public section
 
 /-!
 # Genus six reduces to a single critical pencil

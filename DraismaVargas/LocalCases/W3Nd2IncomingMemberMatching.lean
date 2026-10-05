@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.W3Nd2IncomingNormalization
-import DraismaVargas.LocalCases.W3Nd2StableLift
-import DraismaVargas.LocalCases.M11IncomingOuterPartitions
+module
+
+public import DraismaVargas.LocalCases.W3Nd2IncomingNormalization
+public import DraismaVargas.LocalCases.W3Nd2StableLift
+public import DraismaVargas.LocalCases.M11IncomingOuterPartitions
+
+@[expose] public section
 
 /-!
 # Identifying the incoming W3 nd2 datum with a named Figure 31 member
@@ -407,7 +411,7 @@ theorem transported_endpoints_of_left_divalent
       simp [rightOf] at hValue
   have hPair := M11IncomingOuterPartitions.transported_endpointPartitions data hc hab hOne
     side hPlacement
-  rw [if_pos hSupport] at hPair
+  rw [ite_eq_left hSupport] at hPair
   exact ⟨congrArg Prod.fst hPair, congrArg Prod.snd hPair⟩
 
 /-- The mirror: when `b` is the divalent endpoint the normalization exchanges
@@ -439,7 +443,7 @@ theorem transported_endpoints_of_right_divalent
     simp [rightOf] at hValue
   have hPair := M11IncomingOuterPartitions.transported_endpointPartitions data hc hab hOne
     side hPlacement
-  rw [if_neg hNotSupport] at hPair
+  rw [ite_eq_right hNotSupport] at hPair
   exact ⟨congrArg Prod.fst hPair, congrArg Prod.snd hPair⟩
 
 end Endpoints

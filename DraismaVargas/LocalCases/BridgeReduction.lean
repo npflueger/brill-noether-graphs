@@ -1,7 +1,11 @@
-import Utilities.Subdivision.SpecBridge
-import DraismaVargas.LocalCases.StableModelReduction
-import DraismaVargas.OddGenusTwoCycle
-import Utilities.Foundations.ElementaryExistence
+module
+
+public import Utilities.Subdivision.SpecBridge
+public import DraismaVargas.LocalCases.StableModelReduction
+public import DraismaVargas.OddGenusTwoCycle
+public import Utilities.Foundations.ElementaryExistence
+
+@[expose] public section
 
 /-!
 # Bridgeless specifications admit stable models

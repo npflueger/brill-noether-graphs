@@ -1,9 +1,13 @@
-import DraismaVargas.LocalCases.W3InteriorGraphTracking
-import DraismaVargas.LocalCases.W3ShiftGraphTracking
-import DraismaVargas.LocalCases.W2M1kClosureUnconditional
-import DraismaVargas.LocalCases.W2M1kGaugeFamily
-import DraismaVargas.LocalCases.IncomingSourceCases
-import DraismaVargas.LocalCases.W2M1kArbitraryExit
+module
+
+public import DraismaVargas.LocalCases.W3InteriorGraphTracking
+public import DraismaVargas.LocalCases.W3ShiftGraphTracking
+public import DraismaVargas.LocalCases.W2M1kClosureUnconditional
+public import DraismaVargas.LocalCases.W2M1kGaugeFamily
+public import DraismaVargas.LocalCases.IncomingSourceCases
+public import DraismaVargas.LocalCases.W2M1kArbitraryExit
+
+@[expose] public section
 
 /-!
 # Same-candidate graph and row tracking for Figure 33

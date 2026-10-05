@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.DanglingDescent
+module
+
+public import DraismaVargas.LocalCases.DanglingDescent
+
+@[expose] public section
 
 /-!
 # Non-dangling valency at a wall block
@@ -106,7 +110,7 @@ theorem complement_connected_of_unique_cross
       · have hValue := hCross a b haSide hbSide
         have hPair : a = inner ∧ b = outer := by
           by_contra hNot
-          rw [if_neg hNot] at hValue
+          rw [ite_eq_right hNot] at hValue
           omega
         have hEq : (⟨b, hb⟩ : (Utilities.inducedSubgraph G (Finset.univ \ side)
             ⟨outer, hOuterMem⟩).V) = ⟨outer, hOuterMem⟩ :=
@@ -199,14 +203,14 @@ theorem absorb_branch
           have hValue := hCutCross e.2 e.1 h2 (hFst ▸ hInnerCut)
           have hPair : e.2 = branch ∧ e.1 = inner := by
             by_contra hNot
-            rw [if_neg hNot] at hValue
+            rw [ite_eq_right hNot] at hValue
             omega
           exact Or.inl (Prod.ext hFst hPair.1)
         · have hSnd : e.2 = inner := hCross e.2 h2 e.1 (fun h ↦ hDisjoint e.1 h h1) hPos'
           have hValue := hCutCross e.1 e.2 h1 (hSnd ▸ hInnerCut)
           have hPair : e.1 = branch ∧ e.2 = inner := by
             by_contra hNot
-            rw [if_neg hNot] at hValue
+            rw [ite_eq_right hNot] at hValue
             omega
           exact Or.inr (Prod.ext hPair.1 hSnd)
       · rintro (hEq | hEq) <;> rw [hEq]
@@ -277,7 +281,7 @@ theorem absorb_branch
       have hValue := hCutCross a c haCut hcCut
       have hPair : a = branch ∧ c = inner := by
         by_contra hNot
-        rw [if_neg hNot] at hValue
+        rw [ite_eq_right hNot] at hValue
         omega
       exact absurd (hPair.2 ▸ hInnerBig) hcBig
 
@@ -309,7 +313,7 @@ theorem exists_danglingSide_aux (hConnected : graph_connected G)
       have hOuterCut : outer ∉ cut.side := by
         intro hMem
         have hValue := cut.cross_num_edges outer inner hMem cut.right_not_mem
-        rw [if_neg (fun hPair ↦ hbNe hPair.1.symm)] at hValue
+        rw [ite_eq_right (fun hPair ↦ hbNe hPair.1.symm)] at hValue
         rw [num_edges_symmetric] at hEdgeOne
         omega
       have hOuterBig : outer ∉ side ∪ cut.side := by
@@ -335,9 +339,9 @@ theorem exists_danglingSide_aux (hConnected : graph_connected G)
           num_edges G a b = if a = inner ∧ b = outer then 1 else 0 := by
         intro a b ha hb
         by_cases hPair : a = inner ∧ b = outer
-        · rw [if_pos hPair, hPair.1, hPair.2]
+        · rw [ite_eq_left hPair, hPair.1, hPair.2]
           exact hEdgeOne
-        · rw [if_neg hPair]
+        · rw [ite_eq_right hPair]
           by_contra hNonzero
           have hPos : 0 < num_edges G a b := Nat.pos_of_ne_zero hNonzero
           have haInner : a = inner := hCross a ha b hb hPos

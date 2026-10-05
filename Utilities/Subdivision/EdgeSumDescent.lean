@@ -1,5 +1,9 @@
-import Utilities.Subdivision.SquareRootDescent
-import Mathlib.Tactic
+module
+
+public import Utilities.Subdivision.SquareRootDescent
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # Edge-sum descent: choosing the rounding flags to minimise the step budget

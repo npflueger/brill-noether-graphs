@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.W3Nd3IncomingCensus
-import DraismaVargas.LocalCases.W3Nd3LimitMatrix
-import DraismaVargas.LocalCases.W3Nd2IncomingMemberMatching
+module
+
+public import DraismaVargas.LocalCases.W3Nd3IncomingCensus
+public import DraismaVargas.LocalCases.W3Nd3LimitMatrix
+public import DraismaVargas.LocalCases.W3Nd2IncomingMemberMatching
+
+@[expose] public section
 
 /-!
 # Normalizing an incoming W3 nd3 datum and matching it to a named Figure 30 member

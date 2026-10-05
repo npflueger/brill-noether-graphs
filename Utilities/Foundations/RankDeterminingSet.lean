@@ -1,7 +1,11 @@
-import Utilities.Foundations.RankOne
-import Utilities.Foundations.RiemannRochWinnable
-import Utilities.Subdivision.SubdivisionGraph
-import Utilities.Subdivision.SubdivisionSeparator
+module
+
+public import Utilities.Foundations.RankOne
+public import Utilities.Foundations.RiemannRochWinnable
+public import Utilities.Subdivision.SubdivisionGraph
+public import Utilities.Subdivision.SubdivisionSeparator
+
+@[expose] public section
 
 /-!
 # Rank-determining sets

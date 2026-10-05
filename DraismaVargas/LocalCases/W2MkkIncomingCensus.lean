@@ -1,7 +1,11 @@
-import DraismaVargas.LocalCases.IncomingMatchingCore
-import DraismaVargas.LocalCases.W2MkkStableIncidence
-import DraismaVargas.LocalCases.W3Nd2IncomingMemberMatching
-import DraismaVargas.LocalCases.IncomingSourceCases
+module
+
+public import DraismaVargas.LocalCases.IncomingMatchingCore
+public import DraismaVargas.LocalCases.W2MkkStableIncidence
+public import DraismaVargas.LocalCases.W3Nd2IncomingMemberMatching
+public import DraismaVargas.LocalCases.IncomingSourceCases
+
+@[expose] public section
 
 /-!
 # The incoming census at a `w2Mkk`-classified wall
@@ -270,25 +274,25 @@ noncomputable def singleEnd : target.V :=
     (hFalse : IncomingTargetExpansion.right hc hab hOne
       (star.edge profile.doubleLabel) = false) :
     doubleEnd data hc hab hOne profile = a := by
-  simp only [doubleEnd, hFalse, Bool.false_eq_true, if_false]
+  simp only [doubleEnd, hFalse, Bool.false_eq_true, ite_false]
 
 @[simp] theorem singleEnd_of_false
     (hFalse : IncomingTargetExpansion.right hc hab hOne
       (star.edge profile.doubleLabel) = false) :
     singleEnd data hc hab hOne profile = b := by
-  simp only [singleEnd, hFalse, Bool.false_eq_true, if_false]
+  simp only [singleEnd, hFalse, Bool.false_eq_true, ite_false]
 
 @[simp] theorem doubleEnd_of_true
     (hTrue : IncomingTargetExpansion.right hc hab hOne
       (star.edge profile.doubleLabel) = true) :
     doubleEnd data hc hab hOne profile = b := by
-  simp only [doubleEnd, hTrue, if_true]
+  simp only [doubleEnd, hTrue, ite_true]
 
 @[simp] theorem singleEnd_of_true
     (hTrue : IncomingTargetExpansion.right hc hab hOne
       (star.edge profile.doubleLabel) = true) :
     singleEnd data hc hab hOne profile = a := by
-  simp only [singleEnd, hTrue, if_true]
+  simp only [singleEnd, hTrue, ite_true]
 
 /-- `doubleEnd` and `singleEnd` are the two restored endpoints, in one order or
 the other.  Both orders occur. -/
@@ -359,7 +363,7 @@ theorem transported_endpoints
       (target := contract target hab hOne) ⟨a, hab⟩,
       IncomingTargetExpansion.right hc hab hOne edge = (orientedStar profile).right edge
   · have hFalse := (support_iff data hc hab hOne profile hLeft hRight).mp hSupport
-    rw [if_pos hSupport] at hPair
+    rw [ite_eq_left hSupport] at hPair
     rw [doubleEnd_of_false data hc hab hOne profile hFalse,
       singleEnd_of_false data hc hab hOne profile hFalse]
     exact ⟨congrArg Prod.fst hPair, congrArg Prod.snd hPair⟩
@@ -369,7 +373,7 @@ theorem transported_endpoints
         (star.edge profile.doubleLabel)) with h | h
       · exact h
       · exact absurd ((support_iff data hc hab hOne profile hLeft hRight).mpr h) hSupport
-    rw [if_neg hSupport] at hPair
+    rw [ite_eq_right hSupport] at hPair
     rw [doubleEnd_of_true data hc hab hOne profile hTrue,
       singleEnd_of_true data hc hab hOne profile hTrue]
     exact ⟨congrArg Prod.fst hPair, congrArg Prod.snd hPair⟩

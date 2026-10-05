@@ -1,5 +1,9 @@
-import Bananas.Transmission.RankZeroVertexBridge
-import Utilities.Gluing.TwoEdgeConnectedRigidity
+module
+
+public import Bananas.Transmission.RankZeroVertexBridge
+public import Utilities.Gluing.TwoEdgeConnectedRigidity
+
+@[expose] public section
 
 /-!
 # Degree-one classes on a bridgeless graph

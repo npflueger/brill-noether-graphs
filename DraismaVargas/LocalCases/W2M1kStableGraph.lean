@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W2M1kLeaves
-import DraismaVargas.LocalCases.LimitChainCore
+module
+
+public import DraismaVargas.LocalCases.W2M1kLeaves
+public import DraismaVargas.LocalCases.LimitChainCore
+
+@[expose] public section
 
 /-!
 # Survival and the endpoint census for Figure 33's three members
@@ -270,12 +274,12 @@ noncomputable def bulkOccurrence (profile : W2R2SourceProfile.SourceProfile data
 theorem bulkOccurrence_double :
     bulkOccurrence profile profile.doubleLabel = profile.second := by
   unfold bulkOccurrence
-  exact if_pos rfl
+  exact ite_eq_left rfl
 
 theorem bulkOccurrence_single :
     bulkOccurrence profile profile.singleLabel = profile.third := by
   unfold bulkOccurrence
-  exact if_neg profile.labels_ne.symm
+  exact ite_eq_right profile.labels_ne.symm
 
 theorem bulkOccurrence_target (label : Fin 2) :
     (bulkOccurrence profile label).1.1.1 = star.edge label := by

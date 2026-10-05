@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.WallProgress
+module
+
+public import DraismaVargas.LocalCases.WallProgress
+
+@[expose] public section
 
 /-!
 # A third wall equation by the same route: the trivalent wall

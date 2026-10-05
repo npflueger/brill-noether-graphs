@@ -1,8 +1,12 @@
-import LowGenus.ClosedConstructionTail
-import LowGenus.ConfigurationCommon
-import LowGenus.GenusFiveConfigurations
-import LowGenus.GenusFiveCoreAtlas
-import Utilities.Subdivision.DegenerateSeparator
+module
+
+public import LowGenus.ClosedConstructionTail
+public import LowGenus.ConfigurationCommon
+public import LowGenus.GenusFiveConfigurations
+public import LowGenus.GenusFiveCoreAtlas
+public import Utilities.Subdivision.DegenerateSeparator
+
+@[expose] public section
 
 /-!
 # Atanasov--Ranganathan configuration 3, generic in the core
@@ -318,13 +322,13 @@ theorem endpointPair_arm (d : DegSpec n p) (potential : Fin n → ℤ)
   rcases hEnds with ⟨ht, hh⟩ | ⟨ht, hh⟩
   · have hrise : d.coreRise potential e = (h : ℤ) := by
       simp [DegSpec.coreRise, ht, hh, hCentre, hFar]
-    simp only [ConfigurationCommon.endpointPair, ht, hh, hrise, if_neg hNot,
+    simp only [ConfigurationCommon.endpointPair, ht, hh, hrise, ite_eq_right hNot,
       zero_add]
     rw [lastStep_pos_eq_drain hLength hLe]
     split_ifs <;> ring
   · have hrise : d.coreRise potential e = -(h : ℤ) := by
       simp [DegSpec.coreRise, ht, hh, hCentre, hFar]
-    simp only [ConfigurationCommon.endpointPair, ht, hh, hrise, if_neg hNot,
+    simp only [ConfigurationCommon.endpointPair, ht, hh, hrise, ite_eq_right hNot,
       add_zero]
     rw [firstStep_neg_eq_neg_drain hLength hLe]
     split_ifs <;> ring
@@ -870,7 +874,7 @@ theorem endpointContribution_eq_center_slots (hCore : d.core = cfg.core)
     ?_
   intro x h1 h2 h3
   obtain ⟨hT, hH⟩ := cfg.not_incident_of_ne hCenter h1 h2 h3
-  simp only [slotTerm, hCore, if_neg hT, if_neg hH, add_zero]
+  simp only [slotTerm, hCore, ite_eq_right hT, ite_eq_right hH, add_zero]
 
 theorem endpointContribution_eq_partner_slots (hCore : d.core = cfg.core)
     (potential : Fin n → ℤ) {center : Fin n} (hCenter : cfg.isCenter center = true) :
@@ -1679,7 +1683,7 @@ theorem residual_effective_of_coreVertex {potential : Fin n → ℤ}
     have hNe : d.interiorVertex e o ≠ d.coreVertex center := by
       simp [DegSpec.coreVertex, DegSpec.interiorVertex]
     rw [cfg.divisor_interiorVertex_eq_zero]
-    simp only [one_chip, if_neg hNe, sub_zero, zero_add]
+    simp only [one_chip, ite_eq_right hNe, sub_zero, zero_add]
     exact d.prin_interpolatedScript_interiorVertex_nonneg hInv e o
 
 theorem pair_residual_effective (hCore : d.core = cfg.core)

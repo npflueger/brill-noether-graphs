@@ -1,7 +1,11 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyFourKZero
-import DraismaVargas.LocalCases.W4IncomingRetainedFlags
-import DraismaVargas.LocalCases.SingleRowForest
-import DraismaVargas.LocalCases.WallAdmissibility
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyFourKZero
+public import DraismaVargas.LocalCases.W4IncomingRetainedFlags
+public import DraismaVargas.LocalCases.SingleRowForest
+public import DraismaVargas.LocalCases.WallAdmissibility
+
+@[expose] public section
 
 /-!
 # The actual valency-four anchor at a one-row wall

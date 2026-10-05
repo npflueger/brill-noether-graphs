@@ -1,4 +1,8 @@
-import LowGenus.ConfigurationTwo
+module
+
+public import LowGenus.ConfigurationTwo
+
+@[expose] public section
 
 /-!
 # The Atanasov--Ranganathan construction on row 11

@@ -1,5 +1,9 @@
-import Utilities.Subdivision.SubdivisionSeparator
-import Utilities.Foundations.Parameters
+module
+
+public import Utilities.Subdivision.SubdivisionSeparator
+public import Utilities.Foundations.Parameters
+
+@[expose] public section
 
 /-!
 # Twice-marked banana graphs: definitions

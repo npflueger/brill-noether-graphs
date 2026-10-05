@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.RetainedRowPieces
+module
+
+public import DraismaVargas.LocalCases.RetainedRowPieces
+
+@[expose] public section
 
 /-!
 # Where the marker sits along a retained row
@@ -222,7 +226,7 @@ theorem positiveSegments_pieces_of_straddles (idx : RetainedIndex spec F small)
       [cutOffsetAt face idx x.1 - ((positiveLengths iface face x.1).take (x.2 : ℕ)).sum,
         ((positiveLengths iface face x.1).take (x.2 : ℕ)).sum +
           face.realization.sourceLength (occurrence x) - cutOffsetAt face idx x.1] := by
-  rw [positiveSegments_pieces idx x, if_pos h]
+  rw [positiveSegments_pieces idx x, ite_eq_left h]
 
 /-- A straddled kept slot has exactly two pieces. -/
 theorem length_positiveSegments_pieces_of_straddles (idx : RetainedIndex spec F small)

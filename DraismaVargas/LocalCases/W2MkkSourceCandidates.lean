@@ -1,7 +1,11 @@
-import DraismaVargas.LocalCases.GlobalMkk
-import DraismaVargas.LocalCases.M11SourceGenus
-import DraismaVargas.LocalCases.W3ShiftSourceCandidates
-import DraismaVargas.Infrastructure.TargetSeparation
+module
+
+public import DraismaVargas.LocalCases.GlobalMkk
+public import DraismaVargas.LocalCases.M11SourceGenus
+public import DraismaVargas.LocalCases.W3ShiftSourceCandidates
+public import DraismaVargas.Infrastructure.TargetSeparation
+
+@[expose] public section
 
 /-!
 # Source-derived M-kk geometry (Figure 34)
@@ -686,7 +690,7 @@ noncomputable def pattern (shape : Shape profile) (detach : DetachData profile) 
           (pinSheet profile)).right ((orientedStar profile).edge 0) = false := by
         rw [joinedBackground_right]
         exact TwoStar.right_edge_zero _
-      rw [if_neg (by rw [hFalse]; simp)]
+      rw [ite_eq_right (by rw [hFalse]; simp)]
       show (data.edgePartition ((orientedStar profile).edge 0)).Refines
         (endpointPartition profile)
       rw [orientedStar_edge_zero]
@@ -695,7 +699,7 @@ noncomputable def pattern (shape : Shape profile) (detach : DetachData profile) 
           (pinSheet profile)).right ((orientedStar profile).edge 1) = true := by
         rw [joinedBackground_right]
         exact TwoStar.right_edge_one _
-      rw [if_pos hTrue]
+      rw [ite_eq_left hTrue]
       show (data.edgePartition ((orientedStar profile).edge 1)).Refines
         ((data.vertexPartition wall).detachSheet (pinSheet profile) detach.remainder
           detach.ne_remainder detach.wallTogether)

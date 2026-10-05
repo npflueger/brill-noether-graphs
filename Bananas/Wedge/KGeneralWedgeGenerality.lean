@@ -1,7 +1,11 @@
-import Bananas.CrossOneOff.AffineReduction
-import Bananas.Classification.SciWeierstrass
-import Bananas.Sections.SectionSixDefinitions
-import Bananas.Wedge.WedgeSubmodularity
+module
+
+public import Bananas.CrossOneOff.AffineReduction
+public import Bananas.Classification.SciWeierstrass
+public import Bananas.Sections.SectionSixDefinitions
+public import Bananas.Wedge.WedgeSubmodularity
+
+@[expose] public section
 
 /-!
 # Gluing a general marked graph to a graph with general transmission

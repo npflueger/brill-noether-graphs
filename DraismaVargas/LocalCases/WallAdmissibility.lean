@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.SourceFibreForest
-import DraismaVargas.LocalCases.WallDegeneration
+module
+
+public import DraismaVargas.LocalCases.SourceFibreForest
+public import DraismaVargas.LocalCases.WallDegeneration
+
+@[expose] public section
 
 /-!
 # `DanglingCompatible` is derivable at a wall event
@@ -206,7 +210,7 @@ theorem cross_num_edges_image (data : GluingDatum target degree)
       by_cases hCase : (data.sourceEnds e.1).1 = x ∧ (data.sourceEnds e.1).2 = y
       · exact ⟨⟨by rw [← h1, hCase.1], by rw [← h2, hCase.2]⟩,
           Or.inl (Prod.ext hCase.1 hCase.2)⟩
-      · rw [if_neg hCase] at hPos
+      · rw [ite_eq_right hCase] at hPos
         exact absurd hPos (lt_irrefl 0)
     · have hu : (data.sourceEnds e.1).2 ∈ S := (hmem _).mpr (by rw [h2]; exact hp)
       have hv : (data.sourceEnds e.1).1 ∉ S := fun hIn => hq (by
@@ -218,17 +222,17 @@ theorem cross_num_edges_image (data : GluingDatum target degree)
       by_cases hCase : (data.sourceEnds e.1).2 = x ∧ (data.sourceEnds e.1).1 = y
       · exact ⟨⟨by rw [← h2, hCase.1], by rw [← h1, hCase.2]⟩,
           Or.inr (Prod.ext hCase.2 hCase.1)⟩
-      · rw [if_neg hCase] at hPos
+      · rw [ite_eq_right hCase] at hPos
         exact absurd hPos (lt_irrefl 0)
   rw [num_edges_contract_sourceGraph]
   by_cases hpq : p = sourceVertexMap data hc hab hOne x ∧
       q = sourceVertexMap data hc hab hOne y
-  · rw [if_pos hpq]
+  · rw [ite_eq_left hpq]
     have hxy : sourceVertexMap data hc hab hOne x ≠ sourceVertexMap data hc hab hOne y := by
       intro hEq
       exact hq (by rw [hpq.2, ← hEq, ← hpq.1]; exact hp)
     have hOneUp : num_edges data.sourceGraph x y = 1 := by
-      rw [hcross x hx y hy, if_pos ⟨rfl, rfl⟩]
+      rw [hcross x hx y hy, ite_eq_left ⟨rfl, rfl⟩]
     rw [← hOneUp, num_edges_sourceGraph]
     refine Finset.card_bij' (fun e _ => e.1) (fun e he => ⟨e, ?_⟩) ?_ ?_ ?_ ?_
     · intro hCon
@@ -247,7 +251,7 @@ theorem cross_num_edges_image (data : GluingDatum target degree)
       rfl
     · intro e _
       rfl
-  · rw [if_neg hpq, Finset.card_eq_zero, Finset.filter_eq_empty_iff]
+  · rw [ite_eq_right hpq, Finset.card_eq_zero, Finset.filter_eq_empty_iff]
     intro e _
     exact fun hBad => hpq (key e hBad).1
 
@@ -331,7 +335,7 @@ theorem cross_num_edges_preimage (data : GluingDatum target degree)
   have hyT : sourceVertexMap data hc hab hOne y ∉ T := fun hIn => hy ((hmem y).mpr hIn)
   have hOneDown : num_edges (contractDatum data hc hab hOne).sourceGraph
       (sourceVertexMap data hc hab hOne x) (sourceVertexMap data hc hab hOne y) = 1 := by
-    rw [hcross _ hxT _ hyT, if_pos ⟨rfl, rfl⟩]
+    rw [hcross _ hxT _ hyT, ite_eq_left ⟨rfl, rfl⟩]
   intro u hu v hv
   have huT : sourceVertexMap data hc hab hOne u ∈ T := (hmem u).mp hu
   have hvT : sourceVertexMap data hc hab hOne v ∉ T := fun hIn => hv ((hmem v).mpr hIn)
@@ -339,12 +343,12 @@ theorem cross_num_edges_preimage (data : GluingDatum target degree)
     fun hEq => hvT (hEq ▸ huT)
   by_cases hCase : u = x ∧ v = y
   · obtain ⟨rfl, rfl⟩ := hCase
-    rw [if_pos ⟨rfl, rfl⟩]
+    rw [ite_eq_left ⟨rfl, rfl⟩]
     have hLe := num_edges_le_contract data hc hab hOne huv
     rw [hOneDown] at hLe
     have hPos := num_edges_sourceGraph_pos data e hEnds
     omega
-  · rw [if_neg hCase]
+  · rw [ite_eq_right hCase]
     by_contra hPos
     obtain ⟨e', hEnds'⟩ := exists_sourceEnds_of_num_edges_pos data
       (Nat.pos_of_ne_zero hPos)
@@ -391,7 +395,7 @@ theorem cross_num_edges_preimage (data : GluingDatum target degree)
         have hux : u = x := (congrArg Prod.snd h').symm
         have hvy : v = y := (congrArg Prod.fst h').symm
         exact hCase ⟨hux, hvy⟩
-    · rw [if_neg hImage] at hDownPos
+    · rw [ite_eq_right hImage] at hDownPos
       exact absurd hDownPos (lt_irrefl 0)
 
 /-! ## Connectivity of a saturated side

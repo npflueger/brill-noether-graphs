@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.LeafFacetNoReturn
-import DraismaVargas.LocalCases.NonTrivalentValencyThreeDescent
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoExit
+module
+
+public import DraismaVargas.LocalCases.LeafFacetNoReturn
+public import DraismaVargas.LocalCases.NonTrivalentValencyThreeDescent
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoExit
+
+@[expose] public section
 
 /-!
 # `HasPathEnds` of the wall datum, and its transport to the Part II candidates

@@ -1,5 +1,9 @@
-import Utilities.Gonality.BurnedSet
-import Mathlib.Tactic
+module
+
+public import Utilities.Gonality.BurnedSet
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # A linear non-existence certificate for positive rank

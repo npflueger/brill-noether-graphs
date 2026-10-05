@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W4StablePathCensus
+module
+
+public import DraismaVargas.LocalCases.W4StablePathCensus
+
+@[expose] public section
 
 /-!
 # Finite stable-path assignments for W4
@@ -76,13 +80,13 @@ private theorem count_filterMap_self
           · simp [hHead, hEq, hItem, ih]
       · by_cases hEq : head = item
         · subst head
-          simp only [List.filterMap_cons, if_neg hHead]
-          rw [ih, if_neg hHead]
+          simp only [List.filterMap_cons, ite_eq_right hHead]
+          rw [ih, ite_eq_right hHead]
         · by_cases hItem : keep item
           · rw [List.count_cons_of_ne hEq]
             simp [hHead, hItem, ih]
-          · simp only [List.filterMap_cons, if_neg hHead]
-            rw [ih, if_neg hItem]
+          · simp only [List.filterMap_cons, ite_eq_right hHead]
+            rw [ih, ite_eq_right hItem]
             simp [hItem]
 
 /-- An old edge occurs once in its assigned row and nowhere else. -/
@@ -267,16 +271,16 @@ theorem nd3OldOccurrences_nodup
     (activeSheet block.second) (activeSheet block.third)
   simp [nd3OldOccurrences, hFirstSecond, hFirstThird, hSecondThird]
 
-private theorem indicator_eq_count_of_iff
+theorem indicator_eq_count_of_iff
     {α : Type*} [DecidableEq α] {selected : Prop} [Decidable selected]
     {occurrence : α} {occurrences : Multiset α}
     (hNodup : occurrences.Nodup)
     (hSelected : selected ↔ occurrence ∈ occurrences) :
     (if selected then 1 else 0) = occurrences.count occurrence := by
   by_cases h : selected
-  · rw [if_pos h]
+  · rw [ite_eq_left h]
     exact (Multiset.count_eq_one_of_mem hNodup (hSelected.mp h)).symm
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     exact (Multiset.count_eq_zero.mpr fun hMem ↦
       h (hSelected.mpr hMem)).symm
 
@@ -294,7 +298,7 @@ theorem count_nd2NewOccurrences
       W4TargetPairings.Pairing.labelRight pairing block.first =
         W4TargetPairings.Pairing.labelRight pairing block.second
   · simp [hSame]
-  · rw [if_neg hSame, Multiset.count_singleton]
+  · rw [ite_eq_right hSame, Multiset.count_singleton]
     by_cases hRow : row = newRow pairing
     · by_cases hSheet : sheet = sourceBlock.1
       · simp [hRow, hSheet]

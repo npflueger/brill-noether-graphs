@@ -1,5 +1,9 @@
-import DraismaVargas.Infrastructure.GluingRelabel
-import Utilities.Foundations.UnderlyingSimpleGraph
+module
+
+public import DraismaVargas.Infrastructure.GluingRelabel
+public import Utilities.Foundations.UnderlyingSimpleGraph
+
+@[expose] public section
 
 /-!
 # A target branch as a Boolean relabelling region

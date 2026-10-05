@@ -1,4 +1,8 @@
-import GenusSixExistence.BrillNoetherRank.Tripod.GluingExtend
+module
+
+public import GenusSixExistence.BrillNoetherRank.Tripod.GluingExtend
+
+@[expose] public section
 
 /-!
 # The core identification of the deletion
@@ -306,13 +310,13 @@ theorem newVertex_eq_of_three_le (hT0 : genus T = 0) {u u' : π.T₃.V}
     intro v hv
     have h := DraismaVargas.LocalCases.NonDanglingValency.nonDanglingValency_ne_one _ hG
       (newVertex D π v)
-    rw [nonDanglingValency_newVertex D π hD hT, π.sum_markVertex_eq, if_neg hv, add_zero] at h
+    rw [nonDanglingValency_newVertex D π hD hT, π.sum_markVertex_eq, ite_eq_right hv, add_zero] at h
     exact h
   have hXM : ∀ v ∈ π.markSet, tCount (NewSurvives D π) v ≠ 0 := by
     intro v hv
     have h := DraismaVargas.LocalCases.NonDanglingValency.nonDanglingValency_ne_one _ hG
       (newVertex D π v)
-    rw [nonDanglingValency_newVertex D π hD hT, π.sum_markVertex_eq, if_pos hv] at h
+    rw [nonDanglingValency_newVertex D π hD hT, π.sum_markVertex_eq, ite_eq_left hv] at h
     omega
   have h := card_branch_eq_one (π.T₃_connected hT) (π.T₃_genus hT0) π.markSet π.card_markSet
     (NewSurvives D π) hX hXM
@@ -487,7 +491,7 @@ theorem glabel_cut₀_anc (z : NonDanglingEdge (refine₃ D π)) :
 theorem mergeSlot_isSome_of_isGSlot {j : Fin (p + 1 + 1 + 1 + 3)} (hj : IsGSlot j) :
     ∃ i, mergeSlot s j = some i := by
   unfold mergeSlot
-  rw [dif_pos (show (j : ℕ) < p + 1 + 1 + 1 from hj)]
+  rw [dite_eq_left (show (j : ℕ) < p + 1 + 1 + 1 from hj)]
   exact ⟨_, rfl⟩
 
 include hS in
@@ -1065,7 +1069,7 @@ theorem sum_mergeSlot_coreIncidence {n p : ℕ} (core : Core n p) (s : MarkSlots
   have hleg : ∀ k : Fin 3, mergeSlot s (Fin.natAdd (p + 1 + 1 + 1) k) = none := by
     intro k
     unfold mergeSlot
-    rw [dif_neg (by simp only [Fin.val_natAdd]; omega)]
+    rw [dite_eq_right (by simp only [Fin.val_natAdd]; omega)]
   have hc : ∀ i : Fin (p + 1 + 1 + 1),
       coreIncidence (tripodCore core s) (oldLabel u) (Fin.castAdd 3 i) =
         coreIncidence (markedCore core s) u.castSucc.castSucc.castSucc i := by
@@ -1073,7 +1077,7 @@ theorem sum_mergeSlot_coreIncidence {n p : ℕ} (core : Core n p) (s : MarkSlots
     unfold coreIncidence
     rw [Dichotomy.tripodCore_tail_castAdd, Dichotomy.tripodCore_head_castAdd]
     simp only [oldLabel, Fin.castSucc_inj]
-  simp only [hleg, reduceCtorEq, if_false, Finset.sum_const_zero, add_zero, mergeSlot_castAdd,
+  simp only [hleg, reduceCtorEq, ite_false, Finset.sum_const_zero, add_zero, mergeSlot_castAdd,
     Option.some_inj, hc]
   have := sum_merge₃_mul core s u (fun j' ↦ if j' = j then 1 else 0)
   simp only [ite_mul, one_mul, zero_mul] at this

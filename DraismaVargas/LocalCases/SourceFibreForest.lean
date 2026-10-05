@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.CycleRows
-import DraismaVargas.LocalCases.MonovalentWall
+module
+
+public import DraismaVargas.LocalCases.CycleRows
+public import DraismaVargas.LocalCases.MonovalentWall
+
+@[expose] public section
 
 /-!
 # A non-collapsed stable metric forces forest contraction fibres

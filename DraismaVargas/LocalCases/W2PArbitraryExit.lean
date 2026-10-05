@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.W2PGraphData
-import DraismaVargas.LocalCases.W2PLimitMatrix
-import DraismaVargas.LocalCases.StableGraphFullDimensional
+module
+
+public import DraismaVargas.LocalCases.W2PGraphData
+public import DraismaVargas.LocalCases.W2PLimitMatrix
+public import DraismaVargas.LocalCases.StableGraphFullDimensional
+
+@[expose] public section
 
 /-!
 # Figure 35's certified exit: the outgoing full-dimensional presentation

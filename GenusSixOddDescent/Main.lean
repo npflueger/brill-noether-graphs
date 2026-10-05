@@ -1,10 +1,14 @@
-import Utilities.Gonality.CoreBridgeless
-import GenusSixOddDescent.Chain
-import GenusSixOddDescent.Cost
-import GenusSixOddDescent.HubSystem
-import Utilities.Iso.FossilTopology
-import GenusSixOddDescent.Reduction
-import GenusSixOddDescent.Statement
+module
+
+public import Utilities.Gonality.CoreBridgeless
+public import GenusSixOddDescent.Chain
+public import GenusSixOddDescent.Cost
+public import GenusSixOddDescent.HubSystem
+public import Utilities.Iso.FossilTopology
+public import GenusSixOddDescent.Reduction
+public import GenusSixOddDescent.Statement
+
+@[expose] public section
 
 /-!
 # Odd subdivision descent and conditional genus-six existence

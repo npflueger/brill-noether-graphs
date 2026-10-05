@@ -1,5 +1,9 @@
-import DraismaVargasCount.StepSupplyReduction
-import DraismaVargasCount.GeometricCount
+module
+
+public import DraismaVargasCount.StepSupplyReduction
+public import DraismaVargasCount.GeometricCount
+
+@[expose] public section
 
 /-!
 # An odd closed member at every non-negative request

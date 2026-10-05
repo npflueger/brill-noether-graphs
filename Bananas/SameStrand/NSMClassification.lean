@@ -1,9 +1,13 @@
-import Bananas.Transmission.FarMarkNegativeAPI
-import Bananas.CrossOneOff.LengthTwoCrossMonotonicity
-import Bananas.SameStrand.NSMCrossWitness
-import Bananas.SameStrand.NSMSecondCrossWitness
-import Bananas.SameStrand.SameStrandInteriorNegative
-import Bananas.Theta.ThetaExceptionalArithmetic
+module
+
+public import Bananas.Transmission.FarMarkNegativeAPI
+public import Bananas.CrossOneOff.LengthTwoCrossMonotonicity
+public import Bananas.SameStrand.NSMCrossWitness
+public import Bananas.SameStrand.NSMSecondCrossWitness
+public import Bananas.SameStrand.SameStrandInteriorNegative
+public import Bananas.Theta.ThetaExceptionalArithmetic
+
+@[expose] public section
 
 /-!
 # Corrected interior classification for Theorem 3.9

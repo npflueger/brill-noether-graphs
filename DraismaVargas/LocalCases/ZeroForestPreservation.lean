@@ -1,7 +1,11 @@
-import DraismaVargas.Infrastructure.ContractionFibre
-import DraismaVargas.Infrastructure.IteratedContraction
-import DraismaVargas.Infrastructure.IteratedContractionSource
-import DraismaVargas.LocalCases.ZeroForestBridge
+module
+
+public import DraismaVargas.Infrastructure.ContractionFibre
+public import DraismaVargas.Infrastructure.IteratedContraction
+public import DraismaVargas.Infrastructure.IteratedContractionSource
+public import DraismaVargas.LocalCases.ZeroForestBridge
+
+@[expose] public section
 
 /-!
 # The zero set stays a census forest under contraction

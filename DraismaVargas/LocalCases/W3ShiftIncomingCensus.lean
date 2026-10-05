@@ -1,7 +1,11 @@
-import DraismaVargas.LocalCases.W3ShiftLimitRows
-import DraismaVargas.LocalCases.W3Nd3IncomingCensus
-import DraismaVargas.LocalCases.IncomingMatchingCore
-import DraismaVargas.LocalCases.W3Nd2IncomingMemberMatching
+module
+
+public import DraismaVargas.LocalCases.W3ShiftLimitRows
+public import DraismaVargas.LocalCases.W3Nd3IncomingCensus
+public import DraismaVargas.LocalCases.IncomingMatchingCore
+public import DraismaVargas.LocalCases.W3Nd2IncomingMemberMatching
+
+@[expose] public section
 
 /-!
 # The incoming census at a `w3Shift`-classified wall

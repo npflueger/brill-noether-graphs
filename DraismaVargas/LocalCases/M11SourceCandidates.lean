@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W2IncomingClassification
-import DraismaVargas.LocalCases.GlobalM11Arbitrary
+module
+
+public import DraismaVargas.LocalCases.W2IncomingClassification
+public import DraismaVargas.LocalCases.GlobalM11Arbitrary
+
+@[expose] public section
 
 /-!
 # M11 candidates derived from an actual Case {w2} source profile
@@ -63,7 +67,7 @@ theorem backgroundResolution_right_riemannHurwitz
     List.length_cons, List.length_nil, hNew, hFirst, hSecond]
   omega
 
-private theorem incidentEdges_eq_pair (star : TwoStar target wall) :
+theorem incidentEdges_eq_pair (star : TwoStar target wall) :
     GluingDatum.incidentEdges wall = {star.edge 0, star.edge 1} := by
   classical
   ext edge
@@ -80,7 +84,7 @@ private theorem incidentEdges_eq_pair (star : TwoStar target wall) :
     · exact star.edge_mem_incidentEdges 0
     · rw [Finset.mem_singleton.mp hEdge]; exact star.edge_mem_incidentEdges 1
 
-private theorem all_right_occurrences (star : TwoStar target wall) :
+theorem all_right_occurrences (star : TwoStar target wall) :
     (↑([star.edge 0, star.edge 1] : List target.edges) : Multiset target.edges) =
       (wallEdgesAssigned target wall (fun _ ↦ true) true).val := by
   classical

@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.M11SplitSurvival
-import DraismaVargas.LocalCases.SheetRelabelPruning
+module
+
+public import DraismaVargas.LocalCases.M11SplitSurvival
+public import DraismaVargas.LocalCases.SheetRelabelPruning
+
+@[expose] public section
 
 /-!
 # Actual surviving and deleted occurrences after the M11 remote swap

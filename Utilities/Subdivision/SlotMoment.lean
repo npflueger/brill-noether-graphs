@@ -1,5 +1,9 @@
-import Utilities.Subdivision.InteriorFiring
-import Utilities.IntegralGeometry.Denominator
+module
+
+public import Utilities.Subdivision.InteriorFiring
+public import Utilities.IntegralGeometry.Denominator
+
+@[expose] public section
 
 /-!
 # Consecutive-index row divisibility and the slot-moment arithmetic

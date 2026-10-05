@@ -1,6 +1,10 @@
-import DraismaVargas.Infrastructure.ContractionRamification
-import DraismaVargas.Infrastructure.NonnegativeRationalRealization
-import Utilities.Iso.GraphContractionFibreTree
+module
+
+public import DraismaVargas.Infrastructure.ContractionRamification
+public import DraismaVargas.Infrastructure.NonnegativeRationalRealization
+public import Utilities.Iso.GraphContractionFibreTree
+
+@[expose] public section
 
 /-!
 # Contracting a whole set of target edge occurrences

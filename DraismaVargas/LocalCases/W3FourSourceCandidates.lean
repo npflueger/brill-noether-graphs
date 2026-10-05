@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W3Nd2SourceCandidates
+module
+
+public import DraismaVargas.LocalCases.W3Nd2SourceCandidates
+
+@[expose] public section
 
 /-!
 # Source-derived W3 four-candidate geometry (Figure 28, Equation (2))
@@ -747,7 +751,7 @@ noncomputable def background (grown : GrowProfile input) :
       exact SheetPartition.Refines.refl fine
     · have hRight : rightOf grown.growTarget edge = true := by
         simp [rightOf, hEq]
-      rw [hRight, if_pos rfl]
+      rw [hRight, ite_eq_left rfl]
       change (data.edgePartition edge).Refines (data.vertexPartition wall)
       exact refines_of_mem_incidentEdges data hAt
   · rw [wallEdgesAssigned_false orientation]
@@ -838,7 +842,7 @@ noncomputable def growPattern (grown : GrowProfile input) :
       change (data.edgePartition edge).Refines
         (if rightOf grown.growTarget edge then
           (data.vertexPartition wall) else grown.growPartition)
-      rw [hRight, if_pos rfl]
+      rw [hRight, ite_eq_left rfl]
       exact refines_of_mem_incidentEdges data hAt
   · intro anchor hAnchor sheet hSheet
     have hDistSheet : (data.vertexPartition wall).Rel

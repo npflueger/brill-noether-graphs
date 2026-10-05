@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.W3Nd2RowDescent
-import DraismaVargas.LocalCases.ResolutionStableIncidence
-import DraismaVargas.LocalCases.StableGraphIncidence
+module
+
+public import DraismaVargas.LocalCases.W3Nd2RowDescent
+public import DraismaVargas.LocalCases.ResolutionStableIncidence
+public import DraismaVargas.LocalCases.StableGraphIncidence
+
+@[expose] public section
 
 /-!
 # Stable-incidence certificate for the true Figure 31 coarse member
@@ -176,7 +180,7 @@ theorem coarseBranchVertexMap_of_wall
       (coarseCandidate input profile).datum.sourceEndpoint (freshVertex target)
         vertex.1.1.2 := by
   unfold coarseBranchVertexMap
-  exact congrArg Subtype.val (dif_pos hAt)
+  exact congrArg Subtype.val (dite_eq_left hAt)
 
 theorem coarseBranchVertexMap_of_away
     (input : W3SourceInput data star)
@@ -185,7 +189,7 @@ theorem coarseBranchVertexMap_of_away
     (coarseBranchVertexMap input profile vertex).1 =
       retainedVertex (coarseCandidate input profile) vertex.1 := by
   unfold coarseBranchVertexMap
-  exact congrArg Subtype.val (dif_neg hAway)
+  exact congrArg Subtype.val (dite_eq_right hAway)
 
 /-- On background blocks, equality of fresh endpoints reflects equality of
 the corresponding old wall endpoints. -/

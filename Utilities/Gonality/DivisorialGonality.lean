@@ -1,5 +1,9 @@
-import Utilities.Foundations.RankInvariance
-import ChipFiringWithLean.RiemannRoch
+module
+
+public import Utilities.Foundations.RankInvariance
+public import ChipFiringWithLean.RiemannRoch
+
+@[expose] public section
 
 /-!
 # Divisorial gonality as a natural number

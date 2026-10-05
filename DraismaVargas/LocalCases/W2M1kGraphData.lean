@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W2M1kRowDescent
+module
+
+public import DraismaVargas.LocalCases.W2M1kRowDescent
+
+@[expose] public section
 
 /-!
 # Figure 33's stable incidence graph, for the two divalent members
@@ -204,11 +208,11 @@ noncomputable def dividedSheet (divided : DividedData profile) (sheet : Fin degr
 
 @[simp] theorem dividedSheet_pin (divided : DividedData profile) :
     dividedSheet divided (pinSheet profile profile.doubleLabel) =
-      pinSheet profile profile.doubleLabel := if_pos rfl
+      pinSheet profile profile.doubleLabel := ite_eq_left rfl
 
 theorem dividedSheet_of_ne (divided : DividedData profile) {sheet : Fin degree}
     (hNe : sheet ≠ pinSheet profile profile.doubleLabel) :
-    dividedSheet divided sheet = divided.third := if_neg hNe
+    dividedSheet divided sheet = divided.third := ite_eq_right hNe
 
 /-- **The branch flag of `M⁽²⁾`.** -/
 noncomputable def dividedFlag (shape : Shape profile) (divided : DividedData profile)
@@ -221,12 +225,12 @@ theorem dividedFlag_double (shape : Shape profile) (divided : DividedData profil
     {edge : data.SourceEdge} (hTarget : edge.1.1 = star.edge profile.doubleLabel) :
     dividedFlag shape divided edge =
       (DividedData.candidate shape divided).newSourceEdge
-        (dividedSheet divided edge.1.2) := if_pos hTarget
+        (dividedSheet divided edge.1.2) := ite_eq_left hTarget
 
 theorem dividedFlag_not_double (shape : Shape profile) (divided : DividedData profile)
     {edge : data.SourceEdge} (hTarget : ¬ edge.1.1 = star.edge profile.doubleLabel) :
     dividedFlag shape divided edge =
-      (DividedData.candidate shape divided).oldSourceEdge edge := if_neg hTarget
+      (DividedData.candidate shape divided).oldSourceEdge edge := ite_eq_right hTarget
 
 /-- `e₁` goes to the regrown singleton over its own sheet. -/
 theorem dividedFlag_first (shape : Shape profile) (divided : DividedData profile) :
@@ -439,13 +443,13 @@ theorem joinedFlag_single (profile : W2R2SourceProfile.SourceProfile data star b
     (geometry : GlobalM1k.Geometry data wall) {edge : data.SourceEdge}
     (hTarget : edge.1.1 = star.edge profile.singleLabel) :
     joinedFlag profile geometry edge =
-      (joinedCandidate star geometry).newSourceEdge block.1 := if_pos hTarget
+      (joinedCandidate star geometry).newSourceEdge block.1 := ite_eq_left hTarget
 
 theorem joinedFlag_not_single (profile : W2R2SourceProfile.SourceProfile data star block)
     (geometry : GlobalM1k.Geometry data wall) {edge : data.SourceEdge}
     (hTarget : ¬ edge.1.1 = star.edge profile.singleLabel) :
     joinedFlag profile geometry edge =
-      (joinedCandidate star geometry).oldSourceEdge edge := if_neg hTarget
+      (joinedCandidate star geometry).oldSourceEdge edge := ite_eq_right hTarget
 
 /-- **The flag dictionary at `M⁽³⁾`'s branch vertex.** -/
 theorem joined_selectedFlag_star (input : W2SourceInput data star) (shape : Shape profile)

@@ -1,4 +1,8 @@
-import DraismaVargasCount.Transport
+module
+
+public import DraismaVargasCount.Transport
+
+@[expose] public section
 
 /-!
 # Orientation-independent transport of gluing data

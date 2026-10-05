@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.M11SplitSurvival
+module
+
+public import DraismaVargas.LocalCases.M11SplitSurvival
+
+@[expose] public section
 
 /-!
 # The actual endpoint geometry of the joined M11 candidate

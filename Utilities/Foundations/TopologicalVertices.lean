@@ -1,4 +1,8 @@
-import ChipFiringWithLean.Basic
+module
+
+public import ChipFiringWithLean.Basic
+
+@[expose] public section
 
 /-!
 # Topological vertices

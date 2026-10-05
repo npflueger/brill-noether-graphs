@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.W4OutgoingSurvival
-import DraismaVargas.LocalCases.ResolutionStableIncidence
-import DraismaVargas.LocalCases.StableSourceMatrix
+module
+
+public import DraismaVargas.LocalCases.W4OutgoingSurvival
+public import DraismaVargas.LocalCases.ResolutionStableIncidence
+public import DraismaVargas.LocalCases.StableSourceMatrix
+
+@[expose] public section
 
 /-!
 # Occurrence-induced stable rows and branch incidences for the outgoing W4
@@ -815,7 +819,7 @@ noncomputable def rowOfEdge (input : AuxR0SourceInput data star)
   classical
   have hOld : ∃ other : NonDanglingEdge data,
       retained input pairing other = retained input pairing old := ⟨old, rfl⟩
-  rw [rowOfEdge, dif_pos hOld]
+  rw [rowOfEdge, dite_eq_left hOld]
   exact congrArg NonDanglingEdge.stablePath
     (retained_injective input pairing (Classical.choose_spec hOld))
 
@@ -837,7 +841,7 @@ theorem rowOfEdge_new (input : AuxR0SourceInput data star) (pairing : Fin 3)
       (newOldEdge input pairing sheet hSurvives).stablePath := by
   classical
   have hNotOld := regrownEdge_not_retained input pairing sheet hSurvives
-  rw [rowOfEdge, dif_neg hNotOld]
+  rw [rowOfEdge, dite_eq_right hNotOld]
   refine congrArg NonDanglingEdge.stablePath (Subtype.ext ?_)
   refine newOldSourceEdge_congr input pairing _ sheet ?_
   exact (congrArg Subtype.val
@@ -1386,7 +1390,7 @@ theorem branchImage_away (input : AuxR0SourceInput data star) (pairing : Fin 3)
     (vertex : data.SourceVertex) (hAway : vertex.1.1 ≠ wall) :
     branchImage input pairing vertex = retainedVertex (member input pairing)
       vertex := by
-  rw [branchImage, if_neg hAway]
+  rw [branchImage, ite_eq_right hAway]
 
 theorem branchImage_wall (input : AuxR0SourceInput data star) (pairing : Fin 3)
     (sourceBlock : WallBlock data wall) :
@@ -1394,7 +1398,7 @@ theorem branchImage_wall (input : AuxR0SourceInput data star) (pairing : Fin 3)
       sideEndpoint input pairing (branchSide input pairing sourceBlock)
         sourceBlock.1 := by
   have hAt : (WallBlock.sourceVertex data wall sourceBlock).1.1 = wall := rfl
-  rw [branchImage, if_pos hAt, sourceVertex_sheet, WallBlock.ofSheet_anchor]
+  rw [branchImage, ite_eq_left hAt, sourceVertex_sheet, WallBlock.ofSheet_anchor]
 
 theorem three_le_branchImage (input : AuxR0SourceInput data star)
     (pairing : Fin 3) (vertex : data.SourceVertex)
@@ -1447,7 +1451,7 @@ theorem branchImage_injective (input : AuxR0SourceInput data star)
     (pairing : Fin 3) : Function.Injective (branchImage input pairing) := by
   intro first second hEq
   by_cases hFirst : first.1.1 = wall <;> by_cases hSecond : second.1.1 = wall
-  · rw [branchImage, if_pos hFirst, branchImage, if_pos hSecond] at hEq
+  · rw [branchImage, ite_eq_left hFirst, branchImage, ite_eq_left hSecond] at hEq
     have hSide := sideVertex_inj
       (congrArg (fun vertex : (member input pairing).datum.SourceVertex ↦
         vertex.1.1) hEq)
@@ -1462,7 +1466,7 @@ theorem branchImage_injective (input : AuxR0SourceInput data star)
     have hSecondRepr : (data.vertexPartition wall).repr second.1.2 =
         second.1.2 := hSecond ▸ second.2
     exact hFirstRepr.symm.trans (hWall.trans hSecondRepr)
-  · rw [branchImage, if_pos hFirst, branchImage, if_neg hSecond] at hEq
+  · rw [branchImage, ite_eq_left hFirst, branchImage, ite_eq_right hSecond] at hEq
     have hTarget : sideVertex target wall
           (branchSide input pairing (WallBlock.ofSheet data wall first.1.2)) =
         oldVertex target second.1.1 :=
@@ -1478,7 +1482,7 @@ theorem branchImage_injective (input : AuxR0SourceInput data star)
         have hAbsurd : (Sum.inr () : Vertex target) = Sum.inl second.1.1 :=
           hTarget
         simp at hAbsurd
-  · rw [branchImage, if_neg hFirst, branchImage, if_pos hSecond] at hEq
+  · rw [branchImage, ite_eq_right hFirst, branchImage, ite_eq_left hSecond] at hEq
     have hTarget : oldVertex target first.1.1 = sideVertex target wall
         (branchSide input pairing (WallBlock.ofSheet data wall second.1.2)) :=
       congrArg (fun vertex : (member input pairing).datum.SourceVertex ↦
@@ -1493,7 +1497,7 @@ theorem branchImage_injective (input : AuxR0SourceInput data star)
         have hAbsurd : (Sum.inl first.1.1 : Vertex target) = Sum.inr () :=
           hTarget
         simp at hAbsurd
-  · rw [branchImage, if_neg hFirst, branchImage, if_neg hSecond] at hEq
+  · rw [branchImage, ite_eq_right hFirst, branchImage, ite_eq_right hSecond] at hEq
     exact ResolutionStableIncidence.retainedVertex_injective_away
       (member input pairing) first second hFirst hSecond hEq
 
@@ -1627,13 +1631,13 @@ theorem incidenceCount_nd3_branch (input : AuxR0SourceInput data star)
     simp only [Finset.mem_filter, mem_incidentEdges] at hEdge ⊢
     obtain ⟨hIncident, hRow⟩ := hEdge
     by_cases hIsSingleton : edge.1 = (nd3SingletonEdge picture pairing).1
-    · rw [if_pos hIsSingleton]
+    · rw [ite_eq_left hIsSingleton]
       refine ⟨((mem_nonDanglingIncident _ _ _).mp
         ((hCensus _).mpr (Or.inr rfl))).2, ?_⟩
       rw [← hRegRow, ← hRow, stablePathEquiv_mk,
         show edge = nd3SingletonEdge picture pairing from
           Subtype.ext hIsSingleton]
-    · rw [if_neg hIsSingleton]
+    · rw [ite_eq_right hIsSingleton]
       obtain ⟨hBlock, hLabelled⟩ :=
         old_survivor_info data star sourceBlock edge.1 hIncident
       obtain ⟨label, hLabelActive, hEdgeValue⟩ :=
@@ -1656,13 +1660,13 @@ theorem incidenceCount_nd3_branch (input : AuxR0SourceInput data star)
       by_cases hSecondSingleton :
         second.1 = (nd3SingletonEdge picture pairing).1
     · exact Subtype.ext (hFirstSingleton.trans hSecondSingleton.symm)
-    · rw [if_pos hFirstSingleton, if_neg hSecondSingleton] at hEq
+    · rw [ite_eq_left hFirstSingleton, ite_eq_right hSecondSingleton] at hEq
       exact absurd (congrArg Subtype.val hEq).symm
         (oldSourceEdge_ne_newSourceEdge (member input pairing) _ _)
-    · rw [if_neg hFirstSingleton, if_pos hSecondSingleton] at hEq
+    · rw [ite_eq_right hFirstSingleton, ite_eq_left hSecondSingleton] at hEq
       exact absurd (congrArg Subtype.val hEq)
         (oldSourceEdge_ne_newSourceEdge (member input pairing) _ _)
-    · rw [if_neg hFirstSingleton, if_neg hSecondSingleton] at hEq
+    · rw [ite_eq_right hFirstSingleton, ite_eq_right hSecondSingleton] at hEq
       exact retained_injective input pairing hEq
   · intro edge hEdge
     simp only [Finset.mem_filter, mem_incidentEdges] at hEdge
@@ -1688,7 +1692,7 @@ theorem incidenceCount_nd3_branch (input : AuxR0SourceInput data star)
           (picture.active_sheet label hLabelActive),
           (stablePathEquiv input pairing).injective ?_⟩
         rw [stablePathEquiv_mk, ← hRow, hEdgeEq]
-      · rw [if_neg hNotSingleton]
+      · rw [ite_eq_right hNotSingleton]
         exact hEdgeEq.symm
     · refine ⟨nd3SingletonEdge picture pairing, ?_, ?_⟩
       · simp only [Finset.mem_filter, mem_incidentEdges]
@@ -1697,7 +1701,7 @@ theorem incidenceCount_nd3_branch (input : AuxR0SourceInput data star)
           (stablePathEquiv input pairing).injective ?_⟩
         rw [stablePathEquiv_mk, hRegRow, ← hRow]
         exact congrArg NonDanglingEdge.stablePath (Subtype.ext hValue).symm
-      · rw [if_pos rfl]
+      · rw [ite_eq_left rfl]
         exact (Subtype.ext hValue).symm
 
 /-- **The occurrence-induced branch/row incidence equivalence of an outgoing W4

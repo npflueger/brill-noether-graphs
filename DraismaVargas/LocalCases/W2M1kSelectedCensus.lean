@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W2M1kIncomingMatching
-import DraismaVargas.LocalCases.W2MkkSelectedCensus
+module
+
+public import DraismaVargas.LocalCases.W2M1kIncomingMatching
+public import DraismaVargas.LocalCases.W2MkkSelectedCensus
+
+@[expose] public section
 
 /-!
 # The selected-class census at a `w2M1k` wall

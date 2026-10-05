@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W3FourRowDescent
-import DraismaVargas.LocalCases.W3FourLimitRows
+module
+
+public import DraismaVargas.LocalCases.W3FourRowDescent
+public import DraismaVargas.LocalCases.W3FourLimitRows
+
+@[expose] public section
 
 /-!
 # The regrown column, and Figure 28's presented matrices are the honest ones
@@ -142,12 +146,12 @@ theorem mem_backgroundSheetsOf (geometry : FourStarGeometry data wall)
   · rintro ⟨edge, hEdge, hSome⟩
     by_cases hCond : t = edge.1.1 ∧
         ¬ (data.vertexPartition wall).Rel geometry.growAnchor edge.1.2
-    · rw [if_pos hCond] at hSome
+    · rw [ite_eq_left hCond] at hSome
       exact ⟨edge, hEdge, hCond.1, hCond.2, Option.some.inj hSome⟩
-    · rw [if_neg hCond] at hSome
+    · rw [ite_eq_right hCond] at hSome
       exact absurd hSome (by simp)
   · rintro ⟨edge, hEdge, hTarget, hRel, rfl⟩
-    exact ⟨edge, hEdge, by rw [if_pos ⟨hTarget, hRel⟩]⟩
+    exact ⟨edge, hEdge, by rw [ite_eq_left ⟨hTarget, hRel⟩]⟩
 
 /-- Distinct displayed occurrences above `t` have distinct sheets, so the
 background list of a nodup row is nodup. -/
@@ -160,16 +164,16 @@ theorem backgroundSheetsOf_nodup (geometry : FourStarGeometry data wall)
   have hFirstInfo : t = first.1.1 ∧ first.1.2 = sheet := by
     by_cases hCond : t = first.1.1 ∧
         ¬ (data.vertexPartition wall).Rel geometry.growAnchor first.1.2
-    · rw [Option.mem_def, if_pos hCond] at hFirst
+    · rw [Option.mem_def, ite_eq_left hCond] at hFirst
       exact ⟨hCond.1, Option.some.inj hFirst⟩
-    · rw [Option.mem_def, if_neg hCond] at hFirst
+    · rw [Option.mem_def, ite_eq_right hCond] at hFirst
       exact absurd hFirst (by simp)
   have hSecondInfo : t = second.1.1 ∧ second.1.2 = sheet := by
     by_cases hCond : t = second.1.1 ∧
         ¬ (data.vertexPartition wall).Rel geometry.growAnchor second.1.2
-    · rw [Option.mem_def, if_pos hCond] at hSecond
+    · rw [Option.mem_def, ite_eq_left hCond] at hSecond
       exact ⟨hCond.1, Option.some.inj hSecond⟩
-    · rw [Option.mem_def, if_neg hCond] at hSecond
+    · rw [Option.mem_def, ite_eq_right hCond] at hSecond
       exact absurd hSecond (by simp)
   rw [← sourceEdge_of_target first t hFirstInfo.1,
     ← sourceEdge_of_target second t hSecondInfo.1, hFirstInfo.2, hSecondInfo.2]

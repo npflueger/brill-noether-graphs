@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.ThirdEquation
-import DraismaVargas.LocalCases.W2R1SourceProfile
+module
+
+public import DraismaVargas.LocalCases.ThirdEquation
+public import DraismaVargas.LocalCases.W2R1SourceProfile
+
+@[expose] public section
 
 /-!
 # Actual ramification-one profiles at a trivalent wall
@@ -131,7 +135,7 @@ theorem sum_index_le_of_same_target (data : GluingDatum target degree)
         if edge.1.1.1 = targetEdge then (data.sourceEdgeIndex edge.1 : ℤ) else 0 := by
       apply Finset.sum_congr rfl
       intro edge hEdge
-      rw [if_pos (hTarget edge hEdge)]
+      rw [ite_eq_left (hTarget edge hEdge)]
     _ ≤ ∑ edge : IncidentSourceEdge data vertex,
         if edge.1.1.1 = targetEdge then (data.sourceEdgeIndex edge.1 : ℤ) else 0 :=
       Finset.sum_le_sum_of_subset_of_nonneg (Finset.subset_univ _)

@@ -1,4 +1,8 @@
-import Utilities.Foundations.Duality
+module
+
+public import Utilities.Foundations.Duality
+
+@[expose] public section
 
 /-!
 # Elementary Brill--Noether existence

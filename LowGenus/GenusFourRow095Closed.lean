@@ -1,10 +1,14 @@
-import LowGenus.Generated.GenusFourRow095FaceData
-import LowGenus.GenusFourRow095Positive
-import LowGenus.GenusFiveConfigurations
-import Utilities.Subdivision.ConnectedCheckFast
-import Utilities.Subdivision.ClosedFaceDispatch
-import Utilities.Subdivision.CoreVertexCutGenusFour
-import Utilities.Subdivision.SubdivisionCoreSupport
+module
+
+public import LowGenus.Generated.GenusFourRow095FaceData
+public import LowGenus.GenusFourRow095Positive
+public import LowGenus.GenusFiveConfigurations
+public import Utilities.Subdivision.ConnectedCheckFast
+public import Utilities.Subdivision.ClosedFaceDispatch
+public import Utilities.Subdivision.CoreVertexCutGenusFour
+public import Utilities.Subdivision.SubdivisionCoreSupport
+
+@[expose] public section
 
 /-!
 # A readable closed-face proof for cubic genus-four row 095

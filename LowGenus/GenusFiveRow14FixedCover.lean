@@ -1,5 +1,9 @@
-import LowGenus.GenusFiveClosedCover
-import LowGenus.GenusFiveCoreAtlas
+module
+
+public import LowGenus.GenusFiveClosedCover
+public import LowGenus.GenusFiveCoreAtlas
+
+@[expose] public section
 
 /-! **Independent generated check.** The main row-14 proof is the readable
 `GenusFiveRow14` construction via `ConfigurationBananaTail`; this module gives

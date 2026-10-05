@@ -1,6 +1,10 @@
-import Utilities.Iso.GraphIso
-import Utilities.Grassmannian.OnceMarked
-import Utilities.Transmission.Transmission
+module
+
+public import Utilities.Iso.GraphIso
+public import Utilities.Grassmannian.OnceMarked
+public import Utilities.Transmission.Transmission
+
+@[expose] public section
 
 /-!
 # Transmission and chip-firing graph isomorphisms

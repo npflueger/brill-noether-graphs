@@ -1,7 +1,11 @@
-import DraismaVargasCount.StarCensusEngine
-import DraismaVargasCount.M11StarCensusProof
-import DraismaVargasCount.RegrowthBalances
-import DraismaVargasCount.W3Nd2StarCensusProof
+module
+
+public import DraismaVargasCount.StarCensusEngine
+public import DraismaVargasCount.M11StarCensusProof
+public import DraismaVargasCount.RegrowthBalances
+public import DraismaVargasCount.W3Nd2StarCensusProof
+
+@[expose] public section
 
 /-!
 # The W3Four star census, Stages 1 and 3, and Stage 2 reduced to transports
@@ -1029,7 +1033,7 @@ theorem false_of_selected_eq {α : Type*} [DecidableEq α] (G O L : α) {k₂ k�
   · subst hGL
     by_cases hOG : O = G
     · subst hOG
-      simp only [if_true] at hG
+      simp only [ite_true] at hG
       have hmpos : (0 : ℚ) < m := by
         have : (1 : ℚ) ≤ k₃ := by exact_mod_cast hk₃
         linarith
@@ -1039,10 +1043,10 @@ theorem false_of_selected_eq {α : Type*} [DecidableEq α] (G O L : α) {k₂ k�
       have h1 : (1 : ℚ) / m ≤ 1 / k₂ := one_div_le_one_div_of_le hk₂' hle
       have h2 : (0 : ℚ) < 1 / k₃ := by positivity
       linarith
-    · simp only [if_neg hOG, if_true, zero_add] at hO
+    · simp only [ite_eq_right hOG, ite_true, zero_add] at hO
       have h2 : (0 : ℚ) < 1 / k₃ := by positivity
       linarith
-  · simp only [if_true, if_neg hGL] at hG
+  · simp only [ite_true, ite_eq_right hGL] at hG
     have h1 : (0 : ℚ) < 1 / k₂ := by positivity
     have h3 : (0 : ℚ) ≤ (if G = O then (1 : ℚ) / k₃ else 0) := by
       split_ifs <;> positivity

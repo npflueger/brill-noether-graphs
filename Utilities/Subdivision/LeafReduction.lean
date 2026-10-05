@@ -1,4 +1,8 @@
-import Utilities.Subdivision.LeafPruning
+module
+
+public import Utilities.Subdivision.LeafPruning
+
+@[expose] public section
 
 /-!
 # One-step reduction across a degree-one vertex
@@ -102,7 +106,7 @@ theorem graph_connected_of_addLeaf
       | some z =>
           have hzRoot : z = root := by
             by_contra hzNe
-            simp only [num_edges_none_some, if_neg hzNe] at hvw
+            simp only [num_edges_none_some, ite_eq_right hzNe] at hvw
             omega
           subst z
           exact (hw ((some_mem_lifted root).2 hRootMem)).elim
@@ -114,7 +118,7 @@ theorem graph_connected_of_addLeaf
             fun hRoot => hw (none_mem_lifted.mpr hRoot)
           have haRoot : a = root := by
             by_contra haNe
-            simp only [num_edges_some_none, if_neg haNe] at hvw
+            simp only [num_edges_some_none, ite_eq_right haNe] at hvw
             omega
           subst a
           exact (hRootNotMem haS).elim

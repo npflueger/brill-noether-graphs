@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W3FourIncomingMatching
-import DraismaVargas.LocalCases.W3ShiftSelectedCensus
+module
+
+public import DraismaVargas.LocalCases.W3FourIncomingMatching
+public import DraismaVargas.LocalCases.W3ShiftSelectedCensus
+
+@[expose] public section
 
 /-!
 # The selected-block census at the `w3Four` wall
@@ -1716,7 +1720,7 @@ theorem classes_of_largest_orientation
             ((contractDatum data hc hab hOne).edgePartition o.betaTarget)
             o.betaAnchor o.gammaAnchor o.beta_wall_rel_gamma hSep).Rel o.betaAnchor sheet := by
           rw [SheetPartition.rel_iff, W3FourClosure.splitAlong_repr_pivot,
-            W3FourClosure.splitAlong_repr_eq, if_pos hWallRel, if_pos hRelW]
+            W3FourClosure.splitAlong_repr_eq, ite_eq_left hWallRel, ite_eq_left hRelW]
         rw [hBlock, ← (W3FourClosure.splitAlong _ _ _ _ o.beta_wall_rel_gamma
           hSep).block_eq_of_rel hSplit,
           W3FourClosure.splitAlong_block_pivot o.beta_wall_rel_gamma hSep
@@ -1730,7 +1734,7 @@ theorem classes_of_largest_orientation
             o.betaAnchor o.gammaAnchor o.beta_wall_rel_gamma hSep).Rel
             o.gammaAnchor sheet := by
           rw [SheetPartition.rel_iff, W3FourClosure.splitAlong_repr_alt,
-            W3FourClosure.splitAlong_repr_eq, if_pos hWallRel, if_neg hRelW]
+            W3FourClosure.splitAlong_repr_eq, ite_eq_left hWallRel, ite_eq_right hRelW]
         rw [hBlock, ← (W3FourClosure.splitAlong _ _ _ _ o.beta_wall_rel_gamma
           hSep).block_eq_of_rel hSplit,
           W3FourClosure.splitAlong_block_alt o.beta_wall_rel_gamma hSep,

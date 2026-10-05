@@ -1,6 +1,10 @@
-import Utilities.Subdivision.ConnectedCheckFast
-import Utilities.Subdivision.ExplicitPotential
-import Utilities.Subdivision.SubdivisionConnectivity
+module
+
+public import Utilities.Subdivision.ConnectedCheckFast
+public import Utilities.Subdivision.ExplicitPotential
+public import Utilities.Subdivision.SubdivisionConnectivity
+
+@[expose] public section
 
 /-!
 # The Atanasov--Ranganathan genus-five cubic atlas

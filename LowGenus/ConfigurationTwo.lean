@@ -1,4 +1,8 @@
-import LowGenus.ConfigurationThree
+module
+
+public import LowGenus.ConfigurationThree
+
+@[expose] public section
 
 /-!
 # Atanasov--Ranganathan configuration 2, generic in the core
@@ -356,7 +360,7 @@ theorem endpointContribution_eq_center_slots (hCore : d.core = cfg.core)
     (cfg.secondArm_ne_thirdArm center hCenter) ?_
   intro x h1 h2 h3
   obtain ⟨hT, hH⟩ := cfg.not_incident_of_ne hCenter h1 h2 h3
-  simp only [slotTerm, hCore, if_neg hT, if_neg hH, add_zero]
+  simp only [slotTerm, hCore, ite_eq_right hT, ite_eq_right hH, add_zero]
 
 theorem endpointContribution_center_eq_arms (hCore : d.core = cfg.core)
     {center : Fin 8} (hCenter : cfg.isCenter center = true)
@@ -509,7 +513,7 @@ theorem residual_effective_of_coreVertex {potential : Fin 8 → ℤ}
     have hNe : d.interiorVertex e o ≠ d.coreVertex center := by
       simp [DegSpec.coreVertex, DegSpec.interiorVertex]
     rw [cfg.divisor_interiorVertex_eq_zero]
-    simp only [one_chip, if_neg hNe, sub_zero, zero_add]
+    simp only [one_chip, ite_eq_right hNe, sub_zero, zero_add]
     exact d.prin_interpolatedScript_interiorVertex_nonneg hInv e o
 
 /-- **Configuration 2 at one centre.**  Firing the tripod script leaves an

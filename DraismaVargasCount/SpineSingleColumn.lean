@@ -1,5 +1,9 @@
-import DraismaVargasCount.SpineRowLengthWitness
-import DraismaVargasCount.PassOnceLollipopWitness
+module
+
+public import DraismaVargasCount.SpineRowLengthWitness
+public import DraismaVargasCount.PassOnceLollipopWitness
+
+@[expose] public section
 
 /-!
 # The spine rows of `A_φ`: the single-column property, and where it lives

@@ -1,5 +1,9 @@
-import DraismaVargasCount.GeometricInheritedRows
-import DraismaVargasCount.InheritedLimitBranches
+module
+
+public import DraismaVargasCount.GeometricInheritedRows
+public import DraismaVargasCount.InheritedLimitBranches
+
+@[expose] public section
 
 /-!
 # Naturality of inherited branch labels

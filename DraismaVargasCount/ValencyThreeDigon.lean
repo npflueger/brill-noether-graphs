@@ -1,4 +1,8 @@
-import DraismaVargasCount.ValencyThreeLoopMerge
+module
+
+public import DraismaVargasCount.ValencyThreeLoopMerge
+
+@[expose] public section
 
 set_option autoImplicit false
 
@@ -153,19 +157,19 @@ theorem exists_loopMove (c : CubicCore n p) (b : Fin p × Bool)
     · refine ⟨false, ht, ?_⟩
       show c.core.head s = _
       by_contra hh
-      rw [if_neg hh] at hv
+      rw [ite_eq_right hh] at hv
       have : c.core.tail s = c.graph.vert (e₀, !β) := by
-        by_contra ht'; rw [if_neg ht'] at hv; omega
+        by_contra ht'; rw [ite_eq_right ht'] at hv; omega
       exact hb (this.symm.trans ht)
-    · rw [if_neg ht] at hu
+    · rw [ite_eq_right ht] at hu
       have hh : c.core.head s = c.graph.vert (e₀, β) := by
-        by_contra hh; rw [if_neg hh] at hu; omega
+        by_contra hh; rw [ite_eq_right hh] at hu; omega
       refine ⟨true, hh, ?_⟩
       show c.core.tail s = _
       by_contra ht'
-      rw [if_neg ht'] at hv
+      rw [ite_eq_right ht'] at hv
       have : c.core.head s = c.graph.vert (e₀, !β) := by
-        by_contra hh'; rw [if_neg hh'] at hv; omega
+        by_contra hh'; rw [ite_eq_right hh'] at hv; omega
       exact hb (this.symm.trans hh)
   -- the third dart at `u`
   obtain ⟨a, ha⟩ : (((Finset.univ.filter fun d ↦ c.graph.vert d = c.graph.vert (e₀, β)).erase

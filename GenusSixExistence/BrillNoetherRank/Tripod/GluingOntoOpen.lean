@@ -1,4 +1,8 @@
-import GenusSixExistence.BrillNoetherRank.Tripod.GluingOntoIdent
+module
+
+public import GenusSixExistence.BrillNoetherRank.Tripod.GluingOntoIdent
+
+@[expose] public section
 
 /-!
 # The deletion is open at the base request
@@ -55,18 +59,18 @@ theorem mulVec_eq_sum {S : CFGraph} {k : ℕ} {E : GluingDatum S k} {m : ℕ}
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun x _ ↦ ?_
   by_cases hr : L.row x.stablePath = r
-  · rw [if_pos hr, Finset.sum_eq_single (L.targetEdge.symm x.1.1.1)]
-    · rw [if_pos ⟨hr, (Equiv.apply_symm_apply _ _).symm⟩]
+  · rw [ite_eq_left hr, Finset.sum_eq_single (L.targetEdge.symm x.1.1.1)]
+    · rw [ite_eq_left ⟨hr, (Equiv.apply_symm_apply _ _).symm⟩]
       ring
     · intro c _ hc
-      rw [if_neg]
+      rw [ite_eq_right]
       · ring
       rintro ⟨-, h⟩
       exact hc (by rw [h, Equiv.symm_apply_apply])
     · intro h
       exact absurd (Finset.mem_univ _) h
-  · rw [if_neg hr]
-    exact Finset.sum_eq_zero fun c _ ↦ by rw [if_neg fun h ↦ hr h.1, zero_mul]
+  · rw [ite_eq_right hr]
+    exact Finset.sum_eq_zero fun c _ ↦ by rw [ite_eq_right fun h ↦ hr h.1, zero_mul]
 
 /-- Summing a fibre over the fibres of a composite. -/
 theorem sum_fiber_comp {α β γ : Type*} [Fintype α] [Fintype β] [DecidableEq α] [DecidableEq γ]
@@ -89,11 +93,11 @@ theorem mergeRequest_eq_sum {q : ℕ} (e : Fin q) (w : Fin (q + 1) → ℚ) (j :
     mergeRequest e w j = ∑ i : Fin (q + 1), if mergeOne e i = j then w i else 0 := by
   classical
   rw [Fin.sum_univ_castSucc]
-  simp only [mergeOne_castSucc, mergeOne_last, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [mergeOne_castSucc, mergeOne_last, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   unfold mergeRequest
   by_cases h : j = e
-  · rw [if_pos h, if_pos h.symm]
-  · rw [if_neg h, if_neg (Ne.symm h), add_zero]
+  · rw [ite_eq_left h, ite_eq_left h.symm]
+  · rw [ite_eq_right h, ite_eq_right (Ne.symm h), add_zero]
 
 /-- **The base request of a slot of `G̃`** is the sum of the requested lengths of the G-slots of
 `Γ̃` merging to it. -/
@@ -123,10 +127,10 @@ theorem sum_castAdd_eq {p : ℕ} (s : MarkSlots p) (j : Fin p) (r : Fin (p + 1 +
   · set i₀ : Fin (p + 1 + 1 + 1) := ⟨r.val, hr⟩
     have hr' : r = Fin.castAdd 3 i₀ := Fin.ext rfl
     rw [Finset.sum_eq_single i₀]
-    · rw [hr', mergeSlot_castAdd, if_pos rfl]
+    · rw [hr', mergeSlot_castAdd, ite_eq_left rfl]
       by_cases h : mergeOne s.first (mergeOne s.second (mergeOne s.third i₀)) = j
-      · rw [if_pos h, if_pos (by rw [h])]
-      · rw [if_neg h, if_neg (fun h' ↦ h (Option.some_injective _ h'))]
+      · rw [ite_eq_left h, ite_eq_left (by rw [h])]
+      · rw [ite_eq_right h, ite_eq_right (fun h' ↦ h (Option.some_injective _ h'))]
     · intro i _ hi
       rw [hr']
       split_ifs with h1 h2
@@ -137,8 +141,8 @@ theorem sum_castAdd_eq {p : ℕ} (s : MarkSlots p) (j : Fin p) (r : Fin (p + 1 +
       exact absurd (Finset.mem_univ _) h
   · have hnone : mergeSlot s (legSlot p k) = none := by
       unfold mergeSlot
-      rw [dif_neg (by simp only [legSlot, Fin.val_natAdd]; omega)]
-    rw [hnone, if_neg (by simp)]
+      rw [dite_eq_right (by simp only [legSlot, Fin.val_natAdd]; omega)]
+    rw [hnone, ite_eq_right (by simp)]
     refine Finset.sum_eq_zero fun i _ ↦ ?_
     have hne : legSlot p k ≠ Fin.castAdd 3 i := by
       intro h
@@ -253,17 +257,17 @@ theorem length_gluedPath (z₀ : NonDanglingEdge (refine₃ D π)) :
       rw [φ.fullDim.labelling.row.injective.eq_iff, hQφ,
         ← GeometricDatumIso.stablePathEquiv_mk, (Ξ.stablePathEquiv hG).injective.eq_iff]
     by_cases ha : a.stablePath = CutPaths.gluedPath D π hD hT hπ z₀
-    · rw [if_pos (hiff.mpr ha), if_pos ha, GeometricDatumIso.nonDanglingEdgeEquiv_val,
+    · rw [ite_eq_left (hiff.mpr ha), ite_eq_left ha, GeometricDatumIso.nonDanglingEdgeEquiv_val,
         Ξ.sourceEdgeIndex_map]
       rfl
-    · rw [if_neg (fun h ↦ ha (hiff.mp h)), if_neg ha]
+    · rw [ite_eq_right (fun h ↦ ha (hiff.mp h)), ite_eq_right ha]
   rw [Finset.sum_congr rfl fun a _ ↦ hF a, CutPaths.sum_eq_sum_liftND hD hT hπ]
   · refine Finset.sum_congr rfl fun z _ ↦ ?_
     show _ = if CutPaths.gluedPath D π hD hT hπ z = CutPaths.gluedPath D π hD hT hπ z₀ then
       zG Ξ (π.liftE₃ z.1.1.1) / ((glueDatum D π).sourceEdgeIndex (liftSE D π z.1) : ℚ) else 0
     rw [CutPaths.sourceEdgeIndex_liftSE z.1]
   · intro a ha
-    rw [if_neg]
+    rw [ite_eq_right]
     intro h
     exact ha ((CutPaths.isOld_iff_of_stablePath_eq hD hT hπ h).mpr
       (CutPaths.isOld_liftND hD hT hπ z₀))
@@ -285,7 +289,7 @@ theorem pieceCoords_pos (hφ : φ.Open) (L : StableLengthMatrixLabelling D (Fin 
     · exact (hφ _).le
     · rfl
   refine lt_of_lt_of_le ?_ (Finset.single_le_sum hnn (Finset.mem_univ (firstT₃ π (L.targetEdge c))))
-  rw [if_pos (parent₃_firstT₃ π _)]
+  rw [ite_eq_left (parent₃_firstT₃ π _)]
   exact hφ _
 
 include hS in
@@ -349,7 +353,7 @@ theorem mulVec_pieceCoords (fd : FullDimensionalSourcePresentation D (Fin p))
       have hiff : fd.labelling.row x.stablePath = r ↔ ident.row x.stablePath = j := by
         rw [hj, hP, ident.row.injective.eq_iff, Equiv.eq_symm_apply]
       by_cases hxr : fd.labelling.row x.stablePath = r
-      · rw [if_pos hxr, if_pos (hiff.mp hxr)]
+      · rw [ite_eq_left hxr, ite_eq_left (hiff.mp hxr)]
         unfold pieceCoords
         have hanc := sum_anc_eq hD x (fun ε ↦ zG Ξ (π.liftE₃ ε) / (D.sourceEdgeIndex x.1 : ℚ))
         beta_reduce at hanc
@@ -358,12 +362,12 @@ theorem mulVec_pieceCoords (fd : FullDimensionalSourcePresentation D (Fin p))
         rw [← hanc]
         refine Finset.sum_congr rfl fun z _ ↦ ?_
         by_cases hz : CutPaths.anc D π hD z = x
-        · rw [if_pos hz, if_pos hz, hf]
+        · rw [ite_eq_left hz, ite_eq_left hz, hf]
           beta_reduce
           rw [show (refine₃ D π).sourceEdgeIndex z.1 = D.sourceEdgeIndex x.1 from by
             rw [← hz]; exact CutPaths.idx_eq_anc hD z]
-        · rw [if_neg hz, if_neg hz]
-      · rw [if_neg hxr, if_neg (fun h ↦ hxr (hiff.mpr h))]
+        · rw [ite_eq_right hz, ite_eq_right hz]
+      · rw [ite_eq_right hxr, ite_eq_right (fun h ↦ hxr (hiff.mpr h))]
     rw [Finset.sum_congr rfl fun x _ ↦ hx x,
       sum_fiber_comp (fun x : NonDanglingEdge D ↦ ident.row x.stablePath)
         (CutPaths.anc D π hD) j f]
@@ -386,8 +390,8 @@ theorem mulVec_pieceCoords (fd : FullDimensionalSourcePresentation D (Fin p))
             Fin.castAdd 3 i := by
         rw [← Equiv.eq_symm_apply, ← hz₀, (Ξ.stablePathEquiv hG).injective.eq_iff]
       by_cases hz : CutPaths.gluedPath D π hD hT hπ z = CutPaths.gluedPath D π hD hT hπ z₀
-      · rw [if_pos hz, if_pos (hiff.mp hz)]
-      · rw [if_neg hz, if_neg (fun h ↦ hz (hiff.mpr h))]
+      · rw [ite_eq_left hz, ite_eq_left (hiff.mp hz)]
+      · rw [ite_eq_right hz, ite_eq_right (fun h ↦ hz (hiff.mpr h))]
     simp only [hi]
     have hsum : ∀ i : Fin (p + 1 + 1 + 1),
         (if mergeOne s.first (mergeOne s.second (mergeOne s.third i)) = j then
@@ -409,8 +413,8 @@ theorem mulVec_pieceCoords (fd : FullDimensionalSourcePresentation D (Fin p))
     unfold glabel at hlab
     rw [hlab]
     by_cases hz : ident.row (CutPaths.anc D π hD z).stablePath = j
-    · rw [if_pos (by rw [hz]), if_pos hz]
-    · rw [if_neg (fun h ↦ hz (Option.some_injective _ h)), if_neg hz]
+    · rw [ite_eq_left (by rw [hz]), ite_eq_left hz]
+    · rw [ite_eq_right (fun h ↦ hz (Option.some_injective _ h)), ite_eq_right hz]
   rw [hL, hR]
 
 end Coords

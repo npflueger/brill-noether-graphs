@@ -1,4 +1,8 @@
-import Bananas.Theta.ThetaPrefix
+module
+
+public import Bananas.Theta.ThetaPrefix
+
+@[expose] public section
 
 /-!
 # The coordinate map in the banana Jacobian presentation

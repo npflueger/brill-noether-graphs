@@ -1,7 +1,11 @@
-import DraismaVargas.LocalCases.W3Nd2Background
-import DraismaVargas.LocalCases.W3Nd2EndRows
-import DraismaVargas.LocalCases.ResolutionAwayFromWall
-import DraismaVargas.LocalCases.DivalentSourceLocal
+module
+
+public import DraismaVargas.LocalCases.W3Nd2Background
+public import DraismaVargas.LocalCases.W3Nd2EndRows
+public import DraismaVargas.LocalCases.ResolutionAwayFromWall
+public import DraismaVargas.LocalCases.DivalentSourceLocal
+
+@[expose] public section
 
 /-!
 # Stable-row lifts for the true Figure 31 candidates

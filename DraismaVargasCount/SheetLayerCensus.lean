@@ -1,4 +1,8 @@
-import DraismaVargasCount.DiagonalTargetIso
+module
+
+public import DraismaVargasCount.DiagonalTargetIso
+
+@[expose] public section
 
 /-!
 # The partition census over the diagonal target layer

@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W3ShiftGraphData
+module
+
+public import DraismaVargas.LocalCases.W3ShiftGraphData
+
+@[expose] public section
 
 /-!
 # `W3ShiftClosure.LimitRows` at an arbitrary stable labelling
@@ -113,16 +117,16 @@ theorem occurrences_moving_filter (shift : ShiftProfile input) {anchor : Fin deg
         (hAnchor.trans hRel)
     subst hEq
     have hPath : path = movingRow shift := hRow.symm
-    rw [if_pos hPath]
+    rw [ite_eq_left hPath]
     exact Finset.mem_singleton_self _
   · intro hMem
     by_cases hPath : path = movingRow shift
-    · rw [if_pos hPath, Finset.mem_singleton] at hMem
+    · rw [ite_eq_left hPath, Finset.mem_singleton] at hMem
       subst hMem
       refine Finset.mem_filter.mpr ⟨(mem_occurrences _ _ _).mpr
         ⟨⟨W3ShiftLimitRows.moving_survives shift, hPath.symm⟩, rfl⟩, ?_⟩
       exact hAnchor.symm
-    · rw [if_neg hPath] at hMem
+    · rw [ite_eq_right hPath] at hMem
       exact absurd hMem (Finset.notMem_empty _)
 
 /-- **The incoming `t_α` column of a stable row**: `1/k_α` in `e_α`'s own row,
@@ -192,18 +196,18 @@ theorem newOccurrences_filter (path : StablePath data) :
       ((c.graphData hValid).new_mem_iff_of_survives c.main
         (selected_rel_main c hValid) c.new_main_survives path).mp
         (by rw [← hMain]; exact hOcc)
-    rw [if_pos hPath]
+    rw [ite_eq_left hPath]
     exact Finset.mem_singleton.mpr hMain
   · intro hMem
     by_cases hPath : path = movingRow shift
-    · rw [if_pos hPath, Finset.mem_singleton] at hMem
+    · rw [ite_eq_left hPath, Finset.mem_singleton] at hMem
       subst hMem
       refine Finset.mem_filter.mpr ⟨?_, ?_⟩
       · exact ((c.graphData hValid).new_mem_iff_of_survives c.main
           (selected_rel_main c hValid) c.new_main_survives path).mpr hPath
       · exact ((c.graphData hValid).newSourceEdge_sheet_rel_iff c.main).mpr
           (selected_rel_main c hValid)
-    · rw [if_neg hPath] at hMem
+    · rw [ite_eq_right hPath] at hMem
       exact absurd hMem (Finset.notMem_empty _)
 
 /-- **The member's regrown column of a stable row**: the reciprocal of its own
@@ -407,8 +411,8 @@ theorem ite_source (value : ℚ) (row : coordinate) :
       if row = sourceCoordinates shrink hValid initial (movingRow shift) then
         value else 0 := by
   by_cases hRow : row = sourceCoordinates shrink hValid initial (movingRow shift)
-  · rw [if_pos hRow, if_pos (by rw [hRow]; exact Equiv.symm_apply_apply _ _)]
-  · refine (if_neg fun hEq ↦ hRow ?_).trans (if_neg hRow).symm
+  · rw [ite_eq_left hRow, ite_eq_left (by rw [hRow]; exact Equiv.symm_apply_apply _ _)]
+  · refine (ite_eq_right fun hEq ↦ hRow ?_).trans (ite_eq_right hRow).symm
     rw [← hEq, Equiv.apply_symm_apply]
 
 theorem sum_ite_cofactor (value : ℚ) :

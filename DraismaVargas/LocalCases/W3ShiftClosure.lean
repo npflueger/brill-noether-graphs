@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.W3ShiftShrinkExistence
-import DraismaVargas.LocalCases.W3ShiftSourceCandidates
-import DraismaVargas.LocalCases.W3FourClosure
+module
+
+public import DraismaVargas.LocalCases.W3ShiftShrinkExistence
+public import DraismaVargas.LocalCases.W3ShiftSourceCandidates
+public import DraismaVargas.LocalCases.W3FourClosure
+
+@[expose] public section
 
 /-!
 # Figure 29's `(k−1, k+1)` pair, and Equation (3) as a gauge family

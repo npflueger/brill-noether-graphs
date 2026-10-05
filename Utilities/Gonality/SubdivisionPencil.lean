@@ -1,7 +1,11 @@
-import Utilities.Gonality.GonalityTransport
-import Utilities.Foundations.RankDeterminingSet
-import Utilities.Subdivision.ExplicitPotentialRankOne
-import Utilities.Subdivision.SubdivisionCoreSupport
+module
+
+public import Utilities.Gonality.GonalityTransport
+public import Utilities.Foundations.RankDeterminingSet
+public import Utilities.Subdivision.ExplicitPotentialRankOne
+public import Utilities.Subdivision.SubdivisionCoreSupport
+
+@[expose] public section
 
 /-!
 # Subdivision pencils with an explicit scale and divisor

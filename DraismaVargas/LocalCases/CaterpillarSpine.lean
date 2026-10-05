@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.CaterpillarPruning
+module
+
+public import DraismaVargas.LocalCases.CaterpillarPruning
+
+@[expose] public section
 
 /-!
 # The spine census of the caterpillar seed
@@ -197,9 +201,9 @@ theorem block_pairPart_other (m j : ℕ) (s : Fin (m + 2))
     (pairPart m j).block s = {s} := by
   ext t
   rw [SheetPartition.mem_block_iff, SheetPartition.rel_iff,
-    pairPart_repr, pairPart_repr, if_neg hsj]
+    pairPart_repr, pairPart_repr, ite_eq_right hsj]
   by_cases ht : t.val = j
-  · rw [if_pos ht, Finset.mem_singleton]
+  · rw [ite_eq_left ht, Finset.mem_singleton]
     constructor
     · intro h
       have : s.val = 0 := by simpa using congrArg Fin.val h
@@ -207,7 +211,7 @@ theorem block_pairPart_other (m j : ℕ) (s : Fin (m + 2))
     · intro h
       have : s.val = j := by simpa [h] using ht
       exact (hsj this).elim
-  · rw [if_neg ht, Finset.mem_singleton]
+  · rw [ite_eq_right ht, Finset.mem_singleton]
     exact ⟨fun h ↦ h.symm, fun h ↦ h.symm⟩
 
 /-- Above a singleton sheet block, actual incidence has the same cardinality

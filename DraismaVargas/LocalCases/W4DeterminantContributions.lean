@@ -1,8 +1,12 @@
-import DraismaVargas.LocalCases.BalancingRemaining
-import DraismaVargas.LocalCases.W4Assembly
-import Utilities.IntegralGeometry.WallColumnDeterminant
-import DraismaVargas.Infrastructure.LengthMatrix
-import Mathlib.Tactic
+module
+
+public import DraismaVargas.LocalCases.BalancingRemaining
+public import DraismaVargas.LocalCases.W4Assembly
+public import Utilities.IntegralGeometry.WallColumnDeterminant
+public import DraismaVargas.Infrastructure.LengthMatrix
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # Blockwise determinant contributions in the W4 case

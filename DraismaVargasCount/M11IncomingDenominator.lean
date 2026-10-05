@@ -1,6 +1,10 @@
-import DraismaVargasCount.M11MultiplicityBalance
-import DraismaVargasCount.W2M1kTransitionSiting
-import DraismaVargas.LocalCases.M11FullDimensional
+module
+
+public import DraismaVargasCount.M11MultiplicityBalance
+public import DraismaVargasCount.W2M1kTransitionSiting
+public import DraismaVargas.LocalCases.M11FullDimensional
+
+@[expose] public section
 
 /-!
 # The incoming M11 third row has denominator one

@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W4OutgoingStableRows
+module
+
+public import DraismaVargas.LocalCases.W4OutgoingStableRows
+
+@[expose] public section
 
 /-!
 # The regrown column, and the presented W4 matrices are the honest ones
@@ -212,7 +216,7 @@ theorem blockRegrownRow_nd2_same (input : AuxR0SourceInput data star)
       W4TargetPairings.Pairing.labelRight pairing block.second) :
     blockRegrownRow input pairing sourceBlock = none := by
   rw [blockRegrownRow, hPicture]
-  exact if_pos hSame
+  exact ite_eq_left hSame
 
 omit [DecidableEq target.edges] in
 theorem blockRegrownRow_nd2_ne (input : AuxR0SourceInput data star)
@@ -225,7 +229,7 @@ theorem blockRegrownRow_nd2_ne (input : AuxR0SourceInput data star)
       some (branchEdge data star block.first sourceBlock.1
         picture.first_survives).stablePath := by
   rw [blockRegrownRow, hPicture]
-  exact if_neg hNe
+  exact ite_eq_right hNe
 
 omit [DecidableEq target.edges] in
 theorem blockRegrownRow_nd3 (input : AuxR0SourceInput data star)
@@ -635,7 +639,7 @@ theorem coefficient_newSourceEdge_none (input : AuxR0SourceInput data star)
     exact (occurrenceEquiv target wall
       (member input pairing).right).symm_apply_apply none
   unfold GluingDatum.LengthMatrixPresentation.coefficient
-  rw [hTarget, if_pos rfl]
+  rw [hTarget, ite_eq_left rfl]
 
 theorem row_eq_sum (input : AuxR0SourceInput data star) (pairing : Fin 3)
     (path : List (member input pairing).datum.SourceEdge)
@@ -656,8 +660,8 @@ theorem row_old_some (input : AuxR0SourceInput data star) (pairing : Fin 3)
   refine congrArg List.sum (List.map_congr_left fun edge _ ↦ ?_)
   rw [Function.comp_apply, coefficient_oldSourceEdge]
   by_cases hPlace : edge.1.1 = place
-  · rw [if_pos hPlace, if_pos (congrArg some hPlace.symm)]
-  · rw [if_neg hPlace, if_neg (fun hEq ↦ hPlace (Option.some.inj hEq).symm)]
+  · rw [ite_eq_left hPlace, ite_eq_left (congrArg some hPlace.symm)]
+  · rw [ite_eq_right hPlace, ite_eq_right (fun hEq ↦ hPlace (Option.some.inj hEq).symm)]
 
 theorem row_old_none (input : AuxR0SourceInput data star) (pairing : Fin 3)
     (edges : List data.SourceEdge) :
@@ -667,7 +671,7 @@ theorem row_old_none (input : AuxR0SourceInput data star) (pairing : Fin 3)
   rw [row_eq_sum, List.map_map]
   refine List.sum_eq_zero fun value hValue ↦ ?_
   obtain ⟨edge, _, rfl⟩ := List.mem_map.mp hValue
-  rw [Function.comp_apply, coefficient_oldSourceEdge, if_neg (by simp)]
+  rw [Function.comp_apply, coefficient_oldSourceEdge, ite_eq_right (by simp)]
 
 theorem row_new_some (input : AuxR0SourceInput data star) (pairing : Fin 3)
     (sheets : List (Fin degree)) (place : target.edges) :
@@ -793,12 +797,12 @@ theorem mem_newSheets_iff (input : AuxR0SourceInput data star) (pairing : Fin 3)
   · rintro ⟨other, hOther⟩
     by_cases hRegrown : input.family.assignment.regrown pairing
         (WallBlock.ofSheet data wall other) = some (row, other)
-    · rw [if_pos hRegrown] at hOther
+    · rw [ite_eq_left hRegrown] at hOther
       have hEq : other = sheet := Option.some.inj hOther
       subst hEq
       rw [AuxR0Family.assignment_regrown] at hRegrown
       exact (family_regrown_eq_some_iff input pairing _ row other).mp hRegrown
-    · rw [if_neg hRegrown] at hOther
+    · rw [ite_eq_right hRegrown] at hOther
       exact absurd hOther (by simp)
   · intro hSheet
     refine ⟨sheet, ?_⟩
@@ -806,7 +810,7 @@ theorem mem_newSheets_iff (input : AuxR0SourceInput data star) (pairing : Fin 3)
         (WallBlock.ofSheet data wall sheet) = some (row, sheet) := by
       rw [AuxR0Family.assignment_regrown]
       exact (family_regrown_eq_some_iff input pairing _ row sheet).mpr hSheet
-    rw [if_pos hRegrown]
+    rw [ite_eq_left hRegrown]
 
 theorem newSheets_nodup (input : AuxR0SourceInput data star) (pairing : Fin 3)
     (row : Option target.edges) :
@@ -817,16 +821,16 @@ theorem newSheets_nodup (input : AuxR0SourceInput data star) (pairing : Fin 3)
   have hFirstEq : first = sheet := by
     by_cases hRegrown : input.family.assignment.regrown pairing
         (WallBlock.ofSheet data wall first) = some (row, first)
-    · rw [Option.mem_def, if_pos hRegrown] at hFirst
+    · rw [Option.mem_def, ite_eq_left hRegrown] at hFirst
       exact Option.some.inj hFirst
-    · rw [Option.mem_def, if_neg hRegrown] at hFirst
+    · rw [Option.mem_def, ite_eq_right hRegrown] at hFirst
       exact absurd hFirst (by simp)
   have hSecondEq : second = sheet := by
     by_cases hRegrown : input.family.assignment.regrown pairing
         (WallBlock.ofSheet data wall second) = some (row, second)
-    · rw [Option.mem_def, if_pos hRegrown] at hSecond
+    · rw [Option.mem_def, ite_eq_left hRegrown] at hSecond
       exact Option.some.inj hSecond
-    · rw [Option.mem_def, if_neg hRegrown] at hSecond
+    · rw [Option.mem_def, ite_eq_right hRegrown] at hSecond
       exact absurd hSecond (by simp)
   exact hFirstEq.trans hSecondEq.symm
 
@@ -970,8 +974,8 @@ theorem rowTerm_of_survives (path : StablePath data)
   classical
   unfold rowTerm
   by_cases hRow : edge.stablePath = path
-  · rw [if_pos ⟨edge.2, hRow⟩, if_pos hRow]
-  · rw [if_neg fun hExists ↦ hRow hExists.choose_spec, if_neg hRow]
+  · rw [ite_eq_left ⟨edge.2, hRow⟩, ite_eq_left hRow]
+  · rw [ite_eq_right fun hExists ↦ hRow hExists.choose_spec, ite_eq_right hRow]
 
 /-- One old wall block's contribution to one candidate's regrown column at one
 incoming stable row. -/
@@ -994,7 +998,7 @@ theorem blockColumnTerm_pos (input : AuxR0SourceInput data star)
         (data.sourceEdgeIndex (blockOldSourceEdge input pairing sourceBlock) :
           ℚ) := by
   classical
-  rw [blockColumnTerm, if_pos hRow]
+  rw [blockColumnTerm, ite_eq_left hRow]
 
 omit [DecidableEq target.edges] in
 theorem blockColumnTerm_neg (input : AuxR0SourceInput data star)
@@ -1003,7 +1007,7 @@ theorem blockColumnTerm_neg (input : AuxR0SourceInput data star)
     (hRow : ¬ blockRegrownRow input pairing sourceBlock = some path) :
     blockColumnTerm input pairing path sourceBlock = 0 := by
   classical
-  rw [blockColumnTerm, if_neg hRow]
+  rw [blockColumnTerm, ite_eq_right hRow]
 
 theorem matrix_new_eq_sum (input : AuxR0SourceInput data star) (pairing : Fin 3)
     (path : StablePath data) :
@@ -1124,15 +1128,15 @@ theorem sum_pairings_blockColumnTerm_nd2 (input : AuxR0SourceInput data star)
     · rw [blockColumnTerm_neg input pairing path sourceBlock (by
         rw [blockRegrownRow_nd2_same input pairing sourceBlock block picture
           hPicture hSame]
-        simp), if_neg (by simpa using hSame)]
+        simp), ite_eq_right (by simpa using hSame)]
     · rw [blockColumnTerm, blockRegrownRow_nd2_ne input pairing sourceBlock
         block picture hPicture hSame,
         blockOldSourceEdge_nd2 input pairing sourceBlock block picture hPicture,
-        if_pos hSame, hContribution]
+        ite_eq_left hSame, hContribution]
       by_cases hRow : (branchEdge data star block.first sourceBlock.1
           picture.first_survives).stablePath = path
-      · rw [if_pos (congrArg some hRow), if_pos hRow]
-      · rw [if_neg fun hEq ↦ hRow (Option.some.inj hEq), if_neg hRow]
+      · rw [ite_eq_left (congrArg some hRow), ite_eq_left hRow]
+      · rw [ite_eq_right fun hEq ↦ hRow (Option.some.inj hEq), ite_eq_right hRow]
   rw [Finset.sum_congr rfl fun pairing _ ↦ hTerm pairing, ← Finset.sum_filter,
     Finset.sum_const,
     card_separating_pairings block.first block.second block.distinct,
@@ -1175,8 +1179,8 @@ theorem sum_pairings_blockColumnTerm_nd3 (input : AuxR0SourceInput data star)
     blockOldSourceEdge_nd3 input pairing sourceBlock block picture hPicture,
     rowTerm_nd3SingletonEdge picture pairing path]
   by_cases hRow : (nd3SingletonEdge picture pairing).stablePath = path
-  · rw [if_pos (congrArg some hRow), if_pos hRow]
-  · rw [if_neg fun hEq ↦ hRow (Option.some.inj hEq), if_neg hRow]
+  · rw [ite_eq_left (congrArg some hRow), ite_eq_left hRow]
+  · rw [ite_eq_right fun hEq ↦ hRow (Option.some.inj hEq), ite_eq_right hRow]
 
 /-! ## The four incoming wall columns, block by block -/
 

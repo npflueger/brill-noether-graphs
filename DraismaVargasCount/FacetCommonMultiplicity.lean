@@ -1,6 +1,10 @@
-import DraismaVargasCount.ValencyThreeRigidity
-import DraismaVargasCount.NonTrivalentNonfacetDenominator
-import DraismaVargasCount.StarCensusEngine
+module
+
+public import DraismaVargasCount.ValencyThreeRigidity
+public import DraismaVargasCount.NonTrivalentNonfacetDenominator
+public import DraismaVargasCount.StarCensusEngine
+
+@[expose] public section
 
 /-!
 # Common multiplicity at a facet limit

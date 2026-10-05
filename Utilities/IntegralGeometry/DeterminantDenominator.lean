@@ -1,5 +1,9 @@
-import Utilities.IntegralGeometry.Denominator
-import Mathlib.LinearAlgebra.Matrix.Adjugate
+module
+
+public import Utilities.IntegralGeometry.Denominator
+public import Mathlib.LinearAlgebra.Matrix.Adjugate
+
+@[expose] public section
 
 /-!
 # Determinants give effective coordinate denominators

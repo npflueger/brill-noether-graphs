@@ -1,10 +1,14 @@
-import DraismaVargasCount.OddWitness
-import DraismaVargasCount.ClosedBoundaryMember
-import DraismaVargasCount.SimpleWallSupply
-import DraismaVargasCount.BallotFarEndSwap
-import DraismaVargasCount.BaseCountParity
-import DraismaVargas.LocalCases.RequestedExpandedEndpoints
-import DraismaVargasCount.DegenerateBigDivisor
+module
+
+public import DraismaVargasCount.OddWitness
+public import DraismaVargasCount.ClosedBoundaryMember
+public import DraismaVargasCount.SimpleWallSupply
+public import DraismaVargasCount.BallotFarEndSwap
+public import DraismaVargasCount.BaseCountParity
+public import DraismaVargas.LocalCases.RequestedExpandedEndpoints
+public import DraismaVargasCount.DegenerateBigDivisor
+
+@[expose] public section
 
 /-!
 # The graph side and the member half of the genus-six witness

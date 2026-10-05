@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W2R2Nd2PCofactor
-import DraismaVargas.LocalCases.MonovalentWall
+module
+
+public import DraismaVargas.LocalCases.W2R2Nd2PCofactor
+public import DraismaVargas.LocalCases.MonovalentWall
+
+@[expose] public section
 
 /-!
 # Excluding concentrated nd2 at a leaf-endpoint contraction (Base I)

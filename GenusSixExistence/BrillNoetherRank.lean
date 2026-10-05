@@ -1,5 +1,9 @@
-import GenusSixExistence.BrillNoetherRank.Tripod.Realisation
-import GenusSixExistence.BrillNoetherRank.GenusFivePairs
+module
+
+public import GenusSixExistence.BrillNoetherRank.Tripod.Realisation
+public import GenusSixExistence.BrillNoetherRank.GenusFivePairs
+
+@[expose] public section
 
 /-!
 # The expected Brill--Noether rank through genus six

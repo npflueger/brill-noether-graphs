@@ -1,8 +1,12 @@
-import Utilities.Subdivision.CoreBridgeCut
-import Utilities.Gluing.BridgeContraction
-import Utilities.Subdivision.LaplacianEquiv
-import Utilities.Subdivision.SubdivisionConnectivity
-import Utilities.Gonality.GonalityTransport
+module
+
+public import Utilities.Subdivision.CoreBridgeCut
+public import Utilities.Gluing.BridgeContraction
+public import Utilities.Subdivision.LaplacianEquiv
+public import Utilities.Subdivision.SubdivisionConnectivity
+public import Utilities.Gonality.GonalityTransport
+
+@[expose] public section
 
 /-!
 # Contracting a bridge slot of a subdivision specification
@@ -116,7 +120,7 @@ def merge (w v : Fin (n + 1)) (hvw : v ≠ w) (u : Fin (n + 1)) : Fin n :=
 theorem succAbove_merge (w v : Fin (n + 1)) (hvw : v ≠ w) {u : Fin (n + 1)} (hu : u ≠ w) :
     w.succAbove (merge w v hvw u) = u := by
   unfold merge
-  rw [dif_neg hu]
+  rw [dite_eq_right hu]
   have := (finSuccAboveEquiv w).apply_symm_apply ⟨u, hu⟩
   rw [finSuccAboveEquiv_apply] at this
   exact congrArg Subtype.val this
@@ -124,7 +128,7 @@ theorem succAbove_merge (w v : Fin (n + 1)) (hvw : v ≠ w) {u : Fin (n + 1)} (h
 theorem merge_succAbove (w v : Fin (n + 1)) (hvw : v ≠ w) (i : Fin n) :
     merge w v hvw (w.succAbove i) = i := by
   unfold merge
-  rw [dif_neg (Fin.succAbove_ne w i)]
+  rw [dite_eq_right (Fin.succAbove_ne w i)]
   have := (finSuccAboveEquiv w).symm_apply_apply i
   rw [finSuccAboveEquiv_apply] at this
   exact this
@@ -132,7 +136,7 @@ theorem merge_succAbove (w v : Fin (n + 1)) (hvw : v ≠ w) (i : Fin n) :
 theorem merge_self (w v : Fin (n + 1)) (hvw : v ≠ w) :
     merge w v hvw w = merge w v hvw v := by
   unfold merge
-  rw [dif_pos rfl, dif_neg hvw]
+  rw [dite_eq_left rfl, dite_eq_right hvw]
 
 theorem merge_inj (w v : Fin (n + 1)) (hvw : v ≠ w) {a b : Fin (n + 1)}
     (ha : a ≠ w) (hb : b ≠ w) (h : merge w v hvw a = merge w v hvw b) : a = b := by
@@ -621,26 +625,26 @@ variable {n p : ℕ} (spec : Spec n p)
 theorem stepLeft_of_zero (e : Fin p) (j : Fin (spec.length e)) (hj : j.val = 0) :
     spec.stepLeft e j = Sum.inl (spec.core.tail e) := by
   unfold Spec.stepLeft
-  rw [dif_pos hj]
+  rw [dite_eq_left hj]
   rfl
 
 theorem stepLeft_of_ne_zero (e : Fin p) (j : Fin (spec.length e)) (hj : j.val ≠ 0) :
     spec.stepLeft e j = Sum.inr ⟨e, ⟨j.val - 1, by have := j.isLt; omega⟩⟩ := by
   unfold Spec.stepLeft
-  rw [dif_neg hj]
+  rw [dite_eq_right hj]
   rfl
 
 theorem stepRight_of_last (e : Fin p) (j : Fin (spec.length e)) (hj : j.val + 1 = spec.length e) :
     spec.stepRight e j = Sum.inl (spec.core.head e) := by
   unfold Spec.stepRight
-  rw [dif_pos hj]
+  rw [dite_eq_left hj]
   rfl
 
 theorem stepRight_of_ne_last (e : Fin p) (j : Fin (spec.length e))
     (hj : j.val + 1 ≠ spec.length e) :
     spec.stepRight e j = Sum.inr ⟨e, ⟨j.val, by have := j.isLt; omega⟩⟩ := by
   unfold Spec.stepRight
-  rw [dif_neg hj]
+  rw [dite_eq_right hj]
   rfl
 
 end StepLemmas
@@ -837,8 +841,8 @@ def shorten (e : Fin p) (h2 : 2 ≤ spec.length e) : Spec n p :=
     (fun k => if k = e then spec.length e - 1 else spec.length k)
     (fun k => by
       by_cases hk : k = e
-      · simp only [hk, if_true]; omega
-      · simp only [hk, if_false]; exact spec.length_pos k)
+      · simp only [hk, ite_true]; omega
+      · simp only [hk, ite_false]; exact spec.length_pos k)
 
 @[simp] theorem shorten_core (e : Fin p) (h2 : 2 ≤ spec.length e) :
     (shorten spec e h2).core = spec.core := rfl

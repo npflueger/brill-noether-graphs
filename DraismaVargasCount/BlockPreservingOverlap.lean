@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.BlockPreservingBranchSwap
+module
+
+public import DraismaVargas.LocalCases.BlockPreservingBranchSwap
+
+@[expose] public section
 
 /-!
 # Block-preserving branch swaps with prescribed overlap of any size

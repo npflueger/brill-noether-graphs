@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W4StableSource
+module
+
+public import DraismaVargas.LocalCases.W4StableSource
+
+@[expose] public section
 
 /-!
 # Stable local properties of a gluing datum
@@ -1036,10 +1040,10 @@ theorem matrix_column_eq_of_divalent_of_surviving_localRamification_zero
           apply Finset.sum_congr rfl
           intro edge _
           by_cases hCase : edge.1.1 = item
-          · rw [if_pos hCase]
+          · rw [ite_eq_left hCase]
             simp [GluingDatum.LengthMatrixPresentation.coefficient,
               StableLengthMatrixLabelling.presentation, hCase]
-          · rw [if_neg hCase]
+          · rw [ite_eq_right hCase]
             apply GluingDatum.LengthMatrixPresentation.coefficient_eq_zero_of_target_ne
             simp only [StableLengthMatrixLabelling.presentation,
               Equiv.apply_symm_apply]

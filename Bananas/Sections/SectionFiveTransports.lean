@@ -1,7 +1,11 @@
-import Bananas.Transmission.KGeneralSwap
-import Bananas.Basics.MarkedIso
-import Bananas.Transmission.RankDeltaDuality
-import Utilities.Transmission.TransmissionDuality
+module
+
+public import Bananas.Transmission.KGeneralSwap
+public import Bananas.Basics.MarkedIso
+public import Bananas.Transmission.RankDeltaDuality
+public import Utilities.Transmission.TransmissionDuality
+
+@[expose] public section
 
 /-!
 # Section 5: transmission transports

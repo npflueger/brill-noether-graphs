@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W2R1SourceCandidates
-import DraismaVargas.LocalCases.LimitChainCore
+module
+
+public import DraismaVargas.LocalCases.W2R1SourceCandidates
+public import DraismaVargas.LocalCases.LimitChainCore
+
+@[expose] public section
 
 /-!
 # Survival and the endpoint census for the two `w2-r1` members, at **both**
@@ -380,20 +384,20 @@ theorem card_incident_old (profile : W2R1SourceProfile.OccurrenceProfile data st
   · rw [memberLocal_of_eq data star hPosition]
     simp only [joinedResolutionAt, SheetPartition.blockCountWithin_self]
     by_cases hDouble : profile.doubleLabel = 0
-    · rw [if_pos (hPosition.trans hDouble), ← hDouble]
+    · rw [ite_eq_left (hPosition.trans hDouble), ← hDouble]
       rw [doublePartition_blockCountWithin profile sheet hSheet]
-    · rw [if_neg (fun hZero ↦ hDouble (hPosition.symm.trans hZero)),
+    · rw [ite_eq_right (fun hZero ↦ hDouble (hPosition.symm.trans hZero)),
         blockCountWithin_eq_one_of_ne_doubleLabel profile (Ne.symm hDouble) sheet hSheet]
   · rw [memberLocal_of_ne data star hPosition, sideFine_newEdge]
     by_cases hDouble : profile.doubleLabel = 0
     · rw [sideFine_left_of_zero data star hDouble,
-        if_neg (fun hZero ↦ hPosition (hZero.trans hDouble.symm)), hDouble]
+        ite_eq_right (fun hZero ↦ hPosition (hZero.trans hDouble.symm)), hDouble]
       rw [SheetPartition.blockCountWithin_self]
     · have hZero : position = 0 := by
         have hOne : profile.doubleLabel = 1 := by omega
         rw [hOne] at hPosition
         omega
-      rw [sideFine_left_of_ne_zero data star hDouble, if_pos hZero,
+      rw [sideFine_left_of_ne_zero data star hDouble, ite_eq_left hZero,
         doublePartition_blockCountWithin profile sheet hSheet,
         blockCountWithin_eq_one_of_ne_doubleLabel profile (Ne.symm hDouble) sheet hSheet]
 
@@ -414,22 +418,22 @@ theorem card_incident_fresh (profile : W2R1SourceProfile.OccurrenceProfile data 
   · rw [memberLocal_of_eq data star hPosition]
     simp only [joinedResolutionAt, SheetPartition.blockCountWithin_self]
     by_cases hDouble : profile.doubleLabel = 1
-    · rw [if_pos (hPosition.trans hDouble), ← hDouble]
+    · rw [ite_eq_left (hPosition.trans hDouble), ← hDouble]
       rw [doublePartition_blockCountWithin profile sheet hSheet]
-    · rw [if_neg (fun hOne ↦ hDouble (hPosition.symm.trans hOne)),
+    · rw [ite_eq_right (fun hOne ↦ hDouble (hPosition.symm.trans hOne)),
         blockCountWithin_eq_one_of_ne_doubleLabel profile (Ne.symm hDouble) sheet hSheet]
   · rw [memberLocal_of_ne data star hPosition, sideFine_newEdge]
     by_cases hDouble : profile.doubleLabel = 0
     · have hOne : position = 1 := by
         rw [hDouble] at hPosition
         omega
-      rw [sideFine_right_of_zero data star hDouble, if_pos hOne,
+      rw [sideFine_right_of_zero data star hDouble, ite_eq_left hOne,
         doublePartition_blockCountWithin profile sheet hSheet]
       have hNe : (1 : Fin 2) ≠ profile.doubleLabel := by rw [hDouble]; decide
       rw [blockCountWithin_eq_one_of_ne_doubleLabel profile hNe sheet hSheet]
     · have hOne : profile.doubleLabel = 1 := by omega
       rw [sideFine_right_of_ne_zero data star hDouble,
-        if_neg (fun hEq ↦ hPosition (hEq.trans hOne.symm)), hOne]
+        ite_eq_right (fun hEq ↦ hPosition (hEq.trans hOne.symm)), hOne]
       rw [SheetPartition.blockCountWithin_self]
 
 end Cards
@@ -847,13 +851,13 @@ theorem retained_card_single (hPosition : member.position = member.double)
     Fintype.card (IncidentSourceEdge member.candidate.datum
       (member.vertex member.single sheet)) = 2 := by
   rw [member.card_vertex member.single hSheet,
-    if_neg (by rw [hPosition]; exact member.double_ne_single)]
+    ite_eq_right (by rw [hPosition]; exact member.double_ne_single)]
 
 theorem retained_card_double (hPosition : member.position = member.double)
     {sheet : Fin degree} (hSheet : (data.vertexPartition wall).Rel block.1 sheet) :
     Fintype.card (IncidentSourceEdge member.candidate.datum
       (member.vertex member.double sheet)) = 3 := by
-  rw [member.card_vertex member.double hSheet, if_pos hPosition]
+  rw [member.card_vertex member.double hSheet, ite_eq_left hPosition]
 
 /-- **The retained member's new occurrence survives**, always: it is paired
 with `e₃` at a divalent endpoint and `e₃` never dangles. -/
@@ -1050,14 +1054,14 @@ theorem resolved_card_double (hPosition : member.position ≠ member.double)
     {sheet : Fin degree} (hSheet : (data.vertexPartition wall).Rel block.1 sheet) :
     Fintype.card (IncidentSourceEdge member.candidate.datum
       (member.vertex member.double sheet)) = 2 := by
-  rw [member.card_vertex member.double hSheet, if_neg hPosition]
+  rw [member.card_vertex member.double hSheet, ite_eq_right hPosition]
 
 theorem resolved_card_single (hPosition : member.position ≠ member.double)
     {sheet : Fin degree} (hSheet : (data.vertexPartition wall).Rel block.1 sheet) :
     Fintype.card (IncidentSourceEdge member.candidate.datum
       (member.vertex member.single sheet)) = 3 := by
   rw [member.card_vertex member.single hSheet,
-    if_pos (member.position_eq_single hPosition)]
+    ite_eq_left (member.position_eq_single hPosition)]
 
 /-! ### The two divalent endpoints over the doubled direction -/
 

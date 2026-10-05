@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W2M1kIncomingCensus
-import DraismaVargas.LocalCases.W2M1kStableLift
+module
+
+public import DraismaVargas.LocalCases.W2M1kIncomingCensus
+public import DraismaVargas.LocalCases.W2M1kStableLift
+
+@[expose] public section
 
 /-!
 # Identifying the incoming `w2M1k` datum with a named Figure 33 member

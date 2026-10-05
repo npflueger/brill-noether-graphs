@@ -1,8 +1,12 @@
-import Bananas.Classification.GenusOneRankDelta
-import Bananas.SameStrand.EndpointInversions
-import Bananas.CrossOneOff.AffineReduction
-import Bananas.CrossOneOff.AffineInversionFinite
-import Bananas.Theta.ThetaInvTauCorrection
+module
+
+public import Bananas.Classification.GenusOneRankDelta
+public import Bananas.SameStrand.EndpointInversions
+public import Bananas.CrossOneOff.AffineReduction
+public import Bananas.CrossOneOff.AffineInversionFinite
+public import Bananas.Theta.ThetaInvTauCorrection
+
+@[expose] public section
 
 /-!
 # General transmission in genus one

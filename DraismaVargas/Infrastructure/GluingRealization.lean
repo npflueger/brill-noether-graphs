@@ -1,7 +1,11 @@
-import DraismaVargas.Infrastructure.GluingDatum
-import Utilities.Gonality.SubdivisionPencil
-import Utilities.Subdivision.SubdivisionConnectivity
-import Utilities.Subdivision.UnitSubdivisionPresentation
+module
+
+public import DraismaVargas.Infrastructure.GluingDatum
+public import Utilities.Gonality.SubdivisionPencil
+public import Utilities.Subdivision.SubdivisionConnectivity
+public import Utilities.Subdivision.UnitSubdivisionPresentation
+
+@[expose] public section
 
 /-!
 # Integral realizations of DV gluing data

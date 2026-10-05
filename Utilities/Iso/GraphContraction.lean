@@ -1,6 +1,10 @@
-import Utilities.Subdivision.StrongSeparator
-import Utilities.Subdivision.LaplacianEquiv
-import Mathlib.Tactic
+module
+
+public import Utilities.Subdivision.StrongSeparator
+public import Utilities.Subdivision.LaplacianEquiv
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # Controlled graph-contraction certificates
@@ -223,7 +227,7 @@ def pullScript (c : GraphContractionCertificate G H)
     · simp
   · have hbx : b ≠ c.vertexMap x := Ne.symm hb
     rw [pushDiv]
-    simp only [one_chip, if_neg hbx]
+    simp only [one_chip, ite_eq_right hbx]
     apply Finset.sum_eq_zero
     intro y _
     by_cases hy : y = x

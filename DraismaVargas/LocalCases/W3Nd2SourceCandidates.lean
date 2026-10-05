@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.W3IncomingClassification
-import DraismaVargas.LocalCases.GlobalCoarseFine
-import DraismaVargas.LocalCases.M11SourceGenus
+module
+
+public import DraismaVargas.LocalCases.W3IncomingClassification
+public import DraismaVargas.LocalCases.GlobalCoarseFine
+public import DraismaVargas.LocalCases.M11SourceGenus
+
+@[expose] public section
 
 /-!
 # Source-derived W3 nd2 coarse candidate
@@ -303,7 +307,7 @@ noncomputable def background (input : W3SourceInput data star)
       exact SheetPartition.Refines.refl fine
     · have hRight : rightOf profile.small.1.1.1 edge = true := by
         simp [rightOf, hEq]
-      rw [hRight, if_pos rfl]
+      rw [hRight, ite_eq_left rfl]
       change (data.edgePartition edge).Refines (data.vertexPartition wall)
       exact refines_of_mem_incidentEdges data hAt
   · rw [wallEdgesAssigned_false orientation]

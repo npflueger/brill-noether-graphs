@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.GlobalMkk
-import DraismaVargas.LocalCases.ResolutionP
+module
+
+public import DraismaVargas.LocalCases.GlobalMkk
+public import DraismaVargas.LocalCases.ResolutionP
+
+@[expose] public section
 
 /-!
 # Global arbitrary-degree continuation in case P

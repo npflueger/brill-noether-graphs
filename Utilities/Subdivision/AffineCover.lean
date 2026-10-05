@@ -1,6 +1,10 @@
-import Mathlib.Algebra.Order.Field.Rat
-import Mathlib.Data.List.GetD
-import Mathlib.Tactic
+module
+
+public import Mathlib.Algebra.Order.Field.Rat
+public import Mathlib.Data.List.GetD
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # Kernel-checked affine covering certificates
@@ -365,7 +369,7 @@ private theorem integralCheck_eq_true_iff (data : FarkasData)
 
 /-- General rational checker retained as the fallback for hand-written or
 legacy certificates whose denominators have not been cleared. -/
-private def rationalCheck (data : FarkasData)
+def rationalCheck (data : FarkasData)
     (rows : List (AffineForm m)) : Bool :=
   (data.terms.all fun term =>
     decide (term.row < rows.length ∧ 0 ≤ term.weight)) &&
@@ -519,7 +523,7 @@ def Valid (cones : List (List (AffineForm m)))
             [AffineForm.violation (formAt (coneAt cones cone) i.val)])
 
 /-- Recursive Boolean replay of a contradiction tree under active rows. -/
-private def checkActive (cones : List (List (AffineForm m)))
+def checkActive (cones : List (List (AffineForm m)))
     (active : List (AffineForm m)) : CoverTree m → Bool
   | .leaf farkas => farkas.check active
   | .empty cone =>
@@ -691,7 +695,7 @@ def resultRows : List (AffineForm m) → List (ReductionStep m) →
 
 /-- Mathematical validity of rows deleted in the exact forward order in which
 they disappear from the cone. -/
-private def ValidRows (base : List (AffineForm m)) :
+def ValidRows (base : List (AffineForm m)) :
     List (AffineForm m) → List (ReductionStep m) → Prop
   | _rows, [] => True
   | rows, step :: steps =>
@@ -705,7 +709,7 @@ def Valid (chain : ReductionChain m) (base full : List (AffineForm m)) : Prop :=
   ValidRows base full chain.steps
 
 /-- Boolean replay of row deletions from `rows` down to the claimed result. -/
-private def checkRows (base reduced : List (AffineForm m)) :
+def checkRows (base reduced : List (AffineForm m)) :
     List (AffineForm m) → List (ReductionStep m) → Bool
   | rows, [] => decide (rows = reduced)
   | rows, step :: steps =>
@@ -789,7 +793,7 @@ theorem formsHold_full_of_valid
   | cons step steps ih =>
       simp only [ValidRows] at hValid
       obtain ⟨hMem, hFarkas, hTail⟩ := hValid
-      simp only [resultRows, hMem, if_true] at hResult
+      simp only [resultRows, hMem, ite_true] at hResult
       have hRemaining : FormsHold (full.erase step.removed) point :=
         ih (full.erase step.removed) hTail hResult
       exact formsHold_insert_erased full step.removed hMem point hRemaining
@@ -816,12 +820,12 @@ end ReductionChain
 namespace Examples
 
 /-- The affine form `constant + a*x`. -/
-private def form1 (constant a : ℤ) : AffineForm 1 where
+def form1 (constant a : ℤ) : AffineForm 1 where
   constant := constant
   coefficient := ![a]
 
 /-- The affine form `constant + a*x + b*y`. -/
-private def form2 (constant a b : ℤ) : AffineForm 2 where
+def form2 (constant a b : ℤ) : AffineForm 2 where
   constant := constant
   coefficient := ![a, b]
 

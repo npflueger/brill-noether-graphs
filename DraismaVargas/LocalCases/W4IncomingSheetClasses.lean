@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W4IncomingRetainedFlags
-import DraismaVargas.LocalCases.W4IncomingClassUnion
+module
+
+public import DraismaVargas.LocalCases.W4IncomingRetainedFlags
+public import DraismaVargas.LocalCases.W4IncomingClassUnion
+
+@[expose] public section
 
 /-!
 # Literal sheet classes in the incoming auxiliary r0 cases

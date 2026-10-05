@@ -1,4 +1,8 @@
-import Utilities.Gluing.MarkedTwistDegree
+module
+
+public import Utilities.Gluing.MarkedTwistDegree
+
+@[expose] public section
 
 /-!
 # Effective subtraction and common-complement APIs

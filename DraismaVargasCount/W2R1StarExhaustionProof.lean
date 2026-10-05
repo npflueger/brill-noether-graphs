@@ -1,5 +1,9 @@
-import DraismaVargasCount.W2R1StarCensusProof
-import DraismaVargasCount.M11StarExhaustionProof
+module
+
+public import DraismaVargasCount.W2R1StarCensusProof
+public import DraismaVargasCount.M11StarExhaustionProof
+
+@[expose] public section
 
 /-!
 # W2R1 star exhaustion: the `w2R1` clause with no hypothesis
@@ -480,15 +484,15 @@ noncomputable def newPerm (q : Fin 2) : Equiv.Perm (Fin degree) := by
       (first.vertexPartition wall).Rel x y := fun x y h ↦ (hE 1 x).symm.trans (h.trans (hE 0 y))
   intro x y hxy
   by_cases hx : Fine pair₁ q 1 x <;> by_cases hy : Fine pair₁ q 1 y
-  · simp only [f, hx, hy, if_true] at hxy
+  · simp only [f, hx, hy, ite_true] at hxy
     exact E1.injective hxy
-  · simp only [f, hx, hy, if_true, if_false] at hxy
+  · simp only [f, hx, hy, ite_true, ite_false] at hxy
     have hRel := hSame x y (by rw [hxy]; exact rfl)
     exact absurd ((fine_congr pair₁ q 1 hRel).mp hx) hy
-  · simp only [f, hx, hy, if_true, if_false] at hxy
+  · simp only [f, hx, hy, ite_true, ite_false] at hxy
     have hRel := hSame y x (by rw [hxy]; exact rfl)
     exact absurd ((fine_congr pair₁ q 1 hRel).mp hy) hx
-  · simp only [f, hx, hy, if_false] at hxy
+  · simp only [f, hx, hy, ite_false] at hxy
     exact E0.injective hxy
 
 theorem newPerm_apply (q : Fin 2) (x : Fin degree) :
@@ -526,10 +530,10 @@ theorem nonempty_transport (res : LocalResolution degree) (q : Fin 2)
     fun s ↦ iso.compatible ((M11WallExhaustion.pullbackTwoStar iso wall wall' hWall star').edge 1) wall (incident_of_edge (M11WallExhaustion.pullbackTwoStar iso wall wall' hWall star') 1) s
   have hN0 : ∀ s, ¬ Fine pair₁ q 1 s → N s = E0 s := by
     intro s hs
-    rw [newPerm_apply, if_neg hs]
+    rw [newPerm_apply, ite_eq_right hs]
   have hN1 : ∀ s, Fine pair₁ q 1 s → N s = E1 s := by
     intro s hs
-    rw [newPerm_apply, if_pos hs]
+    rw [newPerm_apply, ite_eq_left hs]
   have hNm : ∀ s, W.Rel (V.symm (N s)) s := by
     intro s
     by_cases hs : Fine pair₁ q 1 s
@@ -615,12 +619,12 @@ theorem nonempty_transport (res : LocalResolution degree) (q : Fin 2)
   · intro edge hInc s
     rcases eq_edge_of_incident (M11WallExhaustion.pullbackTwoStar iso wall wall' hWall star') edge hInc with rfl | rfl
     · rw [TwoStar.right_edge_zero]
-      simp only [Bool.false_eq_true, if_false]
+      simp only [Bool.false_eq_true, ite_false]
       rw [show iso.edgePerm ((M11WallExhaustion.pullbackTwoStar iso wall wall' hWall star').edge 0) s
         = E0 s from rfl, Equiv.symm_apply_apply]
       exact rfl
     · rw [TwoStar.right_edge_one]
-      simp only [if_true]
+      simp only [ite_true]
       rw [show iso.edgePerm ((M11WallExhaustion.pullbackTwoStar iso wall wall' hWall star').edge 1) s
         = E1 s from rfl, Equiv.symm_apply_apply]
       exact rfl

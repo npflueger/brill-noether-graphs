@@ -1,4 +1,8 @@
-import Bananas.Transmission.TransmissionBasics
+module
+
+public import Bananas.Transmission.TransmissionBasics
+
+@[expose] public section
 
 /-!
 # Negative rank differences at rank zero

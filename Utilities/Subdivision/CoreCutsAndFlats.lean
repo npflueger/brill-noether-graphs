@@ -1,4 +1,8 @@
-import Utilities.Subdivision.SubdivisionConnectivity
+module
+
+public import Utilities.Subdivision.SubdivisionConnectivity
+
+@[expose] public section
 
 /-!
 # Core cuts, components, bridges and flats
@@ -154,12 +158,12 @@ theorem otherEnd_not_mem_of_crosses {W : Finset (Fin n)} {e : Fin p} {z : Fin n}
     core.otherEnd e z ∉ W := by
   unfold otherEnd
   by_cases hc : core.tail e = z
-  · rw [if_pos hc]
+  · rw [ite_eq_left hc]
     have htW : core.tail e ∈ W := by rw [hc]; exact hzW
     rcases hcross with ⟨-, h⟩ | ⟨-, h⟩
     · exact h
     · exact absurd htW h
-  · rw [if_neg hc]
+  · rw [ite_eq_right hc]
     have hhW : core.head e ∈ W := by rw [hz.resolve_left hc]; exact hzW
     rcases hcross with ⟨-, h⟩ | ⟨-, h⟩
     · exact absurd hhW h
@@ -172,11 +176,11 @@ theorem otherEnd_mem_of_not_crosses {W : Finset (Fin n)} {e : Fin p} {z : Fin n}
     core.otherEnd e z ∈ W := by
   unfold otherEnd
   by_cases hc : core.tail e = z
-  · rw [if_pos hc]
+  · rw [ite_eq_left hc]
     have htW : core.tail e ∈ W := by rw [hc]; exact hzW
     by_contra hhW
     exact hcross (Or.inl ⟨htW, hhW⟩)
-  · rw [if_neg hc]
+  · rw [ite_eq_right hc]
     have hhW : core.head e ∈ W := by rw [hz.resolve_left hc]; exact hzW
     by_contra htW
     exact hcross (Or.inr ⟨hhW, htW⟩)
@@ -195,9 +199,9 @@ theorem otherEnd_ne {e : Fin p} {z : Fin n} (hz : core.Incident e z)
   have _ : core.Incident e z := hz
   unfold otherEnd
   by_cases hc : core.tail e = z
-  · rw [if_pos hc]
+  · rw [ite_eq_left hc]
     exact fun h => hloop (hc.trans h.symm)
-  · rw [if_neg hc]
+  · rw [ite_eq_right hc]
     exact hc
 
 /-- A crossing slot has a distinguished endpoint inside `W`, the *near* end. -/
@@ -207,11 +211,11 @@ theorem exists_nearEnd {W : Finset (Fin n)} {e : Fin p}
   rcases hcross with ⟨ht, hh⟩ | ⟨hh, ht⟩
   · refine ⟨core.tail e, Or.inl rfl, ht, ?_⟩
     unfold otherEnd
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     exact hh
   · refine ⟨core.head e, Or.inr rfl, hh, ?_⟩
     unfold otherEnd
-    rw [if_neg hloop]
+    rw [ite_eq_right hloop]
     exact ht
 
 /-- A slot has exactly two endpoints: anything incident to `e` other than `z` is
@@ -220,11 +224,11 @@ theorem eq_otherEnd_of_incident {e : Fin p} {u z : Fin n} (hu : core.Incident e 
     (hz : core.Incident e z) (hne : u ≠ z) : u = core.otherEnd e z := by
   unfold otherEnd
   by_cases hc : core.tail e = z
-  · rw [if_pos hc]
+  · rw [ite_eq_left hc]
     rcases hu with h | h
     · exact absurd (h.symm.trans hc) hne
     · exact h.symm
-  · rw [if_neg hc]
+  · rw [ite_eq_right hc]
     have hhead := hz.resolve_left hc
     rcases hu with h | h
     · exact h.symm

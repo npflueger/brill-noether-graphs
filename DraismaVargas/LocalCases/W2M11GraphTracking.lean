@@ -1,9 +1,13 @@
-import DraismaVargas.LocalCases.InteriorGraphTracking
-import DraismaVargas.LocalCases.M11HonestGaugeFamily
-import DraismaVargas.LocalCases.W3ShiftGraphTracking
-import DraismaVargas.LocalCases.IncomingSourceCases
-import DraismaVargas.LocalCases.M11FullDimensional
-import DraismaVargas.LocalCases.M11IncomingMatching
+module
+
+public import DraismaVargas.LocalCases.InteriorGraphTracking
+public import DraismaVargas.LocalCases.M11HonestGaugeFamily
+public import DraismaVargas.LocalCases.W3ShiftGraphTracking
+public import DraismaVargas.LocalCases.IncomingSourceCases
+public import DraismaVargas.LocalCases.M11FullDimensional
+public import DraismaVargas.LocalCases.M11IncomingMatching
+
+@[expose] public section
 
 /-!
 # Same-candidate graph and row tracking for Figure 32

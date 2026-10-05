@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.InteriorProgress
+module
+
+public import DraismaVargas.LocalCases.InteriorProgress
+
+@[expose] public section
 
 /-!
 # The two divalent interior bridges: Figure 33 (`w2M1k`) and Figure 34 (`w2Mkk`)

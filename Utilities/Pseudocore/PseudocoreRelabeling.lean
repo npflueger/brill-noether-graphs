@@ -1,5 +1,9 @@
-import Utilities.Pseudocore.GenusFourPseudocore
-import Mathlib.Data.Fin.Tuple.Sort
+module
+
+public import Utilities.Pseudocore.GenusFourPseudocore
+public import Mathlib.Data.Fin.Tuple.Sort
+
+@[expose] public section
 
 /-!
 # Vertex relabeling and the handshake identity for pseudocores

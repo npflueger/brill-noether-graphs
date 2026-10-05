@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.TraversalPresentation
+module
+
+public import DraismaVargas.LocalCases.TraversalPresentation
+
+@[expose] public section
 
 /-!
 # Faithful and spanning core dictionaries
@@ -235,15 +239,15 @@ theorem exists_relabel_of_injective {firstAt secondAt : Fin n → V}
   classical
   set relabel : Fin n ≃ Fin n :=
     (Equiv.ofInjective firstAt hFirstInjective).trans
-      ((Equiv.setCongr hRange).trans
+      ((Set.equivOfEq hRange).trans
         (Equiv.ofInjective secondAt hSecondInjective).symm) with hRelabel
   have hKey : ∀ v : Fin n, secondAt (relabel v) = firstAt v := by
     intro v
     have hApply := (Equiv.ofInjective secondAt hSecondInjective).apply_symm_apply
-      (Equiv.setCongr hRange ⟨firstAt v, Set.mem_range_self v⟩)
+      (Set.equivOfEq hRange ⟨firstAt v, Set.mem_range_self v⟩)
     have hSubtype :
         (⟨secondAt (relabel v), Set.mem_range_self _⟩ : Set.range secondAt) =
-          Equiv.setCongr hRange ⟨firstAt v, Set.mem_range_self v⟩ := by
+          Set.equivOfEq hRange ⟨firstAt v, Set.mem_range_self v⟩ := by
       rw [hRelabel]
       exact hApply
     exact congrArg Subtype.val hSubtype

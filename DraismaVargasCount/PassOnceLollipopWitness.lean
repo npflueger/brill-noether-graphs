@@ -1,6 +1,10 @@
-import DraismaVargasCount.PassOnceLollipop
-import DraismaVargasCount.LollipopBridgeFibreWitness
-import DraismaVargasCount.RowSingleColumnWitness
+module
+
+public import DraismaVargasCount.PassOnceLollipop
+public import DraismaVargasCount.LollipopBridgeFibreWitness
+public import DraismaVargasCount.RowSingleColumnWitness
+
+@[expose] public section
 
 /-!
 # Pass-once at the lollipop, at a member of the labelled fibre

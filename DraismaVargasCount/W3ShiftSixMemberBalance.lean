@@ -1,6 +1,10 @@
-import DraismaVargasCount.W3ShiftMultiplicityBalance
-import DraismaVargas.LocalCases.SheetRelabelIncidence
-import DraismaVargas.LocalCases.W3ShiftClosure
+module
+
+public import DraismaVargasCount.W3ShiftMultiplicityBalance
+public import DraismaVargas.LocalCases.SheetRelabelIncidence
+public import DraismaVargas.LocalCases.W3ShiftClosure
+
+@[expose] public section
 
 /-!
 # The three actual Equation (3) shift pairs

@@ -1,4 +1,8 @@
-import Bananas.SameStrand.Semibreak
+module
+
+public import Bananas.SameStrand.Semibreak
+
+@[expose] public section
 
 /-!
 # The endpoint rank-one criterion for banana graphs

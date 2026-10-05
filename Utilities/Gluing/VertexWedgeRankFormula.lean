@@ -1,6 +1,10 @@
-import Utilities.Gluing.VertexWedge
-import Utilities.Foundations.RankChipStep
-import ChipFiringWithLean.RiemannRoch
+module
+
+public import Utilities.Gluing.VertexWedge
+public import Utilities.Foundations.RankChipStep
+public import ChipFiringWithLean.RiemannRoch
+
+@[expose] public section
 
 /-!
 # Rank profiles under vertex gluing

@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W2R1StableLift
+module
+
+public import DraismaVargas.LocalCases.W2R1StableLift
+
+@[expose] public section
 
 /-!
 # Figures 37 and 38's row descent, at **both** blocks
@@ -117,14 +121,14 @@ noncomputable def rep (sheet : Fin degree) : data.SourceEdge :=
   else member.profile.first.1
 
 theorem rep_retained (hPosition : member.position = member.double) (sheet : Fin degree) :
-    rep member sheet = member.profile.third.1 := if_pos hPosition
+    rep member sheet = member.profile.third.1 := ite_eq_left hPosition
 
 theorem rep_resolved_second (hPosition : member.position ≠ member.double) {sheet : Fin degree}
     (hRel : (doublePartition member.profile.toOccurrenceProfile).Rel
       (secondSheet member.profile.toOccurrenceProfile) sheet) :
     rep member sheet = member.profile.second.1 := by
   unfold rep
-  rw [if_neg hPosition, if_pos hRel]
+  rw [ite_eq_right hPosition, ite_eq_left hRel]
 
 theorem rep_resolved_first_nd2 (hPosition : member.position ≠ member.double)
     {sheet : Fin degree}
@@ -133,7 +137,7 @@ theorem rep_resolved_first_nd2 (hPosition : member.position ≠ member.double)
     (hNd2 : IsDangling data member.profile.first.1) :
     rep member sheet = member.profile.third.1 := by
   unfold rep
-  rw [if_neg hPosition, if_neg hRel, if_pos (valency_eq_two_of_nd2 member hNd2)]
+  rw [ite_eq_right hPosition, ite_eq_right hRel, ite_eq_left (valency_eq_two_of_nd2 member hNd2)]
 
 theorem rep_resolved_first_nd3 (hPosition : member.position ≠ member.double)
     {sheet : Fin degree}
@@ -142,7 +146,7 @@ theorem rep_resolved_first_nd3 (hPosition : member.position ≠ member.double)
     (hNd3 : ¬ IsDangling data member.profile.first.1) :
     rep member sheet = member.profile.first.1 := by
   unfold rep
-  rw [if_neg hPosition, if_neg hRel, if_neg (valency_ne_two_of_nd3 member hNd3)]
+  rw [ite_eq_right hPosition, ite_eq_right hRel, ite_eq_right (valency_ne_two_of_nd3 member hNd3)]
 
 /-- **Every branch of the representative survives.** -/
 theorem rep_survives (sheet : Fin degree) : ¬ IsDangling data (rep member sheet) := by
@@ -354,12 +358,12 @@ noncomputable def selectedRep (position : Fin 2) (sheet : Fin degree) : data.Sou
 theorem selectedRep_first (position : Fin 2) {sheet : Fin degree}
     (hRel : (data.vertexPartition wall).Rel pair.first.1 sheet) :
     selectedRep pair hValid position sheet = rep (firstMember pair hValid position) sheet :=
-  if_pos hRel
+  ite_eq_left hRel
 
 theorem selectedRep_second (position : Fin 2) {sheet : Fin degree}
     (hRel : ¬ (data.vertexPartition wall).Rel pair.first.1 sheet) :
     selectedRep pair hValid position sheet = rep (secondMember pair hValid position) sheet :=
-  if_neg hRel
+  ite_eq_right hRel
 
 theorem selectedRep_survives (position : Fin 2) (sheet : Fin degree) :
     ¬ IsDangling data (selectedRep pair hValid position sheet) := by

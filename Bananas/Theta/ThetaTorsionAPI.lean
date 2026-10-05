@@ -1,5 +1,9 @@
-import Bananas.Basics.BananaGeometry
-import Bananas.Theta.ThetaPrefix
+module
+
+public import Bananas.Basics.BananaGeometry
+public import Bananas.Theta.ThetaPrefix
+
+@[expose] public section
 
 /-!
 # Verified local input for theta torsion

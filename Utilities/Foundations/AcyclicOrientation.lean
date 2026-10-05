@@ -1,5 +1,9 @@
-import Utilities.Foundations.Duality
-import ChipFiringWithLean.RRGHelpers
+module
+
+public import Utilities.Foundations.Duality
+public import ChipFiringWithLean.RRGHelpers
+
+@[expose] public section
 
 /-!
 # Unwinnability at degree `g - 1` and acyclic orientations

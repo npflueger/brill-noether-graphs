@@ -1,6 +1,10 @@
-import Utilities.Grassmannian.GrassmannianExistence
-import Utilities.Transmission.TransmissionDuality
-import Utilities.Transmission.TransmissionIso
+module
+
+public import Utilities.Grassmannian.GrassmannianExistence
+public import Utilities.Transmission.TransmissionDuality
+public import Utilities.Transmission.TransmissionIso
+
+@[expose] public section
 
 /-!
 # Finite-length transmission existence

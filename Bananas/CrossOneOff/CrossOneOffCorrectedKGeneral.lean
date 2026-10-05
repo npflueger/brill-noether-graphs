@@ -1,5 +1,9 @@
-import Bananas.CrossOneOff.CrossOneOffCorrectedInversion
-import Bananas.CrossOneOff.CrossOneOffPeriodSeparation
+module
+
+public import Bananas.CrossOneOff.CrossOneOffCorrectedInversion
+public import Bananas.CrossOneOff.CrossOneOffPeriodSeparation
+
+@[expose] public section
 
 /-!
 # Corrected long-strand cross-one-off obstruction
@@ -33,7 +37,7 @@ theorem genus_lt_correctedCrossOneOffForcedCount_of_second_long
     {g n : ℕ} (hg : 5 ≤ g) (hn : g + 1 ≤ n) :
     g < correctedCrossOneOffForcedCount g n := by
   have hnTwo : n ≠ 2 := by omega
-  rw [correctedCrossOneOffForcedCount, if_neg hnTwo]
+  rw [correctedCrossOneOffForcedCount, ite_eq_right hnTwo]
   exact (choose_genus_sub_one_two_gt_genus hg).trans_le
     (Nat.le_add_right _ _)
 

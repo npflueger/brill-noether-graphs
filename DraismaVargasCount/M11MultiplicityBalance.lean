@@ -1,5 +1,9 @@
-import DraismaVargasCount.UnitWeightBalance
-import DraismaVargas.LocalCases.M11CommonBalance
+module
+
+public import DraismaVargasCount.UnitWeightBalance
+public import DraismaVargas.LocalCases.M11CommonBalance
+
+@[expose] public section
 
 /-!
 # Multiplicity factors for Equation (6), M11
@@ -135,10 +139,10 @@ theorem denominatorProduct_two
         (fun place ↦ StableSourceMatrix.matrix data third place)
         (star.edge profile.singleLabel) (a := 1) (b := 2) (c := -1)
         (by decide) (by decide) (Or.inr rfl) (one_dvd _) hOdd
-    · simp only [if_neg hPath, sub_zero, one_mul]
+    · simp only [ite_eq_right hPath, sub_zero, one_mul]
       exact lcm_den_eq_right (den_dvd_incomingRowDenominator _ _)
   rw [Finset.prod_congr rfl fun path _ ↦ hTerm path, Finset.prod_mul_distrib,
-    Finset.prod_ite_eq' Finset.univ third (fun _ ↦ 2), if_pos (Finset.mem_univ _)]
+    Finset.prod_ite_eq' Finset.univ third (fun _ ↦ 2), ite_eq_left (Finset.mem_univ _)]
   rfl
 
 /-- Equation (6)'s multiplicity balance, with the odd-denominator hypothesis

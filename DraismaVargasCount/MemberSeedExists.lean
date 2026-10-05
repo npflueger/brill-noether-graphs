@@ -1,5 +1,9 @@
-import DraismaVargasCount.MemberSeedTree
-import DraismaVargasCount.CensusConnected
+module
+
+public import DraismaVargasCount.MemberSeedTree
+public import DraismaVargasCount.CensusConnected
+
+@[expose] public section
 
 /-!
 # Every full-dimensional member has a forest occurrence

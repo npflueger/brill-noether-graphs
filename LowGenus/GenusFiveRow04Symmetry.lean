@@ -1,5 +1,9 @@
-import LowGenus.GenusFiveClosedOrbit
-import LowGenus.GenusFiveCoreAtlas
+module
+
+public import LowGenus.GenusFiveClosedOrbit
+public import LowGenus.GenusFiveCoreAtlas
+
+@[expose] public section
 
 /-! **Independent generated check.** This module provides an additional generated proof of row 04 and is not imported by the main `LowGenus` root.
 

@@ -1,7 +1,11 @@
-import DraismaVargas.LocalCases.W2M1kGraphData
-import DraismaVargas.LocalCases.W2M1kLimitMatrix
-import DraismaVargas.LocalCases.W2M1kCommonBalance
-import DraismaVargas.LocalCases.StableGraphFullDimensional
+module
+
+public import DraismaVargas.LocalCases.W2M1kGraphData
+public import DraismaVargas.LocalCases.W2M1kLimitMatrix
+public import DraismaVargas.LocalCases.W2M1kCommonBalance
+public import DraismaVargas.LocalCases.StableGraphFullDimensional
+
+@[expose] public section
 
 /-!
 # Figure 33's certified exit, one member at a time

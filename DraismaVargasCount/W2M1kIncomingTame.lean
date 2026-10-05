@@ -1,6 +1,10 @@
-import DraismaVargasCount.W2M1kRowTransport
-import DraismaVargasCount.OutgoingRowCalculus
-import DraismaVargasCount.W2M1kCountBalance
+module
+
+public import DraismaVargasCount.W2M1kRowTransport
+public import DraismaVargasCount.OutgoingRowCalculus
+public import DraismaVargasCount.W2M1kCountBalance
+
+@[expose] public section
 
 /-!
 # Incoming M-1k row tameness from a full-dimensional resolution

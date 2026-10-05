@@ -1,6 +1,10 @@
-import Bananas.Wedge.SameFactorWedgePeriod
-import Bananas.Wedge.OppositeWedgeKGeneralClassification
-import Bananas.Transmission.KGeneralSwap
+module
+
+public import Bananas.Wedge.SameFactorWedgePeriod
+public import Bananas.Wedge.OppositeWedgeKGeneralClassification
+public import Bananas.Transmission.KGeneralSwap
+
+@[expose] public section
 
 /-!
 # Mark-placement classification on a rigid genus-two wedge

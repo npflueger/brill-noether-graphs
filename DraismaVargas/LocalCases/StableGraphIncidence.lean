@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.StablePathCount
-import DraismaVargas.LocalCases.SheetRelabelStable
+module
+
+public import DraismaVargas.LocalCases.StablePathCount
+public import DraismaVargas.LocalCases.SheetRelabelStable
+
+@[expose] public section
 
 /-!
 # A minimal stable-source incidence dictionary

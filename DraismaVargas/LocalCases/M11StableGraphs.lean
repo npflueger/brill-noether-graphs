@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.M11SplitStableGraph
-import DraismaVargas.LocalCases.M11JoinedStableGraph
-import DraismaVargas.LocalCases.M11CommonBalance
+module
+
+public import DraismaVargas.LocalCases.M11SplitStableGraph
+public import DraismaVargas.LocalCases.M11JoinedStableGraph
+public import DraismaVargas.LocalCases.M11CommonBalance
+
+@[expose] public section
 
 /-!
 # The actual M11 family has one stable graph

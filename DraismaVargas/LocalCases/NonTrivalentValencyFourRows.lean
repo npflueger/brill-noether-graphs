@@ -1,8 +1,12 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyFourBackground
-import DraismaVargas.LocalCases.M11SourceGenus
-import DraismaVargas.LocalCases.ResolutionAwayFromWall
-import DraismaVargas.LocalCases.DanglingSideStructure
-import DraismaVargas.LocalCases.LimitChainCore
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyFourBackground
+public import DraismaVargas.LocalCases.M11SourceGenus
+public import DraismaVargas.LocalCases.ResolutionAwayFromWall
+public import DraismaVargas.LocalCases.DanglingSideStructure
+public import DraismaVargas.LocalCases.LimitChainCore
+
+@[expose] public section
 
 /-!
 # Stable rows of the `K = 0` candidate above a four-valent wall
@@ -215,9 +219,9 @@ theorem isStar_selectedResolution :
       (selectedResolution source pairing hNoGlue hRamification) := by
   unfold selectedResolution baseResolution
   by_cases hSide : smallerSide source pairing
-  · rw [if_pos hSide]
+  · rw [ite_eq_left hSide]
     exact isStar_reverse (isStar_fineResolution _ _ _)
-  · rw [if_neg hSide]
+  · rw [ite_eq_right hSide]
     exact isStar_fineResolution _ _ _
 
 /-! ## 2.  The outgoing candidate preserves the source genus -/
@@ -267,7 +271,7 @@ theorem candidate_sourceGenus :
           BlockLocalBackground.localizedResolution source pairing hNoGlue
             hRamification
             (blockLocalBackground source pairing hNoGlue hRamification profile
-              hConnected hGenus hValid) block hBlock := dif_neg hBlock
+              hConnected hGenus hValid) block hBlock := dite_eq_right hBlock
     rw [hRes]
     unfold BlockLocalBackground.localizedResolution
     rw [LocalResolution.pasteNewEdge_blockCountWithin,

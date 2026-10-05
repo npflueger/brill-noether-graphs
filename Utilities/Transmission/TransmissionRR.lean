@@ -1,4 +1,8 @@
-import Utilities.Transmission.Transmission
+module
+
+public import Utilities.Transmission.Transmission
+
+@[expose] public section
 
 /-!
 # Riemann--Roch duality for transmission rows

@@ -1,4 +1,4 @@
-# Brill–Noether existence for graphs of genus six
+# Brill–Noether existence and rank for graphs through genus six
 
 `Challenge.lean` imports only Mathlib. It defines finite multigraphs, divisors,
 chip-firing equivalence and the Baker–Norine rank test locally. It then states
@@ -26,7 +26,8 @@ four theorems whose bodies are deliberately `sorry`.
 
 2. **`brill_noether_rank_through_six`** and
    **`brill_noether_rank_ge_rho_through_six`.** The Brill–Noether rank
-   `w^r_d(G)` of [LPP] and [Len] is the largest `k ≥ 0` such that every
+   `w^r_d(G)` of [LPP] and [Len] is −1 when no degree-`d` divisor
+   of rank at least `r` exists, and otherwise is the largest `k ≥ 0` such that every
    effective divisor of degree `r + k` is contained, up to linear equivalence,
    in a divisor of degree `d` and rank at least `r`. For a connected graph of
    genus `g ≤ 6` and `r ≥ 0`, `ρ(g, r, d) ≥ 0`, the first theorem gives
@@ -70,12 +71,12 @@ four theorems whose bodies are deliberately `sorry`.
   holds vacuously.
 - **Exact degree and lower bound on rank.** Each conclusion gives a divisor of
   degree exactly `d` and rank at least `r`. Baker asks for rank exactly `r` and
-  degree at most `d`. The two forms are equivalent, since adding a chip does not
+  degree at most `d`. For nonnegative `r`, the two forms are equivalent, since adding a chip does not
   lower the rank and removing one lowers it by at most one.
 - **ρ.** The condition `ρ ≥ 0` is written without division as
-  `(r + 1)(g − d + r) ≤ g`, with `genus G = g`. There is no hypothesis
-  `0 ≤ r`, because the case `r < 0` is trivial, as in the library's
-  through-genus-six theorem.
+  `(r + 1)(g − d + r) ≤ g`, with `genus G = g`. The existence theorem
+  permits `r < 0`, where its rank test is vacuous. The two Brill–Noether
+  rank theorems require `0 ≤ r`.
 - **Once-marked form.** Young diagrams are Mathlib's `YoungDiagram`, and `μᵢ`
   is `μ.rowLens[i]`. The witness is normalized to degree exactly `g`. Only rows
   `i` of `μ` are tested. For larger `i` the inequality
@@ -97,7 +98,7 @@ four theorems whose bodies are deliberately `sorry`.
   Part I: Constructions*, arXiv:1909.12924.
 - [V2] A. Vargas, *Catalan-many tropical morphisms to trees; Part II: A space
   and a count*, arXiv:2609.09109.
-- [Len] Y. Len, *The Brill–Noether rank of a metric graph*, arXiv:1209.6309.
+- [Len] Y. Len, *The Brill–Noether rank of a tropical curve*, arXiv:1209.6309.
 - [LPP] C. M. Lim, S. Payne and N. Potashnik, *A note on Brill–Noether theory and
   rank-determining sets for metric graphs*, Int. Math. Res. Not. IMRN (2012);
   arXiv:1106.5519.

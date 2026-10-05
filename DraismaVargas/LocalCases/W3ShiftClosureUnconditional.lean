@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W3ShiftSelectedCensus
+module
+
+public import DraismaVargas.LocalCases.W3ShiftSelectedCensus
+
+@[expose] public section
 
 /-!
 # The `w3Shift` identification with the census discharged

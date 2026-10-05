@@ -1,5 +1,9 @@
-import Utilities.IntegralGeometry.ConeWall
-import Mathlib.Tactic
+module
+
+public import Utilities.IntegralGeometry.ConeWall
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # DV local balancing: the valency-two, change-two cases

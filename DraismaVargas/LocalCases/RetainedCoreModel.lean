@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.RetainedRowPieces
-import DraismaVargas.LocalCases.RetainedFibre
+module
+
+public import DraismaVargas.LocalCases.RetainedRowPieces
+public import DraismaVargas.LocalCases.RetainedFibre
+
+@[expose] public section
 
 /-!
 # The slot bijection of the retained core model on the cut spec
@@ -161,7 +165,7 @@ theorem cutSegs_of_rev (iface : InputInterface spec strong.toPresentation coordi
     cutSegs iface face idx topology rev hKept x =
       (OrderedPathSplit.positiveSegments (pieces iface face idx x)).reverse := by
   unfold cutSegs
-  rw [cutData_segments, cutSegments, Equiv.symm_apply_apply, if_pos hrev]
+  rw [cutData_segments, cutSegments, Equiv.symm_apply_apply, ite_eq_left hrev]
   exact positiveSegments_reverse _
 
 /-- **and on one it traverses forwards** it is the piece list itself. -/
@@ -176,7 +180,7 @@ theorem cutSegs_of_not_rev (iface : InputInterface spec strong.toPresentation co
       OrderedPathSplit.positiveSegments (pieces iface face idx x) := by
   unfold cutSegs
   rw [cutData_segments, cutSegments, Equiv.symm_apply_apply,
-    if_neg (show ¬ (rev x = true) by rw [hrev]; exact Bool.false_ne_true)]
+    ite_eq_right (show ¬ (rev x = true) by rw [hrev]; exact Bool.false_ne_true)]
 
 theorem length_cutSegs (iface : InputInterface spec strong.toPresentation coordinates F)
     (face : ClearedFace candidate strong.toPresentation coordinates)

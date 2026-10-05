@@ -1,7 +1,11 @@
-import DraismaVargasCount.GeometricUniformExpansion
-import DraismaVargasCount.DiscreteContraction
-import DraismaVargasCount.W4IncomingNormalizedPartitions
-import DraismaVargas.LocalCases.IncomingNormalizationRows
+module
+
+public import DraismaVargasCount.GeometricUniformExpansion
+public import DraismaVargasCount.DiscreteContraction
+public import DraismaVargasCount.W4IncomingNormalizedPartitions
+public import DraismaVargas.LocalCases.IncomingNormalizationRows
+
+@[expose] public section
 
 /-!
 # Every discrete W4 regrowth is an actual uniform expansion

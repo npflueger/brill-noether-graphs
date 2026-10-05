@@ -1,8 +1,12 @@
-import Utilities.Gonality.LegalFiring
-import Utilities.Gonality.DivisorialGonality
-import Utilities.Foundations.UnderlyingSimpleGraph
-import Utilities.Iso.FossilTopology
-import Utilities.Iso.GraphIso
+module
+
+public import Utilities.Gonality.LegalFiring
+public import Utilities.Gonality.DivisorialGonality
+public import Utilities.Foundations.UnderlyingSimpleGraph
+public import Utilities.Iso.FossilTopology
+public import Utilities.Iso.GraphIso
+
+@[expose] public section
 
 /-!
 # Highlights of the `Utilities` library

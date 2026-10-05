@@ -1,5 +1,9 @@
-import LowGenus.GenusFiveRow12
-import LowGenus.GuardingSet
+module
+
+public import LowGenus.GenusFiveRow12
+public import LowGenus.GuardingSet
+
+@[expose] public section
 
 /-!
 # Row 12 as a guarding set

@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyThreeSimpleRowEquiv
-import DraismaVargas.LocalCases.NonTrivalentValencyThreeRowDictionary
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyThreeSimpleRowEquiv
+public import DraismaVargas.LocalCases.NonTrivalentValencyThreeRowDictionary
+
+@[expose] public section
 
 /-!
 # The common minor of the prescribed Type I / Type II valency-three candidates

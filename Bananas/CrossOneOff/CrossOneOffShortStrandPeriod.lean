@@ -1,4 +1,8 @@
-import Bananas.CrossOneOff.CrossOneOffPeriodSeparation
+module
+
+public import Bananas.CrossOneOff.CrossOneOffPeriodSeparation
+
+@[expose] public section
 
 /-!
 # Period separation for the corrected cross-one-off block, without a length

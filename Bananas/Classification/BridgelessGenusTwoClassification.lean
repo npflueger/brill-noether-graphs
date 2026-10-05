@@ -1,6 +1,10 @@
-import Bananas.Classification.BridgelessGenusTwoKGeneralReduction
-import Bananas.Theta.ThetaKGeneralClassification
-import Bananas.Wedge.WedgeKGeneralClassification
+module
+
+public import Bananas.Classification.BridgelessGenusTwoKGeneralReduction
+public import Bananas.Theta.ThetaKGeneralClassification
+public import Bananas.Wedge.WedgeKGeneralClassification
+
+@[expose] public section
 
 /-!
 # Theorem 4.13, bundled

@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.BalancingRemaining
-import DraismaVargas.LocalCases.ResolutionM1k
+module
+
+public import DraismaVargas.LocalCases.BalancingRemaining
+public import DraismaVargas.LocalCases.ResolutionM1k
+
+@[expose] public section
 
 /-!
 # Coarse/fine two-candidate wall resolutions

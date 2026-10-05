@@ -1,10 +1,14 @@
-import Utilities.Subdivision.DegenerateRamp
-import Utilities.Subdivision.DegenerateMultiBreakScript
-import Utilities.Subdivision.DegenerateSeparator
-import Utilities.Subdivision.ClosedCoreSymmetry
-import Utilities.Subdivision.ClosedContraction
-import Utilities.Segments.AtanasovRanganathanConfigurations
-import LowGenus.GenusFourCubicAtlas
+module
+
+public import Utilities.Subdivision.DegenerateRamp
+public import Utilities.Subdivision.DegenerateMultiBreakScript
+public import Utilities.Subdivision.DegenerateSeparator
+public import Utilities.Subdivision.ClosedCoreSymmetry
+public import Utilities.Subdivision.ClosedContraction
+public import Utilities.Segments.AtanasovRanganathanConfigurations
+public import LowGenus.GenusFourCubicAtlas
+
+@[expose] public section
 
 /-!
 # Unconditional CLOSED-ORTHANT existence on genus-four Core 097

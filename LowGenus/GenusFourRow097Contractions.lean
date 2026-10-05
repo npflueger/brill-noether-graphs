@@ -1,6 +1,10 @@
-import LowGenus.GenusFourRow097Closed
-import Utilities.Subdivision.ClosedContraction
-import Utilities.Subdivision.ReorientContraction
+module
+
+public import LowGenus.GenusFourRow097Closed
+public import Utilities.Subdivision.ClosedContraction
+public import Utilities.Subdivision.ReorientContraction
+
+@[expose] public section
 
 /-!
 # Four readable genus-four faces of row 097

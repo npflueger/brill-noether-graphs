@@ -1,6 +1,10 @@
-import Utilities.Gluing.HandleRestriction
-import Utilities.Gluing.HandleSpread
-import Utilities.Foundations.RankInvariance
+module
+
+public import Utilities.Gluing.HandleRestriction
+public import Utilities.Gluing.HandleSpread
+public import Utilities.Foundations.RankInvariance
+
+@[expose] public section
 
 /-!
 # The long-handle lemma

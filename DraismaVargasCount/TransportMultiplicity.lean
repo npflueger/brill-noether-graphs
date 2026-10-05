@@ -1,6 +1,10 @@
-import DraismaVargasCount.Transport
-import DraismaVargasCount.FibreCaterpillar
-import DraismaVargasCount.Integrality
+module
+
+public import DraismaVargasCount.Transport
+public import DraismaVargasCount.FibreCaterpillar
+public import DraismaVargasCount.Integrality
+
+@[expose] public section
 
 /-!
 # The multiplicity under a transport, and the descent to the fibre quotient

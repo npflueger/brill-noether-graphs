@@ -1,6 +1,10 @@
-import Utilities.Subdivision.StrongSeparator
-import Utilities.Subdivision.LaplacianEquiv
-import Mathlib.Tactic
+module
+
+public import Utilities.Subdivision.StrongSeparator
+public import Utilities.Subdivision.LaplacianEquiv
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # Transport of strong-separator certificates along a Laplacian equivalence

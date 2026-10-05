@@ -1,4 +1,8 @@
-import LowGenus.GenusFiveRow06CoverBase
+module
+
+public import LowGenus.GenusFiveRow06CoverBase
+
+@[expose] public section
 
 /-! **Independent generated check.** This module provides an additional generated proof of row 06 and is not imported by the main `LowGenus` root.
 

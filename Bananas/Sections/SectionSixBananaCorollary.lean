@@ -1,7 +1,11 @@
-import Bananas.SameStrand.NSMFullClassification
-import Bananas.Transmission.TorsionOrderExact
-import Bananas.Transmission.KGeneralBNGeneral
-import Bananas.Classification.CorrectedBananaTorsion
+module
+
+public import Bananas.SameStrand.NSMFullClassification
+public import Bananas.Transmission.TorsionOrderExact
+public import Bananas.Transmission.KGeneralBNGeneral
+public import Bananas.Classification.CorrectedBananaTorsion
+
+@[expose] public section
 
 /-!
 # The Section 6 large-period banana obstruction

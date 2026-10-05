@@ -1,4 +1,8 @@
-import Bananas.CrossOneOff.CrossOneOffKGeneral
+module
+
+public import Bananas.CrossOneOff.CrossOneOffKGeneral
+
+@[expose] public section
 
 /-!
 # Period separation for the corrected cross-one-off block

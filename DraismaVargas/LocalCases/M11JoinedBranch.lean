@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.M11JoinedRowDescent
+module
+
+public import DraismaVargas.LocalCases.M11JoinedRowDescent
+
+@[expose] public section
 
 /-!
 # The actual joined M11 branch endpoint

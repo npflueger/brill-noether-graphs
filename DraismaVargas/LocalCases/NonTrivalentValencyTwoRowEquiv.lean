@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoDescent
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoDescent
+
+@[expose] public section
 
 /-!
 # The row dictionary of the prescribed valency-two candidate
@@ -183,18 +187,18 @@ theorem newWitness_bridge {x : Fin degree}
     (hAnchor : (data.vertexPartition wall).Rel anchor.1 x)
     (hFine : (Prescribed.finePartition sel).Rel rep x) :
     newWitness sel x = none := by
-  rw [newWitness, if_pos hAnchor, if_pos hFine]
+  rw [newWitness, ite_eq_left hAnchor, ite_eq_left hFine]
 
 theorem newWitness_of_anchor {x : Fin degree}
     (hAnchor : (data.vertexPartition wall).Rel anchor.1 x)
     (hFine : ¬ (Prescribed.finePartition sel).Rel rep x) :
     newWitness sel x = anchorWitness sel x := by
-  rw [newWitness, if_pos hAnchor, if_neg hFine]
+  rw [newWitness, ite_eq_left hAnchor, ite_eq_right hFine]
 
 theorem newWitness_of_ordinary {x : Fin degree}
     (hX : ¬ (data.vertexPartition wall).Rel anchor.1 x) :
     newWitness sel x = ordinaryWitness data star anchor x := by
-  rw [newWitness, if_neg hX]
+  rw [newWitness, ite_eq_right hX]
 
 /-- Over the remaining fine classes of the anchor the witness is the retained
 thick survivor of that class. -/
@@ -211,7 +215,7 @@ theorem anchorWitness_eq {x : Fin degree}
     eq_of_finePartition_rel sel hSpec.1 hEdge (hSpec.2.trans hRel.symm)
   refine ⟨⟨(Classical.choose hEx).1, survivor_not_isDangling
     (mem_retainedThick sel hSpec.1).1⟩, ?_, ?_⟩
-  · rw [anchorWitness, dif_pos hEx]
+  · rw [anchorWitness, dite_eq_left hEx]
   · exact congrArg (fun e ↦ e.1) hSame
 
 theorem ordinaryWitness_eq {x : Fin degree}
@@ -223,7 +227,7 @@ theorem ordinaryWitness_eq {x : Fin degree}
   refine ⟨⟨Classical.choose h,
     ((mem_ordinaryStar (Classical.choose h)).mp (Classical.choose_spec h)).1.1⟩, ?_,
     Classical.choose_spec h⟩
-  rw [ordinaryWitness, dif_pos h]
+  rw [ordinaryWitness, dite_eq_left h]
 
 /-! ## 3.  The canonical sheet of a new occurrence -/
 
@@ -322,7 +326,7 @@ theorem rowOfEdge_pos (hValid : data.Valid) (e : NonDanglingEdge (cand).datum)
       ResolutionAwayFromWall.retainedEdge (cand) hValid.1 old = e) :
     rowOfEdge sel hValid e = some (Classical.choose h).stablePath := by
   classical
-  rw [rowOfEdge, dif_pos h]
+  rw [rowOfEdge, dite_eq_left h]
 
 theorem rowOfEdge_neg (hValid : data.Valid) (e : NonDanglingEdge (cand).datum)
     (h : ¬ ∃ old : NonDanglingEdge data,
@@ -330,7 +334,7 @@ theorem rowOfEdge_neg (hValid : data.Valid) (e : NonDanglingEdge (cand).datum)
     rowOfEdge sel hValid e =
       (newWitness sel e.1.1.2).map NonDanglingEdge.stablePath := by
   classical
-  rw [rowOfEdge, dif_neg h]
+  rw [rowOfEdge, dite_eq_right h]
 
 theorem rowOfEdge_retained (hValid : data.Valid) (old : NonDanglingEdge data) :
     rowOfEdge sel hValid (ResolutionAwayFromWall.retainedEdge (cand) hValid.1 old) =

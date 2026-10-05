@@ -1,7 +1,11 @@
-import DraismaVargas.LocalCases.W3Nd2IncomingSheetClasses
-import DraismaVargas.LocalCases.W3Nd3SourceCandidates
-import DraismaVargas.LocalCases.W4IncomingCensus
-import DraismaVargas.LocalCases.W3Nd2IncomingBackground
+module
+
+public import DraismaVargas.LocalCases.W3Nd2IncomingSheetClasses
+public import DraismaVargas.LocalCases.W3Nd3SourceCandidates
+public import DraismaVargas.LocalCases.W4IncomingCensus
+public import DraismaVargas.LocalCases.W3Nd2IncomingBackground
+
+@[expose] public section
 
 /-!
 # The selected incoming fibre and its sheet classes in the W3 nd3-t3 case
@@ -355,12 +359,12 @@ theorem sideEnd_target : (sideEnd data side edge).1.1 = side := by
   obtain ⟨hLeft, hRight⟩ := internalEdge_endpoints_local data hc hab hOne vertex edge hEdge
   rcases hSide with hA | hB
   · have hCond : (data.sourceEnds edge).1.1.1 = side := hLeft.trans hA.symm
-    rw [sideEnd, if_pos hCond]
+    rw [sideEnd, ite_eq_left hCond]
     exact hCond
   · have hCond : ¬ (data.sourceEnds edge).1.1.1 = side := by
       rw [hLeft, hB]
       exact hab
-    rw [sideEnd, if_neg hCond]
+    rw [sideEnd, ite_eq_right hCond]
     exact hRight.trans hB.symm
 
 theorem otherEnd_target_ne : (otherEnd data side edge).1.1 ≠ side := by
@@ -368,12 +372,12 @@ theorem otherEnd_target_ne : (otherEnd data side edge).1.1 ≠ side := by
   obtain ⟨hLeft, hRight⟩ := internalEdge_endpoints_local data hc hab hOne vertex edge hEdge
   rcases hSide with hA | hB
   · have hCond : (data.sourceEnds edge).1.1.1 = side := hLeft.trans hA.symm
-    rw [otherEnd, if_pos hCond, hRight, hA]
+    rw [otherEnd, ite_eq_left hCond, hRight, hA]
     exact Ne.symm hab
   · have hCond : ¬ (data.sourceEnds edge).1.1.1 = side := by
       rw [hLeft, hB]
       exact hab
-    rw [otherEnd, if_neg hCond, hLeft, hB]
+    rw [otherEnd, ite_eq_right hCond, hLeft, hB]
     exact hab
 
 omit hSide in

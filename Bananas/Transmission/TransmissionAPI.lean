@@ -1,7 +1,11 @@
-import Bananas.Transmission.TransmissionBasics
-import Bananas.CrossOneOff.AffineInversionFinite
-import Bananas.SameStrand.EndpointInversions
-import Bananas.Basics.BananaGeometry
+module
+
+public import Bananas.Transmission.TransmissionBasics
+public import Bananas.CrossOneOff.AffineInversionFinite
+public import Bananas.SameStrand.EndpointInversions
+public import Bananas.Basics.BananaGeometry
+
+@[expose] public section
 
 /-!
 # Reusable transmission API checks

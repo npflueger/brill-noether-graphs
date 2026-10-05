@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.MatrixAtlas
-import DraismaVargas.LocalCases.SemanticAtlasMarch
+module
+
+public import DraismaVargas.LocalCases.MatrixAtlas
+public import DraismaVargas.LocalCases.SemanticAtlasMarch
+
+@[expose] public section
 
 /-!
 # Adapters between the source classifier and `SemanticAtlasMarch.State.PresentedProgress`

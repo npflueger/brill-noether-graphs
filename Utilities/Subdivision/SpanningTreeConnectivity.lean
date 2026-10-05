@@ -1,5 +1,9 @@
-import Utilities.Subdivision.SubdivisionConnectivity
-import Mathlib.Tactic
+module
+
+public import Utilities.Subdivision.SubdivisionConnectivity
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # Kernel-cheap spanning-tree connectivity certificates

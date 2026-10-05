@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W4IncomingPrunedFibre
+module
+
+public import DraismaVargas.LocalCases.W4IncomingPrunedFibre
+
+@[expose] public section
 
 /-!
 # Incoming contracted-edge relations on each merged sheet block
@@ -159,9 +163,9 @@ theorem edge_block_eq_ite_of_singleton
         (data.edgePartition contracted).block survivor.1.2 else {sheet} := by
   classical
   by_cases hRel : (data.edgePartition contracted).Rel survivor.1.2 sheet
-  · rw [if_pos hRel]
+  · rw [ite_eq_left hRel]
     exact (data.edgePartition contracted).block_eq_of_rel hRel.symm
-  · rw [if_neg hRel]
+  · rw [ite_eq_right hRel]
     ext other
     rw [SheetPartition.mem_block_iff, Finset.mem_singleton,
       edge_rel_iff_of_singleton data hc hab hOne fd block survivor hSingle sheet other hSheet]

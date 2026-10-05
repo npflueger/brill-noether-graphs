@@ -1,9 +1,13 @@
-import LowGenus.LowGenusExistence
-import LowGenus.GenusFiveCubicCoverage
-import LowGenus.Infrastructure.TrivalentExpansionClosed
-import Utilities.Gluing.GenusFiveVertexCut
-import Utilities.Pseudocore.PseudocoreMarkerWedge
-import Utilities.Pseudocore.PseudocoreSubdivisionProperties
+module
+
+public import LowGenus.LowGenusExistence
+public import LowGenus.GenusFiveCubicCoverage
+public import LowGenus.Infrastructure.TrivalentExpansionClosed
+public import Utilities.Gluing.GenusFiveVertexCut
+public import Utilities.Pseudocore.PseudocoreMarkerWedge
+public import Utilities.Pseudocore.PseudocoreSubdivisionProperties
+
+@[expose] public section
 
 /-!
 # Structural coverage of genus-five pseudocores

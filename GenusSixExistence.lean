@@ -1,7 +1,11 @@
-import GenusSixExistence.Existence
-import GenusSixExistence.OnceMarked
-import GenusSixExistence.BrillNoetherRank
-import GenusSixExistence.Highlights
+module
+
+public import GenusSixExistence.Existence
+public import GenusSixExistence.OnceMarked
+public import GenusSixExistence.BrillNoetherRank
+public import GenusSixExistence.Highlights
+
+@[expose] public section
 
 /-!
 # Brill--Noether existence in genus six

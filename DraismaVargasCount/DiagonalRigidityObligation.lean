@@ -1,6 +1,10 @@
-import DraismaVargasCount.DiagonalClassification
-import DraismaVargasCount.CatFlipRealizedAut
-import DraismaVargasCount.BallotCoreIdentification
+module
+
+public import DraismaVargasCount.DiagonalClassification
+public import DraismaVargasCount.CatFlipRealizedAut
+public import DraismaVargasCount.BallotCoreIdentification
+
+@[expose] public section
 
 /-!
 # The `rigid` field over diagonal members still carries the core-symmetry obligation
@@ -473,11 +477,11 @@ theorem exists_coreIncidence_eq_two_iff (c : Core n p) (e : Fin p) :
     by_cases ht : c.tail e = v
     · by_cases hh : c.head e = v
       · rw [ht, hh]
-      · rw [if_pos ht, if_neg hh] at hv; omega
-    · rw [if_neg ht] at hv
+      · rw [ite_eq_left ht, ite_eq_right hh] at hv; omega
+    · rw [ite_eq_right ht] at hv
       split_ifs at hv <;> omega
   · intro h
-    exact ⟨c.tail e, by rw [coreIncidence_eq, if_pos rfl, ← h, if_pos rfl]⟩
+    exact ⟨c.tail e, by rw [coreIncidence_eq, ite_eq_left rfl, ← h, ite_eq_left rfl]⟩
 
 /-- **A relabelling carries self-loops to self-loops.**  Only the `incidence`
 field is used. -/

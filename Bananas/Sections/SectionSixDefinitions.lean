@@ -1,4 +1,8 @@
-import Utilities.Grassmannian.OnceMarked
+module
+
+public import Utilities.Grassmannian.OnceMarked
+
+@[expose] public section
 
 /-!
 # Definitions specific to Section 6

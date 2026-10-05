@@ -1,4 +1,8 @@
-import Bananas.CrossOneOff.CrossOneOffKGeneral
+module
+
+public import Bananas.CrossOneOff.CrossOneOffKGeneral
+
+@[expose] public section
 
 /-!
 # An extended cross-one-off inversion block

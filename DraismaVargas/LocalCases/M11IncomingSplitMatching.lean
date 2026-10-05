@@ -1,8 +1,12 @@
-import DraismaVargas.LocalCases.M11IncomingSelectedCases
-import DraismaVargas.LocalCases.M11IncomingBackground
-import DraismaVargas.LocalCases.M11IncomingOuterPartitions
-import DraismaVargas.LocalCases.M11RemoteCandidates
-import DraismaVargas.Infrastructure.PartitionNormalization
+module
+
+public import DraismaVargas.LocalCases.M11IncomingSelectedCases
+public import DraismaVargas.LocalCases.M11IncomingBackground
+public import DraismaVargas.LocalCases.M11IncomingOuterPartitions
+public import DraismaVargas.LocalCases.M11RemoteCandidates
+public import DraismaVargas.Infrastructure.PartitionNormalization
+
+@[expose] public section
 
 /-!
 # Pointwise partition matching for the incoming M11 split

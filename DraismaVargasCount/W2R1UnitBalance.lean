@@ -1,5 +1,9 @@
-import DraismaVargasCount.UnitWeightBalance
-import DraismaVargas.LocalCases.W2R1LimitMatrix
+module
+
+public import DraismaVargasCount.UnitWeightBalance
+public import DraismaVargas.LocalCases.W2R1LimitMatrix
+
+@[expose] public section
 
 /-!
 # `prop-signed-mult`(1) for Equation (10): the case `{w2-r1}`

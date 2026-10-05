@@ -1,6 +1,10 @@
-import DraismaVargasCount.CoreSlotCoords
-import DraismaVargasCount.CaterpillarBallotCount
-import DraismaVargasCount.BallotDatum
+module
+
+public import DraismaVargasCount.CoreSlotCoords
+public import DraismaVargasCount.CaterpillarBallotCount
+public import DraismaVargasCount.BallotDatum
+
+@[expose] public section
 
 /-!
 # The slopes separate the ballot members
@@ -149,7 +153,7 @@ variable {m : ℕ} {slot : Fin (6 * m + 3)}
 
 theorem ballotCoreDiag_leaf (s : Slopes (2 * (m + 1))) (hleaf : IsLeafEdge m slot) :
     ballotCoreDiag m s slot = 2 := by
-  rw [ballotCoreDiag, if_pos hleaf]
+  rw [ballotCoreDiag, ite_eq_left hleaf]
 
 theorem not_isLeafEdge_of_spine (hspine : slot.val % 3 = 1) : ¬ IsLeafEdge m slot := by
   rintro (h | h)
@@ -158,11 +162,11 @@ theorem not_isLeafEdge_of_spine (hspine : slot.val % 3 = 1) : ¬ IsLeafEdge m sl
 
 theorem ballotCoreDiag_spine (s : Slopes (2 * (m + 1))) (hspine : slot.val % 3 = 1) :
     ballotCoreDiag m s slot = 1 / (s.slope ((slot.val + 2) / 3) : ℚ) := by
-  rw [ballotCoreDiag, if_neg (not_isLeafEdge_of_spine hspine), if_pos hspine]
+  rw [ballotCoreDiag, ite_eq_right (not_isLeafEdge_of_spine hspine), ite_eq_left hspine]
 
 theorem ballotCoreDiag_stem (s : Slopes (2 * (m + 1))) (hmod : slot.val % 3 = 2)
     (hlast : slot.val ≠ 6 * m + 2) : ballotCoreDiag m s slot = 1 / 2 := by
-  rw [ballotCoreDiag, if_neg (by rintro (h | h) <;> omega), if_neg (by omega)]
+  rw [ballotCoreDiag, ite_eq_right (by rintro (h | h) <;> omega), ite_eq_right (by omega)]
 
 /-! ## 3.  The slopes are separated -/
 
@@ -205,24 +209,24 @@ theorem catDiag_eq_ballotCoreDiag_zig (m : ℕ) :
   have hlt := slot.isLt
   rw [catDiag_eq, ballotCoreDiag]
   by_cases hleaf : IsLeafEdge m slot
-  · rw [if_pos hleaf, if_pos hleaf]
-  · rw [if_neg hleaf, if_neg hleaf]
+  · rw [ite_eq_left hleaf, ite_eq_left hleaf]
+  · rw [ite_eq_right hleaf, ite_eq_right hleaf]
     have hnot : slot.val % 3 ≠ 0 ∧ slot.val ≠ 6 * m + 2 := by
       constructor
       · intro h; exact hleaf (Or.inl h)
       · intro h; exact hleaf (Or.inr h)
     by_cases hspine : slot.val % 3 = 1
-    · rw [if_pos hspine]
+    · rw [ite_eq_left hspine]
       have h1 : 1 ≤ (slot.val + 2) / 3 := by omega
       have h2 : (slot.val + 2) / 3 ≤ 2 * m + 1 := by omega
       rw [zig_slope_mid m h1 h2]
       by_cases hpar : (slot.val + 2) / 3 % 2 = 0
-      · rw [if_pos hpar, if_neg (show ¬ IsPairEdge m slot.val by
+      · rw [ite_eq_left hpar, ite_eq_right (show ¬ IsPairEdge m slot.val by
           rintro (h | h) <;> omega)]
         norm_num
-      · rw [if_neg hpar, if_pos (show IsPairEdge m slot.val from Or.inl (by omega))]
+      · rw [ite_eq_right hpar, ite_eq_left (show IsPairEdge m slot.val from Or.inl (by omega))]
         norm_num
-    · rw [if_neg hspine, if_pos (show IsPairEdge m slot.val from
+    · rw [ite_eq_right hspine, ite_eq_left (show IsPairEdge m slot.val from
         Or.inr ⟨by omega, hnot.2⟩)]
 
 /-- The caterpillar member's diagonal, read on core slots, is the ballot

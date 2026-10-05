@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W3Nd2Survival
-import DraismaVargas.LocalCases.LimitChainCore
+module
+
+public import DraismaVargas.LocalCases.W3Nd2Survival
+public import DraismaVargas.LocalCases.LimitChainCore
+
+@[expose] public section
 
 /-!
 # Opposite-end rows for the true Figure 31 candidates

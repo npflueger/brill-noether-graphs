@@ -1,8 +1,12 @@
-import LowGenus.LowGenusExistence
-import Utilities.Iso.FossilTopology
-import Utilities.Pseudocore.PseudocorePresentation
-import Utilities.Subdivision.SubdivisionConnectivity
-import Utilities.Subdivision.TwoVertexPencilCore
+module
+
+public import LowGenus.LowGenusExistence
+public import Utilities.Iso.FossilTopology
+public import Utilities.Pseudocore.PseudocorePresentation
+public import Utilities.Subdivision.SubdivisionConnectivity
+public import Utilities.Subdivision.TwoVertexPencilCore
+
+@[expose] public section
 
 /-!
 # A formal interface for the Atanasov--Ranganathan low-genus program

@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.CaterpillarSpine
+module
+
+public import DraismaVargas.LocalCases.CaterpillarSpine
+
+@[expose] public section
 
 /-!
 # The pruned caterpillar source valencies
@@ -354,7 +358,7 @@ theorem nonDanglingIncident_core_eq_visible (m : ℕ) (v : (catTree m).V) :
     have hIncident : occ m i ∈ GluingDatum.incidentEdges v :=
       (mem_incidentEdges_occ m v i).mpr hiIncident
     by_cases hLeaf : IsLeafEdge m i
-    · rw [visibleOccurrences, if_pos hLeaf] at hiVisible
+    · rw [visibleOccurrences, ite_eq_left hLeaf] at hiVisible
       simp only [Finset.mem_insert, Finset.mem_singleton] at hiVisible
       rcases hiVisible with rfl | rfl
       · exact (mem_nonDanglingIncident _ _ _).mpr
@@ -364,13 +368,13 @@ theorem nonDanglingIncident_core_eq_visible (m : ℕ) (v : (catTree m).V) :
           ⟨loopSecond_survives hLeaf,
             loopSecond_incident_core_of_target hLeaf hIncident⟩
     · by_cases hStem : IsStemEdge m i
-      · rw [visibleOccurrences, if_neg hLeaf, if_pos hStem] at hiVisible
+      · rw [visibleOccurrences, ite_eq_right hLeaf, ite_eq_left hStem] at hiVisible
         simp only [Finset.mem_singleton] at hiVisible
         subst edge
         exact (mem_nonDanglingIncident _ _ _).mpr
           ⟨stemMain_survives hStem,
             stemMain_incident_core_of_target hIncident⟩
-      · rw [visibleOccurrences, if_neg hLeaf, if_neg hStem] at hiVisible
+      · rw [visibleOccurrences, ite_eq_right hLeaf, ite_eq_right hStem] at hiVisible
         simp only [Finset.mem_singleton] at hiVisible
         subst edge
         have hSpine := isSpineEdge_of_not_leaf_not_stem hLeaf hStem
@@ -383,16 +387,16 @@ theorem sourceEdge_target_eq_occ_of_mem_visibleOccurrences {m : ℕ}
     (hEdge : edge ∈ visibleOccurrences m i) : edge.1.1 = occ m i := by
   classical
   by_cases hLeaf : IsLeafEdge m i
-  · rw [visibleOccurrences, if_pos hLeaf] at hEdge
+  · rw [visibleOccurrences, ite_eq_left hLeaf] at hEdge
     simp only [Finset.mem_insert, Finset.mem_singleton] at hEdge
     rcases hEdge with rfl | rfl <;>
       simp only [loopFirst, loopSecond, GluingDatum.sourceEdge_target]
   · by_cases hStem : IsStemEdge m i
-    · rw [visibleOccurrences, if_neg hLeaf, if_pos hStem] at hEdge
+    · rw [visibleOccurrences, ite_eq_right hLeaf, ite_eq_left hStem] at hEdge
       simp only [Finset.mem_singleton] at hEdge
       subst edge
       simp only [stemOccurrence, GluingDatum.sourceEdge_target]
-    · rw [visibleOccurrences, if_neg hLeaf, if_neg hStem] at hEdge
+    · rw [visibleOccurrences, ite_eq_right hLeaf, ite_eq_right hStem] at hEdge
       simp only [Finset.mem_singleton] at hEdge
       subst edge
       simp only [spineOccurrence, GluingDatum.sourceEdge_target]
@@ -413,9 +417,9 @@ theorem card_visibleOccurrences (m : ℕ) (i : Fin (6 * m + 3)) :
     (visibleOccurrences m i).card = if IsLeafEdge m i then 2 else 1 := by
   classical
   by_cases hLeaf : IsLeafEdge m i
-  · rw [visibleOccurrences, if_pos hLeaf, if_pos hLeaf,
+  · rw [visibleOccurrences, ite_eq_left hLeaf, ite_eq_left hLeaf,
       Finset.card_pair (loopFirst_ne_loopSecond hLeaf)]
-  · rw [visibleOccurrences, if_neg hLeaf, if_neg hLeaf]
+  · rw [visibleOccurrences, ite_eq_right hLeaf, ite_eq_right hLeaf]
     split_ifs <;> simp
 
 /-- Numerical form of the exact central-sheet star census: a target leaf

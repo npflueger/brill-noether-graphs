@@ -1,4 +1,8 @@
-import LowGenus.GenusFiveClosedOrbit
+module
+
+public import LowGenus.GenusFiveClosedOrbit
+
+@[expose] public section
 
 /-!
 # The leg-reversing symmetry of the AR row-08 core

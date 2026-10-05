@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.BalancedGlobal
-import DraismaVargas.LocalCases.WallDegeneration
+module
+
+public import DraismaVargas.LocalCases.BalancedGlobal
+public import DraismaVargas.LocalCases.WallDegeneration
+
+@[expose] public section
 
 /-!
 # Descending retained-edge cuts through a literal wall resolution
@@ -143,7 +147,7 @@ theorem crossing_sourceEdge_eq (data : GluingDatum target degree)
     have hCount := cut.cross_num_edges _ _ hFirst hSecond
     have hPair : (data.sourceEnds edge).1 = left ∧ (data.sourceEnds edge).2 = right := by
       by_contra hNot
-      have hZero := hCount.trans (if_neg hNot)
+      have hZero := hCount.trans (ite_eq_right hNot)
       omega
     exact Or.inl (Prod.ext hPair.1 hPair.2)
   · have hPositive := num_edges_pos_of_sourceEnds data
@@ -151,7 +155,7 @@ theorem crossing_sourceEdge_eq (data : GluingDatum target degree)
     have hCount := cut.cross_num_edges _ _ hSecond hFirst
     have hPair : (data.sourceEnds edge).2 = left ∧ (data.sourceEnds edge).1 = right := by
       by_contra hNot
-      have hZero := hCount.trans (if_neg hNot)
+      have hZero := hCount.trans (ite_eq_right hNot)
       omega
     exact Or.inr (Prod.ext hPair.2 hPair.1)
 
@@ -243,10 +247,10 @@ noncomputable def descendedCut
   rw [GluingDatum.SheetRelabeling.num_edges_sourceGraph_eq_sum data first second,
     Finset.sum_eq_single edge]
   · by_cases h : first = sourceMap candidate left ∧ second = sourceMap candidate right
-    · exact (if_pos (hPositions.mpr h)).trans (if_pos h).symm
-    · exact (if_neg (fun hPair ↦ h (hPositions.mp hPair))).trans (if_neg h).symm
+    · exact (ite_eq_left (hPositions.mpr h)).trans (ite_eq_left h).symm
+    · exact (ite_eq_right (fun hPair ↦ h (hPositions.mp hPair))).trans (ite_eq_right h).symm
   · intro other _ hOther
-    apply if_neg
+    apply ite_eq_right
     intro hCross
     exact hOther (image_crossing_sourceEdge_eq candidate cut edge hEnds hFirst hSecond other hCross)
   · simp
@@ -296,8 +300,8 @@ theorem descendedCut_side_connected
       exact hb (Finset.mem_sdiff.mpr ⟨Finset.mem_univ _, h⟩)
     rw [num_edges_symmetric data.sourceGraph a b, down.cross_num_edges b a hbMem haNot]
     by_cases h : a = sourceMap candidate right ∧ b = sourceMap candidate left
-    · exact (if_pos h.symm).trans (if_pos h).symm
-    · exact (if_neg (fun hPair ↦ h hPair.symm)).trans (if_neg h).symm
+    · exact (ite_eq_left h.symm).trans (ite_eq_left h).symm
+    · exact (ite_eq_right (fun hPair ↦ h hPair.symm)).trans (ite_eq_right h).symm
   have hConnectedSide := NonDanglingValency.complement_connected_of_unique_cross
     hConnected (Finset.univ \ down.side) hOutside hCross
   simpa using hConnectedSide

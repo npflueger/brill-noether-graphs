@@ -1,5 +1,9 @@
-import DraismaVargasCount.W4IncomingIndex
-import DraismaVargasCount.OutgoingRowCalculus
+module
+
+public import DraismaVargasCount.W4IncomingIndex
+public import DraismaVargasCount.OutgoingRowCalculus
+
+@[expose] public section
 
 /-!
 # W4 balance from the actual incoming full-dimensional member

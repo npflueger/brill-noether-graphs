@@ -1,4 +1,8 @@
-import Utilities.Subdivision.ContractionForestCensusGeneral
+module
+
+public import Utilities.Subdivision.ContractionForestCensusGeneral
+
+@[expose] public section
 
 /-!
 # Spanning forests for the contraction census

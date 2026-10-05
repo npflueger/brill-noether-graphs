@@ -1,65 +1,69 @@
-import LowGenus.AtanasovRanganathanProgram
-import LowGenus.AtanasovRanganathanExistence
-import LowGenus.ClosedConstructionTail
-import LowGenus.ConfigurationBananaDoubleChip
-import LowGenus.ConfigurationBananaTail
-import LowGenus.ConfigurationChippedTriangle
-import LowGenus.ConfigurationCommon
-import LowGenus.ConfigurationEleven
-import LowGenus.ConfigurationFive
-import LowGenus.ConfigurationMarkedCommon
-import LowGenus.ConfigurationMarkedRow
-import LowGenus.ConfigurationMarkedThree
-import LowGenus.ConfigurationMarkedTripod
-import LowGenus.ConfigurationSeven
-import LowGenus.ConfigurationThree
-import LowGenus.ConfigurationThreeChain
-import LowGenus.ConfigurationTwo
-import LowGenus.GenusFourRow096Pencil
-import LowGenus.GenusFourRow097Closed
-import LowGenus.GenusFourRow097Contractions
-import LowGenus.GenusFourRow098Closed
-import LowGenus.GenusFiveClosedOrbit
-import LowGenus.GenusFiveConfigurations
-import LowGenus.GenusFiveConstructions
-import LowGenus.GenusFiveTwoPoleData
-import LowGenus.GenusFiveTwoPole
-import LowGenus.GenusFiveTwoPoleClosed
-import LowGenus.GenusFiveCoreAtlas
-import LowGenus.GenusFiveCubicAtlas
-import LowGenus.GenusFiveCanonicalClassifier
-import LowGenus.GenusFiveCubicCoverage
-import LowGenus.GenusFiveBridgeRows
-import LowGenus.GenusFivePseudocoreCoverage
-import LowGenus.GenusFourCanonicalClassifier
-import LowGenus.GenusFourCubicCoverage
-import LowGenus.GenusFourPseudocoreCoverage
-import LowGenus.GenusFourRowsClosed
-import LowGenus.GenusFiveRow05
-import LowGenus.GenusFiveRow05Symmetry
-import LowGenus.GenusFiveRow06
-import LowGenus.GenusFiveRow08
-import LowGenus.GenusFiveRow08ChamberOne
-import LowGenus.GenusFiveRow08ChamberThree
-import LowGenus.GenusFiveRow08ChamberTwo
-import LowGenus.GenusFiveRow08Symmetry
-import LowGenus.GenusFiveRow09
-import LowGenus.GenusFiveRow10
-import LowGenus.GenusFiveRow10ChamberOne
-import LowGenus.GenusFiveRow10ChamberTwo
-import LowGenus.GenusFiveRow10Symmetry
-import LowGenus.GenusFiveRow11
-import LowGenus.GenusFiveRow12
-import LowGenus.GenusFiveRow12Tripod
-import LowGenus.GenusFiveRow12Guarding
-import LowGenus.GenusFiveRow14
-import LowGenus.GenusFiveRow15
-import LowGenus.GenusFiveRow16
-import LowGenus.GuardingSet
-import LowGenus.Highlights
-import LowGenus.Infrastructure.CoreRelabelingClosed
-import LowGenus.Infrastructure.TrivalentExpansionClosed
-import LowGenus.LowGenusExistence
+module
+
+public import LowGenus.AtanasovRanganathanProgram
+public import LowGenus.AtanasovRanganathanExistence
+public import LowGenus.ClosedConstructionTail
+public import LowGenus.ConfigurationBananaDoubleChip
+public import LowGenus.ConfigurationBananaTail
+public import LowGenus.ConfigurationChippedTriangle
+public import LowGenus.ConfigurationCommon
+public import LowGenus.ConfigurationEleven
+public import LowGenus.ConfigurationFive
+public import LowGenus.ConfigurationMarkedCommon
+public import LowGenus.ConfigurationMarkedRow
+public import LowGenus.ConfigurationMarkedThree
+public import LowGenus.ConfigurationMarkedTripod
+public import LowGenus.ConfigurationSeven
+public import LowGenus.ConfigurationThree
+public import LowGenus.ConfigurationThreeChain
+public import LowGenus.ConfigurationTwo
+public import LowGenus.GenusFourRow096Pencil
+public import LowGenus.GenusFourRow097Closed
+public import LowGenus.GenusFourRow097Contractions
+public import LowGenus.GenusFourRow098Closed
+public import LowGenus.GenusFiveClosedOrbit
+public import LowGenus.GenusFiveConfigurations
+public import LowGenus.GenusFiveConstructions
+public import LowGenus.GenusFiveTwoPoleData
+public import LowGenus.GenusFiveTwoPole
+public import LowGenus.GenusFiveTwoPoleClosed
+public import LowGenus.GenusFiveCoreAtlas
+public import LowGenus.GenusFiveCubicAtlas
+public import LowGenus.GenusFiveCanonicalClassifier
+public import LowGenus.GenusFiveCubicCoverage
+public import LowGenus.GenusFiveBridgeRows
+public import LowGenus.GenusFivePseudocoreCoverage
+public import LowGenus.GenusFourCanonicalClassifier
+public import LowGenus.GenusFourCubicCoverage
+public import LowGenus.GenusFourPseudocoreCoverage
+public import LowGenus.GenusFourRowsClosed
+public import LowGenus.GenusFiveRow05
+public import LowGenus.GenusFiveRow05Symmetry
+public import LowGenus.GenusFiveRow06
+public import LowGenus.GenusFiveRow08
+public import LowGenus.GenusFiveRow08ChamberOne
+public import LowGenus.GenusFiveRow08ChamberThree
+public import LowGenus.GenusFiveRow08ChamberTwo
+public import LowGenus.GenusFiveRow08Symmetry
+public import LowGenus.GenusFiveRow09
+public import LowGenus.GenusFiveRow10
+public import LowGenus.GenusFiveRow10ChamberOne
+public import LowGenus.GenusFiveRow10ChamberTwo
+public import LowGenus.GenusFiveRow10Symmetry
+public import LowGenus.GenusFiveRow11
+public import LowGenus.GenusFiveRow12
+public import LowGenus.GenusFiveRow12Tripod
+public import LowGenus.GenusFiveRow12Guarding
+public import LowGenus.GenusFiveRow14
+public import LowGenus.GenusFiveRow15
+public import LowGenus.GenusFiveRow16
+public import LowGenus.GuardingSet
+public import LowGenus.Highlights
+public import LowGenus.Infrastructure.CoreRelabelingClosed
+public import LowGenus.Infrastructure.TrivalentExpansionClosed
+public import LowGenus.LowGenusExistence
+
+@[expose] public section
 
 /-! # The Atanasov--Ranganathan low-genus formalization
 

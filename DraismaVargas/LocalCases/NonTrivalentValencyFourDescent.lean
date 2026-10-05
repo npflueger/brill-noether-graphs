@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyFourRowEquiv
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyFourRowEquiv
+
+@[expose] public section
 
 /-!
 # The descent at a non-anchor wall block of the `K = 0` candidate

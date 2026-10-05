@@ -1,7 +1,11 @@
-import Utilities.Subdivision.CoreCutsAndFlats
-import Utilities.Subdivision.SlotPropagation
-import Utilities.Subdivision.SlotIntervalFiring
-import Utilities.Gonality.LegalFiringChain
+module
+
+public import Utilities.Subdivision.CoreCutsAndFlats
+public import Utilities.Subdivision.SlotPropagation
+public import Utilities.Subdivision.SlotIntervalFiring
+public import Utilities.Gonality.LegalFiringChain
+
+@[expose] public section
 
 /-!
 # The multi-firing bridge move at a general scale
@@ -122,12 +126,12 @@ theorem sidePoint_last (hunit : spec.IsUnit) (g : Fin p) (z : Fin n) :
     congr 1
     show spec.core.head g = spec.core.otherEnd g z
     unfold ExplicitPotential.Core.otherEnd
-    rw [if_pos hc]
+    rw [ite_eq_left hc]
   · rw [spec.sidePoint_last_of_ne N hN g hc]
     congr 1
     show spec.core.tail g = spec.core.otherEnd g z
     unfold ExplicitPotential.Core.otherEnd
-    rw [if_neg hc]
+    rw [ite_eq_right hc]
 
 /-- A slot has exactly two endpoints: anything incident to `g` other than `a` is
 the far endpoint of `g` at `a`. -/
@@ -136,11 +140,11 @@ theorem eq_otherEnd_of_incident {g : Fin p} {a b : Fin n}
     b = spec.core.otherEnd g a := by
   unfold ExplicitPotential.Core.otherEnd
   by_cases hc : spec.core.tail g = a
-  · rw [if_pos hc]
+  · rw [ite_eq_left hc]
     rcases hb with h | h
     · exact absurd (hc.symm.trans h) hab
     · exact h.symm
-  · rw [if_neg hc]
+  · rw [ite_eq_right hc]
     have hha : spec.core.head g = a := ha.resolve_left hc
     rcases hb with h | h
     · exact h.symm
@@ -195,9 +199,9 @@ theorem exists_slot_of_coreVertex_adj (hunit : spec.IsUnit) (h2N : 2 ≤ N) (u :
     -- `stepLeft e o = coreVertex u` forces `o = 0` and `tail e = u`.
     have hzero : o.val = 0 := by
       by_contra hne
-      rw [stepLeft, dif_neg hne] at hleft
+      rw [stepLeft, dite_eq_right hne] at hleft
       simp [coreVertex, interiorVertex] at hleft
-    rw [stepLeft, dif_pos hzero] at hleft
+    rw [stepLeft, dite_eq_left hzero] at hleft
     have htail : spec.core.tail e = u := Sum.inl.inj hleft
     refine ⟨e, Or.inl htail, ?_⟩
     have hpos : (spec.scale N hN).stepRightPosition e o = spec.slotPos N hN e 1 := by
@@ -211,9 +215,9 @@ theorem exists_slot_of_coreVertex_adj (hunit : spec.IsUnit) (h2N : 2 ≤ N) (u :
     obtain ⟨hleft, hright⟩ := hbwd
     have hlast : o.val + 1 = (spec.scale N hN).length e := by
       by_contra hne
-      rw [stepRight, dif_neg hne] at hright
+      rw [stepRight, dite_eq_right hne] at hright
       simp [coreVertex, interiorVertex] at hright
-    rw [stepRight, dif_pos hlast] at hright
+    rw [stepRight, dite_eq_left hlast] at hright
     have hhead : spec.core.head e = u := Sum.inl.inj hright
     have hne : spec.core.tail e ≠ u := fun hcon =>
       spec.core_loopless e (hcon.trans hhead.symm)
@@ -314,9 +318,9 @@ private theorem outdeg_le_one_of_nbrs_mem {G : CFGraph} {S : Finset G.V} {x u : 
     intro y hy
     have hyS : y ∉ S := (Finset.mem_sdiff.mp hy).2
     by_cases hyu : y = u
-    · rw [if_pos hyu, hyu]
+    · rw [ite_eq_left hyu, hyu]
       exact_mod_cast hle
-    · rw [if_neg hyu]
+    · rw [ite_eq_right hyu]
       have hz : num_edges G x y = 0 := by
         by_contra hne
         exact hyS (hnbr y (Nat.pos_of_ne_zero hne) hyu)
@@ -436,9 +440,9 @@ theorem crossF : spec.core.Crosses d.W d.f := by
   have hfar := d.farF
   unfold ExplicitPotential.Core.otherEnd at hfar
   by_cases hc : spec.core.tail d.f = d.v
-  · rw [if_pos hc] at hfar
+  · rw [ite_eq_left hc] at hfar
     exact Or.inl ⟨by rw [hc]; exact d.memW, hfar⟩
-  · rw [if_neg hc] at hfar
+  · rw [ite_eq_right hc] at hfar
     exact Or.inr ⟨by rw [d.incF.resolve_left hc]; exact d.memW, hfar⟩
 
 theorem ne_f_of_mem_X {e : Fin p} (he : e ∈ d.X) : e ≠ d.f := by
@@ -753,11 +757,11 @@ theorem bridgeDiv_apply_frontF (hunit : spec.IsUnit) {k c : ℕ} (hk : k ≤ N)
         (by rintro rfl; exact d.notMemF he) hint0 hintN).symm
   rw [hzero]
   by_cases hck : c = k
-  · rw [if_pos hck, hck]
+  · rw [ite_eq_left hck, hck]
     unfold frontF
     rw [one_chip_apply_v]
     ring
-  · rw [if_neg hck]
+  · rw [ite_eq_right hck]
     have hne : spec.sidePoint N hN d.f d.v c ≠ d.frontF k :=
       spec.sidePoint_ne N hN hunit d.f d.v (le_of_lt hcN) hk hck
     rw [one_chip_apply_other' _ _ hne]
@@ -781,11 +785,11 @@ theorem bridgeDiv_apply_frontX (hunit : spec.IsUnit) {k c : ℕ} {e : Fin p} (he
       (d.frontF_ne_slotPoint hunit hk (d.ne_f_of_mem_X he) hint0 hintN).symm
   rw [hf0, Finset.sum_eq_single_of_mem e he (fun e' he' hne => ?_)]
   · by_cases hct : c = d.t e + k
-    · rw [if_pos hct, hct]
+    · rw [ite_eq_left hct, hct]
       unfold frontX
       rw [one_chip_apply_v]
       ring
-    · rw [if_neg hct]
+    · rw [ite_eq_right hct]
       have hne : spec.sidePoint N hN e (d.z e) c ≠ d.frontX e k :=
         spec.sidePoint_ne N hN hunit e (d.z e) (le_of_lt hcN) (hkX e he) hct
       rw [one_chip_apply_other' _ _ hne]
@@ -808,10 +812,10 @@ theorem bridgeDiv_apply_coreVertex (hunit : spec.IsUnit) {k : ℕ} (hkN : k < N)
     · unfold frontF
       rw [spec.sidePoint_zero N hN hunit d.f d.incF]
       by_cases hvu : d.v = u
-      · rw [if_pos ⟨rfl, hvu⟩, hvu, one_chip_apply_v]
-      · rw [if_neg (fun h => hvu h.2)]
+      · rw [ite_eq_left ⟨rfl, hvu⟩, hvu, one_chip_apply_v]
+      · rw [ite_eq_right (fun h => hvu h.2)]
         exact one_chip_apply_other' _ _ (fun h => hvu (Sum.inl.inj h).symm)
-    · rw [if_neg (by omega : ¬ (k = 0 ∧ d.v = u))]
+    · rw [ite_eq_right (by omega : ¬ (k = 0 ∧ d.v = u))]
       unfold frontF
       rw [spec.sidePoint_eq_slotPoint N hN d.f d.v k]
       exact one_chip_apply_other' _ _
@@ -823,14 +827,14 @@ theorem bridgeDiv_apply_coreVertex (hunit : spec.IsUnit) {k : ℕ} (hkN : k < N)
     have h2 : d.t e + k ≤ N := hkX e he
     by_cases hlast : d.t e + k = N
     · by_cases hou : spec.core.otherEnd e (d.z e) = u
-      · rw [if_pos ⟨hlast, hou⟩]
+      · rw [ite_eq_left ⟨hlast, hou⟩]
         unfold frontX
         rw [hlast, spec.sidePoint_last N hN hunit e (d.z e), hou, one_chip_apply_v]
-      · rw [if_neg (fun h => hou h.2)]
+      · rw [ite_eq_right (fun h => hou h.2)]
         unfold frontX
         rw [hlast, spec.sidePoint_last N hN hunit e (d.z e)]
         exact one_chip_apply_other' _ _ (fun h => hou (Sum.inl.inj h).symm)
-    · rw [if_neg (fun h => hlast h.1)]
+    · rw [ite_eq_right (fun h => hlast h.1)]
       unfold frontX
       rw [spec.sidePoint_eq_slotPoint N hN e (d.z e) (d.t e + k)]
       exact one_chip_apply_other' _ _
@@ -903,7 +907,7 @@ theorem bridgeSet_legal (hunit : spec.IsUnit) (hR : effective d.R) {k : ℕ}
           · exact h
         · rw [spec.num_edges_coreVertex_sidePoint N hN hunit h2N d.incF]
       refine le_trans hone ?_
-      rw [d.bridgeDiv_apply_coreVertex hunit hkN hkX d.v, if_pos ⟨rfl, rfl⟩]
+      rw [d.bridgeDiv_apply_coreVertex hunit hkN hkX d.v, ite_eq_left ⟨rfl, rfl⟩]
       have h1 : (0 : ℤ) ≤ ∑ e ∈ d.X,
           (if d.t e + 0 = N ∧ spec.core.otherEnd e (d.z e) = d.v then (1 : ℤ) else 0) :=
         Finset.sum_nonneg fun e _ => by split_ifs <;> norm_num
@@ -935,8 +939,8 @@ theorem bridgeSet_legal (hunit : spec.IsUnit) (hR : effective d.R) {k : ℕ}
       have hz : outdeg_S (spec.scale N hN).graph (d.bridgeSet k)
           (spec.slotPoint N hN g (j.val + 1)) = 0 := by
         rw [spec.outdeg_slotPoint N hN hunit _ g ho0 hoN,
-          if_pos (d.mem_bridgeSet_of_inside hunit k ht hh (by omega)),
-          if_pos (d.mem_bridgeSet_of_inside hunit k ht hh (by omega))]
+          ite_eq_left (d.mem_bridgeSet_of_inside hunit k ht hh (by omega)),
+          ite_eq_left (d.mem_bridgeSet_of_inside hunit k ht hh (by omega))]
         norm_num
       rw [hz]
       exact d.effective_bridgeDiv hR k _
@@ -954,14 +958,14 @@ theorem bridgeSet_legal (hunit : spec.IsUnit) (hR : effective d.R) {k : ℕ}
         rw [← d.mem_bridgeSet_frontX_iff hunit hX hbnd (le_of_lt hcN), hxc]
         exact hxmem
       rw [← hxc, spec.outdeg_sidePoint N hN hunit _ g (d.z g) hc0 hcN,
-        if_pos ((d.mem_bridgeSet_frontX_iff hunit hX hbnd (by omega)).mpr (by omega))]
+        ite_eq_left ((d.mem_bridgeSet_frontX_iff hunit hX hbnd (by omega)).mpr (by omega))]
       by_cases hnext : c + 1 ≤ d.t g + k
-      · rw [if_pos ((d.mem_bridgeSet_frontX_iff hunit hX hbnd (by omega)).mpr hnext)]
+      · rw [ite_eq_left ((d.mem_bridgeSet_frontX_iff hunit hX hbnd (by omega)).mpr hnext)]
         simpa using d.effective_bridgeDiv hR k _
-      · rw [if_neg (fun hcon =>
+      · rw [ite_eq_right (fun hcon =>
           hnext ((d.mem_bridgeSet_frontX_iff hunit hX hbnd (by omega)).mp hcon))]
         rw [d.bridgeDiv_apply_frontX hunit hX (by omega) hkX hc0 hcN,
-          if_pos (by omega : c = d.t g + k)]
+          ite_eq_left (by omega : c = d.t g + k)]
         have := hR (spec.sidePoint N hN g (d.z g) c)
         omega
     · -- the bridge itself
@@ -976,14 +980,14 @@ theorem bridgeSet_legal (hunit : spec.IsUnit) (hR : effective d.R) {k : ℕ}
         rw [← d.mem_bridgeSet_frontF_iff hunit hkN (le_of_lt hcN), hxc]
         exact hxmem
       rw [← hxc, spec.outdeg_sidePoint N hN hunit _ d.f d.v hc0 hcN,
-        if_pos ((d.mem_bridgeSet_frontF_iff hunit hkN (by omega)).mpr (by omega))]
+        ite_eq_left ((d.mem_bridgeSet_frontF_iff hunit hkN (by omega)).mpr (by omega))]
       by_cases hnext : c + 1 ≤ k
-      · rw [if_pos ((d.mem_bridgeSet_frontF_iff hunit hkN (by omega)).mpr hnext)]
+      · rw [ite_eq_left ((d.mem_bridgeSet_frontF_iff hunit hkN (by omega)).mpr hnext)]
         simpa using d.effective_bridgeDiv hR k _
-      · rw [if_neg (fun hcon =>
+      · rw [ite_eq_right (fun hcon =>
           hnext ((d.mem_bridgeSet_frontF_iff hunit hkN (by omega)).mp hcon))]
         rw [d.bridgeDiv_apply_frontF hunit (by omega) hkX hc0 hcN,
-          if_pos (by omega : c = k)]
+          ite_eq_left (by omega : c = k)]
         have := hR (spec.sidePoint N hN d.f d.v c)
         omega
 
@@ -1056,7 +1060,7 @@ theorem bridgeSet_step (hunit : spec.IsUnit) {k : ℕ} (hk : k < d.tauStar) :
     have hDk1 := d.bridgeDiv_apply_coreVertex hunit hk1N hkX1 u
     have hsum0 : (∑ e ∈ d.X,
         (if d.t e + k = N ∧ spec.core.otherEnd e (d.z e) = u then (1 : ℤ) else 0)) = 0 :=
-      Finset.sum_eq_zero fun e he => if_neg (fun h => by have := hkX e he; omega)
+      Finset.sum_eq_zero fun e he => ite_eq_right (fun h => by have := hkX e he; omega)
     show set_firing (spec.scale N hN).graph (d.bridgeDiv k) (d.bridgeSet k)
         ((spec.scale N hN).coreVertex u)
       = d.bridgeDiv (k + 1) ((spec.scale N hN).coreVertex u)
@@ -1069,13 +1073,13 @@ theorem bridgeSet_step (hunit : spec.IsUnit) {k : ℕ} (hk : k < d.tauStar) :
       have hsum1 : (∑ e ∈ d.X,
           (if d.t e + (k + 1) = N ∧ spec.core.otherEnd e (d.z e) = u then (1 : ℤ) else 0))
             = 0 :=
-        Finset.sum_eq_zero fun e he => if_neg (fun h =>
+        Finset.sum_eq_zero fun e he => ite_eq_right (fun h =>
           (spec.core.otherEnd_not_mem_of_crosses (d.incX e he) (d.memX e he)
             (d.crossX e he)) (by rw [h.2]; exact huW))
       have houtdeg : outdeg_S (spec.scale N hN).graph (d.bridgeSet k)
           ((spec.scale N hN).coreVertex u) = (if u = d.v ∧ k = 0 then (1 : ℤ) else 0) := by
         by_cases hcase : u = d.v ∧ k = 0
-        · rw [if_pos hcase]
+        · rw [ite_eq_left hcase]
           obtain ⟨hu, hk0⟩ := hcase
           have hfne : spec.sidePoint N hN d.f d.v 1 ∉ d.bridgeSet k := by
             rw [d.mem_bridgeSet_frontF_iff hunit hkN (by omega)]
@@ -1094,7 +1098,7 @@ theorem bridgeSet_step (hunit : spec.IsUnit) {k : ℕ} (hk : k < d.tauStar) :
           · exact absurd (show spec.sidePoint N hN g u 1 = spec.sidePoint N hN d.f d.v 1
               by rw [hgf, hgu]) hyne
           · exact h
-        · rw [if_neg hcase]
+        · rw [ite_eq_right hcase]
           refine outdeg_eq_zero_of_nbrs_mem fun y hy => ?_
           obtain ⟨g, hginc, rfl⟩ :=
             spec.exists_slot_of_coreVertex_adj N hN hunit h2N u hy
@@ -1102,17 +1106,17 @@ theorem bridgeSet_step (hunit : spec.IsUnit) {k : ℕ} (hk : k < d.tauStar) :
           · exact absurd ⟨h1, h2⟩ hcase
           · exact h
       have hzero1 : (if k + 1 = 0 ∧ d.v = u then (1 : ℤ) else 0) = 0 :=
-        if_neg (fun h => by have h1 := h.1; omega)
+        ite_eq_right (fun h => by have h1 := h.1; omega)
       rw [set_firing_apply_of_mem _ _ hmemS, houtdeg, hDk, hDk1, hsum0, hsum1, hzero1]
       by_cases hcase : u = d.v ∧ k = 0
-      · have e1 : (if u = d.v ∧ k = 0 then (1 : ℤ) else 0) = 1 := if_pos hcase
+      · have e1 : (if u = d.v ∧ k = 0 then (1 : ℤ) else 0) = 1 := ite_eq_left hcase
         have e2 : (if k = 0 ∧ d.v = u then (1 : ℤ) else 0) = 1 :=
-          if_pos ⟨hcase.2, hcase.1.symm⟩
+          ite_eq_left ⟨hcase.2, hcase.1.symm⟩
         rw [e1, e2]
         ring
-      · have e1 : (if u = d.v ∧ k = 0 then (1 : ℤ) else 0) = 0 := if_neg hcase
+      · have e1 : (if u = d.v ∧ k = 0 then (1 : ℤ) else 0) = 0 := ite_eq_right hcase
         have e2 : (if k = 0 ∧ d.v = u then (1 : ℤ) else 0) = 0 :=
-          if_neg (fun h => hcase ⟨h.2.symm, h.1⟩)
+          ite_eq_right (fun h => hcase ⟨h.2.symm, h.1⟩)
         rw [e1, e2]
         ring
     · -- off the near side: the landing chips arrive
@@ -1135,9 +1139,9 @@ theorem bridgeSet_step (hunit : spec.IsUnit) {k : ℕ} (hk : k < d.tauStar) :
         rw [hAdef, Finset.card_filter, Nat.cast_sum]
         exact Finset.sum_congr rfl fun e _ => by split_ifs <;> norm_num
       have hzeroA : (if k = 0 ∧ d.v = u then (1 : ℤ) else 0) = 0 :=
-        if_neg (fun h => huW (by rw [← h.2]; exact d.memW))
+        ite_eq_right (fun h => huW (by rw [← h.2]; exact d.memW))
       have hzero1 : (if k + 1 = 0 ∧ d.v = u then (1 : ℤ) else 0) = 0 :=
-        if_neg (fun h => by have h1 := h.1; omega)
+        ite_eq_right (fun h => by have h1 := h.1; omega)
       rw [set_firing_apply_of_not_mem _ _ hnotS, houtdeg, hcard, hDk, hDk1, hsum0,
         hzeroA, hzero1]
       ring
@@ -1159,8 +1163,8 @@ theorem bridgeSet_step (hunit : spec.IsUnit) {k : ℕ} (hk : k < d.tauStar) :
       rw [set_firing_apply_of_mem _ _
           (d.mem_bridgeSet_of_inside hunit k ht hh (o := j.val + 1) (by omega)),
         spec.outdeg_slotPoint N hN hunit _ g ho0 hoN,
-        if_pos (d.mem_bridgeSet_of_inside hunit k ht hh (by omega)),
-        if_pos (d.mem_bridgeSet_of_inside hunit k ht hh (by omega)),
+        ite_eq_left (d.mem_bridgeSet_of_inside hunit k ht hh (by omega)),
+        ite_eq_left (d.mem_bridgeSet_of_inside hunit k ht hh (by omega)),
         d.bridgeDiv_apply_of_slot_other hunit (by omega) hkXle hgf hgX ho0 hoN,
         d.bridgeDiv_apply_of_slot_other hunit (by omega) hkX1 hgf hgX ho0 hoN]
       ring
@@ -1169,8 +1173,8 @@ theorem bridgeSet_step (hunit : spec.IsUnit) {k : ℕ} (hk : k < d.tauStar) :
         fun o ho => d.not_mem_bridgeSet_of_outside hunit k ht hh hgf hgX ho
       rw [set_firing_apply_of_not_mem _ _ (hnotS _ (by omega)),
         spec.outdeg_slotPoint N hN hunit _ g ho0 hoN,
-        if_pos (Finset.mem_compl.mpr (hnotS _ (by omega))),
-        if_pos (Finset.mem_compl.mpr (hnotS _ (by omega))),
+        ite_eq_left (Finset.mem_compl.mpr (hnotS _ (by omega))),
+        ite_eq_left (Finset.mem_compl.mpr (hnotS _ (by omega))),
         d.bridgeDiv_apply_of_slot_other hunit (by omega) hkXle hgf hgX ho0 hoN,
         d.bridgeDiv_apply_of_slot_other hunit (by omega) hkX1 hgf hgX ho0 hoN]
       ring
@@ -1187,36 +1191,36 @@ theorem bridgeSet_step (hunit : spec.IsUnit) {k : ℕ} (hk : k < d.tauStar) :
       · rw [set_firing_apply_of_mem _ _
             ((d.mem_bridgeSet_frontX_iff hunit hX hbnd (by omega)).mpr hin),
           spec.outdeg_sidePoint N hN hunit _ g (d.z g) hc0 hcN,
-          if_pos ((d.mem_bridgeSet_frontX_iff hunit hX hbnd (by omega)).mpr (by omega)),
+          ite_eq_left ((d.mem_bridgeSet_frontX_iff hunit hX hbnd (by omega)).mpr (by omega)),
           d.bridgeDiv_apply_frontX hunit hX (by omega) hkXle hc0 hcN]
         by_cases hnext : c + 1 ≤ d.t g + k
-        · rw [if_pos ((d.mem_bridgeSet_frontX_iff hunit hX hbnd (by omega)).mpr hnext),
-            if_neg (by omega : ¬ c = d.t g + k), if_neg (by omega : ¬ c = d.t g + (k + 1))]
+        · rw [ite_eq_left ((d.mem_bridgeSet_frontX_iff hunit hX hbnd (by omega)).mpr hnext),
+            ite_eq_right (by omega : ¬ c = d.t g + k), ite_eq_right (by omega : ¬ c = d.t g + (k + 1))]
           ring
-        · rw [if_neg (fun hcon => hnext
+        · rw [ite_eq_right (fun hcon => hnext
               ((d.mem_bridgeSet_frontX_iff hunit hX hbnd (by omega)).mp hcon)),
-            if_pos (by omega : c = d.t g + k),
-            if_neg (by omega : ¬ c = d.t g + (k + 1))]
+            ite_eq_left (by omega : c = d.t g + k),
+            ite_eq_right (by omega : ¬ c = d.t g + (k + 1))]
           ring
       · have hnotS : spec.sidePoint N hN g (d.z g) c ∉ d.bridgeSet k := fun hcon =>
           hin ((d.mem_bridgeSet_frontX_iff hunit hX hbnd (by omega)).mp hcon)
         rw [set_firing_apply_of_not_mem _ _ hnotS,
           spec.outdeg_sidePoint N hN hunit _ g (d.z g) hc0 hcN,
           d.bridgeDiv_apply_frontX hunit hX (by omega) hkXle hc0 hcN,
-          if_neg (by omega : ¬ c = d.t g + k)]
+          ite_eq_right (by omega : ¬ c = d.t g + k)]
         have h2 : spec.sidePoint N hN g (d.z g) (c + 1) ∉ d.bridgeSet k := fun hcon => by
           have := (d.mem_bridgeSet_frontX_iff hunit hX hbnd (by omega)).mp hcon
           omega
         by_cases hprev : c = d.t g + (k + 1)
         · have h1 : spec.sidePoint N hN g (d.z g) (c - 1) ∈ d.bridgeSet k :=
             (d.mem_bridgeSet_frontX_iff hunit hX hbnd (by omega)).mpr (by omega)
-          rw [if_neg (by simpa using h1), if_pos (Finset.mem_compl.mpr h2), if_pos hprev]
+          rw [ite_eq_right (by simpa using h1), ite_eq_left (Finset.mem_compl.mpr h2), ite_eq_left hprev]
           ring
         · have h1 : spec.sidePoint N hN g (d.z g) (c - 1) ∉ d.bridgeSet k := fun hcon => by
             have := (d.mem_bridgeSet_frontX_iff hunit hX hbnd (by omega)).mp hcon
             omega
-          rw [if_pos (Finset.mem_compl.mpr h1), if_pos (Finset.mem_compl.mpr h2),
-            if_neg hprev]
+          rw [ite_eq_left (Finset.mem_compl.mpr h1), ite_eq_left (Finset.mem_compl.mpr h2),
+            ite_eq_right hprev]
           ring
     · -- the bridge: its front advances one step
       subst hf
@@ -1231,35 +1235,35 @@ theorem bridgeSet_step (hunit : spec.IsUnit) {k : ℕ} (hk : k < d.tauStar) :
       · rw [set_firing_apply_of_mem _ _
             ((d.mem_bridgeSet_frontF_iff hunit hkN (by omega)).mpr hin),
           spec.outdeg_sidePoint N hN hunit _ d.f d.v hc0 hcN,
-          if_pos ((d.mem_bridgeSet_frontF_iff hunit hkN (by omega)).mpr (by omega)),
+          ite_eq_left ((d.mem_bridgeSet_frontF_iff hunit hkN (by omega)).mpr (by omega)),
           d.bridgeDiv_apply_frontF hunit (by omega) hkXle hc0 hcN]
         by_cases hnext : c + 1 ≤ k
-        · rw [if_pos ((d.mem_bridgeSet_frontF_iff hunit hkN (by omega)).mpr hnext),
-            if_neg (by omega : ¬ c = k), if_neg (by omega : ¬ c = k + 1)]
+        · rw [ite_eq_left ((d.mem_bridgeSet_frontF_iff hunit hkN (by omega)).mpr hnext),
+            ite_eq_right (by omega : ¬ c = k), ite_eq_right (by omega : ¬ c = k + 1)]
           ring
-        · rw [if_neg (fun hcon => hnext
+        · rw [ite_eq_right (fun hcon => hnext
               ((d.mem_bridgeSet_frontF_iff hunit hkN (by omega)).mp hcon)),
-            if_pos (by omega : c = k), if_neg (by omega : ¬ c = k + 1)]
+            ite_eq_left (by omega : c = k), ite_eq_right (by omega : ¬ c = k + 1)]
           ring
       · have hnotS : spec.sidePoint N hN d.f d.v c ∉ d.bridgeSet k := fun hcon =>
           hin ((d.mem_bridgeSet_frontF_iff hunit hkN (by omega)).mp hcon)
         rw [set_firing_apply_of_not_mem _ _ hnotS,
           spec.outdeg_sidePoint N hN hunit _ d.f d.v hc0 hcN,
           d.bridgeDiv_apply_frontF hunit (by omega) hkXle hc0 hcN,
-          if_neg (by omega : ¬ c = k)]
+          ite_eq_right (by omega : ¬ c = k)]
         have h2 : spec.sidePoint N hN d.f d.v (c + 1) ∉ d.bridgeSet k := fun hcon => by
           have := (d.mem_bridgeSet_frontF_iff hunit hkN (by omega)).mp hcon
           omega
         by_cases hprev : c = k + 1
         · have h1 : spec.sidePoint N hN d.f d.v (c - 1) ∈ d.bridgeSet k :=
             (d.mem_bridgeSet_frontF_iff hunit hkN (by omega)).mpr (by omega)
-          rw [if_neg (by simpa using h1), if_pos (Finset.mem_compl.mpr h2), if_pos hprev]
+          rw [ite_eq_right (by simpa using h1), ite_eq_left (Finset.mem_compl.mpr h2), ite_eq_left hprev]
           ring
         · have h1 : spec.sidePoint N hN d.f d.v (c - 1) ∉ d.bridgeSet k := fun hcon => by
             have := (d.mem_bridgeSet_frontF_iff hunit hkN (by omega)).mp hcon
             omega
-          rw [if_pos (Finset.mem_compl.mpr h1), if_pos (Finset.mem_compl.mpr h2),
-            if_neg hprev]
+          rw [ite_eq_left (Finset.mem_compl.mpr h1), ite_eq_left (Finset.mem_compl.mpr h2),
+            ite_eq_right hprev]
           ring
 
 /-! ## The chain is a chain of legal moves -/
@@ -1315,7 +1319,7 @@ theorem bridgeDiv_tauStar_apply_coreVertex (hunit : spec.IsUnit) (u : Fin n) :
   have htau := d.one_le_tauStar
   have hsm := d.sMax_le
   rw [d.bridgeDiv_apply_coreVertex hunit d.tauStar_lt (fun e he => d.offset_add_tauStar_le he) u,
-    if_neg (fun h => by have h1 := h.1; omega)]
+    ite_eq_right (fun h => by have h1 := h.1; omega)]
   have hcard : ((d.X.filter
         (fun e => d.t e = d.sMax ∧ spec.core.otherEnd e (d.z e) = u)).card : ℤ)
       = ∑ e ∈ d.X, (if d.t e + d.tauStar = N ∧ spec.core.otherEnd e (d.z e) = u
@@ -1327,9 +1331,9 @@ theorem bridgeDiv_tauStar_apply_coreVertex (hunit : spec.IsUnit) (u : Fin n) :
       unfold tauStar
       omega
     by_cases hc : d.t e = d.sMax ∧ spec.core.otherEnd e (d.z e) = u
-    · rw [if_pos hc, if_pos ⟨h2.mpr hc.1, hc.2⟩]
+    · rw [ite_eq_left hc, ite_eq_left ⟨h2.mpr hc.1, hc.2⟩]
       norm_num
-    · rw [if_neg hc, if_neg (fun h => hc ⟨h2.mp h.1, h.2⟩)]
+    · rw [ite_eq_right hc, ite_eq_right (fun h => hc ⟨h2.mp h.1, h.2⟩)]
       norm_num
   rw [hcard]
   ring
@@ -1342,7 +1346,7 @@ theorem bridgeDiv_tauStar_apply_frontF (hunit : spec.IsUnit) :
   have htau := d.one_le_tauStar
   rw [d.bridgeDiv_apply_frontF hunit (le_of_lt d.tauStar_lt)
       (fun e he => d.offset_add_tauStar_le he) (by omega) d.tauStar_lt,
-    if_pos rfl]
+    ite_eq_left rfl]
 
 /-- **The landing divisor, on a crossing slot of non-maximal offset.**  Its chip
 is still interior. -/
@@ -1355,7 +1359,7 @@ theorem bridgeDiv_tauStar_apply_frontX (hunit : spec.IsUnit) {e : Fin p} (he : e
   have h3 : d.t e + d.tauStar < N := by unfold tauStar; omega
   rw [d.bridgeDiv_apply_frontX hunit he (le_of_lt d.tauStar_lt)
       (fun e' he' => d.offset_add_tauStar_le he') (by omega) h3,
-    if_pos rfl]
+    ite_eq_left rfl]
 
 /-! ## Uniqueness of the legal sets of `D_k`
 
@@ -1408,8 +1412,8 @@ theorem bridgeDiv_coreVertex (c : d.Confined) (hunit : spec.IsUnit) {k : ℕ} (h
   have hkX : ∀ e ∈ d.X, d.t e + k ≤ N - 1 := fun e he => d.offset_add_le hk he
   rw [d.bridgeDiv_apply_coreVertex hunit (by omega) (fun e he => by
       have := hkX e he; omega) u,
-    if_neg (fun h => by have h1 := h.1; omega), c.coreFree u,
-    Finset.sum_eq_zero (fun e he => if_neg (fun h => by
+    ite_eq_right (fun h => by have h1 := h.1; omega), c.coreFree u,
+    Finset.sum_eq_zero (fun e he => ite_eq_right (fun h => by
       have := hkX e he; have h1 := h.1; omega))]
   ring
 
@@ -1454,8 +1458,8 @@ theorem bridgeDiv_interior_le_one (c : d.Confined) (hunit : spec.IsUnit) {k : �
         · intro h; rw [← h, spec.sideOffset_sideOffset N d.f d.v (by omega)]
         · intro h; rw [h, spec.sideOffset_sideOffset N d.f d.v hkN]
       by_cases hc : j = spec.sideOffset N d.f d.v k
-      · rw [if_pos (hiff.mpr hc), if_pos hc]; ring
-      · rw [if_neg (fun hcon => hc (hiff.mp hcon)), if_neg hc]; ring
+      · rw [ite_eq_left (hiff.mpr hc), ite_eq_left hc]; ring
+      · rw [ite_eq_right (fun hcon => hc (hiff.mp hcon)), ite_eq_right hc]; ring
     rw [Finset.sum_congr rfl hrw, Finset.sum_ite_eq' (Finset.Ioo 0 N)
       (spec.sideOffset N d.f d.v k) (fun _ => (1 : ℤ))]
     split_ifs <;> norm_num
@@ -1478,8 +1482,8 @@ theorem bridgeDiv_interior_le_one (c : d.Confined) (hunit : spec.IsUnit) {k : �
           · intro h; rw [← h, spec.sideOffset_sideOffset N g (d.z g) (by omega)]
           · intro h; rw [h, spec.sideOffset_sideOffset N g (d.z g) (hkXle g hgX)]
         by_cases hc : j = spec.sideOffset N g (d.z g) (d.t g + k)
-        · rw [if_pos (hiff.mpr hc), if_pos hc]; ring
-        · rw [if_neg (fun hcon => hc (hiff.mp hcon)), if_neg hc]; ring
+        · rw [ite_eq_left (hiff.mpr hc), ite_eq_left hc]; ring
+        · rw [ite_eq_right (fun hcon => hc (hiff.mp hcon)), ite_eq_right hc]; ring
       rw [Finset.sum_congr rfl hrw, Finset.sum_ite_eq' (Finset.Ioo 0 N)
         (spec.sideOffset N g (d.z g) (d.t g + k)) (fun _ => (1 : ℤ))]
       split_ifs <;> norm_num
@@ -1539,7 +1543,7 @@ theorem legal_set_unique (c : d.Confined) (hunit : spec.IsUnit) {k : ℕ} (hk0 :
     have := d.offset_add_le hk he; omega
   -- the two kinds of front carry a chip
   have hchipF : 1 ≤ d.bridgeDiv k (spec.sidePoint N hN d.f d.v k) := by
-    rw [d.bridgeDiv_apply_frontF hunit (by omega) hkXle (by omega) hkN, if_pos rfl]
+    rw [d.bridgeDiv_apply_frontF hunit (by omega) hkXle (by omega) hkN, ite_eq_left rfl]
     have := c.eff (spec.sidePoint N hN d.f d.v k)
     omega
   have hchipX : ∀ e ∈ d.X,
@@ -1547,7 +1551,7 @@ theorem legal_set_unique (c : d.Confined) (hunit : spec.IsUnit) {k : ℕ} (hk0 :
     intro e he
     have hb : d.t e + k < N := by have := d.offset_add_le hk he; omega
     rw [d.bridgeDiv_apply_frontX hunit he (by omega) hkXle
-      (by have := d.onePos e he; omega) hb, if_pos rfl]
+      (by have := d.onePos e he; omega) hb, ite_eq_left rfl]
     have := c.eff (spec.sidePoint N hN e (d.z e) (d.t e + k))
     omega
   -- the core part of `T`, and its closure off the chip slots

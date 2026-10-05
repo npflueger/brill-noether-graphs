@@ -1,9 +1,13 @@
-import Bananas.CrossOneOff.AffineReduction
-import Bananas.Transmission.KGeneralSwap
-import Utilities.Iso.GraphContractionFibreTree
-import Bananas.Wedge.WedgeSubmodularity
-import Bananas.Transmission.KGeneralBNGeneral
-import Utilities.Gluing.ChainGluing
+module
+
+public import Bananas.CrossOneOff.AffineReduction
+public import Bananas.Transmission.KGeneralSwap
+public import Utilities.Iso.GraphContractionFibreTree
+public import Bananas.Wedge.WedgeSubmodularity
+public import Bananas.Transmission.KGeneralBNGeneral
+public import Utilities.Gluing.ChainGluing
+
+@[expose] public section
 
 /-!
 # Chains with a common general-transmission period
@@ -140,7 +144,7 @@ private theorem affineReflectionSupport_rising_uniform
   ext n
   simp only [Transpositions.risingSet, Set.mem_ofPred_eq]
   by_cases hasi : α i < α (i + 1)
-  · rw [if_pos hasi]
+  · rw [ite_eq_left hasi]
     constructor
     · exact fun h => h.1
     · intro hn
@@ -155,7 +159,7 @@ private theorem affineReflectionSupport_rising_uniform
         show i + q * (k : ℤ) + 1 = (i + 1) + q * (k : ℤ) by ring,
         hαsucc]
       omega
-  · rw [if_neg hasi]
+  · rw [ite_eq_right hasi]
     simp only [Set.mem_empty_iff_false, iff_false, not_and]
     intro hn
     obtain ⟨q, hq⟩ := hn
@@ -215,7 +219,7 @@ theorem affineReflection_star_affine_and_count_le
   have hsEq : affineReflection k i hk = Transpositions.sigma S hS := rfl
   by_cases hRise : α i < α (i + 1)
   · have hR : Transpositions.risingSet α S = S := by
-      simpa only [S, if_pos hRise] using
+      simpa only [S, ite_eq_left hRise] using
         affineReflectionSupport_rising_uniform hα i hk
     have hStar : α ⋆ affineReflection k i hk = α * affineReflection k i hk := by
       rw [hsEq, Transpositions.starSigma]
@@ -229,7 +233,7 @@ theorem affineReflection_star_affine_and_count_le
     exact ⟨hα.aspPerm_mul (affineReflection_isKAffine k i hk),
       by rw [kInversionCount_mul_affineReflection_add_one hα i hk hRise]⟩
   · have hR : Transpositions.risingSet α S = ∅ := by
-      simpa only [S, if_neg hRise] using
+      simpa only [S, ite_eq_right hRise] using
         affineReflectionSupport_rising_uniform hα i hk
     have hStar : α ⋆ affineReflection k i hk = α := by
       rw [hsEq, Transpositions.starSigma]

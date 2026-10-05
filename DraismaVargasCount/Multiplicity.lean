@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.CaterpillarRows
-import Utilities.IntegralGeometry.Denominator
+module
+
+public import DraismaVargas.LocalCases.CaterpillarRows
+public import Utilities.IntegralGeometry.Denominator
+
+@[expose] public section
 
 /-!
 # Part II's determinantal multiplicity, and its API
@@ -637,10 +641,10 @@ theorem leafCount_catTree (m : ℕ) : leafCount (catTree m) = 2 * m + 2 := by
     simp only [leafIdx] at hval
     apply Fin.ext
     rcases h1 with h1 | h1 <;> rcases h2 with h2 | h2 <;>
-      [ (rw [if_pos (by omega), if_pos (by omega)] at hval);
-        (rw [if_pos (by omega), if_neg (by omega)] at hval);
-        (rw [if_neg (by omega), if_pos (by omega)] at hval);
-        (rw [if_neg (by omega), if_neg (by omega)] at hval) ] <;> omega
+      [ (rw [ite_eq_left (by omega), ite_eq_left (by omega)] at hval);
+        (rw [ite_eq_left (by omega), ite_eq_right (by omega)] at hval);
+        (rw [ite_eq_right (by omega), ite_eq_left (by omega)] at hval);
+        (rw [ite_eq_right (by omega), ite_eq_right (by omega)] at hval) ] <;> omega
   · intro index _
     have hlt := index.isLt
     by_cases hk : index.val ≤ 2 * m
@@ -650,14 +654,14 @@ theorem leafCount_catTree (m : ℕ) : leafCount (catTree m) = 2 * m + 2 := by
           omega)))
       · apply Fin.ext
         simp only [leafIdx]
-        rw [if_pos (by show 3 * index.val + 1 ≤ 6 * m + 1; omega)]
+        rw [ite_eq_left (by show 3 * index.val + 1 ≤ 6 * m + 1; omega)]
         show (3 * index.val + 1) / 3 = index.val
         omega
     · refine ⟨⟨6 * m + 3, by omega⟩, ?_, ?_⟩
       · exact (mem_leafVertices _).mpr ((isLeafVertex_catTree_iff m _).mpr (Or.inr rfl))
       · apply Fin.ext
         simp only [leafIdx]
-        rw [if_neg (by show ¬ (6 * m + 3 ≤ 6 * m + 1); omega)]
+        rw [ite_eq_right (by show ¬ (6 * m + 3 ≤ 6 * m + 1); omega)]
         omega
 
 /-! ### The diagonal entries of the caterpillar length matrix -/
@@ -691,7 +695,7 @@ theorem coefficient_cat (m : ℕ) (i : Fin (6 * m + 3))
       1 / ((caterpillarDatum m).sourceEdgeIndex edge : ℚ) := by
   classical
   unfold coefficient
-  rw [if_pos]
+  rw [ite_eq_left]
   show i = (catEdgeEquiv m).symm edge.1.1
   rw [hTarget]
   exact ((catEdgeEquiv m).symm_apply_apply i).symm
@@ -801,19 +805,19 @@ theorem matrix_diag_cat (m : ℕ) (i : Fin (6 * m + 3)) :
   classical
   rw [matrix_diag_eq_sum]
   by_cases hLeaf : IsLeafEdge m i
-  · rw [if_pos hLeaf, toFinset_path_leaf m hLeaf,
+  · rw [ite_eq_left hLeaf, toFinset_path_leaf m hLeaf,
       Finset.sum_pair (loopFirst_ne_loopSecond hLeaf)]
     unfold loopFirst loopSecond
     rw [sourceEdgeIndex_caterpillar, sourceEdgeIndex_caterpillar,
-      if_neg (fun h ↦ not_pair_of_leaf hLeaf h.1),
-      if_neg (fun h ↦ not_pair_of_leaf hLeaf h.1)]
+      ite_eq_right (fun h ↦ not_pair_of_leaf hLeaf h.1),
+      ite_eq_right (fun h ↦ not_pair_of_leaf hLeaf h.1)]
     norm_num
-  · rw [if_neg hLeaf, toFinset_path_notLeaf m hLeaf, Finset.sum_singleton,
+  · rw [ite_eq_right hLeaf, toFinset_path_notLeaf m hLeaf, Finset.sum_singleton,
       sourceEdgeIndex_caterpillar]
     by_cases hPair : IsPairEdge m i.val
-    · rw [if_pos hPair, if_pos ⟨hPair, Or.inl rfl⟩]
+    · rw [ite_eq_left hPair, ite_eq_left ⟨hPair, Or.inl rfl⟩]
       norm_num
-    · rw [if_neg hPair, if_neg (fun h ↦ hPair h.1)]
+    · rw [ite_eq_right hPair, ite_eq_right (fun h ↦ hPair h.1)]
       norm_num
 
 /-! ### The caterpillar has multiplicity one -/
@@ -839,10 +843,10 @@ theorem card_leafEdges (m : ℕ) :
     unfold IsLeafEdge at h1 h2
     apply Fin.ext
     rcases h1 with h1 | h1 <;> rcases h2 with h2 | h2 <;>
-      [ (rw [if_pos (by omega), if_pos (by omega)] at hval);
-        (rw [if_pos (by omega), if_neg (by omega)] at hval);
-        (rw [if_neg (by omega), if_pos (by omega)] at hval);
-        (rw [if_neg (by omega), if_neg (by omega)] at hval) ] <;> omega
+      [ (rw [ite_eq_left (by omega), ite_eq_left (by omega)] at hval);
+        (rw [ite_eq_left (by omega), ite_eq_right (by omega)] at hval);
+        (rw [ite_eq_right (by omega), ite_eq_left (by omega)] at hval);
+        (rw [ite_eq_right (by omega), ite_eq_right (by omega)] at hval) ] <;> omega
   · intro index _
     have hlt := index.isLt
     by_cases hk : index.val ≤ 2 * m
@@ -850,14 +854,14 @@ theorem card_leafEdges (m : ℕ) :
         Or.inl (by show (3 * index.val) % 3 = 0; omega)⟩, ?_⟩
       apply Fin.ext
       simp only [leafEdgeIdx]
-      rw [if_pos (by show 3 * index.val ≤ 6 * m; omega)]
+      rw [ite_eq_left (by show 3 * index.val ≤ 6 * m; omega)]
       show (3 * index.val) / 3 = index.val
       omega
     · refine ⟨⟨6 * m + 2, by omega⟩, Finset.mem_filter.mpr ⟨Finset.mem_univ _,
         Or.inr rfl⟩, ?_⟩
       apply Fin.ext
       simp only [leafEdgeIdx]
-      rw [if_neg (by show ¬ (6 * m + 2 ≤ 6 * m); omega)]
+      rw [ite_eq_right (by show ¬ (6 * m + 2 ≤ 6 * m); omega)]
       omega
 
 theorem num_matrix_diag_cat (m : ℕ) (i : Fin (6 * m + 3)) :
@@ -865,12 +869,12 @@ theorem num_matrix_diag_cat (m : ℕ) (i : Fin (6 * m + 3)) :
       if IsLeafEdge m i then 2 else 1 := by
   rw [matrix_diag_cat]
   by_cases hLeaf : IsLeafEdge m i
-  · rw [if_pos hLeaf, if_pos hLeaf]
+  · rw [ite_eq_left hLeaf, ite_eq_left hLeaf]
     norm_num
-  · rw [if_neg hLeaf, if_neg hLeaf]
+  · rw [ite_eq_right hLeaf, ite_eq_right hLeaf]
     by_cases hPair : IsPairEdge m i.val
-    · rw [if_pos hPair]; norm_num
-    · rw [if_neg hPair]; norm_num
+    · rw [ite_eq_left hPair]; norm_num
+    · rw [ite_eq_right hPair]; norm_num
 
 /-- The numerators of the caterpillar's diagonal multiply to `2^{l(T)}`. -/
 theorem prod_num_matrix_diag_cat (m : ℕ) :
@@ -914,7 +918,7 @@ theorem card_pairEdges (m : ℕ) :
         Or.inl hmod6⟩, ?_⟩
       apply Fin.ext
       simp only [pairEdgeIdx]
-      rw [if_pos (show (6 * (index.val / 3) + 1) % 6 = 1 from hmod6)]
+      rw [ite_eq_left (show (6 * (index.val / 3) + 1) % 6 = 1 from hmod6)]
       show min (3 * ((6 * (index.val / 3) + 1) / 6) + 0) (3 * m) = index.val
       omega
     · have hlt' : 6 * (index.val / 3) + 2 < 6 * m + 3 := by omega
@@ -925,7 +929,7 @@ theorem card_pairEdges (m : ℕ) :
         Or.inr ⟨hmod3, hne⟩⟩, ?_⟩
       apply Fin.ext
       simp only [pairEdgeIdx]
-      rw [if_neg (show ¬ ((6 * (index.val / 3) + 2) % 6 = 1) by omega), if_pos hmod6]
+      rw [ite_eq_right (show ¬ ((6 * (index.val / 3) + 2) % 6 = 1) by omega), ite_eq_left hmod6]
       show min (3 * ((6 * (index.val / 3) + 2) / 6) + 1) (3 * m) = index.val
       omega
     · have hlt' : 6 * (index.val / 3) + 5 < 6 * m + 3 := by omega
@@ -935,8 +939,8 @@ theorem card_pairEdges (m : ℕ) :
         Or.inr ⟨hmod3, hne⟩⟩, ?_⟩
       apply Fin.ext
       simp only [pairEdgeIdx]
-      rw [if_neg (show ¬ ((6 * (index.val / 3) + 5) % 6 = 1) by omega),
-        if_neg (show ¬ ((6 * (index.val / 3) + 5) % 6 = 2) by omega)]
+      rw [ite_eq_right (show ¬ ((6 * (index.val / 3) + 5) % 6 = 1) by omega),
+        ite_eq_right (show ¬ ((6 * (index.val / 3) + 5) % 6 = 2) by omega)]
       show min (3 * ((6 * (index.val / 3) + 5) / 6) + 2) (3 * m) = index.val
       omega
 
@@ -946,12 +950,12 @@ theorem den_matrix_diag_cat (m : ℕ) (i : Fin (6 * m + 3)) :
       if IsPairEdge m i.val then 2 else 1 := by
   rw [matrix_diag_cat]
   by_cases hLeaf : IsLeafEdge m i
-  · rw [if_pos hLeaf, if_neg (not_pair_of_leaf hLeaf)]
+  · rw [ite_eq_left hLeaf, ite_eq_right (not_pair_of_leaf hLeaf)]
     norm_num
-  · rw [if_neg hLeaf]
+  · rw [ite_eq_right hLeaf]
     by_cases hPair : IsPairEdge m i.val
-    · rw [if_pos hPair, if_pos hPair]; norm_num
-    · rw [if_neg hPair, if_neg hPair]; norm_num
+    · rw [ite_eq_left hPair, ite_eq_left hPair]; norm_num
+    · rw [ite_eq_right hPair, ite_eq_right hPair]; norm_num
 
 theorem prod_den_matrix_diag_cat (m : ℕ) :
     ∏ i, ((matrix (CaterpillarRows.labelling m).presentation i i).den : ℚ) =

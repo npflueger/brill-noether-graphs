@@ -1,4 +1,8 @@
-import DraismaVargas.Infrastructure.GluingDatum
+module
+
+public import DraismaVargas.Infrastructure.GluingDatum
+
+@[expose] public section
 
 /-!
 # Star partitions: one distinguished block through sheet `0`, singletons elsewhere
@@ -58,11 +62,11 @@ def sheetStar (n : ℕ) (P : ℕ → Prop) [DecidablePred P] : SheetPartition (n
   repr_idem := by
     intro k
     by_cases h : P k.val
-    · rw [if_pos h]
+    · rw [ite_eq_left h]
       by_cases h0 : P ((0 : Fin (n + 1)) : ℕ)
-      · rw [if_pos h0]
-      · rw [if_neg h0]
-    · rw [if_neg h, if_neg h]
+      · rw [ite_eq_left h0]
+      · rw [ite_eq_right h0]
+    · rw [ite_eq_right h, ite_eq_right h]
 
 @[simp] theorem sheetStar_repr (P : ℕ → Prop) [DecidablePred P] (k : Fin (n + 1)) :
     (sheetStar n P).repr k = if P k.val then 0 else k := rfl
@@ -81,22 +85,22 @@ theorem sheetStar_rel_iff (P : ℕ → Prop) [DecidablePred P] (hP0 : P 0)
   have hzero : ((0 : Fin (n + 1)) : ℕ) = 0 := rfl
   rw [rel_iff, sheetStar_repr, sheetStar_repr]
   by_cases hi : P i.val <;> by_cases hj : P j.val
-  · rw [if_pos hi, if_pos hj]; exact ⟨fun _ => Or.inl ⟨hi, hj⟩, fun _ => rfl⟩
-  · rw [if_pos hi, if_neg hj]
+  · rw [ite_eq_left hi, ite_eq_left hj]; exact ⟨fun _ => Or.inl ⟨hi, hj⟩, fun _ => rfl⟩
+  · rw [ite_eq_left hi, ite_eq_right hj]
     constructor
     · intro h
       exact absurd (by rw [← h, hzero]; exact hP0) hj
     · rintro (⟨-, h⟩ | rfl)
       · exact absurd h hj
       · exact absurd hi hj
-  · rw [if_neg hi, if_pos hj]
+  · rw [ite_eq_right hi, ite_eq_left hj]
     constructor
     · intro h
       exact absurd (by rw [h, hzero]; exact hP0) hi
     · rintro (⟨h, -⟩ | rfl)
       · exact absurd h hi
       · exact absurd hj hi
-  · rw [if_neg hi, if_neg hj]
+  · rw [ite_eq_right hi, ite_eq_right hj]
     exact ⟨fun h => Or.inr h, fun h => h.resolve_left (fun hh => hi hh.1)⟩
 
 /-- **Nested blocks refine.** -/
@@ -214,8 +218,8 @@ theorem sheetStar_discrete : sheetStar n (fun k => k = 0) = discrete (n + 1) := 
   funext k
   show (if k.val = 0 then (0 : Fin (n + 1)) else k) = k
   by_cases h : k.val = 0
-  · rw [if_pos h]; exact (Fin.ext h).symm
-  · rw [if_neg h]
+  · rw [ite_eq_left h]; exact (Fin.ext h).symm
+  · rw [ite_eq_right h]
 
 /-- Any predicate cutting out exactly `{0}` gives the discrete partition. -/
 theorem sheetStar_eq_discrete (P : ℕ → Prop) [DecidablePred P]
@@ -226,8 +230,8 @@ theorem sheetStar_eq_discrete (P : ℕ → Prop) [DecidablePred P]
     show (if P k.val then (0 : Fin (n + 1)) else k)
       = (if k.val = 0 then (0 : Fin (n + 1)) else k)
     by_cases h : k.val = 0
-    · rw [if_pos h, if_pos ((hP _).mpr h)]
-    · rw [if_neg h, if_neg (fun hh => h ((hP _).mp hh))]]
+    · rw [ite_eq_left h, ite_eq_left ((hP _).mpr h)]
+    · rw [ite_eq_right h, ite_eq_right (fun hh => h ((hP _).mp hh))]]
   exact sheetStar_discrete
 
 /-- **The number of blocks of a star partition**: one for the block itself and

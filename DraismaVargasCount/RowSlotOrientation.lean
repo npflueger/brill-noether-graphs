@@ -1,4 +1,8 @@
-import DraismaVargasCount.RowVertexEnumeration
+module
+
+public import DraismaVargasCount.RowVertexEnumeration
+
+@[expose] public section
 
 /-!
 # Deriving the request-slot orientation from actual source endpoints

@@ -1,4 +1,8 @@
-import Utilities.Foundations.CommonOffsetRounding
+module
+
+public import Utilities.Foundations.CommonOffsetRounding
+
+@[expose] public section
 
 /-!
 # Sampling and rounding a convex integer path

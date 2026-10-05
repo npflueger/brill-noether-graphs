@@ -1,6 +1,10 @@
-import DraismaVargasCount.BallotCoreIdentification
-import DraismaVargasCount.DiagonalClassification
-import DraismaVargasCount.SlopeRigidity
+module
+
+public import DraismaVargasCount.BallotCoreIdentification
+public import DraismaVargasCount.DiagonalClassification
+public import DraismaVargasCount.SlopeRigidity
+
+@[expose] public section
 
 /-!
 # The `extract` field of `DiagonalClassification`: a class statement, and a necessary condition

@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoTracks
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoExitFree
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoTracks
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoExitFree
+
+@[expose] public section
 
 /-!
 # The vertex dictionary and (H-II) of the valency-two Base II type change at a leaf wall
@@ -336,13 +340,13 @@ theorem outerEnd_of_fst (e : NonDanglingEdge wd.cover)
     (h : (wd.cover.sourceEnds e.1).1 = F.vertex) :
     outerEnd m wd F e = (wd.cover.sourceEnds e.1).2 := by
   unfold outerEnd
-  rw [if_pos h]
+  rw [ite_eq_left h]
 
 theorem outerEnd_of_not_fst (e : NonDanglingEdge wd.cover)
     (h : (wd.cover.sourceEnds e.1).1 ≠ F.vertex) :
     outerEnd m wd F e = (wd.cover.sourceEnds e.1).1 := by
   unfold outerEnd
-  rw [if_neg h]
+  rw [ite_eq_right h]
 
 theorem incident_outerEnd (e : NonDanglingEdge wd.cover) :
     Incident wd.cover e.1 (outerEnd m wd F e) := by

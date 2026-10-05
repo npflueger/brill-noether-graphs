@@ -1,6 +1,10 @@
-import LowGenus.GenusFiveTwoPole
-import LowGenus.GenusFiveConfigurations
-import Utilities.Subdivision.DiscreteSpecialization
+module
+
+public import LowGenus.GenusFiveTwoPole
+public import LowGenus.GenusFiveConfigurations
+public import Utilities.Subdivision.DiscreteSpecialization
+
+@[expose] public section
 
 /-!
 # Six closed genus-five constructions from the common positive proof

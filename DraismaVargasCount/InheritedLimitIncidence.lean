@@ -1,4 +1,8 @@
-import DraismaVargasCount.InheritedLimitBranches
+module
+
+public import DraismaVargasCount.InheritedLimitBranches
+
+@[expose] public section
 
 /-!
 # Actual inherited stable-core incidence at a positive-request limit

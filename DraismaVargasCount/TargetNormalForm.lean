@@ -1,5 +1,9 @@
-import DraismaVargasCount.Transport
-import DraismaVargas.Infrastructure.CaterpillarTree
+module
+
+public import DraismaVargasCount.Transport
+public import DraismaVargas.Infrastructure.CaterpillarTree
+
+@[expose] public section
 
 /-!
 # A normal form for the target tree, with the occurrence bijection as data

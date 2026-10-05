@@ -1,5 +1,9 @@
-import Bananas.Jacobian.BananaJacobianReducedInjectivity
-import Bananas.Jacobian.BananaJacobianDiagonal
+module
+
+public import Bananas.Jacobian.BananaJacobianReducedInjectivity
+public import Bananas.Jacobian.BananaJacobianDiagonal
+
+@[expose] public section
 
 /-!
 # Integer-lattice reduction for banana coordinates

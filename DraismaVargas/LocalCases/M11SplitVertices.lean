@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.M11SplitBranch
-import DraismaVargas.LocalCases.ResolutionStableIncidence
+module
+
+public import DraismaVargas.LocalCases.M11SplitBranch
+public import DraismaVargas.LocalCases.ResolutionStableIncidence
+
+@[expose] public section
 
 /-!
 # Branch-vertex equivalence for the actual first M11 split
@@ -79,14 +83,14 @@ theorem branchVertexMap_of_wall (vertex : BranchVertex data)
     branchVertexMap input profile hCard vertex =
       selectedNewBranch input profile hCard := by
   unfold branchVertexMap
-  exact dif_pos hAt
+  exact dite_eq_left hAt
 
 theorem branchVertexMap_of_away (vertex : BranchVertex data)
     (hAway : vertex.1.1.1 ≠ wall) :
     (branchVertexMap input profile hCard vertex).1 =
       retainedVertex (firstSplitPattern input profile hCard).candidate vertex.1 := by
   unfold branchVertexMap
-  exact congrArg Subtype.val (dif_neg hAway)
+  exact congrArg Subtype.val (dite_eq_right hAway)
 
 theorem branchVertexMap_injective :
     Function.Injective (branchVertexMap input profile hCard) := by

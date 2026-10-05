@@ -1,4 +1,8 @@
-import Bananas.CrossOneOff.OneOffTransmission
+module
+
+public import Bananas.CrossOneOff.OneOffTransmission
+
+@[expose] public section
 
 /-!
 # Multiple-residue rows for the same-strand one-off marking

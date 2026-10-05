@@ -1,5 +1,9 @@
-import Utilities.IntegralGeometry.Denominator
-import DraismaVargas.Infrastructure.LengthMatrix
+module
+
+public import Utilities.IntegralGeometry.Denominator
+public import DraismaVargas.Infrastructure.LengthMatrix
+
+@[expose] public section
 
 /-!
 # Clearing a positive rational gluing realization

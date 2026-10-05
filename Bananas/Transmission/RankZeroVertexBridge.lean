@@ -1,4 +1,8 @@
-import Bananas.Classification.GenusTwoReduction
+module
+
+public import Bananas.Classification.GenusTwoReduction
+
+@[expose] public section
 
 /-!
 # Rank-zero witnesses as reduced one-chip classes

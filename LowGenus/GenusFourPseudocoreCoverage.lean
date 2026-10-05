@@ -1,10 +1,14 @@
-import LowGenus.LowGenusExistence
-import LowGenus.Infrastructure.TrivalentExpansionClosed
-import Utilities.Iso.FossilTopology
-import Utilities.Gluing.GenusThreeCycleWedge
-import Utilities.Pseudocore.PseudocoreMarkerWedge
-import Utilities.Pseudocore.PseudocorePresentation
-import Utilities.Pseudocore.PseudocoreSubdivisionProperties
+module
+
+public import LowGenus.LowGenusExistence
+public import LowGenus.Infrastructure.TrivalentExpansionClosed
+public import Utilities.Iso.FossilTopology
+public import Utilities.Gluing.GenusThreeCycleWedge
+public import Utilities.Pseudocore.PseudocoreMarkerWedge
+public import Utilities.Pseudocore.PseudocorePresentation
+public import Utilities.Pseudocore.PseudocoreSubdivisionProperties
+
+@[expose] public section
 
 /-!
 # Public genus-four reduction to six closed cubic rows

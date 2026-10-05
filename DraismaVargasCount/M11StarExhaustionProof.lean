@@ -1,4 +1,8 @@
-import DraismaVargasCount.M11StarCensusProof
+module
+
+public import DraismaVargasCount.M11StarCensusProof
+
+@[expose] public section
 
 /-!
 # M-11 star exhaustion: the `w2M11` clause with no hypothesis
@@ -384,11 +388,11 @@ theorem nonempty_transportFree_of_rel (iso : GeometricDatumIso first second)
   · intro edge hInc s
     have hE := hEnd edge hInc s
     by_cases hr : right edge = true
-    · simp only [hr, if_true] at hE ⊢
+    · simp only [hr, ite_true] at hE ⊢
       have h1 := back res.right res'.right τF σF hR hσFr (σF.symm (iso.edgePerm edge s))
         (iso.edgePerm edge s) (by rw [Equiv.apply_symm_apply]; rfl)
       exact h1.trans hE
-    · simp only [hr, if_false, Bool.false_eq_true] at hE ⊢
+    · simp only [hr, ite_false, Bool.false_eq_true] at hE ⊢
       have h1 := back res.left res'.left τO σO hL hσOr (σO.symm (iso.edgePerm edge s))
         (iso.edgePerm edge s) (by rw [Equiv.apply_symm_apply]; rfl)
       exact h1.trans hE
@@ -486,7 +490,7 @@ theorem nonempty_transportFree_split (iso : GeometricDatumIso first second)
     rw [Equiv.symm_apply_apply]
     exact (hS.right s s).mpr ⟨rfl, Or.inr rfl⟩
   · intro edge hInc s
-    rw [if_pos (hRight edge hInc), if_pos (hRight edge hInc)]
+    rw [ite_eq_left (hRight edge hInc), ite_eq_left (hRight edge hInc)]
     have hCompat := iso.compatible edge wall hInc s
     have hWs : W.Rel (E.symm (iso.edgePerm edge s)) s := by
       rw [hWE, Equiv.apply_symm_apply]
@@ -528,8 +532,8 @@ theorem nonempty_transportFree_joined (iso : GeometricDatumIso first second)
   · intro edge hInc s
     have hCompat := iso.compatible edge wall hInc s
     by_cases hr : right edge = true
-    · rw [if_pos hr, if_pos hr]; exact (hS.right _ _).mpr hCompat
-    · rw [if_neg hr, if_neg hr]; exact (hS.left _ _).mpr hCompat
+    · rw [ite_eq_left hr, ite_eq_left hr]; exact (hS.right _ _).mpr hCompat
+    · rw [ite_eq_right hr, ite_eq_right hr]; exact (hS.left _ _).mpr hCompat
 
 end ShapeTransport
 

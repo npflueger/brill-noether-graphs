@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.ClassifierInterface
-import DraismaVargas.LocalCases.SecondEquation
+module
+
+public import DraismaVargas.LocalCases.ClassifierInterface
+public import DraismaVargas.LocalCases.SecondEquation
+
+@[expose] public section
 
 /-!
 # Wall arithmetic and the per-wall family dispatcher
@@ -921,7 +925,7 @@ theorem atlasMatrix_atlasOutgoingLabel {Guard : coordinate → Prop}
         (atlasOutgoingLabel input hnodup fallback wall hw i) =
       GluingDatum.LengthMatrixPresentation.matrix
         ((input wall hw).family.presentation i) := by
-  rw [atlasChartMatrix_apply, atlasOutgoingLabel, dif_pos hdet]
+  rw [atlasChartMatrix_apply, atlasOutgoingLabel, dite_eq_left hdet]
   exact MatrixAtlas.atlasMatrix_encodePresentation _ _ _
 
 /-- **The assembly.**  A `WallInput` at every coordinate, duplicate-free

@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.M11RemotePruning
-import DraismaVargas.LocalCases.PrunedFibreTree
+module
+
+public import DraismaVargas.LocalCases.M11RemotePruning
+public import DraismaVargas.LocalCases.PrunedFibreTree
+
+@[expose] public section
 
 /-!
 # The M11 remote swap moves only the double target direction

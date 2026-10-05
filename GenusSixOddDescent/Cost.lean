@@ -1,5 +1,9 @@
-import Utilities.Subdivision.EdgeSumDescent
-import Utilities.Subdivision.SlotIntervalFiring
+module
+
+public import Utilities.Subdivision.EdgeSumDescent
+public import Utilities.Subdivision.SlotIntervalFiring
+
+@[expose] public section
 
 /-!
 # Slot cost and the odd-scale chip bound
@@ -334,7 +338,7 @@ private theorem roundData_interior (hunit : spec.IsUnit) (f : Fin p)
   rw [show (spec.scale N hN).interiorVertex f k
     = (Sum.inr ⟨f, k⟩ : (spec.scale N hN).Vertex) from rfl]
   simp only [roundData]
-  rw [dif_neg hne]
+  rw [dite_eq_right hne]
 
 private theorem unitStepContribution_core (e : Fin p) (w : Fin n) :
     spec.unitStepContribution N hN e ((spec.scale N hN).coreVertex w) = 0 := rfl
@@ -355,8 +359,8 @@ private theorem unitStepContribution_interior (hunit : spec.IsUnit) (e f : Fin p
   rw [hcs, hoff]
   by_cases hfe : f = e
   · subst hfe
-    rw [if_pos rfl, if_pos rfl]
-  · rw [if_neg hfe, if_neg (fun hc2 => hfe (congrArg Sigma.fst hc2))]
+    rw [ite_eq_left rfl, ite_eq_left rfl]
+  · rw [ite_eq_right hfe, ite_eq_right (fun hc2 => hfe (congrArg Sigma.fst hc2))]
 
 private theorem contribution_eq (hunit : spec.IsUnit) (e : Fin p)
     (y : (spec.scale N hN).Vertex) :
@@ -369,15 +373,15 @@ private theorem contribution_eq (hunit : spec.IsUnit) (e : Fin p)
       = (spec.scale N hN).coreVertex w from rfl,
       unitStepContribution_core spec N hN e w]
     refine (Finset.sum_eq_zero fun j _ => ?_).symm
-    rw [if_neg (by simp [interiorVertex, coreVertex]), mul_zero]
+    rw [ite_eq_right (by simp [interiorVertex, coreVertex]), mul_zero]
   · rw [show (Sum.inr ⟨f, k⟩ : (spec.scale N hN).Vertex)
       = (spec.scale N hN).interiorVertex f k from rfl,
       unitStepContribution_interior spec N hN hunit e f k]
     by_cases hfe : f = e
     · subst hfe
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       rw [Finset.sum_eq_single k]
-      · rw [if_pos rfl, mul_one]
+      · rw [ite_eq_left rfl, mul_one]
       · intro j _ hjk
         have hne : (spec.scale N hN).interiorVertex f j
             ≠ (spec.scale N hN).interiorVertex f k := by
@@ -385,12 +389,12 @@ private theorem contribution_eq (hunit : spec.IsUnit) (e : Fin p)
           refine hjk (Fin.ext ?_)
           exact congrArg (fun s : (spec.scale N hN).Interior => s.2.val)
             (Sum.inr.inj hc)
-        rw [if_neg hne, mul_zero]
+        rw [ite_eq_right hne, mul_zero]
       · intro hk
         exact absurd (Finset.mem_univ k) hk
-    · rw [if_neg hfe]
+    · rw [ite_eq_right hfe]
       refine (Finset.sum_eq_zero fun j _ => ?_).symm
-      rw [if_neg (by
+      rw [ite_eq_right (by
         intro hc
         exact hfe (congrArg Sigma.fst (Sum.inr.inj hc)).symm), mul_zero]
 
@@ -516,8 +520,8 @@ theorem cost_three (h3 : 0 < 3) {D : CFDiv (spec.scale 3 h3).graph} (hD : effect
   unfold cost
   rw [modDist_three]
   by_cases h : spec.offsetSum 3 h3 D e % 3 = 0
-  · rw [if_pos (hiff.mpr h), if_pos h]
-  · rw [if_neg (fun hc => h (hiff.mp hc)), if_neg h]
+  · rw [ite_eq_left (hiff.mpr h), ite_eq_left h]
+  · rw [ite_eq_right (fun hc => h (hiff.mp hc)), ite_eq_right h]
 
 /-- At `N = 3` the cost weight counts the bad slots. -/
 theorem Delta_three (h3 : 0 < 3) {D : CFDiv (spec.scale 3 h3).graph}

@@ -1,5 +1,9 @@
-import DraismaVargasCount.TransportedChipEndgame
-import DraismaVargasCount.RowHairpinPosition
+module
+
+public import DraismaVargasCount.TransportedChipEndgame
+public import DraismaVargasCount.RowHairpinPosition
+
+@[expose] public section
 
 /-!
 # Helper facts for the genus-six odd-subdivision witness

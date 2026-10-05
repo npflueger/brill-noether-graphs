@@ -1,8 +1,12 @@
-import Utilities.Foundations.ElementaryExistence
-import Utilities.Gluing.BridgeRankOne
-import Utilities.Gluing.BridgeContraction
-import Utilities.Gluing.VertexCutConnectivity
-import Utilities.Subdivision.PointedGenusOneRigidTransport
+module
+
+public import Utilities.Foundations.ElementaryExistence
+public import Utilities.Gluing.BridgeRankOne
+public import Utilities.Gluing.BridgeContraction
+public import Utilities.Gluing.VertexCutConnectivity
+public import Utilities.Subdivision.PointedGenusOneRigidTransport
+
+@[expose] public section
 
 /-!
 # Rank one across a positive-genus articulation in genus five

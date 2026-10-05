@@ -1,4 +1,8 @@
-import DraismaVargasCount.GeneralKRowsK
+module
+
+public import DraismaVargasCount.GeneralKRowsK
+
+@[expose] public section
 
 /-!
 # The general-`K` exit at a four-valent wall: the outgoing presentation

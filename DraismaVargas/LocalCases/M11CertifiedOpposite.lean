@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.M11FullDimensional
+module
+
+public import DraismaVargas.LocalCases.M11FullDimensional
+
+@[expose] public section
 
 /-!
 # An opposite-sign full-dimensional member of the actual M11 family

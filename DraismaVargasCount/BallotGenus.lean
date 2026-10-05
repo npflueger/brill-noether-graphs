@@ -1,4 +1,8 @@
-import DraismaVargasCount.BallotDatum
+module
+
+public import DraismaVargasCount.BallotDatum
+
+@[expose] public section
 
 /-!
 # The source of the ballot-parametrized caterpillar has genus `g`

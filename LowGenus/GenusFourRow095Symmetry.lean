@@ -1,5 +1,9 @@
-import LowGenus.GenusFourRow095
-import Utilities.Subdivision.SubdivisionIso
+module
+
+public import LowGenus.GenusFourRow095
+public import Utilities.Subdivision.SubdivisionIso
+
+@[expose] public section
 
 /-!
 # The normalization involution of Core 095

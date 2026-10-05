@@ -1,5 +1,9 @@
-import Bananas.CrossOneOff.CrossOneOffFiniteCountSol
-import Bananas.CrossOneOff.CrossOneOffShortStrandPeriod
+module
+
+public import Bananas.CrossOneOff.CrossOneOffFiniteCountSol
+public import Bananas.CrossOneOff.CrossOneOffShortStrandPeriod
+
+@[expose] public section
 
 /-!
 # Corrected both-off inversion lower bound

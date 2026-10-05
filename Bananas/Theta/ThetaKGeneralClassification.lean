@@ -1,6 +1,10 @@
-import Bananas.Theta.ThetaKGeneralCoordinates
-import Bananas.SameStrand.EndpointCardinality
-import Bananas.Transmission.KGeneralSwap
+module
+
+public import Bananas.Theta.ThetaKGeneralCoordinates
+public import Bananas.SameStrand.EndpointCardinality
+public import Bananas.Transmission.KGeneralSwap
+
+@[expose] public section
 
 /-!
 # Endpoint-safe theta form of Theorem 4.13

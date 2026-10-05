@@ -1,4 +1,8 @@
-import Bananas.Classification.BridgelessGenusTwoTopology
+module
+
+public import Bananas.Classification.BridgelessGenusTwoTopology
+
+@[expose] public section
 
 /-!
 # Degree shapes of bridgeless genus-two cores

@@ -1,4 +1,8 @@
-import Utilities.Subdivision.SlotIntervalFiring
+module
+
+public import Utilities.Subdivision.SlotIntervalFiring
+
+@[expose] public section
 
 /-!
 # Propagation of a legal firing set along a slot
@@ -46,12 +50,12 @@ def sidePoint (g : Fin p) (z : Fin n) (k : ℕ) : (spec.scale N hN).Vertex :=
 theorem sidePoint_of_tail (g : Fin p) {z : Fin n} (hz : spec.core.tail g = z)
     (k : ℕ) : spec.sidePoint N hN g z k = spec.slotPoint N hN g k := by
   unfold sidePoint
-  rw [if_pos hz]
+  rw [ite_eq_left hz]
 
 theorem sidePoint_of_ne (g : Fin p) {z : Fin n} (hz : spec.core.tail g ≠ z)
     (k : ℕ) : spec.sidePoint N hN g z k = spec.slotPoint N hN g (N - k) := by
   unfold sidePoint
-  rw [if_neg hz]
+  rw [ite_eq_right hz]
 
 /-- Read from the tail, `sidePoint` *is* `slotPoint`. -/
 theorem sidePoint_tail (g : Fin p) (k : ℕ) :

@@ -1,5 +1,9 @@
-import Utilities.Subdivision.CoreExpansion
-import Utilities.Subdivision.ContractionForestCensusGeneral
+module
+
+public import Utilities.Subdivision.CoreExpansion
+public import Utilities.Subdivision.ContractionForestCensusGeneral
+
+@[expose] public section
 
 /-!
 # Closed faces carried by a core expansion

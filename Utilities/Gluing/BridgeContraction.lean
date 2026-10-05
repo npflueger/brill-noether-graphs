@@ -1,5 +1,9 @@
-import Utilities.Gluing.BridgeDivisors
-import Utilities.Gluing.VertexWedge
+module
+
+public import Utilities.Gluing.BridgeDivisors
+public import Utilities.Gluing.VertexWedge
+
+@[expose] public section
 
 /-!
 # Contracting a separating bridge

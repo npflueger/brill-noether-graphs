@@ -1,5 +1,9 @@
-import Utilities.Grassmannian.GrassmannianEnvelope
-import Utilities.Transmission.TransmissionShift
+module
+
+public import Utilities.Grassmannian.GrassmannianEnvelope
+public import Utilities.Transmission.TransmissionShift
+
+@[expose] public section
 
 /-!
 # Arbitrary output shifts of Grassmannian ASP permutations

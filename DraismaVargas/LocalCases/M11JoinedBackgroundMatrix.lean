@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.M11JoinedLimitMatrix
+module
+
+public import DraismaVargas.LocalCases.M11JoinedLimitMatrix
+
+@[expose] public section
 
 /-!
 # Identifying Figure 32's joined background sum on the original wall
@@ -165,10 +169,10 @@ theorem sum_old_add_third (path : StablePath data) :
       (fun edge ↦ (1 : ℚ) / data.sourceEdgeIndex edge) hMem
     change (∑ edge ∈ oldBackgroundOccurrences profile path, (1 : ℚ) / data.sourceEdgeIndex edge) +
       (1 : ℚ) / data.sourceEdgeIndex profile.third.1 = matrix data path (star.edge profile.singleLabel) at hSum
-    simpa only [if_pos hRow, hIndex, Nat.cast_one, div_one] using hSum
+    simpa only [ite_eq_left hRow, hIndex, Nat.cast_one, div_one] using hSum
   · have hNot : profile.third.1 ∉ occurrences data path (star.edge profile.singleLabel) :=
       fun h ↦ hRow ((third_mem_occurrences_iff profile path).mp h)
-    simp only [oldBackgroundOccurrences, Finset.erase_eq_of_notMem hNot, if_neg hRow, add_zero, matrix]
+    simp only [oldBackgroundOccurrences, Finset.erase_eq_of_notMem hNot, ite_eq_right hRow, add_zero, matrix]
 
 /-- The source's joined background `s` is the old single column with the
 one third-row contribution removed. -/
@@ -191,9 +195,9 @@ theorem matrix_new_eq_old_sub_half (path : StablePath data) :
   rw [M11JoinedLimitMatrix.matrix_new input profile hCard]
   have hBackground := backgroundColumn_add_third input profile hCard path
   by_cases hRow : path = NonDanglingEdge.stablePath ⟨profile.third.1, profile.third_survives⟩
-  · simp only [if_pos hRow] at hBackground ⊢
+  · simp only [ite_eq_left hRow] at hBackground ⊢
     linarith
-  · simp only [if_neg hRow] at hBackground ⊢
+  · simp only [ite_eq_right hRow] at hBackground ⊢
     linarith
 
 /-- The joined contribution for any weights on the original stable rows.
@@ -208,7 +212,7 @@ theorem sum_weighted_new_column (weight : StablePath data → ℚ) :
   simp_rw [matrix_new_eq_old_sub_half input profile hCard, mul_sub]
   rw [Finset.sum_sub_distrib]
   congr 1
-  simp only [mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   ring
 
 /-- When the row weights annihilate the old single column, the joined

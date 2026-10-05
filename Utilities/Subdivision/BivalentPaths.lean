@@ -1,5 +1,9 @@
-import Utilities.Subdivision.StrongSeparator
-import Utilities.Subdivision.CoreExpansion
+module
+
+public import Utilities.Subdivision.StrongSeparator
+public import Utilities.Subdivision.CoreExpansion
+
+@[expose] public section
 
 /-!
 # Bivalent paths and strong-separator cells

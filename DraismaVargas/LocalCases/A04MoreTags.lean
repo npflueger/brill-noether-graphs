@@ -1,8 +1,12 @@
-import DraismaVargas.LocalCases.A04FourTags
-import DraismaVargas.LocalCases.W2PArbitraryIncomingExit
-import DraismaVargas.LocalCases.W2MkkArbitraryExit
-import DraismaVargas.LocalCases.W2MkkStableIncidence
-import DraismaVargas.LocalCases.W3FourStableIncidence
+module
+
+public import DraismaVargas.LocalCases.A04FourTags
+public import DraismaVargas.LocalCases.W2PArbitraryIncomingExit
+public import DraismaVargas.LocalCases.W2MkkArbitraryExit
+public import DraismaVargas.LocalCases.W2MkkStableIncidence
+public import DraismaVargas.LocalCases.W3FourStableIncidence
+
+@[expose] public section
 
 /-!
 # Routed walls: the wall dispatcher and the full-dimensional supply on further tags

@@ -1,5 +1,9 @@
-import Utilities.Subdivision.TwoPoleSubdivision
-import Utilities.Gluing.TwoPoleReachability
+module
+
+public import Utilities.Subdivision.TwoPoleSubdivision
+public import Utilities.Gluing.TwoPoleReachability
+
+@[expose] public section
 
 /-!
 # Principal divisors on the factors of a two-pole subdivision

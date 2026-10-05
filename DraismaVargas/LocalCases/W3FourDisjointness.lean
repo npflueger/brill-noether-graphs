@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W3FourSourceCandidates
-import DraismaVargas.LocalCases.RelabelFullDimensional
+module
+
+public import DraismaVargas.LocalCases.W3FourSourceCandidates
+public import DraismaVargas.LocalCases.RelabelFullDimensional
+
+@[expose] public section
 
 /-!
 # Figure 28: `Disjoint e₂ e₃` is a sheet-labelling gauge, not a datum invariant

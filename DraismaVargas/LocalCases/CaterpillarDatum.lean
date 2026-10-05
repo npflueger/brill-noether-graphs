@@ -1,6 +1,10 @@
-import DraismaVargas.Infrastructure.CaterpillarTree
-import DraismaVargas.Infrastructure.Change
-import DraismaVargas.Infrastructure.SheetGluing
+module
+
+public import DraismaVargas.Infrastructure.CaterpillarTree
+public import DraismaVargas.Infrastructure.Change
+public import DraismaVargas.Infrastructure.SheetGluing
+
+@[expose] public section
 
 /-!
 # The caterpillar-of-loops gluing datum
@@ -83,11 +87,11 @@ def pairPart (m j : ℕ) : SheetPartition (m + 2) where
   repr_idem := by
     intro k
     by_cases h : k.val = j
-    · rw [if_pos h]
+    · rw [ite_eq_left h]
       by_cases h0 : (0 : Fin (m + 2)).val = j
-      · rw [if_pos h0]
-      · rw [if_neg h0]
-    · rw [if_neg h, if_neg h]
+      · rw [ite_eq_left h0]
+      · rw [ite_eq_right h0]
+    · rw [ite_eq_right h, ite_eq_right h]
 
 @[simp] theorem pairPart_repr (m j : ℕ) (k : Fin (m + 2)) :
     (pairPart m j).repr k = if k.val = j then 0 else k := rfl
@@ -99,7 +103,7 @@ theorem pairPart_repr_of_ne (m j : ℕ) (k : Fin (m + 2)) (h : k.val ≠ j) :
 theorem pairPart_rel_zero (m j : ℕ) (k : Fin (m + 2))
     (hk : k.val = j) : (pairPart m j).Rel k 0 := by
   show (pairPart m j).repr k = (pairPart m j).repr 0
-  rw [pairPart_repr, pairPart_repr, if_pos hk]
+  rw [pairPart_repr, pairPart_repr, ite_eq_left hk]
   split_ifs <;> rfl
 
 /-- The fixed points of `pairPart m j` are the sheets other than `j`. -/
@@ -107,7 +111,7 @@ theorem pairPart_fixed_iff (m j : ℕ) (hj : 1 ≤ j) (k : Fin (m + 2)) :
     (pairPart m j).repr k = k ↔ k.val ≠ j := by
   constructor
   · intro h hval
-    rw [pairPart_repr, if_pos hval] at h
+    rw [pairPart_repr, ite_eq_left hval] at h
     have hzero : (0 : Fin (m + 2)).val = k.val := congrArg Fin.val h
     simp only [Fin.val_zero] at hzero
     omega
@@ -207,12 +211,12 @@ def catEdgePart (m : ℕ) (e : (catTree m).edges) : SheetPartition (m + 2) :=
 theorem catEdgePart_of_pair (m : ℕ) (i : Fin (6 * m + 3))
     (h : IsPairEdge m i.val) :
     catEdgePart m (occ m i) = pairPart m (pairIndex (i.val + 1)) := by
-  unfold catEdgePart; rw [edgeIndex_occ, if_pos h]
+  unfold catEdgePart; rw [edgeIndex_occ, ite_eq_left h]
 
 theorem catEdgePart_of_not_pair (m : ℕ) (i : Fin (6 * m + 3))
     (h : ¬ IsPairEdge m i.val) :
     catEdgePart m (occ m i) = SheetPartition.discrete (m + 2) := by
-  unfold catEdgePart; rw [edgeIndex_occ, if_neg h]
+  unfold catEdgePart; rw [edgeIndex_occ, ite_eq_right h]
 
 theorem catVertexPart_val (m : ℕ) (v : (catTree m).V) (a : ℕ) (hv : v.val = a) :
     catVertexPart m v = pairPart m (pairIndex a) := by
@@ -611,12 +615,12 @@ theorem sum_nonPair (m : ℕ) :
   induction m with
   | zero => simp
   | succ k ih =>
-    have hw0 : nonPair (6 * k) = 1 := by unfold nonPair; rw [if_neg (by omega)]
-    have hw1 : nonPair (6 * k + 1) = 0 := by unfold nonPair; rw [if_pos (by omega)]
-    have hw2 : nonPair (6 * k + 2) = 0 := by unfold nonPair; rw [if_pos (by omega)]
-    have hw3 : nonPair (6 * k + 3) = 1 := by unfold nonPair; rw [if_neg (by omega)]
-    have hw4 : nonPair (6 * k + 4) = 1 := by unfold nonPair; rw [if_neg (by omega)]
-    have hw5 : nonPair (6 * k + 5) = 0 := by unfold nonPair; rw [if_pos (by omega)]
+    have hw0 : nonPair (6 * k) = 1 := by unfold nonPair; rw [ite_eq_right (by omega)]
+    have hw1 : nonPair (6 * k + 1) = 0 := by unfold nonPair; rw [ite_eq_left (by omega)]
+    have hw2 : nonPair (6 * k + 2) = 0 := by unfold nonPair; rw [ite_eq_left (by omega)]
+    have hw3 : nonPair (6 * k + 3) = 1 := by unfold nonPair; rw [ite_eq_right (by omega)]
+    have hw4 : nonPair (6 * k + 4) = 1 := by unfold nonPair; rw [ite_eq_right (by omega)]
+    have hw5 : nonPair (6 * k + 5) = 0 := by unfold nonPair; rw [ite_eq_left (by omega)]
     rw [show 6 * (k + 1) = 6 * k + 5 + 1 by ring, Finset.sum_range_succ,
       show 6 * k + 5 = 6 * k + 4 + 1 from rfl, Finset.sum_range_succ,
       show 6 * k + 4 = 6 * k + 3 + 1 from rfl, Finset.sum_range_succ,
@@ -645,15 +649,15 @@ theorem sum_nonPairEdge (m : ℕ) :
     rw [Finset.mem_range] at hi
     unfold nonPair
     by_cases hp : i % 6 = 1 ∨ i % 3 = 2
-    · rw [if_pos ((isPairEdge_iff_of_ne m i (by omega)).mpr hp), if_pos hp]
-    · rw [if_neg (fun h => hp ((isPairEdge_iff_of_ne m i (by omega)).mp h)),
-        if_neg hp]
+    · rw [ite_eq_left ((isPairEdge_iff_of_ne m i (by omega)).mpr hp), ite_eq_left hp]
+    · rw [ite_eq_right (fun h => hp ((isPairEdge_iff_of_ne m i (by omega)).mp h)),
+        ite_eq_right hp]
   have h0 : (if IsPairEdge m (6 * m) then (0 : ℕ) else 1) = 1 := by
-    rw [if_neg (by unfold IsPairEdge; omega)]
+    rw [ite_eq_right (by unfold IsPairEdge; omega)]
   have h1 : (if IsPairEdge m (6 * m + 1) then (0 : ℕ) else 1) = 0 := by
-    rw [if_pos (by unfold IsPairEdge; omega)]
+    rw [ite_eq_left (by unfold IsPairEdge; omega)]
   have h2 : (if IsPairEdge m (6 * m + 2) then (0 : ℕ) else 1) = 1 := by
-    rw [if_neg (by unfold IsPairEdge; omega)]
+    rw [ite_eq_right (by unfold IsPairEdge; omega)]
   rw [show 6 * m + 3 = 6 * m + 2 + 1 from rfl, Finset.sum_range_succ,
     show 6 * m + 2 = 6 * m + 1 + 1 from rfl, Finset.sum_range_succ,
     show 6 * m + 1 = 6 * m + 1 from rfl, Finset.sum_range_succ,
@@ -669,10 +673,10 @@ theorem card_blocks_catEdgePart (m : ℕ) (i : Fin (6 * m + 3)) :
       if IsPairEdge m i.val then m + 1 else m + 2 := by
   have hi := i.isLt
   by_cases h : IsPairEdge m i.val
-  · rw [catEdgePart_of_pair m i h, if_pos h]
+  · rw [catEdgePart_of_pair m i h, ite_eq_left h]
     exact card_blocks_pairPart m _ (pairIndex_pos _)
       (pairIndex_lt m (i.val + 1) (by omega))
-  · rw [catEdgePart_of_not_pair m i h, if_neg h]
+  · rw [catEdgePart_of_not_pair m i h, ite_eq_right h]
     exact card_blocks_discrete (m + 2)
 
 theorem card_blocks_vertexPartition (m : ℕ) (v : (catTree m).V) :
@@ -708,8 +712,8 @@ theorem card_sourceEdge_caterpillarDatum (m : ℕ) :
         = (m + 1) + (if IsPairEdge m i then 0 else 1) := by
     intro i _
     by_cases h : IsPairEdge m i
-    · rw [if_pos h, if_pos h]
-    · rw [if_neg h, if_neg h]
+    · rw [ite_eq_left h, ite_eq_left h]
+    · rw [ite_eq_right h, ite_eq_right h]
   rw [Finset.sum_congr rfl hsplit, Finset.sum_add_distrib, Finset.sum_const,
     Finset.card_range, smul_eq_mul, sum_nonPairEdge]
 
@@ -758,9 +762,9 @@ theorem block_pairPart_zero (m j : ℕ) (hj2 : j < m + 2) :
   rw [SheetPartition.mem_block_iff, SheetPartition.rel_iff, hzero, pairPart_repr,
     Finset.mem_insert, Finset.mem_singleton]
   by_cases hk : (k : ℕ) = j
-  · rw [if_pos hk]
+  · rw [ite_eq_left hk]
     exact ⟨fun _ => Or.inr (Fin.ext hk), fun _ => rfl⟩
-  · rw [if_neg hk]
+  · rw [ite_eq_right hk]
     constructor
     · intro h; exact Or.inl h.symm
     · rintro (h | h)
@@ -794,10 +798,10 @@ theorem sourceEdgeIndex_spineSheet (m : ℕ) (i : Fin (6 * m + 3)) :
   rw [GluingDatum.sourceEdgeIndex_sourceEdge]
   show (catEdgePart m (occ m i)).blockCard 0 = _
   by_cases h : IsPairEdge m i.val
-  · rw [catEdgePart_of_pair m i h, if_pos h]
+  · rw [catEdgePart_of_pair m i h, ite_eq_left h]
     exact blockCard_pairPart_zero m _ (pairIndex_pos _)
       (pairIndex_lt m (i.val + 1) (by omega))
-  · rw [catEdgePart_of_not_pair m i h, if_neg h]
+  · rw [catEdgePart_of_not_pair m i h, ite_eq_right h]
     exact blockCard_discrete (m + 2) 0
 
 /-! ## 7.  Non-vacuity
@@ -836,33 +840,33 @@ example : genus (caterpillarDatum 1).sourceGraph = 4 := by
 /-- `g = 4`: the spine slopes are `(2, 1, 2)`. -/
 example : (caterpillarDatum 1).sourceEdgeIndex
     ((caterpillarDatum 1).sourceEdge (occ 1 ⟨1, by omega⟩) 0) = 2 := by
-  rw [sourceEdgeIndex_spineSheet, if_pos (by
+  rw [sourceEdgeIndex_spineSheet, ite_eq_left (by
     show IsPairEdge 1 1
     unfold IsPairEdge; omega)]
 
 example : (caterpillarDatum 1).sourceEdgeIndex
     ((caterpillarDatum 1).sourceEdge (occ 1 ⟨4, by omega⟩) 0) = 1 := by
-  rw [sourceEdgeIndex_spineSheet, if_neg (by
+  rw [sourceEdgeIndex_spineSheet, ite_eq_right (by
     show ¬ IsPairEdge 1 4
     unfold IsPairEdge; omega)]
 
 example : (caterpillarDatum 1).sourceEdgeIndex
     ((caterpillarDatum 1).sourceEdge (occ 1 ⟨7, by omega⟩) 0) = 2 := by
-  rw [sourceEdgeIndex_spineSheet, if_pos (by
+  rw [sourceEdgeIndex_spineSheet, ite_eq_left (by
     show IsPairEdge 1 7
     unfold IsPairEdge; omega)]
 
 /-- `g = 4`: the two stems `2` and `5` carry index two (`m(e_b) = 2`). -/
 example : (caterpillarDatum 1).sourceEdgeIndex
     ((caterpillarDatum 1).sourceEdge (occ 1 ⟨2, by omega⟩) 0) = 2 := by
-  rw [sourceEdgeIndex_spineSheet, if_pos (by
+  rw [sourceEdgeIndex_spineSheet, ite_eq_left (by
     show IsPairEdge 1 2
     unfold IsPairEdge; omega)]
 
 /-- `g = 4`: the four leaf edges `0, 3, 6, 8` are folded, index one each. -/
 example : (caterpillarDatum 1).sourceEdgeIndex
     ((caterpillarDatum 1).sourceEdge (occ 1 ⟨8, by omega⟩) 0) = 1 := by
-  rw [sourceEdgeIndex_spineSheet, if_neg (by
+  rw [sourceEdgeIndex_spineSheet, ite_eq_right (by
     show ¬ IsPairEdge 1 8
     unfold IsPairEdge; omega)]
 

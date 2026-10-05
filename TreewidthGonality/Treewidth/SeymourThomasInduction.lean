@@ -1,4 +1,8 @@
-import TreewidthGonality.Treewidth.Separation
+module
+
+public import TreewidthGonality.Treewidth.Separation
+
+@[expose] public section
 
 /-!
 # The Bellenbaum--Diestel induction

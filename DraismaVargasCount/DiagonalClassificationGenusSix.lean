@@ -1,7 +1,11 @@
-import DraismaVargasCount.DiagonalFromSeparation
-import DraismaVargasCount.RigidityBasepoint
-import DraismaVargasCount.DiagonalClassificationEndgame
-import DraismaVargasCount.LoopAdjacentDiagonal
+module
+
+public import DraismaVargasCount.DiagonalFromSeparation
+public import DraismaVargasCount.RigidityBasepoint
+public import DraismaVargasCount.DiagonalClassificationEndgame
+public import DraismaVargasCount.LoopAdjacentDiagonal
+
+@[expose] public section
 
 /-!
 # `DiagonalClassification 2` from four geometric hypotheses

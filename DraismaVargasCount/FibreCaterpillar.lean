@@ -1,4 +1,8 @@
-import DraismaVargasCount.Fibre
+module
+
+public import DraismaVargasCount.Fibre
+
+@[expose] public section
 
 /-!
 # Non-vacuity of the labelled fibre: the caterpillar of loops
@@ -248,13 +252,13 @@ theorem incidenceCount_coreVertex (m : ℕ) (vertex : (catTree m).V)
         have hIndexEq := congrArg (CaterpillarRows.rowIndex m) hPath
         rwa [CaterpillarRows.rowIndex_main, CaterpillarRows.rowIndex_main] at hIndexEq
       subst hEq
-      rw [if_pos hIndex]
+      rw [ite_eq_left hIndex]
       exact hVisible
     · intro first _ second _ hEq
       exact Subtype.ext hEq
     · intro occurrence hOccurrence
       by_cases hIndex : slot ∈ incidentIndices m vertex
-      · rw [if_pos hIndex] at hOccurrence
+      · rw [ite_eq_left hIndex] at hOccurrence
         have hMem : occurrence ∈ nonDanglingIncident (caterpillarDatum m)
             (coreVertex m vertex) := by
           rw [hStar]
@@ -269,13 +273,13 @@ theorem incidenceCount_coreVertex (m : ℕ) (vertex : (catTree m).V)
             NonDanglingEdge (caterpillarDatum m)) : (caterpillarDatum m).SourceEdge).1.1
               = occ m slot from
             sourceEdge_target_eq_occ_of_mem_visibleOccurrences hOccurrence, hSymm]
-      · rw [if_neg hIndex] at hOccurrence
+      · rw [ite_eq_right hIndex] at hOccurrence
         exact absurd hOccurrence (by simp)
   rw [incidenceCount, show (CaterpillarRows.rowEquiv m).symm slot =
       (CaterpillarRows.main m slot).stablePath from rfl, hCard]
   by_cases hIndex : slot ∈ incidentIndices m vertex
-  · rw [if_pos hIndex, if_pos hIndex, card_visibleOccurrences]
-  · rw [if_neg hIndex, if_neg hIndex, Finset.card_empty]
+  · rw [ite_eq_left hIndex, ite_eq_left hIndex, card_visibleOccurrences]
+  · rw [ite_eq_right hIndex, ite_eq_right hIndex, Finset.card_empty]
 
 /-! ## 3.  The core of the caterpillar of loops -/
 
@@ -306,9 +310,9 @@ theorem catHeadVal_le (m : ℕ) (slot : Fin (6 * m + 3)) :
   have hlt := slot.isLt
   have hparent := parentIndex_le_pred (slot.val + 1)
   by_cases hLeaf : IsLeafEdge m slot
-  · rw [catHeadVal, if_pos hLeaf]
+  · rw [catHeadVal, ite_eq_left hLeaf]
     omega
-  · rw [catHeadVal, if_neg hLeaf]
+  · rw [catHeadVal, ite_eq_right hLeaf]
     unfold IsLeafEdge at hLeaf
     rw [not_or] at hLeaf
     omega
@@ -317,9 +321,9 @@ theorem catHeadVal_mod (m : ℕ) (slot : Fin (6 * m + 3)) :
     catHeadVal m slot % 3 ≠ 1 := by
   have hlt := slot.isLt
   by_cases hLeaf : IsLeafEdge m slot
-  · rw [catHeadVal, if_pos hLeaf]
+  · rw [catHeadVal, ite_eq_left hLeaf]
     exact catTailVal_mod m slot
-  · rw [catHeadVal, if_neg hLeaf]
+  · rw [catHeadVal, ite_eq_right hLeaf]
     unfold IsLeafEdge at hLeaf
     rw [not_or] at hLeaf
     omega
@@ -354,11 +358,11 @@ theorem coreIncidence_catCore (m : ℕ) {vertex : (catTree m).V}
   simp only [hTail, hHead, mem_incidentIndices]
   unfold catHeadVal
   by_cases hLeaf : IsLeafEdge m slot
-  · rw [if_pos hLeaf, if_pos hLeaf]
+  · rw [ite_eq_left hLeaf, ite_eq_left hLeaf]
     unfold catTailVal parentIndex
     unfold IsLeafEdge at hLeaf
     split_ifs <;> omega
-  · rw [if_neg hLeaf, if_neg hLeaf]
+  · rw [ite_eq_right hLeaf, ite_eq_right hLeaf]
     unfold catTailVal parentIndex
     unfold IsLeafEdge at hLeaf
     rw [not_or] at hLeaf

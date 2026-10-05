@@ -1,6 +1,10 @@
-import Bananas.Sections.SectionSixChainConclusion
-import Bananas.Transmission.CycleTorsionOrder
-import Bananas.Examples.ExampleBngChain
+module
+
+public import Bananas.Sections.SectionSixChainConclusion
+public import Bananas.Transmission.CycleTorsionOrder
+public import Bananas.Examples.ExampleBngChain
+
+@[expose] public section
 
 /-!
 # Cools--Draisma--Payne--Robeva nonexistence for a chain of loops

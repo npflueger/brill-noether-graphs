@@ -1,4 +1,8 @@
-import DraismaVargasCount.IndexPattern
+module
+
+public import DraismaVargasCount.IndexPattern
+
+@[expose] public section
 
 /-!
 # The row denominators `d_i` of a full-dimensional morphism
@@ -514,7 +518,7 @@ theorem rowDenominator_cat_pairEdge (m : ℕ) {i : Fin (6 * m + 3)}
     intro edge hEdge
     rw [rowEdges_cat_notLeafEdge m hNotLeaf, Finset.mem_singleton] at hEdge
     rw [hEdge, CaterpillarStable.sourceEdgeIndex_caterpillar,
-      if_pos ⟨hPair, Or.inl rfl⟩]
+      ite_eq_left ⟨hPair, Or.inl rfl⟩]
   exact rowDenominator_eq_of_rowIndexConstant _ i i hConstant
     (rowFibre_cat_notLeafEdge m hNotLeaf)
 
@@ -526,7 +530,7 @@ theorem rowDenominator_cat_spineEdge (m : ℕ) {i : Fin (6 * m + 3)}
     intro edge hEdge
     rw [rowEdges_cat_notLeafEdge m hNotLeaf, Finset.mem_singleton] at hEdge
     rw [hEdge, CaterpillarStable.sourceEdgeIndex_caterpillar,
-      if_neg (fun hCase ↦ hNotPair hCase.1)]
+      ite_eq_right (fun hCase ↦ hNotPair hCase.1)]
   exact rowDenominator_eq_of_rowIndexConstant _ i i hConstant
     (rowFibre_cat_notLeafEdge m hNotLeaf)
 
@@ -542,8 +546,8 @@ theorem rowIndicesConsecutive_cat (m : ℕ) (i : Fin (6 * m + 3)) :
   rw [rowEdges_cat_notLeafEdge m hLeaf, Finset.mem_singleton] at hEdge
   rw [hEdge, CaterpillarStable.sourceEdgeIndex_caterpillar]
   by_cases hPair : IsPairEdge m i.val
-  · exact Or.inr (by rw [if_pos ⟨hPair, Or.inl rfl⟩])
-  · exact Or.inl (by rw [if_neg (fun hCase ↦ hPair hCase.1)])
+  · exact Or.inr (by rw [ite_eq_left ⟨hPair, Or.inl rfl⟩])
+  · exact Or.inl (by rw [ite_eq_right (fun hCase ↦ hPair hCase.1)])
 
 /-- **The trichotomy, inhabited**: every row of the caterpillar of loops meets
 one of the three cases. -/

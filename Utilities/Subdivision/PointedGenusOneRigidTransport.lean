@@ -1,5 +1,9 @@
-import Utilities.Gluing.VertexWedgeGenusOne
-import Utilities.Iso.GraphIso
+module
+
+public import Utilities.Gluing.VertexWedgeGenusOne
+public import Utilities.Iso.GraphIso
+
+@[expose] public section
 
 /-!
 # Transport of pointed genus-one rigidity

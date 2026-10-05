@@ -1,4 +1,8 @@
-import DraismaVargasCount.GeneralKRowCore
+module
+
+public import DraismaVargasCount.GeneralKRowCore
+
+@[expose] public section
 
 /-!
 # The census of a star-shaped wall block, for an arbitrary candidate
@@ -94,11 +98,11 @@ theorem ret_rel {x : Fin degree}
   rw [endPart_rel_iff]
   unfold ret
   by_cases hL : (C.resolution ((G.vertexPartition wall).repr x)).left = G.vertexPartition wall
-  · rw [if_pos hL]
-    simp only [Bool.false_eq_true, if_false]
+  · rw [ite_eq_left hL]
+    simp only [Bool.false_eq_true, ite_false]
     rw [hL]
-  · rw [if_neg hL]
-    simp only [if_true]
+  · rw [ite_eq_right hL]
+    simp only [ite_true]
     rcases hS with ⟨hl, _⟩ | ⟨hr, _⟩
     · exact absurd hl hL
     · rw [hr]
@@ -111,13 +115,13 @@ theorem fine_rel {x : Fin degree}
   rw [endPart_rel_iff, newPart_rel_iff]
   unfold ret
   by_cases hL : (C.resolution ((G.vertexPartition wall).repr x)).left = G.vertexPartition wall
-  · rw [if_pos hL]
-    simp only [Bool.not_false, if_true]
+  · rw [ite_eq_left hL]
+    simp only [Bool.not_false, ite_true]
     rcases hS with ⟨_, hn⟩ | ⟨hr, hn⟩
     · rw [hn]
     · rw [hn, hL, hr]
-  · rw [if_neg hL]
-    simp only [Bool.not_true, Bool.false_eq_true, if_false]
+  · rw [ite_eq_right hL]
+    simp only [Bool.not_true, Bool.false_eq_true, ite_false]
     rcases hS with ⟨hl, _⟩ | ⟨_, hn⟩
     · exact absurd hl hL
     · rw [hn]

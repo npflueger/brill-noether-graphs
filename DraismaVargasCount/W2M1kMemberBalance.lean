@@ -1,5 +1,9 @@
-import DraismaVargasCount.OutgoingRowCalculus
-import DraismaVargas.LocalCases.W2M1kGaugeFamily
+module
+
+public import DraismaVargasCount.OutgoingRowCalculus
+public import DraismaVargas.LocalCases.W2M1kGaugeFamily
+
+@[expose] public section
 
 /-!
 # `{w2-r2-nd3-M-1k}`: the member rows of `M⁽²⁾` and `M⁽³⁾`, and why `c⁽q⁾ ≠ 0` costs nothing

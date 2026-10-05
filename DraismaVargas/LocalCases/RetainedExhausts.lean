@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.RetainedCoreModel
+module
+
+public import DraismaVargas.LocalCases.RetainedCoreModel
+
+@[expose] public section
 
 /-!
 # The general-forest Euler count, and the relabeling receipt it closes

@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoTracks
-import DraismaVargas.LocalCases.NonTrivalentValencyThreeSimpleTracks
-import DraismaVargas.LocalCases.NonTrivalentValencyFourTracks
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoTracks
+public import DraismaVargas.LocalCases.NonTrivalentValencyThreeSimpleTracks
+public import DraismaVargas.LocalCases.NonTrivalentValencyFourTracks
+
+@[expose] public section
 
 /-!
 # The incoming pairing at a Part II wall, and what a Whitehead move can prescribe

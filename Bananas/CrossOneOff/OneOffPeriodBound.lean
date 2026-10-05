@@ -1,5 +1,9 @@
-import Bananas.CrossOneOff.OneOffPositiveRows
-import Bananas.CrossOneOff.CrossOneOffBlock
+module
+
+public import Bananas.CrossOneOff.OneOffPositiveRows
+public import Bananas.CrossOneOff.CrossOneOffBlock
+
+@[expose] public section
 
 /-!
 # The affine-period bound for the same-strand one-off marking

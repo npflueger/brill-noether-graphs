@@ -1,4 +1,8 @@
-import DraismaVargasCount.RowTransitionPosition
+module
+
+public import DraismaVargasCount.RowTransitionPosition
+
+@[expose] public section
 
 /-!
 # All actual weighted positions on leaf-avoiding rows

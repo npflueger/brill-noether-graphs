@@ -1,5 +1,9 @@
-import Utilities.Gluing.InteriorScriptTransport
-import Utilities.Subdivision.DegenerateSpec
+module
+
+public import Utilities.Gluing.InteriorScriptTransport
+public import Utilities.Subdivision.DegenerateSpec
+
+@[expose] public section
 
 /-!
 # Localizing a guarding picture to one chip-free component

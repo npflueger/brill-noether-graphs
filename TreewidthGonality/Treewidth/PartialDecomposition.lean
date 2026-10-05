@@ -1,4 +1,8 @@
-import TreewidthGonality.Treewidth.TreeDecomposition
+module
+
+public import TreewidthGonality.Treewidth.TreeDecomposition
+
+@[expose] public section
 
 /-!
 # Partial tree decompositions

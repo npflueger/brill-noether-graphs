@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W2R1RowDescent
-import Utilities.IntegralGeometry.WallColumnDeterminant
+module
+
+public import DraismaVargas.LocalCases.W2R1RowDescent
+public import Utilities.IntegralGeometry.WallColumnDeterminant
+
+@[expose] public section
 
 /-!
 # Equation (10): the common balance of the two `{w2-r1}` members
@@ -318,7 +322,7 @@ theorem localColumn_double_nd2 (profile : W2R1SourceProfile.SourceProfile data s
       profile.second_target
   unfold localColumn
   rw [hSet, Finset.sum_filter,
-    Finset.sum_pair (first_ne_second_val profile.toOccurrenceProfile), if_neg hFirst]
+    Finset.sum_pair (first_ne_second_val profile.toOccurrenceProfile), ite_eq_right hFirst]
   simp only [hSecond]
   split_ifs <;> ring
 
@@ -605,7 +609,7 @@ theorem firstBox_retained {position : Fin 2}
     firstBox pair position path =
       (if path = thirdRow pair.firstProfile then (1 : ℚ) else 0) /
         (data.sourceEdgeIndex pair.firstProfile.third.1 : ℚ) := by
-  rw [firstBox, if_pos hPosition, localColumn_single]
+  rw [firstBox, ite_eq_left hPosition, localColumn_single]
 
 /-- **Figure 37 gluing II at `A₀` (`nd3`): `σ⁽²⁾(J_{A₀},1) = c(e₁)/k₁ +
 c(e₂)/k₂`.** -/
@@ -617,7 +621,7 @@ theorem firstBox_resolved_nd3 {position : Fin 2}
           (data.sourceEdgeIndex pair.firstProfile.first.1 : ℚ) +
         (if path = secondRow pair.firstProfile then (1 : ℚ) else 0) /
           (data.sourceEdgeIndex pair.firstProfile.second.1 : ℚ) := by
-  rw [firstBox, if_neg hPosition, localColumn_double_nd3 _ hNd3]
+  rw [firstBox, ite_eq_right hPosition, localColumn_double_nd3 _ hNd3]
 
 /-- **Figure 38 gluing II at `A₀` (`nd2`): `σ⁽²⁾(J_{A₀},1) = c_h/k₂`.**  The
 pruned `e₁` class contributes nothing. -/
@@ -627,7 +631,7 @@ theorem firstBox_resolved_nd2 {position : Fin 2}
     firstBox pair position path =
       (if path = secondRow pair.firstProfile then (1 : ℚ) else 0) /
         (data.sourceEdgeIndex pair.firstProfile.second.1 : ℚ) := by
-  rw [firstBox, if_neg hPosition, localColumn_double_nd2 _ hNd2]
+  rw [firstBox, ite_eq_right hPosition, localColumn_double_nd2 _ hNd2]
 
 /-- The `B₀` twin of `firstBox_retained`. -/
 theorem secondBox_retained {position : Fin 2}
@@ -635,7 +639,7 @@ theorem secondBox_retained {position : Fin 2}
     secondBox pair position path =
       (if path = thirdRow pair.secondProfile then (1 : ℚ) else 0) /
         (data.sourceEdgeIndex pair.secondProfile.third.1 : ℚ) := by
-  rw [secondBox, if_pos hPosition, localColumn_single]
+  rw [secondBox, ite_eq_left hPosition, localColumn_single]
 
 /-- The `B₀` twin of `firstBox_resolved_nd3`. -/
 theorem secondBox_resolved_nd3 {position : Fin 2}
@@ -646,7 +650,7 @@ theorem secondBox_resolved_nd3 {position : Fin 2}
           (data.sourceEdgeIndex pair.secondProfile.first.1 : ℚ) +
         (if path = secondRow pair.secondProfile then (1 : ℚ) else 0) /
           (data.sourceEdgeIndex pair.secondProfile.second.1 : ℚ) := by
-  rw [secondBox, if_neg hPosition, localColumn_double_nd3 _ hNd3]
+  rw [secondBox, ite_eq_right hPosition, localColumn_double_nd3 _ hNd3]
 
 /-- The `B₀` twin of `firstBox_resolved_nd2`. -/
 theorem secondBox_resolved_nd2 {position : Fin 2}
@@ -655,7 +659,7 @@ theorem secondBox_resolved_nd2 {position : Fin 2}
     secondBox pair position path =
       (if path = secondRow pair.secondProfile then (1 : ℚ) else 0) /
         (data.sourceEdgeIndex pair.secondProfile.second.1 : ℚ) := by
-  rw [secondBox, if_neg hPosition, localColumn_double_nd2 _ hNd2]
+  rw [secondBox, ite_eq_right hPosition, localColumn_double_nd2 _ hNd2]
 
 /-- **The display below Figure 37 and below Figure 38, at `A₀`:**
 `σ⁽¹⁾(J_{A₀},1) + σ⁽²⁾(J_{A₀},1) = σ₀(J_{A₀},2) + σ₀(J_{A₀},3)`.  Stated on
@@ -668,12 +672,12 @@ theorem firstBox_sum (path : StablePath data) :
   by_cases hZero : (0 : Fin 2) = pair.firstProfile.doubleLabel
   · have hOne : (1 : Fin 2) ≠ pair.firstProfile.doubleLabel := by
       rw [← hZero]; decide
-    rw [firstBox, if_pos hZero, firstBox, if_neg hOne]
+    rw [firstBox, ite_eq_left hZero, firstBox, ite_eq_right hOne]
     exact sum_over_labels
       (fun label ↦ localColumn data wall pair.first.1 path (star.edge label))
       pair.firstProfile.labels_ne.symm
   · have hOne : (1 : Fin 2) = pair.firstProfile.doubleLabel := by omega
-    rw [firstBox, if_neg hZero, firstBox, if_pos hOne]
+    rw [firstBox, ite_eq_right hZero, firstBox, ite_eq_left hOne]
     exact sum_over_labels
       (fun label ↦ localColumn data wall pair.first.1 path (star.edge label))
       pair.firstProfile.labels_ne
@@ -687,7 +691,7 @@ theorem secondBox_sum (path : StablePath data) :
   by_cases hZero : other (0 : Fin 2) = pair.secondProfile.doubleLabel
   · have hOne : other (1 : Fin 2) ≠ pair.secondProfile.doubleLabel := by
       rw [← hZero]; decide
-    rw [secondBox, if_pos hZero, secondBox, if_neg hOne]
+    rw [secondBox, ite_eq_left hZero, secondBox, ite_eq_right hOne]
     exact sum_over_labels
       (fun label ↦ localColumn data wall pair.second.1 path (star.edge label))
       pair.secondProfile.labels_ne.symm
@@ -696,7 +700,7 @@ theorem secondBox_sum (path : StablePath data) :
       generalize pair.secondProfile.doubleLabel = d
       revert d
       decide
-    rw [secondBox, if_neg hZero, secondBox, if_pos hOne]
+    rw [secondBox, ite_eq_right hZero, secondBox, ite_eq_left hOne]
     exact sum_over_labels
       (fun label ↦ localColumn data wall pair.second.1 path (star.edge label))
       pair.secondProfile.labels_ne

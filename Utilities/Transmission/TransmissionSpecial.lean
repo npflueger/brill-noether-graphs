@@ -1,5 +1,9 @@
-import Utilities.Transmission.Transmission
-import Demazure.SlipFace
+module
+
+public import Utilities.Transmission.Transmission
+public import Demazure.SlipFace
+
+@[expose] public section
 
 /-!
 # Transmission inequalities outside the special slipface locus are automatic

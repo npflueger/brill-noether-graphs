@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W2M1kSwapped
-import DraismaVargas.LocalCases.SheetRelabelStable
+module
+
+public import DraismaVargas.LocalCases.W2M1kSwapped
+public import DraismaVargas.LocalCases.SheetRelabelStable
+
+@[expose] public section
 
 /-!
 # Transporting a W2 source input and its occurrence profile along a sheet relabelling

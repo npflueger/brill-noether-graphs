@@ -1,7 +1,11 @@
-import LowGenus.GenusFourRow095
-import LowGenus.GenusFourRow097Contractions
-import Utilities.Subdivision.ClosedContraction
-import Utilities.Subdivision.ReorientContraction
+module
+
+public import LowGenus.GenusFourRow095
+public import LowGenus.GenusFourRow097Contractions
+public import Utilities.Subdivision.ClosedContraction
+public import Utilities.Subdivision.ReorientContraction
+
+@[expose] public section
 
 /-!
 # Passive contraction data for the twenty-four proper faces of row 095

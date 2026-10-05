@@ -1,7 +1,11 @@
-import DraismaVargas.LocalCases.M11SplitBranch
-import DraismaVargas.LocalCases.M11BranchSeparation
-import DraismaVargas.LocalCases.StablePathCount
-import DraismaVargas.LocalCases.M11JoinedIncidence
+module
+
+public import DraismaVargas.LocalCases.M11SplitBranch
+public import DraismaVargas.LocalCases.M11BranchSeparation
+public import DraismaVargas.LocalCases.StablePathCount
+public import DraismaVargas.LocalCases.M11JoinedIncidence
+
+@[expose] public section
 
 /-!
 # Literal branch flags for the first M11 split

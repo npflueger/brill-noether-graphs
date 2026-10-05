@@ -1,4 +1,8 @@
-import Utilities.Foundations.Parameters
+module
+
+public import Utilities.Foundations.Parameters
+
+@[expose] public section
 
 /-!
 # Rank transport under an adjacency-preserving vertex equivalence
@@ -115,8 +119,8 @@ def mapScript (equivalence : LaplacianEquiv G H)
       rw [h, equivalence.toEquiv.symm_apply_apply]
   simp only [mapDiv, one_chip]
   by_cases h : equivalence.toEquiv.symm y = x
-  · rw [if_pos h, if_pos (hiff.mp h)]
-  · rw [if_neg h, if_neg (mt hiff.mpr h)]
+  · rw [ite_eq_left h, ite_eq_left (hiff.mp h)]
+  · rw [ite_eq_right h, ite_eq_right (mt hiff.mpr h)]
 
 /-- Vertex valence is preserved by an adjacency-preserving equivalence. -/
 theorem vertex_degree_eq (equivalence : LaplacianEquiv G H) (x : G.V) :

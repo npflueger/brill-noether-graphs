@@ -1,6 +1,10 @@
-import Bananas.SameStrand.EndpointInversions
-import Bananas.CrossOneOff.CrossOneOffDelta
-import Bananas.Theta.ThetaArithmetic
+module
+
+public import Bananas.SameStrand.EndpointInversions
+public import Bananas.CrossOneOff.CrossOneOffDelta
+public import Bananas.Theta.ThetaArithmetic
+
+@[expose] public section
 
 /-!
 # Rank characterizations of raw transmission permutations
@@ -601,7 +605,7 @@ theorem rankSupport_two_distinct_interior_strand_chips
       simp [y, hwy]
     have hEw : E w = 0 := by
       dsimp [E]
-      simp only [one_chip, if_neg hnx, if_neg hny, add_zero]
+      simp only [one_chip, ite_eq_right hnx, ite_eq_right hny, add_zero]
     have hRank := rank_semibreak_sub_vertex_eq_neg_one B E hSemi hDeg w hEw
     have hw' : 0 ≤ rank B.graph (E - one_chip w) := by
       simpa [rankSupport, E, x, y] using hw

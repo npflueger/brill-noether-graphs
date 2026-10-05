@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.M11JoinedStableLift
+module
+
+public import DraismaVargas.LocalCases.M11JoinedStableLift
+
+@[expose] public section
 
 /-!
 # Local checks for descending joined M11 stable rows

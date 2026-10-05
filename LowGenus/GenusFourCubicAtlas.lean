@@ -1,7 +1,11 @@
-import Utilities.Subdivision.ConnectedCheckFast
-import Utilities.Subdivision.CubicCore
-import Utilities.Subdivision.SubdivisionConnectivity
-import Mathlib.Tactic
+module
+
+public import Utilities.Subdivision.ConnectedCheckFast
+public import Utilities.Subdivision.CubicCore
+public import Utilities.Subdivision.SubdivisionConnectivity
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # The six loopless cubic genus-four core types
@@ -26,7 +30,7 @@ structure Row where
   connected : core.Connected
   cubic : core.Cubic
 
-private theorem connected (core : Core 6 9) :
+theorem connected (core : Core 6 9) :
     core.connectedCheckFast = true → core.Connected :=
   fun h => ExplicitPotential.Core.connected_of_connectedCheckFast h
 
@@ -57,46 +61,46 @@ def row100Core : Core 6 9 where
   tail := ![0, 0, 0, 1, 1, 1, 2, 2, 3]
   head := ![3, 4, 5, 2, 4, 5, 3, 5, 4]
 
-private theorem row095_loopless :
+theorem row095_loopless :
     ∀ edge : Fin 9, row095Core.tail edge ≠ row095Core.head edge := by
   intro edge; fin_cases edge <;> decide
 
-private theorem row096_loopless :
+theorem row096_loopless :
     ∀ edge : Fin 9, row096Core.tail edge ≠ row096Core.head edge := by
   intro edge; fin_cases edge <;> decide
 
-private theorem row097_loopless :
+theorem row097_loopless :
     ∀ edge : Fin 9, row097Core.tail edge ≠ row097Core.head edge := by
   intro edge; fin_cases edge <;> decide
 
-private theorem row098_loopless :
+theorem row098_loopless :
     ∀ edge : Fin 9, row098Core.tail edge ≠ row098Core.head edge := by
   intro edge; fin_cases edge <;> decide
 
-private theorem row099_loopless :
+theorem row099_loopless :
     ∀ edge : Fin 9, row099Core.tail edge ≠ row099Core.head edge := by
   intro edge; fin_cases edge <;> decide
 
-private theorem row100_loopless :
+theorem row100_loopless :
     ∀ edge : Fin 9, row100Core.tail edge ≠ row100Core.head edge := by
   intro edge; fin_cases edge <;> decide
 
-private theorem row095_cubic : row095Core.Cubic := by
+theorem row095_cubic : row095Core.Cubic := by
   intro vertex; fin_cases vertex <;> decide
 
-private theorem row096_cubic : row096Core.Cubic := by
+theorem row096_cubic : row096Core.Cubic := by
   intro vertex; fin_cases vertex <;> decide
 
-private theorem row097_cubic : row097Core.Cubic := by
+theorem row097_cubic : row097Core.Cubic := by
   intro vertex; fin_cases vertex <;> decide
 
-private theorem row098_cubic : row098Core.Cubic := by
+theorem row098_cubic : row098Core.Cubic := by
   intro vertex; fin_cases vertex <;> decide
 
-private theorem row099_cubic : row099Core.Cubic := by
+theorem row099_cubic : row099Core.Cubic := by
   intro vertex; fin_cases vertex <;> decide
 
-private theorem row100_cubic : row100Core.Cubic := by
+theorem row100_cubic : row100Core.Cubic := by
   intro vertex; fin_cases vertex <;> decide
 
 def row095 : Row := ⟨row095Core, row095_loopless,

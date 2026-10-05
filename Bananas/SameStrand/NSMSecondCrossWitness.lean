@@ -1,5 +1,9 @@
-import Bananas.SameStrand.NSMCrossWitness
-import Bananas.CrossOneOff.CrossOneOffFiring
+module
+
+public import Bananas.SameStrand.NSMCrossWitness
+public import Bananas.CrossOneOff.CrossOneOffFiring
+
+@[expose] public section
 
 /-!
 # Second distinct-strand witness in Theorem 3.9

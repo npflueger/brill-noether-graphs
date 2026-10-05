@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.TargetPartitionNormalization
-import DraismaVargas.LocalCases.ResolutionAwayFromWall
-import DraismaVargas.LocalCases.WallDegeneration
+module
+
+public import DraismaVargas.LocalCases.TargetPartitionNormalization
+public import DraismaVargas.LocalCases.ResolutionAwayFromWall
+public import DraismaVargas.LocalCases.WallDegeneration
+
+@[expose] public section
 
 /-!
 # Incoming normalization follows every retained wall row

@@ -1,8 +1,12 @@
-import Bananas.Theta.ThetaPrincipal
-import Bananas.Theta.ThetaResidue
-import Bananas.Theta.ThetaArithmetic
-import Bananas.Transmission.TransmissionAPI
-import Bananas.Theta.ThetaTorsionAPI
+module
+
+public import Bananas.Theta.ThetaPrincipal
+public import Bananas.Theta.ThetaResidue
+public import Bananas.Theta.ThetaArithmetic
+public import Bananas.Transmission.TransmissionAPI
+public import Bananas.Theta.ThetaTorsionAPI
+
+@[expose] public section
 
 /-! Exact torsion order for normalized evenly marked theta marks. -/
 

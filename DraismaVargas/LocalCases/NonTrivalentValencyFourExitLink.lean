@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyFourExit
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyFourExit
+
+@[expose] public section
 
 /-!
 # The valency-four `K = 0` exit: path ends, and the type-change link
@@ -323,13 +327,13 @@ theorem nonDanglingValency_ret_eq_three_of_unique (x : Fin deg)
           (⟨a, hab⟩ : GraphContraction.Vertex targetIn b)).repr x := hzR.symm
     by_cases hSide : wallStar.right pairing z.1.1 = wRetSide (((wGauged).vertexPartition
         (⟨a, hab⟩ : GraphContraction.Vertex targetIn b)).repr x)
-    · simp only [if_pos hSide]
+    · simp only [ite_eq_left hSide]
       exact (mem_nonDanglingIncident _ _ _).mpr
         ⟨ResolutionSurvival.not_isDangling_oldSourceEdge (wCand)
           (gaugedData_valid wSrc pairing wNG wRam wVal).1 _ hzS,
         NonTrivalentValencyFourRowDictionary.oldSourceEdge_incident_ret wSrc pairing wNG wRam
           wProf wConn wGen wVal hb hzA hzR hSide⟩
-    · simp only [if_neg hSide]
+    · simp only [ite_eq_right hSide]
       have hSurv :=
         (NonTrivalentValencyFourRowEquiv.newSourceEdge_survives_of_unique_fine_survivor
           wSrc pairing wNG wRam wProf wConn wGen wVal hbz hzS hzA
@@ -356,17 +360,17 @@ theorem nonDanglingValency_ret_eq_three_of_unique (x : Fin deg)
         (⟨a, hab⟩ : GraphContraction.Vertex targetIn b)).repr x)
     · by_cases hSide' : wallStar.right pairing z'.1.1 = wRetSide (((wGauged).vertexPartition
           (⟨a, hab⟩ : GraphContraction.Vertex targetIn b)).repr x)
-      · rw [if_pos hSide, if_pos hSide'] at hEq
+      · rw [ite_eq_left hSide, ite_eq_left hSide'] at hEq
         exact ResolutionCut.oldSourceEdge_injective (wCand) hEq
-      · rw [if_pos hSide, if_neg hSide'] at hEq
+      · rw [ite_eq_left hSide, ite_eq_right hSide'] at hEq
         exact absurd hEq (NonTrivalentValencyFourRowDictionary.new_ne_old wSrc pairing
           wNG wRam wProf wConn wGen wVal z'.1.2 z)
     · by_cases hSide' : wallStar.right pairing z'.1.1 = wRetSide (((wGauged).vertexPartition
           (⟨a, hab⟩ : GraphContraction.Vertex targetIn b)).repr x)
-      · rw [if_neg hSide, if_pos hSide'] at hEq
+      · rw [ite_eq_right hSide, ite_eq_left hSide'] at hEq
         exact absurd hEq (NonTrivalentValencyFourRowDictionary.new_ne_old wSrc pairing
           wNG wRam wProf wConn wGen wVal z.1.2 z').symm
-      · rw [if_neg hSide, if_neg hSide'] at hEq
+      · rw [ite_eq_right hSide, ite_eq_right hSide'] at hEq
         have hbz : ¬ ((wGauged).vertexPartition
             (⟨a, hab⟩ : GraphContraction.Vertex targetIn b)).Rel anchorBlock.1 z.1.2 :=
           fun hBad ↦ hb (hBad.trans hzR.symm)

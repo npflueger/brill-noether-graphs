@@ -1,4 +1,8 @@
-import DraismaVargasCount.StarPilot
+module
+
+public import DraismaVargasCount.StarPilot
+
+@[expose] public section
 
 /-!
 # Labelled retained columns force equality of limit metrics

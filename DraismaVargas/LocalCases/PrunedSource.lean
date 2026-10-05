@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.DanglingDescent
+module
+
+public import DraismaVargas.LocalCases.DanglingDescent
+
+@[expose] public section
 
 /-!
 # The pruned source as an actual graph
@@ -104,7 +108,7 @@ private theorem sum_card_filter_pair_local {T : Type u} [DecidableEq T] [Fintype
       by_cases hx : x = v
       · subst hx
         have hyx : y ≠ x := fun h ↦ hHead h.symm
-        rw [if_pos (Or.inl rfl)]
+        rw [ite_eq_left (Or.inl rfl)]
         rw [Finset.sum_eq_single y]
         · simp
         · intro u _ hu
@@ -113,7 +117,7 @@ private theorem sum_card_filter_pair_local {T : Type u} [DecidableEq T] [Fintype
         · simp
       · by_cases hy : y = v
         · subst hy
-          rw [if_pos (Or.inr rfl)]
+          rw [ite_eq_left (Or.inr rfl)]
           rw [Finset.sum_eq_single x]
           · simp
           · intro u _ hu
@@ -418,7 +422,7 @@ private theorem num_edges_cons_cases (G : CFGraph.{u}) (e : G.V × G.V)
   by_cases hNew : e = (a, b) ∨ e = (b, a)
   · exact Or.inl hNew
   · refine Or.inr ?_
-    rw [num_edges_subEdges, Multiset.filter_cons, if_neg hNew, Multiset.zero_add]
+    rw [num_edges_subEdges, Multiset.filter_cons, ite_eq_right hNew, Multiset.zero_add]
       at hpos
     rw [num_edges_subEdges]
     exact hpos
@@ -457,7 +461,7 @@ noncomputable def repOf {V : Type u} [Nonempty V] (c : Finset V) : V :=
 
 private theorem repOf_mem {V : Type u} [Nonempty V] {c : Finset V}
     (h : c.Nonempty) : repOf c ∈ c := by
-  rw [repOf, dif_pos h]
+  rw [repOf, dite_eq_left h]
   exact h.choose_spec
 
 /-- The chosen representative of a genuine walk-component represents it. -/

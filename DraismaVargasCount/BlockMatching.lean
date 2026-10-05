@@ -1,4 +1,8 @@
-import DraismaVargas.Infrastructure.PartitionNormalization
+module
+
+public import DraismaVargas.Infrastructure.PartitionNormalization
+
+@[expose] public section
 
 /-!
 # Realizing a bijection of blocks by a permutation of sheets

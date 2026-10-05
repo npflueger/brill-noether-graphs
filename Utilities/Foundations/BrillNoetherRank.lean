@@ -1,7 +1,11 @@
-import Utilities.Foundations.RankInvariance
-import Utilities.Subdivision.RankOne
-import Utilities.Subdivision.LaplacianEquiv
-import Mathlib.Data.Int.ConditionallyCompleteOrder
+module
+
+public import Utilities.Foundations.RankInvariance
+public import Utilities.Subdivision.RankOne
+public import Utilities.Subdivision.LaplacianEquiv
+public import Mathlib.Data.Int.ConditionallyCompleteOrder
+
+@[expose] public section
 
 /-!
 # The Brill--Noether rank of a finite graph
@@ -9,7 +13,7 @@ import Mathlib.Data.Int.ConditionallyCompleteOrder
 Lim, Payne and Potashnik introduced the **Brill--Noether rank** `w^r_d` of a
 metric graph as a well-behaved substitute for `dim W^r_d`, which is *not*
 upper semicontinuous on the moduli space of metric graphs
-(arXiv:1106.5519, Definition 3.1):
+(arXiv:1106.5519v2, Definition 1.5):
 
 > `w^r_d(Γ)` is the largest integer `k` such that, for every effective divisor
 > `E` of degree `r + k`, there exists a divisor `D` of degree `d` and rank at
@@ -17,10 +21,11 @@ upper semicontinuous on the moduli space of metric graphs
 > `w^r_d(Γ)` is `-1`.
 
 Len extended the definition to weighted tropical curves and proved upper
-semicontinuity there (arXiv:1209.6309, §6).  Both papers prove a
+semicontinuity there (*The Brill--Noether rank of a tropical curve*,
+arXiv:1209.6309, §5, Definitions 5.1--5.2).  Both papers prove a
 specialization inequality `dim W^r_d(X) ≤ w^r_d(Γ)`, from which LPP deduce
-`w^r_d(Γ) ≥ min {ρ(g,r,d), g}` for *every* metric graph — by transfer from
-algebraic geometry, never combinatorially.
+`w^r_d(Γ) ≥ min {ρ(g,r,d), g}` for *every* metric graph — using specialization from
+algebraic geometry.
 
 This file records the **discrete** analogue, in which both `E` and `D` are
 supported on the vertices of a finite graph.  Note the degree bookkeeping:
@@ -29,7 +34,7 @@ supported on the vertices of a finite graph.  Note the degree bookkeeping:
 * `w^r_d(G) ≥ 0` is *exactly* Brill--Noether existence (`bnRankGe_zero_iff_bnExists`):
   a single divisor of rank at least `r` already absorbs every effective divisor
   of degree `r`, by the definition of rank.  Nothing is gained at `k = 0`.
-* `w^r_d(G) ≥ 1` is genuinely more.  It splits into a *ramification* half
+* For `r = 1`, `w^r_d(G) ≥ 1` is genuinely more.  It splits into a *ramification* half
   (`E = 2•v`) and a *secant* half (`E = v + w`, `v ≠ w`), and neither half
   implies the other in general.
 
@@ -93,7 +98,7 @@ theorem bnRankGe_iff_contained (G : CFGraph) (r d k : ℤ) :
     obtain ⟨D, _hDEffective, hDegD, hRankD, hResidual⟩ := h E hEffective hDegree
     exact ⟨D, hDegD, hRankD, winnable_of_effective G _ hResidual⟩
 
-/-! ## The rank-zero case is exactly Brill--Noether existence -/
+/-! ## The k = 0 case is exactly Brill--Noether existence -/
 
 /-- **The `k = 0` case is not new information.**  `w^r_d(G) ≥ 0` says that
 every effective divisor of degree `r` can be absorbed, and that is precisely
@@ -239,7 +244,7 @@ noncomputable def bnRank (G : CFGraph) (r d : ℤ) : ℤ :=
 theorem bnRank_eq_neg_one_of_not_bnExists {G : CFGraph} {r d : ℤ}
     (hExists : ¬ BNExists G r d) :
     bnRank G r d = -1 := by
-  rw [bnRank, if_neg hExists]
+  rw [bnRank, ite_eq_right hExists]
 
 /-- **The defining property of `bnRank`.**  For nonnegative parameters the
 predicate `BNRankGe` is exactly the comparison `k ≤ w^r_d(G)`. -/
@@ -247,7 +252,7 @@ theorem bnRankGe_iff_le_bnRank {G : CFGraph} {r d k : ℤ} (hr : 0 ≤ r) (hk : 
     BNRankGe G r d k ↔ k ≤ bnRank G r d := by
   by_cases hExists : BNExists G r d
   · have hValue : bnRank G r d = sSup {k : ℤ | 0 ≤ k ∧ BNRankGe G r d k} := by
-      rw [bnRank, if_pos hExists]
+      rw [bnRank, ite_eq_left hExists]
     have hBdd : BddAbove {k : ℤ | 0 ≤ k ∧ BNRankGe G r d k} := by
       refine ⟨d - r, ?_⟩
       rintro m ⟨hm, hRank⟩

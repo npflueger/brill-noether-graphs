@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W3TrackedAnchoring
+module
+
+public import DraismaVargas.LocalCases.W3TrackedAnchoring
+
+@[expose] public section
 
 /-! # Tracked selection of the actual Figure 28 gauge member
 

@@ -1,4 +1,8 @@
-import Utilities.Subdivision.DegenerateInterpolation
+module
+
+public import Utilities.Subdivision.DegenerateInterpolation
+
+@[expose] public section
 
 /-!
 # Canonical piecewise interpolation on closed subdivision faces

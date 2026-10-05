@@ -1,7 +1,11 @@
-import Utilities.Gluing.BridgeGraph
-import Utilities.Subdivision.GraphIsoLaplacianEquiv
-import Utilities.Foundations.InducedSubgraph
-import Mathlib.Tactic
+module
+
+public import Utilities.Gluing.BridgeGraph
+public import Utilities.Subdivision.GraphIsoLaplacianEquiv
+public import Utilities.Foundations.InducedSubgraph
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # Presentations by one separating bridge
@@ -61,7 +65,7 @@ noncomputable def rightGlue : cut.rightGraph.V :=
 
 @[simp] theorem rightGlue_val : cut.rightGlue.val = cut.rightAttach := rfl
 
-private theorem not_left_of_right {z : K.V} (hz : z ∈ cut.right) : z ∉ cut.left :=
+theorem not_left_of_right {z : K.V} (hz : z ∈ cut.right) : z ∉ cut.left :=
   fun hzLeft => (Finset.disjoint_left.mp cut.disjoint) hzLeft hz
 
 private theorem not_right_of_left {z : K.V} (hz : z ∈ cut.left) : z ∉ cut.right :=
@@ -107,7 +111,7 @@ noncomputable def vertexEquiv : cut.bridgeGraph.V ≃ K.V where
     cut.vertexEquiv (Sum.inr b) = b.val := rfl
 
 set_option backward.isDefEq.respectTransparency false in
-private theorem num_edges_cross (a : cut.leftGraph.V) (b : cut.rightGraph.V) :
+theorem num_edges_cross (a : cut.leftGraph.V) (b : cut.rightGraph.V) :
     num_edges K a.val b.val =
       if a = cut.leftGlue ∧ b = cut.rightGlue then 1 else 0 := by
   have hRaw := cut.cross_num_edges a.val b.val a.property b.property
@@ -280,7 +284,7 @@ def swap : OneBridgeCut K where
     by_cases hPair : a = cut.rightAttach ∧ b = cut.leftAttach
     · rcases hPair with ⟨rfl, rfl⟩
       simpa using h
-    · simp only [hPair, if_false]
+    · simp only [hPair, ite_false]
       have hReverse : ¬ (b = cut.leftAttach ∧ a = cut.rightAttach) := by
         rintro ⟨hLeft, hRight⟩
         exact hPair ⟨hRight, hLeft⟩

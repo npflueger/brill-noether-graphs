@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W4TargetPairings
-import DraismaVargas.LocalCases.ResolutionCoarseFine
+module
+
+public import DraismaVargas.LocalCases.W4TargetPairings
+public import DraismaVargas.LocalCases.ResolutionCoarseFine
+
+@[expose] public section
 
 /-!
 # Sheet resolutions for the W4 r0 source blocks
@@ -63,7 +67,7 @@ theorem nd2Resolution_newEdge_of_ne (wall : SheetPartition d)
     (hNe : firstRight ≠ secondRight) :
     (nd2Resolution wall anchor firstRight secondRight).newEdge = wall := by
   unfold nd2Resolution
-  rw [dif_neg hNe]
+  rw [dite_eq_right hNe]
   rfl
 
 /-- Under a same-side nd2 pattern, the endpoint carrying the two active
@@ -99,7 +103,7 @@ theorem nd2Resolution_endpoints_of_ne (wall : SheetPartition d)
     (nd2Resolution wall anchor firstRight secondRight).left = wall ∧
       (nd2Resolution wall anchor firstRight secondRight).right = wall := by
   unfold nd2Resolution
-  rw [dif_neg hNe]
+  rw [dite_eq_right hNe]
   exact ⟨rfl, rfl⟩
 
 /-- The same-side W4 resolution gives every sheet in the selected wall block

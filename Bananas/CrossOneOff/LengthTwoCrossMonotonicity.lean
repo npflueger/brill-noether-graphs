@@ -1,5 +1,9 @@
-import Bananas.CrossOneOff.LengthTwoCrossBasePoint
-import Bananas.Transmission.RankDeltaDuality
+module
+
+public import Bananas.CrossOneOff.LengthTwoCrossBasePoint
+public import Bananas.Transmission.RankDeltaDuality
+
+@[expose] public section
 
 /-!
 # Monotonicity ingredients for the length-two cross exception

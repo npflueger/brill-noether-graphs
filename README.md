@@ -9,11 +9,17 @@ contributions are welcome!
 
 ## Dependencies
 
-These formalizations build upon [Mathlib](github.com/leanprover-community/mathlib4) and the following two repositories.
+These formalizations build upon [Mathlib](https://github.com/leanprover-community/mathlib4) and the following two repositories.
 
-* [Chip-firing with Lean4](github.com/DhyeyMavani2003), developed by Dhyey Mavani and Nathan Pflueger. This provides the basic notions of divisor theory on graphs, including the Riemann--Roch theorem.
-* [Demazure products](github.com/npflueger/demazure), developed by Nathan Pflueger. This provides the theory of Demazure products on integer permutations, needed for vertex gluing arguments.
+* [Chip-firing with Lean4](https://github.com/DhyeyMavani2003/chip-firing-with-lean), developed by Dhyey Mavani and Nathan Pflueger. This provides the basic notions of divisor theory on graphs, including the Riemann--Roch theorem.
+* [Demazure products](https://github.com/npflueger/demazure), developed by Nathan Pflueger. This provides the theory of Demazure products on integer permutations, needed for vertex gluing arguments.
 
+The build uses Lean and Mathlib v4.34.0. Both dependencies now use Lean's
+`module` system upstream: Demazure is pinned to its v1.1.2 release, and
+chip-firing to the commit immediately after v1.1.2, which updates its docbuild
+dependencies. Exact Git commits are pinned in `lakefile.toml` and recorded in
+`lake-manifest.json`; no vendored copies are needed. All project Lean sources
+also use the module system.
 
 ## Source papers
 
@@ -41,8 +47,9 @@ These formalizations build upon [Mathlib](github.com/leanprover-community/mathli
 - [Catalan-many tropical morphisms to trees; Part II: A space and a count](https://arxiv.org/abs/2609.09109),
   by A. Vargas (2026). Its walk through the space of metric graphs by Whitehead
   moves is used in the proof of Part I here, and its count of tropical
-  morphisms to trees has been formalized modulo 2 in genus six, as far as needed
-  for Brill–Noether existence in genus six.
+  morphisms to trees has been adapted to a finite combinatorial model modulo 2
+  in every even genus at least six. The submission uses the genus-six count
+  for existence and the genus-eight count for the Brill–Noether rank bound.
 - [Twice-marked banana graphs & Brill--Noether generality](https://doi.org/10.5802/alco.443),
   by N. Pflueger and N. Solomon (2025). The paper's principal results are
   formalized; formulation and scope differences are documented alongside the
@@ -52,8 +59,8 @@ These formalizations build upon [Mathlib](github.com/leanprover-community/mathli
 
 `Palomar/BNChains/` is a complete entry: a Mathlib-only challenge, its solution,
 a comparator configuration and formalization metadata. `Palomar/GenusSix/`
-(Brill–Noether existence through genus six, and once-marked existence through
-genus five) has its challenge, its solution `Palomar/Solutions/GenusSix.lean` and
+(Brill–Noether existence and rank through genus six, and once-marked existence
+through genus five) has its challenge, its solution `Palomar/Solutions/GenusSix.lean` and
 a comparator configuration; its formalization metadata is a draft.
 `Palomar/SubdivisionGonality/` (the Draisma–Vargas bound on gonality up to
 subdivision) is a draft: it states the theorems over a Mathlib-only vocabulary,
@@ -165,6 +172,10 @@ This checks all statement/solution pairs with pinned versions of Comparator,
 `lean4export`, Landrun, and NanoDa. GitHub Actions runs the same check on pushes
 and pull requests to `main`. Pass config paths to check only those pairs, for
 example `./scripts/verify-comparator.sh Palomar/GenusSix/comparator.json`.
+
+Shared statement/solution definitions use explicit proof terms where tactics
+would generate private helpers with different module names. Comparator checks
+these definition bodies, including their proofs, for exact agreement.
 
 On macOS, where Landrun cannot run, set `PALOMAR_FAKE_LANDRUN=1` to replace it
 with Comparator's development shim, which runs the build and export steps

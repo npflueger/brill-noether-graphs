@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.WallSplitIncidence
+module
+
+public import DraismaVargas.LocalCases.WallSplitIncidence
+
+@[expose] public section
 
 /-!
 # The incidence dictionary at an unramified wall block
@@ -150,7 +154,7 @@ theorem card_retainedStar_add_of_bridge (vertex : data.SourceVertex) (row : Stab
     ext e
     rw [Finset.mem_sdiff, Finset.mem_filter, mem_incidentEdges, mem_retainedStar]
     by_cases hb : bridge.stablePath = row
-    · rw [if_pos hb, Finset.mem_singleton]
+    · rw [ite_eq_left hb, Finset.mem_singleton]
       constructor
       · rintro ⟨⟨hInc, hRow⟩, hNot⟩
         have hT : e.1.1.1 = contracted := by
@@ -161,7 +165,7 @@ theorem card_retainedStar_add_of_bridge (vertex : data.SourceVertex) (row : Stab
         refine ⟨⟨hBridgeInc, hb⟩, ?_⟩
         rintro ⟨⟨-, hT⟩, -⟩
         exact hT hBridgeT
-    · rw [if_neg hb]
+    · rw [ite_eq_right hb]
       simp only [Finset.notMem_empty, iff_false]
       rintro ⟨⟨hInc, hRow⟩, hNot⟩
       have hT : e.1.1.1 = contracted := by
@@ -174,10 +178,10 @@ theorem card_retainedStar_add_of_bridge (vertex : data.SourceVertex) (row : Stab
   rw [hDiff] at hCard
   unfold incidenceCount
   by_cases hb : bridge.stablePath = row
-  · rw [if_pos hb] at hCard ⊢
+  · rw [ite_eq_left hb] at hCard ⊢
     rw [Finset.card_singleton] at hCard
     omega
-  · rw [if_neg hb] at hCard ⊢
+  · rw [ite_eq_right hb] at hCard ⊢
     rw [Finset.card_empty] at hCard
     omega
 
@@ -196,10 +200,10 @@ theorem incidenceCount_divalent (vertex : data.SourceVertex) (row : StablePath d
         ⟨hEq, vertex, (mem_incidentEdges _ _ _).mp he, hBridgeInc, hTwo⟩
   unfold incidenceCount
   by_cases hb : bridge.stablePath = row
-  · rw [if_pos hb, mul_one,
+  · rw [ite_eq_left hb, mul_one,
       Finset.filter_true_of_mem (fun e he ↦ (hAll e he).trans hb),
       card_incidentEdges, hTwo]
-  · rw [if_neg hb, mul_zero, Finset.card_eq_zero, Finset.filter_eq_empty_iff]
+  · rw [ite_eq_right hb, mul_zero, Finset.card_eq_zero, Finset.filter_eq_empty_iff]
     intro e he hRow
     exact hb ((hAll e he).symm.trans hRow)
 
@@ -433,11 +437,11 @@ theorem card_fibreStar_pair (vertex : (contractDatum data hc hab hOne).SourceVer
   have h2 := card_retainedStar_add_of_bridge data contracted p q bridge hBridgeP hBridgeT hUniqueP
   have h3 := incidenceCount_divalent data p q bridge hBridgeP hTwoP
   by_cases hb : bridge.stablePath = q
-  · rw [if_pos hb] at h1 h2
-    rw [if_pos hb, mul_one] at h3
+  · rw [ite_eq_left hb] at h1 h2
+    rw [ite_eq_left hb, mul_one] at h3
     omega
-  · rw [if_neg hb] at h1 h2
-    rw [if_neg hb, mul_zero] at h3
+  · rw [ite_eq_right hb] at h1 h2
+    rw [ite_eq_right hb, mul_zero] at h3
     omega
 
 include hInj in

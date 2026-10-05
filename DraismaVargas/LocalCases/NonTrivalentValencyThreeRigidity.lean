@@ -1,7 +1,11 @@
-import DraismaVargas.LocalCases.NonTrivalentWallSetup
-import DraismaVargas.LocalCases.NonTrivalentValencyThreeAnchor
-import DraismaVargas.LocalCases.ThirdEquation
-import DraismaVargas.LocalCases.W4IncomingPrunedFibre
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentWallSetup
+public import DraismaVargas.LocalCases.NonTrivalentValencyThreeAnchor
+public import DraismaVargas.LocalCases.ThirdEquation
+public import DraismaVargas.LocalCases.W4IncomingPrunedFibre
+
+@[expose] public section
 
 /-!
 # Ramification of the actual four-valent anchor at a valency-three wall

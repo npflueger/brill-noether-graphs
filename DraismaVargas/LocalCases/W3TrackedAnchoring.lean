@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W3InteriorGraphTracking
+module
+
+public import DraismaVargas.LocalCases.W3InteriorGraphTracking
+
+@[expose] public section
 
 /-!
 # W3 anchored row coherence

@@ -1,4 +1,8 @@
-import Bananas.Transmission.KGeneralBNGeneral
+module
+
+public import Bananas.Transmission.KGeneralBNGeneral
+
+@[expose] public section
 
 /-!
 # Gonality forced by `k`-general transmission

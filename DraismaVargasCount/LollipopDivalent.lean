@@ -1,5 +1,9 @@
-import DraismaVargasCount.LollipopDivalentWitness
-import DraismaVargasCount.RowHairpinPosition
+module
+
+public import DraismaVargasCount.LollipopDivalentWitness
+public import DraismaVargasCount.RowHairpinPosition
+
+@[expose] public section
 
 /-!
 # The image of a lollipop branch vertex: divalence and distinctness

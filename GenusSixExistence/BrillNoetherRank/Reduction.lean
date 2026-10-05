@@ -1,7 +1,11 @@
-import GenusSixOddDescent.Main
-import Utilities.Subdivision.OddSubdivisionDescent
-import Utilities.Foundations.RiemannRochWinnable
-import LowGenus.AtanasovRanganathanExistence
+module
+
+public import GenusSixOddDescent.Main
+public import Utilities.Subdivision.OddSubdivisionDescent
+public import Utilities.Foundations.RiemannRochWinnable
+public import LowGenus.AtanasovRanganathanExistence
+
+@[expose] public section
 
 /-!
 # Brill--Noether rank through genus six: the reduction

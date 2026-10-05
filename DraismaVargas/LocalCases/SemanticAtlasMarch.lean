@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.FiniteAtlasMarch
-import DraismaVargas.LocalCases.ClosedFaceRealization
-import DraismaVargas.LocalCases.FullDimensionalSource
+module
+
+public import DraismaVargas.LocalCases.FiniteAtlasMarch
+public import DraismaVargas.LocalCases.ClosedFaceRealization
+public import DraismaVargas.LocalCases.FullDimensionalSource
+
+@[expose] public section
 
 /-!
 # A finite atlas march retaining subdivision pencils

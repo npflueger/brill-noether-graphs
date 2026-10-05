@@ -1,5 +1,9 @@
-import TreewidthGonality.Gonality.BrambleGonality
-import TreewidthGonality.Treewidth.SeymourThomas
+module
+
+public import TreewidthGonality.Gonality.BrambleGonality
+public import TreewidthGonality.Treewidth.SeymourThomas
+
+@[expose] public section
 
 /-!
 # `treewidth ≤ gonality`

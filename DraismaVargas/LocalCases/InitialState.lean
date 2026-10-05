@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.MatrixAtlas
-import DraismaVargas.LocalCases.SeedCandidate
-import DraismaVargas.LocalCases.SeedDeterminant
+module
+
+public import DraismaVargas.LocalCases.MatrixAtlas
+public import DraismaVargas.LocalCases.SeedCandidate
+public import DraismaVargas.LocalCases.SeedDeterminant
+
+@[expose] public section
 
 /-!
 # Initial states of the semantic march

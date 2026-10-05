@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.W3Nd2FineRowDescent
-import DraismaVargas.LocalCases.ResolutionStableIncidence
-import DraismaVargas.LocalCases.StableGraphIncidence
+module
+
+public import DraismaVargas.LocalCases.W3Nd2FineRowDescent
+public import DraismaVargas.LocalCases.ResolutionStableIncidence
+public import DraismaVargas.LocalCases.StableGraphIncidence
+
+@[expose] public section
 
 /-!
 # Stable-incidence certificate for the true Figure 31 fine member
@@ -273,7 +277,7 @@ theorem fineBranchVertexMap_of_wall
       (fineCandidate input profile).datum.sourceEndpoint (freshVertex target)
         vertex.1.1.2 := by
   unfold fineBranchVertexMap
-  exact congrArg Subtype.val (dif_pos hAt)
+  exact congrArg Subtype.val (dite_eq_left hAt)
 
 theorem fineBranchVertexMap_of_away
     (input : W3SourceInput data star)
@@ -282,7 +286,7 @@ theorem fineBranchVertexMap_of_away
     (fineBranchVertexMap input profile vertex).1 =
       retainedVertex (fineCandidate input profile) vertex.1 := by
   unfold fineBranchVertexMap
-  exact congrArg Subtype.val (dif_neg hAway)
+  exact congrArg Subtype.val (dite_eq_right hAway)
 
 /-- On background blocks, equality of fresh endpoints reflects equality of
 the corresponding old wall endpoints. -/

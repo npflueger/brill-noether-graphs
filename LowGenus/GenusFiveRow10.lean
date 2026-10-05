@@ -1,5 +1,9 @@
-import LowGenus.GenusFiveRow10ChamberOne
-import LowGenus.GenusFiveRow10ChamberTwo
+module
+
+public import LowGenus.GenusFiveRow10ChamberOne
+public import LowGenus.GenusFiveRow10ChamberTwo
+
+@[expose] public section
 
 /-!
 # The Atanasov--Ranganathan construction on row 10

@@ -1,5 +1,9 @@
-import Bananas.CrossOneOff.CrossOneOffFiring
-import Bananas.Transmission.RankZeroSupport
+module
+
+public import Bananas.CrossOneOff.CrossOneOffFiring
+public import Bananas.Transmission.RankZeroSupport
+
+@[expose] public section
 
 /-!
 # Rank-difference calculation for the cross-one-off marking

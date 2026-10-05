@@ -1,4 +1,8 @@
-import LowGenus.GenusFiveRow12Tripod
+module
+
+public import LowGenus.GenusFiveRow12Tripod
+
+@[expose] public section
 
 /-!
 # The Atanasov--Ranganathan construction on row 12

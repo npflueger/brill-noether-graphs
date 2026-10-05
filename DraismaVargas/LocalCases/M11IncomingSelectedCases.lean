@@ -1,7 +1,11 @@
-import DraismaVargas.LocalCases.M11IncomingPartitions
-import DraismaVargas.LocalCases.IncomingW2TargetPlacement
-import DraismaVargas.LocalCases.M11SourceCandidates
-import DraismaVargas.LocalCases.FullDimensionalSource
+module
+
+public import DraismaVargas.LocalCases.M11IncomingPartitions
+public import DraismaVargas.LocalCases.IncomingW2TargetPlacement
+public import DraismaVargas.LocalCases.M11SourceCandidates
+public import DraismaVargas.LocalCases.FullDimensionalSource
+
+@[expose] public section
 
 /-!
 # Incoming M11 selected-block cases

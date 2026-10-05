@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.GlobalW4
+module
+
+public import DraismaVargas.LocalCases.GlobalW4
+
+@[expose] public section
 
 /-!
 # Source-facing classification of W4 wall blocks

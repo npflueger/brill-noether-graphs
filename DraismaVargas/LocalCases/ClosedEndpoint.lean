@@ -1,6 +1,10 @@
-import DraismaVargas.Interface
-import DraismaVargas.LocalCases.ClosedFaceRealization
-import DraismaVargas.LocalCases.PrunedContractedSpecResidues
+module
+
+public import DraismaVargas.Interface
+public import DraismaVargas.LocalCases.ClosedFaceRealization
+public import DraismaVargas.LocalCases.PrunedContractedSpecResidues
+
+@[expose] public section
 
 /-!
 # The closed-face endpoint interface

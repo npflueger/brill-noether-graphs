@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.SecondEquation
+module
+
+public import DraismaVargas.LocalCases.SecondEquation
+
+@[expose] public section
 
 /-!
 # Actual ramification-one occurrence profiles at a divalent wall
@@ -59,20 +63,20 @@ theorem sum_sourceEdgeIndex_target
       rw [← Finset.univ_sigma_univ, Finset.sum_sigma]
       refine Finset.sum_congr rfl fun edge _ ↦ ?_
       by_cases hEdge : edge.1 = targetEdge
-      · simp only [if_pos hEdge]
+      · simp only [ite_eq_left hEdge]
         exact (Finset.sum_coe_sort
           (SheetPartition.blocksWithin (data.edgePartition edge.1)
             (data.vertexPartition vertex.1.1) ⟨vertex.1.2, vertex.2⟩)
           (fun block ↦ ((data.edgePartition edge.1).blockCard block.1 : ℤ))).trans
           (sum_blockCard_blocksWithin _ _
             (refines_of_mem_incidentEdges data edge.2) ⟨vertex.1.2, vertex.2⟩)
-      · simp only [if_neg hEdge, Finset.sum_const_zero]
+      · simp only [ite_eq_right hEdge, Finset.sum_const_zero]
     _ = ((data.vertexPartition vertex.1.1).blockCard vertex.1.2 : ℤ) := by
       rw [Fintype.sum_eq_single ⟨targetEdge, hIncident⟩]
       · simp
       · intro edge hNe
         have hValue : edge.1 ≠ targetEdge := fun h ↦ hNe (Subtype.ext h)
-        simp only [hValue, if_false]
+        simp only [hValue, ite_false]
 
 /-- The incident source occurrences over one of the two named directions. -/
 noncomputable def fibre (data : GluingDatum target degree)
@@ -291,8 +295,8 @@ theorem nonDanglingValency_eq_three (profile : OccurrenceProfile data star block
     nonDanglingValency data (WallBlock.sourceVertex data wall block) = 3 := by
   classical
   rw [← card_filter_not_isDangling_eq_nonDanglingValency, profile.incident_univ]
-  rw [Finset.filter_insert, if_pos hFirst, Finset.filter_insert, if_pos hSecond,
-    Finset.filter_singleton, if_pos hThird]
+  rw [Finset.filter_insert, ite_eq_left hFirst, Finset.filter_insert, ite_eq_left hSecond,
+    Finset.filter_singleton, ite_eq_left hThird]
   have hNot : profile.first ∉ ({profile.second, profile.third} : Finset
       (IncidentSourceEdge data (WallBlock.sourceVertex data wall block))) := by
     intro hMem
@@ -308,8 +312,8 @@ theorem nonDanglingValency_eq_two (profile : OccurrenceProfile data star block)
     nonDanglingValency data (WallBlock.sourceVertex data wall block) = 2 := by
   classical
   rw [← card_filter_not_isDangling_eq_nonDanglingValency, profile.incident_univ]
-  rw [Finset.filter_insert, if_neg (not_not_intro hFirst), Finset.filter_insert,
-    if_pos hSecond, Finset.filter_singleton, if_pos hThird]
+  rw [Finset.filter_insert, ite_eq_right (not_not_intro hFirst), Finset.filter_insert,
+    ite_eq_left hSecond, Finset.filter_singleton, ite_eq_left hThird]
   exact Finset.card_pair profile.second_ne_third
 
 /-- Both doubled-side occurrences cannot dangle: that would leave surviving
@@ -322,8 +326,8 @@ theorem not_both_isDangling (profile : OccurrenceProfile data star block)
   have hThird := profile.third_not_isDangling input.dangling_no_glue
   have hValency : nonDanglingValency data (WallBlock.sourceVertex data wall block) = 1 := by
     rw [← card_filter_not_isDangling_eq_nonDanglingValency, profile.incident_univ]
-    rw [Finset.filter_insert, if_neg (not_not_intro hFirst), Finset.filter_insert,
-      if_neg (not_not_intro hSecond), Finset.filter_singleton, if_pos hThird]
+    rw [Finset.filter_insert, ite_eq_right (not_not_intro hFirst), Finset.filter_insert,
+      ite_eq_right (not_not_intro hSecond), Finset.filter_singleton, ite_eq_left hThird]
     exact Finset.card_singleton _
   have hCases := input.nonDangling_valency block
   omega

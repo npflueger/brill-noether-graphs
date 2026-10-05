@@ -1,6 +1,10 @@
-import Utilities.Transmission.TransmissionIso
-import Utilities.Transmission.TransmissionWedge
-import Utilities.Gluing.VertexWedgePresentation
+module
+
+public import Utilities.Transmission.TransmissionIso
+public import Utilities.Transmission.TransmissionWedge
+public import Utilities.Gluing.VertexWedgePresentation
+
+@[expose] public section
 
 /-!
 # Transmission through a presented vertex wedge

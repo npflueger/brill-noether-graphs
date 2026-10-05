@@ -1,6 +1,10 @@
-import Bananas.SameStrand.EndpointCardinality
-import Bananas.Transmission.TransmissionAPI
-import Bananas.Theta.EvenlyMarkedThetaKGeneral
+module
+
+public import Bananas.SameStrand.EndpointCardinality
+public import Bananas.Transmission.TransmissionAPI
+public import Bananas.Theta.EvenlyMarkedThetaKGeneral
+
+@[expose] public section
 
 /-!
 # Mechanical API audit for two remaining statement targets

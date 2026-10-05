@@ -1,4 +1,8 @@
-import GenusSixExistence.BrillNoetherRank.Tripod.Gluing
+module
+
+public import GenusSixExistence.BrillNoetherRank.Tripod.Gluing
+
+@[expose] public section
 
 /-!
 # Restricting an isomorphism of glued data

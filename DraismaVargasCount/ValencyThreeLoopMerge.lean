@@ -1,5 +1,9 @@
-import DraismaVargasCount.ValencyThreeCensus
-import DraismaVargasCount.PassOnceLollipopWitness
+module
+
+public import DraismaVargasCount.ValencyThreeCensus
+public import DraismaVargasCount.PassOnceLollipopWitness
+
+@[expose] public section
 
 set_option autoImplicit false
 
@@ -328,22 +332,22 @@ theorem exists_loopSwap (H : RegrowthAnchor w block) {e₀ : Fin p}
   refine ⟨swapIso w.limit t₂ s₀ s₃ hdisc hrel, fun _ ↦ rfl, ?_, ?_, ?_, ?_⟩
   · apply Subtype.ext
     change (t₂, (if t₂ = t₂ then Equiv.swap s₀ s₃ else Equiv.refl _) s₀) = (L.e 3).1
-    rw [if_pos rfl, Equiv.swap_apply_left]
+    rw [ite_eq_left rfl, Equiv.swap_apply_left]
     exact Prod.ext h30.symm rfl
   · apply Subtype.ext
     change ((L.e 3).1.1, (if (L.e 3).1.1 = t₂ then Equiv.swap s₀ s₃ else Equiv.refl _) s₃) =
       (L.e 0).1
-    rw [if_pos h30, Equiv.swap_apply_right]
+    rw [ite_eq_left h30, Equiv.swap_apply_right]
     exact Prod.ext h30 rfl
   · apply Subtype.ext
     change ((L.e 1).1.1, (if (L.e 1).1.1 = t₂ then Equiv.swap s₀ s₃ else Equiv.refl _)
       (L.e 1).1.2) = (L.e 1).1
-    rw [if_neg L.dir3]
+    rw [ite_eq_right L.dir3]
     rfl
   · apply Subtype.ext
     change ((L.e 2).1.1, (if (L.e 2).1.1 = t₂ then Equiv.swap s₀ s₃ else Equiv.refl _)
       (L.e 2).1.2) = (L.e 2).1
-    rw [if_neg L.dir4]
+    rw [ite_eq_right L.dir4]
     rfl
 
 /-- The limit stable path of a labelled survivor. -/

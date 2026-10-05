@@ -1,7 +1,11 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyFourKZero
-import DraismaVargas.LocalCases.W4SourceClassification
-import DraismaVargas.LocalCases.NonDanglingValency
-import DraismaVargas.LocalCases.NonTrivalentValencyFourAnchor
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyFourKZero
+public import DraismaVargas.LocalCases.W4SourceClassification
+public import DraismaVargas.LocalCases.NonDanglingValency
+public import DraismaVargas.LocalCases.NonTrivalentValencyFourAnchor
+
+@[expose] public section
 
 /-!
 # The rigid K = 0 background above a four-valent wall
@@ -243,9 +247,9 @@ theorem exterior (facts : BlockDangling data star pattern anchor)
             rw [hOpposite]
             cases hFirstSide :
                 W4TargetPairings.Pairing.labelRight pairing block.first
-            · simp only [hFirstSide, Bool.not_false, if_true] at hEndpoint ⊢
+            · simp only [hFirstSide, Bool.not_false, ite_true] at hEndpoint ⊢
               exact hEndpoint
-            · simp only [hFirstSide, Bool.not_true, if_true] at hEndpoint ⊢
+            · simp only [hFirstSide, Bool.not_true, ite_true] at hEndpoint ⊢
               exact hEndpoint
           rw [hEndpoint']
           exact facts.refinesOnBlock_nd2 block hPattern label hFirst
@@ -258,7 +262,7 @@ theorem exterior (facts : BlockDangling data star pattern anchor)
         · simp only [Bool.false_eq, hEndpoints.1]
           exact (star.edgePartition_refines_wall data label).refinesOnBlock
             anchor
-        · simp only [if_true, hEndpoints.2]
+        · simp only [ite_true, hEndpoints.2]
           exact (star.edgePartition_refines_wall data label).refinesOnBlock
             anchor
   | nd3 block =>
@@ -674,13 +678,13 @@ theorem activeTotal_eq (profile : OrdinaryBlockProfile data star anchor)
     (block : WallBlock data wall)
     (hBlock : ¬ (data.vertexPartition wall).Rel anchor block.1) :
     profile.activeTotal block = profile.active block :=
-  if_neg hBlock
+  ite_eq_right hBlock
 
 theorem activeTotal_eq_empty (profile : OrdinaryBlockProfile data star anchor)
     (block : WallBlock data wall)
     (hBlock : (data.vertexPartition wall).Rel anchor block.1) :
     profile.activeTotal block = ∅ :=
-  if_pos hBlock
+  ite_eq_left hBlock
 
 theorem activeTotal_card (profile : OrdinaryBlockProfile data star anchor)
     (block : WallBlock data wall) :

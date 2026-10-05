@@ -1,5 +1,9 @@
-import DraismaVargasCount.ValencyTwoSplit
-import DraismaVargasCount.ValencyThreeResolutionMatch
+module
+
+public import DraismaVargasCount.ValencyTwoSplit
+public import DraismaVargasCount.ValencyThreeResolutionMatch
+
+@[expose] public section
 
 /-!
 # Valency-two resolution match: stage 4 at valency two, in general
@@ -993,9 +997,9 @@ theorem transport_div (Dl Dr : T₁.edges) (hW : ∀ e, e ∈ GluingDatum.incide
     rw [hR, σr.apply_symm_apply]; exact hNr s
   · intro edge hInc s
     rcases (hW edge).mp (mem_of_ends hInc) with rfl | rfl
-    · rw [hr₁l]; simp only [Bool.false_eq_true, if_false, σl, Equiv.symm_apply_apply]
+    · rw [hr₁l]; simp only [Bool.false_eq_true, ite_false, σl, Equiv.symm_apply_apply]
       exact rfl
-    · rw [hr₁r]; simp only [if_true, σr, Equiv.symm_apply_apply]
+    · rw [hr₁r]; simp only [ite_true, σr, Equiv.symm_apply_apply]
       exact rfl
 
 /-- A swap of two related sheets preserves every class. -/
@@ -1113,7 +1117,7 @@ theorem transport_leaf (Dt D₃ : T₁.edges)
     · intro edge hInc s
       have hmemW := mem_of_ends hInc
       rw [hr₁ edge hmemW]
-      simp only [if_true]
+      simp only [ite_true]
       rcases (hW edge).mp hmemW with rfl | rfl
       · rw [Equiv.symm_apply_apply]; exact rfl
       · rw [hR, Equiv.apply_symm_apply, h2r]
@@ -1179,9 +1183,9 @@ theorem resolution_eq (sec : (contract target hab hOne).edges → Bool) (hP : Pl
   have hnew := M11IncomingOuterPartitions.transported_edgePartition_new data hc hab hOne sec hP
     fd.targetConnected fd.targetGenus
   refine ⟨hnew, fun h ↦ ?_, fun h ↦ ?_⟩
-  · rw [if_pos h] at hpair
+  · rw [ite_eq_left h] at hpair
     exact ⟨congrArg Prod.fst hpair, congrArg Prod.snd hpair⟩
-  · rw [if_neg h] at hpair
+  · rw [ite_eq_right h] at hpair
     exact ⟨congrArg Prod.fst hpair, congrArg Prod.snd hpair⟩
 
 /-- The side of a folded occurrence. -/

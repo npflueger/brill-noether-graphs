@@ -1,5 +1,9 @@
-import DraismaVargasCount.NonTrivalentBalance
-import DraismaVargasCount.SharpRowDenominator
+module
+
+public import DraismaVargasCount.NonTrivalentBalance
+public import DraismaVargasCount.SharpRowDenominator
+
+@[expose] public section
 
 /-!
 # Actual full-dimensional corner and leaf-column receipts
@@ -89,7 +93,7 @@ theorem row_eq_leafRow_of_supported
   have hValue := matrix_leafEdge_column fd hLeaf row
   rw [← hCol] at hValue
   by_contra hNe
-  rw [if_neg hNe] at hValue
+  rw [ite_eq_right hNe] at hValue
   exact corner_ne_zero fd hSupport hValue
 
 /-- The actual leaf corner is 2. No single-occurrence receipt is assumed. -/
@@ -103,7 +107,7 @@ theorem corner_eq_two_of_leaf
   have hRow := row_eq_leafRow_of_supported fd hSupport hLeaf hColumn
   have hEdge := eq_leafEdge_of_mem hLeaf hColumn
   have h := matrix_leafEdge_column fd hLeaf row
-  rw [if_pos hRow, ← hEdge, Equiv.symm_apply_apply] at h
+  rw [ite_eq_left hRow, ← hEdge, Equiv.symm_apply_apply] at h
   exact h
 
 /-- A nonleaf supported row has one actual occurrence and a reciprocal corner. -/
@@ -131,9 +135,9 @@ theorem corner_num (fd : FullDimensionalSourcePresentation data coordinate)
       if col ∈ leafColumns fd.labelling.presentation then 2 else 1 := by
   classical
   by_cases hLeaf : col ∈ leafColumns fd.labelling.presentation
-  · rw [if_pos hLeaf, corner_eq_two_of_leaf fd hSupport hLeaf]
+  · rw [ite_eq_left hLeaf, corner_eq_two_of_leaf fd hSupport hLeaf]
     norm_num
-  · rw [if_neg hLeaf]
+  · rw [ite_eq_right hLeaf]
     obtain ⟨edge, _, _, hCorner⟩ := corner_eq_reciprocal_of_nonleaf fd hSupport hLeaf
     exact NonTrivalentBalance.num_eq_one_of_eq_one_div (data.sourceEdgeIndex_pos edge) hCorner
 
@@ -158,7 +162,7 @@ theorem nonfacet_entry_eq_zero_of_leaf
   have hFacet := row_eq_leafRow_of_supported fd hSupport hLeaf hColumn
   have hEdge := eq_leafEdge_of_mem hLeaf hColumn
   have h := matrix_leafEdge_column fd hLeaf row
-  rw [← hEdge, Equiv.symm_apply_apply, if_neg (hRow.trans_eq hFacet)] at h
+  rw [← hEdge, Equiv.symm_apply_apply, ite_eq_right (hRow.trans_eq hFacet)] at h
   exact h
 
 /-- Deleting an actual zero entry does not change a row denominator. -/

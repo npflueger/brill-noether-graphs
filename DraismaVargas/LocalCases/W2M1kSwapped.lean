@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W2M1kSourceCandidates
+module
+
+public import DraismaVargas.LocalCases.W2M1kSourceCandidates
+
+@[expose] public section
 
 /-!
 # The swapped Figure 33 bundle at an actual `w2M1k` profile

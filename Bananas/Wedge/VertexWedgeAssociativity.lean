@@ -1,5 +1,9 @@
-import Bananas.Basics.Definitions
-import Utilities.Iso.GraphConstructorIso
+module
+
+public import Bananas.Basics.Definitions
+public import Utilities.Iso.GraphConstructorIso
+
+@[expose] public section
 
 /-!
 # Associativity of vertex wedges
@@ -194,7 +198,7 @@ def vertexWedge_assoc
             · have hsum : (Sum.inr q : (vertexWedge G H x y).V) ≠
                   Sum.inr ⟨z, hzy⟩ := fun h =>
                 hqz (congrArg Subtype.val (Sum.inr.inj h))
-              rw [if_neg hqz]
+              rw [ite_eq_right hqz]
               split
               · rename_i h
                 exact (hsum h).elim
@@ -237,7 +241,7 @@ def vertexWedge_assoc
             · have hsum : (Sum.inr r : (vertexWedge G H x y).V) ≠
                   Sum.inr ⟨z, hzy⟩ := fun h =>
                 hrz (congrArg Subtype.val (Sum.inr.inj h))
-              rw [if_neg hrz]
+              rw [ite_eq_right hrz]
               split
               · rename_i h
                 exact (hsum h).elim

@@ -1,6 +1,10 @@
-import DraismaVargas.Interface
-import Utilities.Gluing.VertexCutWedge
-import Utilities.Gluing.VertexWedgeRankFormula
+module
+
+public import DraismaVargas.Interface
+public import Utilities.Gluing.VertexCutWedge
+public import Utilities.Gluing.VertexWedgeRankFormula
+
+@[expose] public section
 
 /-!
 # Rank retraction from a pendant vertex-wedge factor

@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.ForestReceiptGeneral
-import Mathlib.Data.List.Chain
-import Mathlib.Data.List.Nodup
+module
+
+public import DraismaVargas.LocalCases.ForestReceiptGeneral
+public import Mathlib.Data.List.Chain
+public import Mathlib.Data.List.Nodup
+
+@[expose] public section
 
 /-!
 # `RowsMeetEndsOnly`, discharged (pure list combinatorics)

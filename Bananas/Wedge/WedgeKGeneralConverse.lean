@@ -1,7 +1,11 @@
-import Bananas.Classification.PointedGenusOneKGeneral
-import Bananas.Wedge.WedgePeriodRecurrence
-import Bananas.Classification.BridgelessGenusTwoCornerAlgebra
-import Bananas.Transmission.TorsionOrderExact
+module
+
+public import Bananas.Classification.PointedGenusOneKGeneral
+public import Bananas.Wedge.WedgePeriodRecurrence
+public import Bananas.Classification.BridgelessGenusTwoCornerAlgebra
+public import Bananas.Transmission.TorsionOrderExact
+
+@[expose] public section
 
 /-!
 # Period extraction from a rigid genus-two wedge

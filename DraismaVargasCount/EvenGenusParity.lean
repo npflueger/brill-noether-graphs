@@ -1,10 +1,14 @@
-import DraismaVargasCount.BallotEndSwapGeneral
-import DraismaVargasCount.StarSupplyAssembly
-import DraismaVargasCount.CensusAssembly
-import DraismaVargasCount.ValencyTwoPairing
-import DraismaVargasCount.ValencyFourRealisation
-import DraismaVargasCount.SimpleWallSupply
-import DraismaVargasCount.StepSupplyGenusSix
+module
+
+public import DraismaVargasCount.BallotEndSwapGeneral
+public import DraismaVargasCount.StarSupplyAssembly
+public import DraismaVargasCount.CensusAssembly
+public import DraismaVargasCount.ValencyTwoPairing
+public import DraismaVargasCount.ValencyFourRealisation
+public import DraismaVargasCount.SimpleWallSupply
+public import DraismaVargasCount.StepSupplyGenusSix
+
+@[expose] public section
 
 /-!
 # The mod-2 Draisma--Vargas count in every even genus at least six
@@ -127,7 +131,7 @@ theorem exists_parent_slot (m : ℕ) (j : Fin (4 * m + 2)) (hj : j.val ≠ 0) :
     omega
   refine ⟨⟨FibreCaterpillar.branchVal j.val - 1, by omega⟩, Fin.ext ?_, ?_⟩
   · show FibreCaterpillar.branchIdx (FibreCaterpillar.catHeadVal m _) = j.val
-    rw [FibreCaterpillar.catHeadVal, if_neg hLeaf]
+    rw [FibreCaterpillar.catHeadVal, ite_eq_right hLeaf]
     show FibreCaterpillar.branchIdx (FibreCaterpillar.branchVal j.val - 1 + 1) = j.val
     rw [Nat.sub_add_cancel (by omega), FibreCaterpillar.branchIdx_branchVal]
   · show FibreCaterpillar.branchIdx

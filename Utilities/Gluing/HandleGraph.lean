@@ -1,5 +1,9 @@
-import Utilities.Foundations.ScriptClamping
-import Mathlib.Tactic
+module
+
+public import Utilities.Foundations.ScriptClamping
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # A graph with a handle
@@ -126,16 +130,16 @@ def handlePoint (j : ℕ) : (handleGraph G x y m).V :=
   else handleInl y
 
 @[simp] theorem handlePoint_zero : handlePoint G x y m 0 = handleInl x := by
-  rw [handlePoint, if_pos rfl]
+  rw [handlePoint, ite_eq_left rfl]
 
 theorem handlePoint_succ (i : Fin (m + 1)) :
     handlePoint G x y m (i + 1) = handleInr i := by
   have hi : (i : ℕ) + 1 ≤ m + 1 := i.isLt
-  rw [handlePoint, if_neg (Nat.succ_ne_zero _), dif_pos hi]
+  rw [handlePoint, ite_eq_right (Nat.succ_ne_zero _), dite_eq_left hi]
   rfl
 
 @[simp] theorem handlePoint_last : handlePoint G x y m (m + 2) = handleInl y := by
-  rw [handlePoint, if_neg (by omega), dif_neg (by omega)]
+  rw [handlePoint, ite_eq_right (by omega), dite_eq_right (by omega)]
 
 /-- Position `1` is the first new vertex. -/
 private theorem handlePoint_one : handlePoint G x y m 1 = handleInr 0 :=
@@ -304,7 +308,7 @@ private theorem num_edges_handlePoint_succ_pos {n : ℕ} (hn : n ≤ m) :
     0 < num_edges (handleGraph G x y m) (handlePoint G x y m (n + 1)) (handlePoint G x y m n) := by
   have hp : handlePoint G x y m (n + 1) = handleInr ⟨n, by omega⟩ :=
     handlePoint_succ G x y m ⟨n, by omega⟩
-  rw [hp, num_edges_handleGraph_handleInr, if_pos rfl]
+  rw [hp, num_edges_handleGraph_handleInr, ite_eq_left rfl]
   omega
 
 /-! ## Principal divisors -/

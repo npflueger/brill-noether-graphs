@@ -1,6 +1,10 @@
-import Bananas.Transmission.ChainTwoLoopsSameLeft
-import Utilities.Gluing.TwoEdgeConnectedRigidity
-import Utilities.Gluing.OneVertexCutFactors
+module
+
+public import Bananas.Transmission.ChainTwoLoopsSameLeft
+public import Utilities.Gluing.TwoEdgeConnectedRigidity
+public import Utilities.Gluing.OneVertexCutFactors
+
+@[expose] public section
 
 /-!
 # Same-factor submodularity on a rigid genus-one wedge

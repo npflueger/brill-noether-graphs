@@ -1,7 +1,11 @@
-import Bananas.Sections.SectionFiveDefinitions
-import Bananas.Sections.SectionFiveTransports
-import Bananas.Sections.SectionFiveSymmetries
-import Bananas.Sections.SectionFiveInversionBound
+module
+
+public import Bananas.Sections.SectionFiveDefinitions
+public import Bananas.Sections.SectionFiveTransports
+public import Bananas.Sections.SectionFiveSymmetries
+public import Bananas.Sections.SectionFiveInversionBound
+
+@[expose] public section
 
 /-!
 # Section 5: symmetry statements

@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W3FourLimitRows
-import DraismaVargas.LocalCases.W3ShiftClosure
+module
+
+public import DraismaVargas.LocalCases.W3FourLimitRows
+public import DraismaVargas.LocalCases.W3ShiftClosure
+
+@[expose] public section
 
 /-!
 # Figure 29's length matrices: `W3ShiftClosure.LimitRows`, derived
@@ -191,11 +195,11 @@ theorem columnSum_eq_at (wall : target.V) (anchor : Fin degree)
         List.sum_cons] at ih ⊢
       by_cases hTarget : t = e.1.1
       · by_cases hRel : (data.vertexPartition wall).Rel anchor e.1.2
-        · rw [if_pos hTarget, if_pos ⟨hTarget, hRel⟩, if_neg (by tauto)]
+        · rw [ite_eq_left hTarget, ite_eq_left ⟨hTarget, hRel⟩, ite_eq_right (by tauto)]
           rw [ih]; ring
-        · rw [if_pos hTarget, if_neg (by tauto), if_pos ⟨hTarget, hRel⟩]
+        · rw [ite_eq_left hTarget, ite_eq_right (by tauto), ite_eq_left ⟨hTarget, hRel⟩]
           rw [ih]; ring
-      · rw [if_neg hTarget, if_neg (by tauto), if_neg (by tauto)]
+      · rw [ite_eq_right hTarget, ite_eq_right (by tauto), ite_eq_right (by tauto)]
         rw [ih]; ring
 
 /-- **The background regrown occurrences of a row reproduce its `t` column,
@@ -220,10 +224,10 @@ theorem sum_backgroundSheetsAt (wall : target.V) (anchor : Fin degree)
           exact congrArg (fun p ↦ SheetPartition.blockCard p e.1.2)
             (congrArg data.edgePartition hCond.1)
         simp only [backgroundSheetsAt, backgroundSumAt, List.filterMap_cons,
-          List.map_cons, List.sum_cons, if_pos hCond] at ih ⊢
+          List.map_cons, List.sum_cons, ite_eq_left hCond] at ih ⊢
         rw [hIdx, ih]
       · simp only [backgroundSheetsAt, backgroundSumAt, List.filterMap_cons,
-          List.map_cons, List.sum_cons, if_neg hCond] at ih ⊢
+          List.map_cons, List.sum_cons, ite_eq_right hCond] at ih ⊢
         rw [ih, zero_add]
 
 /-! ## The determinant of one Figure 29 member
@@ -495,7 +499,7 @@ theorem selectedSum_stableRowPath (labelling : StablePathLabelling data)
       (if t = edge.1.1 ∧ (data.vertexPartition wall).Rel anchor edge.1.2 then
         (1 : ℚ) / data.sourceEdgeIndex edge else 0) = 0 := by
     intro edge hEdge hNe
-    refine if_neg fun hCond ↦ hNe ?_
+    refine ite_eq_right fun hCond ↦ hNe ?_
     obtain ⟨hEdgeSurvives, _⟩ := (oldRowOf_eq_some_iff labelling edge row).mp
       ((mem_rowOccurrences labelling row edge).mp hEdge)
     exact hUnique edge hEdgeSurvives hCond.1 hCond.2
@@ -508,9 +512,9 @@ theorem selectedSum_stableRowPath (labelling : StablePathLabelling data)
         (by rw [hRow]
             exact labelling.oldRowOf_eq_some
               (⟨selected, hSurvives⟩ : NonDanglingEdge data))
-    rw [Finset.sum_eq_single_of_mem selected hMem hZero, if_pos hRow,
-      if_pos ⟨hTarget, hRel⟩]
-  · rw [if_neg hRow]
+    rw [Finset.sum_eq_single_of_mem selected hMem hZero, ite_eq_left hRow,
+      ite_eq_left ⟨hTarget, hRel⟩]
+  · rw [ite_eq_right hRow]
     refine Finset.sum_eq_zero fun edge hEdge ↦ ?_
     by_cases hNe : edge = selected
     · refine absurd ?_ hRow

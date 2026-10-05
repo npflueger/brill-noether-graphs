@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W2MkkIncomingMatching
-import DraismaVargas.LocalCases.FiniteAtlasMarch
+module
+
+public import DraismaVargas.LocalCases.W2MkkIncomingMatching
+public import DraismaVargas.LocalCases.FiniteAtlasMarch
+
+@[expose] public section
 
 /-!
 # Figure 34's certified exit, and the arbitrary incoming `w2Mkk` cover

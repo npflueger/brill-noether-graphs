@@ -1,9 +1,13 @@
-import DraismaVargasCount.DiscreteW4Normalization
-import DraismaVargasCount.StarFrameIso
-import DraismaVargasCount.UniformExpansionRecognition
-import DraismaVargasCount.W4LimitContraction
-import DraismaVargasCount.W4PairingRigidity
-import DraismaVargasCount.FrameColumnRigidity
+module
+
+public import DraismaVargasCount.DiscreteW4Normalization
+public import DraismaVargasCount.StarFrameIso
+public import DraismaVargasCount.UniformExpansionRecognition
+public import DraismaVargasCount.W4LimitContraction
+public import DraismaVargasCount.W4PairingRigidity
+public import DraismaVargasCount.FrameColumnRigidity
+
+@[expose] public section
 
 /-!
 # Exhaustion of the labelled geometric star at an arbitrary discrete four-valent wall

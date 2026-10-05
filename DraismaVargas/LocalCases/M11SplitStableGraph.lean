@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.M11SplitVertices
-import DraismaVargas.LocalCases.M11SplitBranchFlags
+module
+
+public import DraismaVargas.LocalCases.M11SplitVertices
+public import DraismaVargas.LocalCases.M11SplitBranchFlags
+
+@[expose] public section
 
 /-!
 # The first M11 split preserves the actual stable graph

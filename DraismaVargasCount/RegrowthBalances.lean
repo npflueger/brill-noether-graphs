@@ -1,11 +1,15 @@
-import DraismaVargasCount.RegrowthWallInput
-import DraismaVargasCount.W3FourCountBalance
-import DraismaVargasCount.W3ShiftMultiplicityBalance
-import DraismaVargasCount.W2M1kIncomingTame
-import DraismaVargasCount.W2MkkIncomingDenominator
-import DraismaVargasCount.InheritedLimitIncidence
-import DraismaVargasCount.W3ShiftSixMemberMultiplicity
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoExit
+module
+
+public import DraismaVargasCount.RegrowthWallInput
+public import DraismaVargasCount.W3FourCountBalance
+public import DraismaVargasCount.W3ShiftMultiplicityBalance
+public import DraismaVargasCount.W2M1kIncomingTame
+public import DraismaVargasCount.W2MkkIncomingDenominator
+public import DraismaVargasCount.InheritedLimitIncidence
+public import DraismaVargasCount.W3ShiftSixMemberMultiplicity
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoExit
+
+@[expose] public section
 
 /-!
 # Four incoming-member balances at a regrowth

@@ -1,4 +1,8 @@
-import DraismaVargasCount.CoreChainSites
+module
+
+public import DraismaVargasCount.CoreChainSites
+
+@[expose] public section
 
 /-!
 # Relabelling invariance of the open odd count
@@ -182,7 +186,7 @@ theorem Relabel.head_eq_of_tail_ne {c c' : Core n p} (d : Relabel c c') (e : Fin
     c'.head (d.slot e) = d.vtx (c.tail e) := by
   by_contra hc
   have key := d.incidence (c.tail e) e
-  rw [coreIncidence_eq, coreIncidence_eq, if_neg h, if_neg hc] at key
+  rw [coreIncidence_eq, coreIncidence_eq, ite_eq_right h, ite_eq_right hc] at key
   split_ifs at key with h1 h2 <;> omega
 
 /-- **Nothing is lost in passing to `Relabel`**: an incidence-preserving pair of
@@ -207,31 +211,31 @@ def Relabel.toCoreIso {c c' : Core n p} (d : Relabel c c') : CoreIso c c' where
     · simp only [h, decide_true, Bool.not_true, Bool.not_false]
       show c'.head (d.slot e) = d.vtx (c.head e)
       have key := d.incidence (c.head e) e
-      rw [coreIncidence_eq, coreIncidence_eq, if_pos (rfl : c.head e = c.head e)] at key
+      rw [coreIncidence_eq, coreIncidence_eq, ite_eq_left (rfl : c.head e = c.head e)] at key
       by_contra hc
-      rw [if_neg hc] at key
+      rw [ite_eq_right hc] at key
       by_cases hl : c.tail e = c.head e
-      · rw [if_pos hl] at key
+      · rw [ite_eq_left hl] at key
         split_ifs at key <;> omega
       · have hne : c'.tail (d.slot e) ≠ d.vtx (c.head e) := by
           rw [h]
           exact fun hx ↦ hl (d.vtx.injective hx)
-        rw [if_neg hl, if_neg hne] at key
+        rw [ite_eq_right hl, ite_eq_right hne] at key
         omega
     · simp only [h, decide_false, Bool.not_false, Bool.not_true]
       show c'.tail (d.slot e) = d.vtx (c.head e)
       have hhead := d.head_eq_of_tail_ne e h
       have key := d.incidence (c.head e) e
-      rw [coreIncidence_eq, coreIncidence_eq, if_pos (rfl : c.head e = c.head e)] at key
+      rw [coreIncidence_eq, coreIncidence_eq, ite_eq_left (rfl : c.head e = c.head e)] at key
       by_contra hc
-      rw [if_neg hc] at key
+      rw [ite_eq_right hc] at key
       by_cases hl : c.tail e = c.head e
-      · rw [if_pos hl,
-          if_pos (by rw [hhead, hl] : c'.head (d.slot e) = d.vtx (c.head e))] at key
+      · rw [ite_eq_left hl,
+          ite_eq_left (by rw [hhead, hl] : c'.head (d.slot e) = d.vtx (c.head e))] at key
         omega
       · have hne : c'.head (d.slot e) ≠ d.vtx (c.head e) := fun hx ↦
           hl (d.vtx.injective (hhead.symm.trans hx))
-        rw [if_neg hl, if_neg hne] at key
+        rw [ite_eq_right hl, ite_eq_right hne] at key
         omega
 
 /-! ## 2.  Relabelling a member -/

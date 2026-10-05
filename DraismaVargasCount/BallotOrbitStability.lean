@@ -1,5 +1,9 @@
-import DraismaVargasCount.DiagonalRigidityObligation
-import DraismaVargasCount.DiagonalExtract
+module
+
+public import DraismaVargasCount.DiagonalRigidityObligation
+public import DraismaVargasCount.DiagonalExtract
+
+@[expose] public section
 
 /-!
 # The ballot diagonals are stable under the relabellings of the caterpillar core
@@ -219,8 +223,8 @@ theorem ballotCoreDiag_of_loopAdjacent (m : ℕ) (s : Slopes (2 * (m + 1)))
     {e : Fin (6 * m + 3)} (h : LoopAdjacent (catCore m) e) :
     BallotSlopes.ballotCoreDiag m s e = if IsLeafEdge m e then 2 else 1 / 2 := by
   by_cases hleaf : IsLeafEdge m e
-  · rw [if_pos hleaf, BallotSlopes.ballotCoreDiag_leaf s hleaf]
-  · rw [if_neg hleaf, loopAdjacent_catCore] at *
+  · rw [ite_eq_left hleaf, BallotSlopes.ballotCoreDiag_leaf s hleaf]
+  · rw [ite_eq_right hleaf, loopAdjacent_catCore] at *
     have hlt := e.isLt
     have hleaf' : e.val % 3 ≠ 0 ∧ e.val ≠ 6 * m + 2 := by
       unfold IsLeafEdge at hleaf; push Not at hleaf; exact hleaf
@@ -259,8 +263,8 @@ theorem ballotCoreDiag_relabel_eq_of_not_loopAdjacent {m : ℕ} (s t : Slopes (2
       (loopAdjacent_relabel_symm d slot).mpr hla
     rw [ballotCoreDiag_of_loopAdjacent m s hla', ballotCoreDiag_of_loopAdjacent m t hla]
     by_cases hleaf : IsLeafEdge m slot
-    · rw [if_pos hleaf, if_pos ((relabel_isLeafEdge_symm_iff d slot).mpr hleaf)]
-    · rw [if_neg hleaf, if_neg fun hx ↦ hleaf ((relabel_isLeafEdge_symm_iff d slot).mp hx)]
+    · rw [ite_eq_left hleaf, ite_eq_left ((relabel_isLeafEdge_symm_iff d slot).mpr hleaf)]
+    · rw [ite_eq_right hleaf, ite_eq_right fun hx ↦ hleaf ((relabel_isLeafEdge_symm_iff d slot).mp hx)]
   · exact h slot hla
 
 /-! ## 5.  Genus two and genus four: the test has nothing left to test
@@ -413,7 +417,7 @@ theorem innerSlot_head_val {m k : ℕ} (hk : k < 2 * m - 1) :
     ((catCore m).head (innerSlot m k hk)).val = 2 * k + 3 := by
   rw [catCore_head_val]
   unfold catHeadVal
-  rw [if_neg (not_isLeafEdge_innerSlot hk)]
+  rw [ite_eq_right (not_isLeafEdge_innerSlot hk)]
   show branchIdx (3 * k + 4 + 1) = 2 * k + 3
   unfold branchIdx
   omega
@@ -480,7 +484,7 @@ def innerIndex {m : ℕ} (d : Relabel (catCore m) (catCore m)) (k : ℕ) : ℕ :
 theorem innerIndex_eq {m : ℕ} (d : Relabel (catCore m) (catCore m)) {k : ℕ}
     (hk : k < 2 * m - 1) :
     innerIndex d k = ((d.slot.symm (innerSlot m k hk)).val - 4) / 3 := by
-  unfold innerIndex; exact dif_pos hk
+  unfold innerIndex; exact dite_eq_left hk
 
 theorem innerIndex_spec {m : ℕ} (d : Relabel (catCore m) (catCore m)) {k : ℕ}
     (hk : k < 2 * m - 1) :

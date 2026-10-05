@@ -1,4 +1,8 @@
-import Utilities.Pseudocore.PseudocoreMarkerCut
+module
+
+public import Utilities.Pseudocore.PseudocoreMarkerCut
+
+@[expose] public section
 
 /-!
 # Graph properties of compatible pseudocore subdivisions

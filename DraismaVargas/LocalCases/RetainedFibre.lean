@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.RetainedTraversal
+module
+
+public import DraismaVargas.LocalCases.RetainedTraversal
+
+@[expose] public section
 
 /-!
 # The requested core vertices on the terminal face: fibres and markers

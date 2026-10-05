@@ -1,5 +1,9 @@
-import Utilities.Gluing.BridgeDivisors
-import Utilities.Foundations.RankOne
+module
+
+public import Utilities.Gluing.BridgeDivisors
+public import Utilities.Foundations.RankOne
+
+@[expose] public section
 
 /-!
 # Rank one across a bridge

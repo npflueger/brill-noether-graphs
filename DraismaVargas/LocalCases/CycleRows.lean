@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.TraversalPresentation
-import DraismaVargas.LocalCases.ZeroForestPreservation
+module
+
+public import DraismaVargas.LocalCases.TraversalPresentation
+public import DraismaVargas.LocalCases.ZeroForestPreservation
+
+@[expose] public section
 
 /-!
 # Cycles of the quotient source are unions of displayed rows

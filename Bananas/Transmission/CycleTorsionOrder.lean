@@ -1,7 +1,11 @@
-import Bananas.Jacobian.BananaJacobianProposition214
-import Bananas.Classification.GenusOneKGeneral
-import Bananas.Transmission.ChainTwoLoopsSameLeft
-import Mathlib.Data.ZMod.Basic
+module
+
+public import Bananas.Jacobian.BananaJacobianProposition214
+public import Bananas.Classification.GenusOneKGeneral
+public import Bananas.Transmission.ChainTwoLoopsSameLeft
+public import Mathlib.Data.ZMod.Basic
+
+@[expose] public section
 
 /-!
 # Example 1.11: the torsion order of a cycle

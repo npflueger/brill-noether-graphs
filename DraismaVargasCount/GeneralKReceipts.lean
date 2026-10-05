@@ -1,8 +1,12 @@
-import DraismaVargasCount.GeneralKResolution
-import DraismaVargasCount.BlockPreservingOverlap
-import DraismaVargas.LocalCases.SheetRelabelIncidence
-import DraismaVargasCount.GeometricTransport
-import DraismaVargas.LocalCases.M11SourceGenus
+module
+
+public import DraismaVargasCount.GeneralKResolution
+public import DraismaVargasCount.BlockPreservingOverlap
+public import DraismaVargas.LocalCases.SheetRelabelIncidence
+public import DraismaVargasCount.GeometricTransport
+public import DraismaVargas.LocalCases.M11SourceGenus
+
+@[expose] public section
 
 /-!
 # The `K ≥ 1` local resolution receipts at a four-valent wall
@@ -1334,7 +1338,7 @@ theorem selected_euler (block : Fin degree)
   unfold selected
   cases side
   · exact h
-  · simp only [if_true, LocalResolution.reverse_newEdge, LocalResolution.reverse_left,
+  · simp only [ite_true, LocalResolution.reverse_newEdge, LocalResolution.reverse_left,
       LocalResolution.reverse_right, SplitData.resolution_newEdge, SplitData.resolution_left,
       SplitData.resolution_right]
     omega

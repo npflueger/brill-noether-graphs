@@ -1,6 +1,10 @@
-import DraismaVargas.Infrastructure.OrderedBlockSplit
-import DraismaVargas.LocalCases.ClosedEndpoint
-import Utilities.Subdivision.SlotRefinement
+module
+
+public import DraismaVargas.Infrastructure.OrderedBlockSplit
+public import DraismaVargas.LocalCases.ClosedEndpoint
+public import Utilities.Subdivision.SlotRefinement
+
+@[expose] public section
 
 /-!
 # The interface data a closed-face input refinement needs
@@ -153,10 +157,10 @@ def ofStableLength (slot : Fin p ≃ coordinate) (stableLength : coordinate → 
     by_cases hmem : slot.symm row ∈ F
     · have h := zero_eq _ hmem
       rw [slot.apply_symm_apply] at h
-      rw [hMap row, h, if_pos hmem, Nat.cast_zero]
+      rw [hMap row, h, ite_eq_left hmem, Nat.cast_zero]
     · have h := length_eq _ hmem
       rw [slot.apply_symm_apply] at h
-      rw [hMap row, h, if_neg hmem]
+      rw [hMap row, h, ite_eq_right hmem]
 
 @[simp] theorem ofStableLength_slot (slot : Fin p ≃ coordinate)
     (stableLength : coordinate → ℕ)
@@ -207,14 +211,14 @@ theorem rowSegments_sum_of_not_mem
     (face : ClearedFace candidate presentation coordinates) {i : Fin p}
     (hi : i ∉ F) :
     (rowSegments iface face i).sum = face.scale * spec.length i := by
-  rw [rowSegments_sum iface face i, if_neg hi]
+  rw [rowSegments_sum iface face i, ite_eq_right hi]
 
 /-- On a forest slot the whole row is contracted: its total is zero. -/
 theorem rowSegments_sum_of_mem
     (iface : InputInterface spec presentation coordinates F)
     (face : ClearedFace candidate presentation coordinates) {i : Fin p}
     (hi : i ∈ F) : (rowSegments iface face i).sum = 0 := by
-  rw [rowSegments_sum iface face i, if_pos hi]
+  rw [rowSegments_sum iface face i, ite_eq_left hi]
 
 /-- and then every occurrence displayed by a forest row has cleared length
 zero: the face contracts the whole row, occurrence by occurrence. -/

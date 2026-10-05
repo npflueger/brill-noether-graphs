@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.W2MkkGraphData
-import DraismaVargas.LocalCases.W2MkkLimitColumns
-import DraismaVargas.LocalCases.StableGraphFullDimensional
+module
+
+public import DraismaVargas.LocalCases.W2MkkGraphData
+public import DraismaVargas.LocalCases.W2MkkLimitColumns
+public import DraismaVargas.LocalCases.StableGraphFullDimensional
+
+@[expose] public section
 
 /-!
 # Figure 34's certified exit, one member at a time

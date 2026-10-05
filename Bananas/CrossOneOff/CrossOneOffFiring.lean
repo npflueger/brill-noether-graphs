@@ -1,6 +1,10 @@
-import Bananas.CrossOneOff.CrossOneOffArithmetic
-import Bananas.Theta.ThetaPrefix
-import Bananas.SameStrand.Semibreak
+module
+
+public import Bananas.CrossOneOff.CrossOneOffArithmetic
+public import Bananas.Theta.ThetaPrefix
+public import Bananas.SameStrand.Semibreak
+
+@[expose] public section
 
 /-!
 # Firing identities for the cross-one-off marking

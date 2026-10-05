@@ -1,6 +1,10 @@
-import Bananas.CrossOneOff.CrossOneOffFiniteRows
-import Bananas.SameStrand.EndpointCardinality
-import Bananas.CrossOneOff.CrossOneOffForcedCountLengthTwo
+module
+
+public import Bananas.CrossOneOff.CrossOneOffFiniteRows
+public import Bananas.SameStrand.EndpointCardinality
+public import Bananas.CrossOneOff.CrossOneOffForcedCountLengthTwo
+
+@[expose] public section
 
 /-!
 # Explicit coordinates for the corrected cross-one-off inversion count
@@ -129,7 +133,7 @@ theorem crossOneOffPredecessorPosition_decode
     have hqle : q ≤ q * n := by
       exact Nat.le_mul_of_pos_right q (by omega)
     omega
-  · rw [crossOneOffPredecessorPosition, if_neg hr]
+  · rw [crossOneOffPredecessorPosition, ite_eq_right hr]
     exact crossOneOffColumnPosition_decode hn
 
 theorem crossOneOffPredecessorPosition_injective
@@ -177,8 +181,8 @@ theorem crossOneOffColumnPosition_row
   by_cases hr : x % (n - 1) = 0
   · simp [crossOneOffRow, hmod, hdiv, hr]
   · have hlast : x % (n - 1) ≠ n - 1 := by omega
-    rw [crossOneOffRow, if_neg (by simpa [hmod] using hr),
-      if_neg (by simpa [hmod] using hlast), if_neg hr, hdiv]
+    rw [crossOneOffRow, ite_eq_right (by simpa [hmod] using hr),
+      ite_eq_right (by simpa [hmod] using hlast), ite_eq_right hr, hdiv]
     unfold crossOneOffColumnPosition
     omega
 
@@ -221,12 +225,12 @@ theorem crossOneOffPredecessorPosition_row
       simpa [Nat.add_comm, Nat.mul_comm,
         Nat.div_eq_of_lt (by omega : n - 1 < n)] using
         (Nat.add_mul_div_left (n - 1) (q - 1) (by omega : 0 < n))
-    rw [if_pos hr, hpre, crossOneOffRow,
-      if_neg (by rw [hrem]; omega : (q * n - 1) % n ≠ 0),
-      if_pos hrem, hquot]
+    rw [ite_eq_left hr, hpre, crossOneOffRow,
+      ite_eq_right (by rw [hrem]; omega : (q * n - 1) % n ≠ 0),
+      ite_eq_left hrem, hquot]
     omega
-  · rw [if_neg hr, crossOneOffPredecessorPosition, if_neg hr]
-    rw [crossOneOffColumnPosition_row (by omega) hxg, if_neg hr]
+  · rw [ite_eq_right hr, crossOneOffPredecessorPosition, ite_eq_right hr]
+    rw [crossOneOffColumnPosition_row (by omega) hxg, ite_eq_right hr]
 
 private theorem nat_div_le_div_add_sub
     {d x y : ℕ} (_hd : 1 ≤ d) (hyx : y ≤ x) :
@@ -250,7 +254,7 @@ private theorem nat_div_lt_div_add_sub_of_mod_ne_zero
     apply hxMod
     rw [hx]
     exact Nat.mod_eq_zero_of_dvd hDvd
-  rw [hx, Nat.succ_div, if_neg hNotDvd]
+  rw [hx, Nat.succ_div, ite_eq_right hNotDvd]
   omega
 
 /-- A predecessor row at compressed coordinate `y` and a column row at a
@@ -309,18 +313,18 @@ theorem crossOneOff_predecessor_column_mem
       crossOneOffRow g n (crossOneOffColumnPosition n x) := by
     rw [hPreRow, hColRow]
     by_cases hry : y % (n - 1) = 0
-    · rw [if_pos hry]
+    · rw [ite_eq_left hry]
       have hqyPos : 1 ≤ y / (n - 1) := by
         apply (Nat.le_div_iff_mul_le (by omega : 0 < n - 1)).2
         simpa using hyDiv hry
       by_cases hrx : x % (n - 1) = 0
-      · rw [if_pos hrx]
+      · rw [ite_eq_left hrx]
         have hqxLt : x / (n - 1) < g := by
           have hxPos : 0 < x := by omega
           have := Nat.div_lt_self hxPos (by omega : 1 < n - 1)
           omega
         omega
-      · rw [if_neg hrx]
+      · rw [ite_eq_right hrx]
         have hDivGapStrict : x / (n - 1) <
             y / (n - 1) + (x - y) := by
           exact nat_div_lt_div_add_sub_of_mod_ne_zero
@@ -328,9 +332,9 @@ theorem crossOneOff_predecessor_column_mem
         have hCross : x / (n - 1) + y <
             y / (n - 1) + x := by omega
         omega
-    · rw [if_neg hry]
+    · rw [ite_eq_right hry]
       by_cases hrx : x % (n - 1) = 0
-      · rw [if_pos hrx]
+      · rw [ite_eq_left hrx]
         have hqxLt : x / (n - 1) < g := by
           have hxPos : 0 < x := by omega
           have := Nat.div_lt_self hxPos (by omega : 1 < n - 1)
@@ -340,7 +344,7 @@ theorem crossOneOff_predecessor_column_mem
           apply Nat.le_sub_of_add_le
           omega
         omega
-      · rw [if_neg hrx]
+      · rw [ite_eq_right hrx]
         have hDivGapStrict : x / (n - 1) <
             y / (n - 1) + (x - y) := by
           exact nat_div_lt_div_add_sub_of_mod_ne_zero
@@ -462,7 +466,7 @@ private theorem crossOneOffAdjacentPair_mem
       Nat.div_eq_of_lt (by omega : n - 1 < n)] using
       (Nat.add_mul_div_left (n - 1) (q - 1) (by omega : 0 < n))
   have hHighRow : crossOneOffRow g n (q * n - 1) = g + q := by
-    rw [crossOneOffRow, if_neg (by rw [hRem]; omega), if_pos hRem, hQuot]
+    rw [crossOneOffRow, ite_eq_right (by rw [hRem]; omega), ite_eq_left hRem, hQuot]
     omega
   have hLowRow : crossOneOffRow g n (q * n) = q + 1 := by
     simp [crossOneOffRow, Nat.mul_div_left q (by omega : 0 < n)]

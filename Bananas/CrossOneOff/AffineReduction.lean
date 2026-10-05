@@ -1,5 +1,9 @@
-import Bananas.CrossOneOff.SignChangingInversions
-import Utilities.Transmission.DemazureFactorization
+module
+
+public import Bananas.CrossOneOff.SignChangingInversions
+public import Utilities.Transmission.DemazureFactorization
+
+@[expose] public section
 
 /-!
 # Affine simple-reflection reduction

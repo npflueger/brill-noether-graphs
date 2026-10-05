@@ -1,4 +1,8 @@
-import GenusSixOddDescent.Moves
+module
+
+public import GenusSixOddDescent.Moves
+
+@[expose] public section
 
 /-!
 # Bridge moves and swaps of states
@@ -112,10 +116,10 @@ private theorem edgeChipCount_one_chip_slotPoint (hunit : spec.IsUnit) {g : Fin 
       obtain ⟨hb0, hbN⟩ := Finset.mem_Ioo.mp hb
       exact one_chip_apply_other' _ _
         (spec.slotPoint_ne N hN hunit g (le_of_lt hbN) (le_of_lt hoN) hbo)
-    rw [if_pos hgg, hgg,
+    rw [ite_eq_left hgg, hgg,
       Finset.sum_eq_single_of_mem o (Finset.mem_Ioo.mpr ⟨h0, hoN⟩) hsingle,
       one_chip_apply_v]
-  · rw [if_neg hgg]
+  · rw [ite_eq_right hgg]
     refine Finset.sum_eq_zero fun j hj => ?_
     obtain ⟨hj0, hjN⟩ := Finset.mem_Ioo.mp hj
     exact one_chip_apply_other' _ _ fun h =>
@@ -269,7 +273,7 @@ private theorem landing_edgeChipCount (hunit : spec.IsUnit)
           = (spec.scale N hN).coreVertex (spec.core.otherEnd e (d.z e)) := by
         show spec.sidePoint N hN e (d.z e) (d.t e + d.tauStar) = _
         rw [hlast, spec.sidePoint_last N hN hunit e (d.z e)]
-      rw [hpt, spec.edgeChipCount_one_chip_coreVertex N hN hunit, if_pos hmax]
+      rw [hpt, spec.edgeChipCount_one_chip_coreVertex N hN hunit, ite_eq_left hmax]
       split_ifs <;> rfl
     · have hlt : d.t e < d.sMax := by omega
       have hc0 : 0 < d.t e + d.tauStar := by omega
@@ -279,18 +283,18 @@ private theorem landing_edgeChipCount (hunit : spec.IsUnit)
         spec.sidePoint_eq_slotPoint N hN e (d.z e) (d.t e + d.tauStar)
       rw [hpt, spec.edgeChipCount_one_chip_slotPoint N hN hunit
         (spec.sideOffset_pos N e (d.z e) hc0 hcN)
-        (spec.sideOffset_lt N e (d.z e) hc0 hcN) g, if_neg hmax]
+        (spec.sideOffset_lt N e (d.z e) hc0 hcN) g, ite_eq_right hmax]
   -- the middle indicator, rewritten in `crossingMax` terms
   have hmid : (if g ∈ d.X then (if d.t g = d.sMax then (0 : ℤ) else 1) else 0)
       = if g ∈ spec.crossing E W ∧ g ∉ spec.crossingMax N hN D E W then (1 : ℤ) else 0 := by
     by_cases hgX : g ∈ spec.crossing E W
-    · rw [if_pos (show g ∈ d.X from hgX)]
+    · rw [ite_eq_left (show g ∈ d.X from hgX)]
       by_cases hgm : spec.offsetFromSide N hN D W g = spec.sMax N hN D E W
-      · rw [if_pos (show d.t g = d.sMax from hgm),
-          if_neg fun h => h.2 ((spec.mem_crossingMax N hN).mpr ⟨hgX, hgm⟩)]
-      · rw [if_neg (show ¬ d.t g = d.sMax from hgm),
-          if_pos ⟨hgX, fun h => hgm ((spec.mem_crossingMax N hN).mp h).2⟩]
-    · rw [if_neg (show ¬ g ∈ d.X from hgX), if_neg fun h => hgX h.1]
+      · rw [ite_eq_left (show d.t g = d.sMax from hgm),
+          ite_eq_right fun h => h.2 ((spec.mem_crossingMax N hN).mpr ⟨hgX, hgm⟩)]
+      · rw [ite_eq_right (show ¬ d.t g = d.sMax from hgm),
+          ite_eq_left ⟨hgX, fun h => hgm ((spec.mem_crossingMax N hN).mp h).2⟩]
+    · rw [ite_eq_right (show ¬ g ∈ d.X from hgX), ite_eq_right fun h => hgX h.1]
   rw [hchain, spec.edgeChipCount_add, spec.edgeChipCount_add, spec.edgeChipCount_sum,
     hF, Finset.sum_congr rfl hterm, Finset.sum_ite_eq, hmid,
     spec.edgeChipCount_eq_sum_slotPoint N hN hunit, hRsum g]
@@ -391,11 +395,11 @@ theorem swap (hunit : spec.IsUnit)
     rw [spec.landing_coreVertex N hN hunit hD hconn hbridgeless hinc hbridge hW u, he₀,
       Finset.filter_singleton]
     by_cases hu : u = spec.core.otherEnd e₀ (spec.nearEndpoint W e₀)
-    · rw [if_pos (show spec.core.otherEnd e₀ (spec.nearEndpoint W e₀) = u from hu.symm),
-        if_pos hu, Finset.card_singleton]
+    · rw [ite_eq_left (show spec.core.otherEnd e₀ (spec.nearEndpoint W e₀) = u from hu.symm),
+        ite_eq_left hu, Finset.card_singleton]
       norm_num
-    · rw [if_neg (show ¬ spec.core.otherEnd e₀ (spec.nearEndpoint W e₀) = u from
-          fun h => hu h.symm), if_neg hu, Finset.card_empty]
+    · rw [ite_eq_right (show ¬ spec.core.otherEnd e₀ (spec.nearEndpoint W e₀) = u from
+          fun h => hu h.symm), ite_eq_right hu, Finset.card_empty]
       norm_num
   -- **The landing divisor is the state at `w` with the swapped slot set.**
   have hLtype : spec.TypeI N hN (d.bridgeDiv (spec.tauStar N hN D E W))
@@ -407,46 +411,46 @@ theorem swap (hunit : spec.IsUnit)
       rw [spec.landing_edgeChipCount N hN hunit hD hconn hbridgeless hinc hbridge hW g]
       by_cases hgf : g = f
       · subst hgf
-        rw [if_pos (rfl : g = g),
-          if_neg (show ¬ (g ∈ spec.crossing E W ∧
+        rw [ite_eq_left (rfl : g = g),
+          ite_eq_right (show ¬ (g ∈ spec.crossing E W ∧
               g ∉ spec.crossingMax N hN D E W) from
             fun h => hbridge.1 (spec.crossing_subset E W h.1)),
-          if_neg (show ¬ (g ∈ E ∧ ¬ spec.core.Crosses W g) from
+          ite_eq_right (show ¬ (g ∈ E ∧ ¬ spec.core.Crosses W g) from
             fun h => hbridge.1 h.1),
-          if_pos (Finset.mem_insert_self g (E.erase e₀))]
+          ite_eq_left (Finset.mem_insert_self g (E.erase e₀))]
         norm_num
-      · rw [if_neg hgf]
+      · rw [ite_eq_right hgf]
         by_cases hgX : g ∈ spec.crossing E W
         · obtain ⟨hgE, hgcross⟩ := spec.mem_crossing.mp hgX
-          rw [if_neg (show ¬ (g ∈ E ∧ ¬ spec.core.Crosses W g) from
+          rw [ite_eq_right (show ¬ (g ∈ E ∧ ¬ spec.core.Crosses W g) from
             fun h => h.2 hgcross)]
           by_cases hge : g = e₀
-          · rw [if_neg (show ¬ (g ∈ spec.crossing E W ∧
+          · rw [ite_eq_right (show ¬ (g ∈ spec.crossing E W ∧
                 g ∉ spec.crossingMax N hN D E W) from
                 fun h => h.2 ((hmax_iff g).mpr hge)),
-              if_neg (show g ∉ insert f (E.erase e₀) from fun h => by
+              ite_eq_right (show g ∉ insert f (E.erase e₀) from fun h => by
                 rcases Finset.mem_insert.mp h with h1 | h1
                 · exact hgf h1
                 · exact (Finset.mem_erase.mp h1).1 hge)]
             norm_num
-          · rw [if_pos (show g ∈ spec.crossing E W ∧
+          · rw [ite_eq_left (show g ∈ spec.crossing E W ∧
                 g ∉ spec.crossingMax N hN D E W from
                 ⟨hgX, fun h => hge ((hmax_iff g).mp h)⟩),
-              if_pos (Finset.mem_insert.mpr
+              ite_eq_left (Finset.mem_insert.mpr
                 (Or.inr (Finset.mem_erase.mpr ⟨hge, hgE⟩)))]
             norm_num
-        · rw [if_neg (show ¬ (g ∈ spec.crossing E W ∧
+        · rw [ite_eq_right (show ¬ (g ∈ spec.crossing E W ∧
             g ∉ spec.crossingMax N hN D E W) from fun h => hgX h.1)]
           have hncross : ¬ spec.core.Crosses W g := fun hc =>
             (d.cutSub g hc).elim hgX hgf
           have hge : g ≠ e₀ := fun h => hgX (by rw [h]; exact he₀X)
           by_cases hgE : g ∈ E
-          · rw [if_pos (show g ∈ E ∧ ¬ spec.core.Crosses W g from ⟨hgE, hncross⟩),
-              if_pos (Finset.mem_insert.mpr
+          · rw [ite_eq_left (show g ∈ E ∧ ¬ spec.core.Crosses W g from ⟨hgE, hncross⟩),
+              ite_eq_left (Finset.mem_insert.mpr
                 (Or.inr (Finset.mem_erase.mpr ⟨hge, hgE⟩)))]
             norm_num
-          · rw [if_neg (show ¬ (g ∈ E ∧ ¬ spec.core.Crosses W g) from fun h => hgE h.1),
-              if_neg (show g ∉ insert f (E.erase e₀) from fun h => by
+          · rw [ite_eq_right (show ¬ (g ∈ E ∧ ¬ spec.core.Crosses W g) from fun h => hgE h.1),
+              ite_eq_right (show g ∉ insert f (E.erase e₀) from fun h => by
                 rcases Finset.mem_insert.mp h with h1 | h1
                 · exact hgf h1
                 · exact hgE (Finset.mem_of_mem_erase h1))]

@@ -1,9 +1,13 @@
-import Utilities.Iso.FossilTopology
-import Utilities.Gonality.CoreBridgeless
-import Utilities.Gluing.SeparatingEdgePath
-import Utilities.Subdivision.CoreBridgeCut
-import Utilities.Subdivision.SlotIntervalFiring
-import Utilities.Subdivision.SubdivisionChipDescent
+module
+
+public import Utilities.Iso.FossilTopology
+public import Utilities.Gonality.CoreBridgeless
+public import Utilities.Gluing.SeparatingEdgePath
+public import Utilities.Subdivision.CoreBridgeCut
+public import Utilities.Subdivision.SlotIntervalFiring
+public import Utilities.Subdivision.SubdivisionChipDescent
+
+@[expose] public section
 
 /-!
 # Contracting every bridge, at every scale
@@ -100,7 +104,7 @@ private theorem sum_smul_rep_eq_liftDiv_pushDiv (D : CFDiv K) :
   rw [Finset.sum_eq_single (c.vertexMap x)]
   · simp
   · intro b _ hb
-    rw [if_neg (Ne.symm hb), zero_mul]
+    rw [ite_eq_right (Ne.symm hb), zero_mul]
   · simp
 
 /-- The fibres of `c` consist of linearly equivalent one-chip divisors. -/
@@ -177,10 +181,10 @@ private theorem num_edges_eq_sum_split (u : St → K.V × K.V)
       apply hloop s
       rw [h1] at h2 ⊢
       exact (Prod.mk.inj h2).1
-    rw [if_pos (Or.inl h1), if_pos h1, if_neg h2]
+    rw [ite_eq_left (Or.inl h1), ite_eq_left h1, ite_eq_right h2]
   · by_cases h2 : u s = (y, x)
-    · rw [if_pos (Or.inr h2), if_neg h1, if_pos h2]
-    · rw [if_neg (not_or.mpr ⟨h1, h2⟩), if_neg h1, if_neg h2]
+    · rw [ite_eq_left (Or.inr h2), ite_eq_right h1, ite_eq_left h2]
+    · rw [ite_eq_right (not_or.mpr ⟨h1, h2⟩), ite_eq_right h1, ite_eq_right h2]
 
 /-- Summing the two orientations of one unordered pair over a condition on ordered pairs. -/
 private theorem pair_sum_split {V : Type*} [Fintype V] [DecidableEq V] (C : V → V → Prop)
@@ -243,8 +247,8 @@ theorem valid_of_stepInjection (u : St → K.V × K.V) (u' : St' → K'.V × K'.
       intro x y
       rw [num_edges_eq_sum_split u hK hloop x y]
       by_cases hxy : π x = a ∧ π y = b
-      · simp only [hxy, and_self, if_true]
-      · simp only [hxy, if_false, Finset.sum_const_zero]
+      · simp only [hxy, and_self, ite_true]
+      · simp only [hxy, ite_false, Finset.sum_const_zero]
     simp_rw [hterm]
     calc (∑ x : K.V, ∑ y : K.V, ∑ s, (if π x = a ∧ π y = b then
           ((if u s = (x, y) then 1 else 0) + (if u s = (y, x) then 1 else 0)) else 0))
@@ -278,7 +282,7 @@ theorem valid_of_stepInjection (u : St → K.V × K.V) (u' : St' → K'.V × K'.
       fun h => hab (h.1.symm.trans (hsame.trans h.2))
     have h2 : ¬(π (u s).2 = a ∧ π (u s).1 = b) :=
       fun h => hab (h.1.symm.trans (hsame.symm.trans h.2))
-    simp only [F, h1, h2, if_false, add_zero]
+    simp only [F, h1, h2, ite_false, add_zero]
   change num_edges K' a b = ∑ x : K.V, ∑ y : K.V,
       if π x = a ∧ π y = b then num_edges K x y else 0
   rw [hRight, hLeft, hOff]
@@ -342,14 +346,14 @@ theorem prin_one_chip_of_bivalent {K : CFGraph} {x p q : K.V}
   rw [num_edges_self_zero] at hxx
   have hxp : x ≠ p := by
     intro h
-    rw [if_pos h] at hxx
+    rw [ite_eq_left h] at hxx
     split_ifs at hxx <;> omega
   have hxq : x ≠ q := by
     intro h
-    rw [if_pos h] at hxx
+    rw [ite_eq_left h] at hxx
     split_ifs at hxx <;> omega
   have hsum : ∑ u : K.V, (num_edges K x u : ℤ) = 2 := by
-    simp_rw [hnb, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp_rw [hnb, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     norm_num
   funext v
   rw [prin_apply]
@@ -360,17 +364,17 @@ theorem prin_one_chip_of_bivalent {K : CFGraph} {x p q : K.V}
         (if u = v then (num_edges K v u : ℤ) else 0) - (num_edges K v u : ℤ) := by
       intro u
       split_ifs <;> ring
-    simp only [if_true]
+    simp only [ite_true]
     rw [Finset.sum_congr rfl fun u _ => hrw u, Finset.sum_sub_distrib, Finset.sum_ite_eq',
-      if_pos (Finset.mem_univ _), num_edges_self_zero, hsum, if_neg hxp, if_neg hxq]
+      ite_eq_left (Finset.mem_univ _), num_edges_self_zero, hsum, ite_eq_right hxp, ite_eq_right hxq]
     norm_num
   · have hrw : ∀ u : K.V, ((if u = x then (1 : ℤ) else 0) - (if v = x then 1 else 0)) *
         (num_edges K v u : ℤ) = if u = x then (num_edges K v u : ℤ) else 0 := by
       intro u
-      rw [if_neg hv]
+      rw [ite_eq_right hv]
       split_ifs <;> ring
-    rw [Finset.sum_congr rfl fun u _ => hrw u, Finset.sum_ite_eq', if_pos (Finset.mem_univ _),
-      num_edges_symmetric, hnb v, if_neg hv]
+    rw [Finset.sum_congr rfl fun u _ => hrw u, Finset.sum_ite_eq', ite_eq_left (Finset.mem_univ _),
+      num_edges_symmetric, hnb v, ite_eq_right hv]
     ring
 
 /-- **Chips slide along a path of bivalent vertices.** If the first step of the path joins
@@ -513,7 +517,7 @@ theorem separatingEdgeCut_of_chipEquivalent (hG : graph_connected G) (e : Fin G.
     exact ⟨e, by simp⟩
   have hz : (edgeAt G e).2 = z := by
     by_contra hz
-    rw [if_neg (fun h => hz h.2)] at hcross
+    rw [ite_eq_right (fun h => hz h.2)] at hcross
     omega
   subst hz
   exact ⟨cut⟩
@@ -532,9 +536,9 @@ theorem tailNeighbor_scale_eq_slotPoint_one (hunit : spec.IsUnit) (e : Fin p) :
   unfold Spec.tailNeighbor Spec.stepRight
   by_cases h1 : N = 1
   · subst h1
-    rw [dif_pos (by dsimp only; omega), spec.slotPoint_last 1 hN hunit e]
+    rw [dite_eq_left (by dsimp only; omega), spec.slotPoint_last 1 hN hunit e]
     rfl
-  · rw [dif_neg (by dsimp only; omega)]
+  · rw [dite_eq_right (by dsimp only; omega)]
     exact spec.interiorVertex_eq_slotPoint N hN hunit e ⟨0, by omega⟩
 
 /-- On a refinement of a unit presentation, every point of a bridge slot is equivalent to the
@@ -551,14 +555,14 @@ theorem slotPoint_linearEquiv (hunit : spec.IsUnit) {c : CoreBridgeCut.Data spec
       (by omega) (by omega) (by omega)
     by_cases h1 : y = spec.slotPoint N hN c.bridge (t - 1)
     · have h2 : y ≠ spec.slotPoint N hN c.bridge (t + 1) := h1 ▸ hne
-      rw [if_pos h1, if_neg h2]
+      rw [ite_eq_left h1, ite_eq_right h2]
       have := hadj.mpr (Or.inl h1)
       omega
     · by_cases h2 : y = spec.slotPoint N hN c.bridge (t + 1)
-      · rw [if_neg h1, if_pos h2]
+      · rw [ite_eq_right h1, ite_eq_left h2]
         have := hadj.mpr (Or.inr h2)
         omega
-      · rw [if_neg h1, if_neg h2]
+      · rw [ite_eq_right h1, ite_eq_right h2]
         have : ¬ 0 < num_edges (spec.scale N hN).graph (spec.slotPoint N hN c.bridge t) y :=
           fun h => (hadj.mp h).elim h1 h2
         omega
@@ -581,8 +585,8 @@ private theorem sum_fibre_ite {V W : Type*} [Fintype V] [Fintype W] [DecidableEq
       ∑ x : V, if P y ∧ g x = y then E x else 0 := by
     intro y
     by_cases hy : P y
-    · simp only [hy, true_and, if_true]
-    · simp only [hy, false_and, if_false, Finset.sum_const_zero]
+    · simp only [hy, true_and, ite_true]
+    · simp only [hy, false_and, ite_false, Finset.sum_const_zero]
   simp_rw [h1]
   rw [Finset.sum_comm]
   apply Finset.sum_congr rfl
@@ -590,7 +594,7 @@ private theorem sum_fibre_ite {V W : Type*} [Fintype V] [Fintype W] [DecidableEq
   rw [Finset.sum_eq_single (g x)]
   · simp
   · intro y _ hy
-    rw [if_neg (fun h => hy h.2.symm)]
+    rw [ite_eq_right (fun h => hy h.2.symm)]
   · simp
 
 /-- Pushing an embedded divisor forward is embedding the pushed divisor, when the two
@@ -734,12 +738,12 @@ theorem contractionMap_kept {e : Fin G.edges.card} (h : Kept G e)
     (j : Fin (((spec G).scale N hN).length e - 1)) :
     contractionMap G N hN (Sum.inr ⟨e, j⟩) =
       Sum.inr ⟨slotEquiv G ⟨e, h⟩, ⟨j.val, lt_scale_unit_sub j.isLt⟩⟩ := by
-  simp only [contractionMap, dif_pos h]
+  simp only [contractionMap, dite_eq_left h]
 
 theorem contractionMap_not_kept {e : Fin G.edges.card} (h : ¬ Kept G e)
     (j : Fin (((spec G).scale N hN).length e - 1)) :
     contractionMap G N hN (Sum.inr ⟨e, j⟩) = Sum.inl (coreMap G ((spec G).core.tail e)) := by
-  simp only [contractionMap, dif_neg h]
+  simp only [contractionMap, dite_eq_right h]
 
 theorem stepLeft_congr {n p : ℕ} (T : Spec n p) {e₁ e₂ : Fin p} (h : e₁ = e₂)
     {j₁ : Fin (T.length e₁)} {j₂ : Fin (T.length e₂)} (hj : j₁.val = j₂.val) :
@@ -760,9 +764,9 @@ theorem contractionMap_stepLeft_kept (e : {e : Fin G.edges.card // Kept G e})
         ⟨j.val, lt_scale_unit j.isLt⟩ := by
   unfold Spec.stepLeft
   by_cases hz : j.val = 0
-  · rw [dif_pos hz, dif_pos (by exact hz)]
+  · rw [dite_eq_left hz, dite_eq_left (by exact hz)]
     simp only [Spec.coreVertex, contractionMap_inl, Spec.scale_core, tail_slotEquiv]
-  · rw [dif_neg hz, dif_neg (by exact hz)]
+  · rw [dite_eq_right hz, dite_eq_right (by exact hz)]
     simp only [Spec.interiorVertex, contractionMap_kept G N hN e.2]
 
 theorem contractionMap_stepRight_kept (e : {e : Fin G.edges.card // Kept G e})
@@ -772,11 +776,11 @@ theorem contractionMap_stepRight_kept (e : {e : Fin G.edges.card // Kept G e})
         ⟨j.val, lt_scale_unit j.isLt⟩ := by
   unfold Spec.stepRight
   by_cases hl : j.val + 1 = N
-  · rw [dif_pos (hl.trans (length_scale_unit _ _ _ _).symm),
-      dif_pos (hl.trans (length_scale_unit _ _ _ _).symm)]
+  · rw [dite_eq_left (hl.trans (length_scale_unit _ _ _ _).symm),
+      dite_eq_left (hl.trans (length_scale_unit _ _ _ _).symm)]
     simp only [Spec.coreVertex, contractionMap_inl, Spec.scale_core, head_slotEquiv]
-  · rw [dif_neg (fun h => hl (h.trans (length_scale_unit _ _ _ _))),
-      dif_neg (fun h => hl (h.trans (length_scale_unit _ _ _ _)))]
+  · rw [dite_eq_right (fun h => hl (h.trans (length_scale_unit _ _ _ _))),
+      dite_eq_right (fun h => hl (h.trans (length_scale_unit _ _ _ _)))]
     simp only [Spec.interiorVertex, contractionMap_kept G N hN e.2]
 
 theorem contractionMap_stepLeft_not_kept {e : Fin G.edges.card} (h : ¬ Kept G e)
@@ -785,9 +789,9 @@ theorem contractionMap_stepLeft_not_kept {e : Fin G.edges.card} (h : ¬ Kept G e
       Sum.inl (coreMap G ((spec G).core.tail e)) := by
   unfold Spec.stepLeft
   by_cases hz : j.val = 0
-  · rw [dif_pos hz]
+  · rw [dite_eq_left hz]
     rfl
-  · rw [dif_neg hz]
+  · rw [dite_eq_right hz]
     exact contractionMap_not_kept G N hN h _
 
 theorem contractionMap_stepRight_not_kept {e : Fin G.edges.card} (h : ¬ Kept G e)
@@ -796,9 +800,9 @@ theorem contractionMap_stepRight_not_kept {e : Fin G.edges.card} (h : ¬ Kept G 
       Sum.inl (coreMap G ((spec G).core.tail e)) := by
   unfold Spec.stepRight
   by_cases hl : j.val + 1 = ((spec G).scale N hN).length e
-  · rw [dif_pos hl]
+  · rw [dite_eq_left hl]
     exact congrArg Sum.inl (coreMap_head_of_not_kept G h)
-  · rw [dif_neg hl]
+  · rw [dite_eq_right hl]
     exact contractionMap_not_kept G N hN h _
 
 /-- The unit steps of the fossil refinement, as unit steps of the refinement of `G`. -/

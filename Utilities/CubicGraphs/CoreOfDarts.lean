@@ -1,4 +1,8 @@
-import Utilities.CubicGraphs.CubicCoreDarts
+module
+
+public import Utilities.CubicGraphs.CubicCoreDarts
+
+@[expose] public section
 
 /-!
 # Coring a cubic dart graph, and the Whitehead chain restated on cores

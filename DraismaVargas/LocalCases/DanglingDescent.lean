@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.StableLocalProperties
-import Utilities.Iso.GraphContractionFibreTree
+module
+
+public import DraismaVargas.LocalCases.StableLocalProperties
+public import Utilities.Iso.GraphContractionFibreTree
+
+@[expose] public section
 
 /-!
 # The dangling-side descent
@@ -486,7 +490,7 @@ theorem exists_smaller_cut (G : CFGraph.{u}) (S : Finset G.V) (hSne : S.Nonempty
               ⟨inner, hInnerComp⟩) ⟨inner, hInnerComp⟩ ⟨outer, hOuterT⟩ =
             num_edges G inner outer :=
           Utilities.num_edges_inducedSubgraph G _ _ _ _
-        rw [hCross inner outer hInner hOuter, if_pos ⟨rfl, rfl⟩] at hValue
+        rw [hCross inner outer hInner hOuter, ite_eq_left ⟨rfl, rfl⟩] at hValue
         omega
       refine reach_trans (reach_single hStep) ?_
       refine reach_induced_transfer
@@ -552,12 +556,12 @@ theorem exists_smaller_cut (G : CFGraph.{u}) (S : Finset G.V) (hSne : S.Nonempty
     · have hbR : b ∈ S \ sideComponent G S hSne pv qv :=
         Finset.mem_sdiff.mpr ⟨hbS, hbT⟩
       by_cases hPair : a = w ∧ b = inner
-      · rw [if_pos hPair]
+      · rw [ite_eq_left hPair]
         have h1 := num_edges_le_crossCount G (sideComponent G S hSne pv qv)
           (S \ sideComponent G S hSne pv qv) haT hbR
         have h2 : 0 < num_edges G a b := by rw [hPair.1, hPair.2]; exact hInnerEdge
         omega
-      · rw [if_neg hPair]
+      · rw [ite_eq_right hPair]
         have h1 := num_edges_add_le_crossCount G (sideComponent G S hSne pv qv)
           (S \ sideComponent G S hSne pv qv) haT hbR hwT hInnerR
           (by
@@ -567,7 +571,7 @@ theorem exists_smaller_cut (G : CFGraph.{u}) (S : Finset G.V) (hSne : S.Nonempty
         omega
     · have h1 : ¬ (a = inner ∧ b = outer) := fun h ↦ haNeInner h.1
       have h2 : ¬ (a = w ∧ b = inner) := fun h ↦ hbS (h.2 ▸ hInner)
-      rw [hCross a b haS hbS, if_neg h1, if_neg h2]
+      rw [hCross a b haS hbS, ite_eq_right h1, ite_eq_right h2]
   · unfold genus
     rw [hTcardV]
     omega
@@ -614,7 +618,7 @@ theorem danglingSideDescent (data : GluingDatum target degree) :
   have hwMem : w ∈ cut.side := by
     by_contra hNotMem
     have hZero := cut.cross_num_edges inner w cut.left_mem hNotMem
-    rw [if_neg fun hPair ↦ hwNeOuter hPair.2] at hZero
+    rw [ite_eq_right fun hPair ↦ hwNeOuter hPair.2] at hZero
     omega
   obtain ⟨smaller, hLess⟩ := exists_danglingSide_of_mem_side cut hwMem hEdgePos
   exact ⟨w, inner, smaller, hEnds.symm, hLess⟩

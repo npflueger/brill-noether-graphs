@@ -1,5 +1,9 @@
-import DraismaVargasCount.BallotDiagonal
-import DraismaVargasCount.FibreCaterpillar
+module
+
+public import DraismaVargasCount.BallotDiagonal
+public import DraismaVargasCount.FibreCaterpillar
+
+@[expose] public section
 
 /-!
 # Multiplicity one for every ballot caterpillar

@@ -1,5 +1,9 @@
-import Bananas.Jacobian.BananaJacobianReducedInjectivity
-import Bananas.CrossOneOff.CrossOneOffDelta
+module
+
+public import Bananas.Jacobian.BananaJacobianReducedInjectivity
+public import Bananas.CrossOneOff.CrossOneOffDelta
+
+@[expose] public section
 
 /-!
 # Paper coordinate representatives are q-reduced
@@ -71,18 +75,18 @@ private theorem paperCoordinateSemibreak_eq_sum {g : ℕ} (B : Banana g)
     intro alpha _
     by_cases halpha : 0 < (p alpha).val ∧
         (p alpha).val < B.length alpha
-    · rw [dif_pos halpha,
+    · rw [dite_eq_left halpha,
         strandVertex_eq_interiorVertex_normalizedInteriorOffset B alpha
           (p alpha) halpha]
       simp [one_chip, SubdivisionGraph.Spec.interiorVertex]
-    · rw [dif_neg halpha]
+    · rw [dite_eq_right halpha]
       rfl
   · change (if paperCoordinateChips B p gamma = some offset then 1 else 0) = _
     by_cases hgamma : 0 < (p gamma).val ∧
         (p gamma).val < B.length gamma
     · rw [show paperCoordinateChips B p gamma =
           some (normalizedInteriorOffset B gamma (p gamma) hgamma) by
-        simp only [paperCoordinateChips, dif_pos hgamma]]
+        simp only [paperCoordinateChips, dite_eq_left hgamma]]
       simp only [Option.some.injEq]
       rw [Finset.sum_eq_single gamma]
       · simp [hgamma, one_chip,
@@ -96,34 +100,34 @@ private theorem paperCoordinateSemibreak_eq_sum {g : ℕ} (B : Banana g)
       · intro alpha _ hne
         by_cases halpha : 0 < (p alpha).val ∧
             (p alpha).val < B.length alpha
-        · rw [dif_pos halpha,
+        · rw [dite_eq_left halpha,
             strandVertex_eq_interiorVertex_normalizedInteriorOffset B alpha
               (p alpha) halpha]
           simp [one_chip, SubdivisionGraph.Spec.interiorVertex, hne.symm]
-        · rw [dif_neg halpha]
+        · rw [dite_eq_right halpha]
           rfl
       · simp
     · rw [show paperCoordinateChips B p gamma = none by
-        simp only [paperCoordinateChips, dif_neg hgamma]]
+        simp only [paperCoordinateChips, dite_eq_right hgamma]]
       simp only [reduceCtorEq, ↓reduceIte]
       symm
       apply Finset.sum_eq_zero
       intro alpha _
       by_cases halpha : 0 < (p alpha).val ∧
           (p alpha).val < B.length alpha
-      · rw [dif_pos halpha,
+      · rw [dite_eq_left halpha,
           strandVertex_eq_interiorVertex_normalizedInteriorOffset B alpha
             (p alpha) halpha]
         simp only [one_chip, SubdivisionGraph.Spec.interiorVertex]
         by_cases hag : alpha = gamma
         · subst alpha
           exact (hgamma halpha).elim
-        · rw [if_neg]
+        · rw [ite_eq_right]
           intro heq
           have hsigma := Sum.inr.inj heq
           have hslots : gamma = alpha := congrArg Sigma.fst hsigma
           exact hag hslots.symm
-      · rw [dif_neg halpha]
+      · rw [dite_eq_right halpha]
         rfl
 
 private theorem positionCoordinate_summand_eq_normalForm_summand {g : ℕ}
@@ -141,25 +145,25 @@ private theorem positionCoordinate_summand_eq_normalForm_summand {g : ℕ}
     have hlength := B.length_pos alpha
     have hnotInterior : ¬(0 < (p alpha).val ∧
         (p alpha).val < B.length alpha) := by omega
-    rw [dif_neg hnotInterior]
+    rw [dite_eq_right hnotInterior]
     rw [hp, strandVertex_zero]
-    rw [if_pos rfl, if_neg (Nat.ne_of_gt hlength).symm]
+    rw [ite_eq_left rfl, ite_eq_right (Nat.ne_of_gt hlength).symm]
     simp
   · by_cases hlast : (p alpha).val = B.length alpha
     · have hp : p alpha = ⟨B.length alpha, by omega⟩ := Fin.ext hlast
       have hlength := B.length_pos alpha
       have hnotInterior : ¬(0 < (p alpha).val ∧
           (p alpha).val < B.length alpha) := by omega
-      rw [dif_neg hnotInterior]
+      rw [dite_eq_right hnotInterior]
       rw [hp, strandVertex_length]
-      rw [if_neg (Nat.ne_of_gt hlength), if_pos rfl]
+      rw [ite_eq_right (Nat.ne_of_gt hlength), ite_eq_left rfl]
       simp
       abel
     · have hinterior : 0 < (p alpha).val ∧
           (p alpha).val < B.length alpha := by
         have hpBound := (p alpha).isLt
         omega
-      rw [dif_pos hinterior, if_neg hzero, if_neg hlast]
+      rw [dite_eq_left hinterior, ite_eq_right hzero, ite_eq_right hlast]
       simp
       abel
 
@@ -191,11 +195,11 @@ private theorem degree_paperCoordinateSemibreak {g : ℕ} (B : Banana g)
   intro alpha _
   by_cases hinterior : 0 < (p alpha).val ∧
       (p alpha).val < B.length alpha
-  · rw [if_pos hinterior]
-    simp only [paperCoordinateChips, dif_pos hinterior,
-      Option.isSome_some, if_true]
-  · rw [if_neg hinterior]
-    simp only [paperCoordinateChips, dif_neg hinterior,
+  · rw [ite_eq_left hinterior]
+    simp only [paperCoordinateChips, dite_eq_left hinterior,
+      Option.isSome_some, ite_true]
+  · rw [ite_eq_right hinterior]
+    simp only [paperCoordinateChips, dite_eq_right hinterior,
       Option.isSome_none]
     norm_num
 
@@ -221,14 +225,14 @@ theorem paperCoordinateRightCoefficient_add_degree_le_genus {g : ℕ}
     have hlength := B.length_pos alpha
     have hpBound := (p alpha).isLt
     by_cases hzero : (p alpha).val = 0
-    · rw [if_pos hzero, if_neg (by omega), if_neg (by omega)]
+    · rw [ite_eq_left hzero, ite_eq_right (by omega), ite_eq_right (by omega)]
       norm_num
     · by_cases hlast : (p alpha).val = B.length alpha
-      · rw [if_neg hzero, if_pos hlast, if_neg (by omega)]
+      · rw [ite_eq_right hzero, ite_eq_left hlast, ite_eq_right (by omega)]
         norm_num
       · have hinterior : 0 < (p alpha).val ∧
             (p alpha).val < B.length alpha := by omega
-        rw [if_neg hzero, if_neg hlast, if_pos hinterior]
+        rw [ite_eq_right hzero, ite_eq_right hlast, ite_eq_left hinterior]
         norm_num
   rw [Finset.sum_congr rfl (fun alpha _ => hPartition alpha)]
   let active : Fin (g + 1) → ℤ := fun alpha =>
@@ -236,7 +240,7 @@ theorem paperCoordinateRightCoefficient_add_degree_le_genus {g : ℕ}
   change (∑ alpha : Fin (g + 1), active alpha) ≤ (g : ℤ)
   have hZeroActive : active zeroSlot = 0 := by
     unfold active
-    rw [if_pos hzeroSlot]
+    rw [ite_eq_left hzeroSlot]
   have hSplit : (∑ alpha : Fin (g + 1), active alpha) =
       ∑ alpha ∈ (Finset.univ.erase zeroSlot), active alpha := by
     rw [← Finset.sum_erase_add (Finset.univ : Finset (Fin (g + 1)))

@@ -1,13 +1,17 @@
-import DraismaVargasCount.M11StarExhaustionProof
-import DraismaVargasCount.W2R1StarExhaustionProof
-import DraismaVargasCount.W2PStarExhaustionProof
-import DraismaVargasCount.W3Nd2StarExhaustionProof
-import DraismaVargasCount.W3Nd3StarExhaustionProof
-import DraismaVargasCount.W4NonDiscreteStarExhaustionProof
-import DraismaVargasCount.W3FourStarExhaustionProof
-import DraismaVargasCount.W2M1kStarExhaustionProof
-import DraismaVargasCount.W2MkkStarExhaustionProof
-import DraismaVargasCount.W3ShiftStarExhaustionProof
+module
+
+public import DraismaVargasCount.M11StarExhaustionProof
+public import DraismaVargasCount.W2R1StarExhaustionProof
+public import DraismaVargasCount.W2PStarExhaustionProof
+public import DraismaVargasCount.W3Nd2StarExhaustionProof
+public import DraismaVargasCount.W3Nd3StarExhaustionProof
+public import DraismaVargasCount.W4NonDiscreteStarExhaustionProof
+public import DraismaVargasCount.W3FourStarExhaustionProof
+public import DraismaVargasCount.W2M1kStarExhaustionProof
+public import DraismaVargasCount.W2MkkStarExhaustionProof
+public import DraismaVargasCount.W3ShiftStarExhaustionProof
+
+@[expose] public section
 
 /-!
 # The trivalent walls at genus six: the in-cone supply from the ten family clauses

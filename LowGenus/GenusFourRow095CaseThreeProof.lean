@@ -1,4 +1,8 @@
-import LowGenus.GenusFourRow095CasesTwoThree
+module
+
+public import LowGenus.GenusFourRow095CasesTwoThree
+
+@[expose] public section
 
 /-!
 # Endpoint replay for the short Core-095 chamber

@@ -1,4 +1,8 @@
-import Bananas.Transmission.RankZeroVertexBridge
+module
+
+public import Bananas.Transmission.RankZeroVertexBridge
+
+@[expose] public section
 
 /-!
 # Degree-one representatives

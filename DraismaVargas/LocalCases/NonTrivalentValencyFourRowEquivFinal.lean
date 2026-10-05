@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyFourRowDictionary
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyFourRowDictionary
+
+@[expose] public section
 
 /-!
 # The row equivalence of the `K = 0` candidate at a four-valent wall

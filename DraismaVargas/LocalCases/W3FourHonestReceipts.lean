@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W3FourArbitraryExit
+module
+
+public import DraismaVargas.LocalCases.W3FourArbitraryExit
+
+@[expose] public section
 
 /-!
 # Figure 28's honest family at an arbitrary stable labelling

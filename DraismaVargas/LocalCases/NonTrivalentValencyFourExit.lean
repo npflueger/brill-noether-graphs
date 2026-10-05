@@ -1,8 +1,12 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoExit
-import DraismaVargas.LocalCases.NonTrivalentValencyFourRetainedInjective
-import DraismaVargas.LocalCases.WallDatumPathEnds
-import DraismaVargas.LocalCases.StableGraphIncidence
-import DraismaVargas.LocalCases.SheetRelabelIncidence
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoExit
+public import DraismaVargas.LocalCases.NonTrivalentValencyFourRetainedInjective
+public import DraismaVargas.LocalCases.WallDatumPathEnds
+public import DraismaVargas.LocalCases.StableGraphIncidence
+public import DraismaVargas.LocalCases.SheetRelabelIncidence
+
+@[expose] public section
 
 /-!
 # The valency-four `K = 0` exit: the outgoing full-dimensional presentation
@@ -583,11 +587,11 @@ theorem nonDanglingValency_ret_le (x : Fin deg)
     · refine Finset.mem_image.mpr ⟨old,
         NonTrivalentValencyFourRowEquivFinal.mem_nonDanglingIncident_block wSrc pairing wNG
           wRam hOldSurv hAt hRel, ?_⟩
-      rw [if_pos hSide]
+      rw [ite_eq_left hSide]
     · refine Finset.mem_image.mpr ⟨old,
         NonTrivalentValencyFourRowEquivFinal.mem_nonDanglingIncident_block wSrc pairing wNG
           wRam hOldSurv hAt hRel, ?_⟩
-      rw [if_neg (by rw [hSide]; exact Bool.not_ne_self _)]
+      rw [ite_eq_right (by rw [hSide]; exact Bool.not_ne_self _)]
   rw [← card_nonDanglingIncident]
   refine le_trans (Finset.card_le_card hSub) (le_trans Finset.card_image_le ?_)
   rw [card_nonDanglingIncident]

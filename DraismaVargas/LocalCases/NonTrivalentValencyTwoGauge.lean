@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.BlockPreservingBranchSwap
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoBaseOne
-import DraismaVargas.LocalCases.SheetRelabelStable
+module
+
+public import DraismaVargas.LocalCases.BlockPreservingBranchSwap
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoBaseOne
+public import DraismaVargas.LocalCases.SheetRelabelStable
+
+@[expose] public section
 
 /-!
 # Part II, valency two, Configuration A: the `t₃`-branch alignment gauge
@@ -150,14 +154,14 @@ theorem exists_perm_matching_pair {d : ℕ}
   have hMoveOne : ∀ sheet, ∀ hOne : sheet ∈ first,
       move sheet = (matchOne ⟨sheet, hOne⟩ : Fin d) := by
     intro sheet hOne
-    simp only [move, dif_pos hOne]
+    simp only [move, dite_eq_left hOne]
   have hMoveTwo : ∀ sheet, sheet ∉ first → ∀ hTwo : sheet ∈ second,
       move sheet = (matchTwo ⟨sheet, hTwo⟩ : Fin d) := by
     intro sheet hOne hTwo
-    simp only [move, dif_neg hOne, dif_pos hTwo]
+    simp only [move, dite_eq_right hOne, dite_eq_left hTwo]
   have hMoveNone : ∀ sheet, sheet ∉ first → sheet ∉ second → move sheet = sheet := by
     intro sheet hOne hTwo
-    simp only [move, dif_neg hOne, dif_neg hTwo]
+    simp only [move, dite_eq_right hOne, dite_eq_right hTwo]
   have hIntoOne : ∀ sheet ∈ first, move sheet ∈ target₁ := by
     intro sheet hOne
     rw [hMoveOne sheet hOne]
@@ -377,7 +381,7 @@ def IsAlignmentGauge (data : GluingDatum target degree) (star : TwoStar target w
 
 /-- A block-preserving permutation is always available; it aligns the two
 directions exactly when some permutation does. -/
-private theorem exists_conditional_gauge (data : GluingDatum target degree)
+theorem exists_conditional_gauge (data : GluingDatum target degree)
     (star : TwoStar target wall) (anchor : WallBlock data wall)
     (thickSheet thinSheet : Fin degree) :
     ∃ gauge : Equiv.Perm (Fin degree),

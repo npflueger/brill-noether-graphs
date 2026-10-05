@@ -1,4 +1,8 @@
-import Utilities.CubicGraphs.CubicDarts
+module
+
+public import Utilities.CubicGraphs.CubicDarts
+
+@[expose] public section
 
 /-!
 # Transporting a Whitehead move backwards along an isomorphism

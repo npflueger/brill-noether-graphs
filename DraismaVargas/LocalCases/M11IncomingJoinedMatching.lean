@@ -1,7 +1,11 @@
-import DraismaVargas.LocalCases.M11IncomingSelectedCases
-import DraismaVargas.LocalCases.M11IncomingBackground
-import DraismaVargas.LocalCases.M11IncomingOuterPartitions
-import DraismaVargas.Infrastructure.PartitionNormalization
+module
+
+public import DraismaVargas.LocalCases.M11IncomingSelectedCases
+public import DraismaVargas.LocalCases.M11IncomingBackground
+public import DraismaVargas.LocalCases.M11IncomingOuterPartitions
+public import DraismaVargas.Infrastructure.PartitionNormalization
+
+@[expose] public section
 
 /-!
 # Actual incoming joined M11 cover matching

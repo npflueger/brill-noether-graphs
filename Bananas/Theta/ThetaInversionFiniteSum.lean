@@ -1,4 +1,8 @@
-import Bananas.Theta.ThetaInversionCount
+module
+
+public import Bananas.Theta.ThetaInversionCount
+
+@[expose] public section
 
 /-!
 # Finite-period inversion sums

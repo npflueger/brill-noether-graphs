@@ -1,4 +1,8 @@
-import DraismaVargasCount.W2M1kTransitionSiting
+module
+
+public import DraismaVargasCount.W2M1kTransitionSiting
+
+@[expose] public section
 
 /-!
 # Signed multiplicity balance on the constructed M-1k family

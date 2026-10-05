@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.ResolutionCut
-import DraismaVargas.LocalCases.ZeroForestBridge
+module
+
+public import DraismaVargas.LocalCases.ResolutionCut
+public import DraismaVargas.LocalCases.ZeroForestBridge
+
+@[expose] public section
 
 /-!
 # Euler counts restricted to a union of source-contraction fibres

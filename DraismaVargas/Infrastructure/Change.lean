@@ -1,4 +1,8 @@
-import DraismaVargas.Infrastructure.GluingDatum
+module
+
+public import DraismaVargas.Infrastructure.GluingDatum
+
+@[expose] public section
 
 /-!
 # Ramification change of a gluing datum

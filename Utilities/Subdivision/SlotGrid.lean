@@ -1,6 +1,10 @@
-import Utilities.Subdivision.OddSubdivisionDescent
-import Utilities.Gonality.GonalityTransport
-import Mathlib.Tactic
+module
+
+public import Utilities.Subdivision.OddSubdivisionDescent
+public import Utilities.Gonality.GonalityTransport
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # The `M`-grid inside a subdivision specification
@@ -106,7 +110,7 @@ theorem roundData_fineOf (S : Spec n p) (M : ℕ) (hM : 0 < M) (x : S.Vertex) :
         have hrw : M * (o.val + 1) - 1 + 1 = M * (o.val + 1) := by omega
         rw [hrw]
         exact Nat.mul_mod_right _ _
-      simp only [Spec.fineOf, Spec.roundData, hmod, dif_pos, Sum.isLeft]
+      simp only [Spec.fineOf, Spec.roundData, hmod, dite_eq_left, Sum.isLeft]
   obtain ⟨x', hx'⟩ := Sum.isLeft_iff.mp hleft
   rw [hx']
   congr 1

@@ -1,5 +1,9 @@
-import DraismaVargasCount.Star
-import DraismaVargasCount.GeometricValidityTransport
+module
+
+public import DraismaVargasCount.Star
+public import DraismaVargasCount.GeometricValidityTransport
+
+@[expose] public section
 
 /-!
 # Geometric contraction is functorial
@@ -157,7 +161,7 @@ theorem contractVertexPartition_of_eq {target : CFGraph} {degree : ℕ}
     (data : GluingDatum target degree) (a b : target.V)
     {y : Vertex target b} (h : (y : target.V) = a) :
     contractVertexPartition data a b y
-      = join (data.vertexPartition a) (data.vertexPartition b) := if_pos h
+      = join (data.vertexPartition a) (data.vertexPartition b) := ite_eq_left h
 
 /-- The two endpoint sheet permutations of a `GeometricDatumIso` agree modulo the join
 of the endpoint partitions of the occurrence, downstairs. -/
@@ -207,12 +211,12 @@ noncomputable def contractVertexPerm (iso : GeometricDatumIso first second) (e�
 theorem contractVertexPerm_merged (iso : GeometricDatumIso first second) (e₁ : target₁.edges)
     {x : Vertex target₁ ((e₁ : target₁.V × target₁.V)).2}
     (hx : (x : target₁.V) = ((e₁ : target₁.V × target₁.V)).1) :
-    contractVertexPerm iso e₁ x = mergedPerm iso e₁ := if_pos hx
+    contractVertexPerm iso e₁ x = mergedPerm iso e₁ := ite_eq_left hx
 
 theorem contractVertexPerm_of_ne (iso : GeometricDatumIso first second) (e₁ : target₁.edges)
     {x : Vertex target₁ ((e₁ : target₁.V × target₁.V)).2}
     (hx : (x : target₁.V) ≠ ((e₁ : target₁.V × target₁.V)).1) :
-    contractVertexPerm iso e₁ x = iso.vertexPerm (x : target₁.V) := if_neg hx
+    contractVertexPerm iso e₁ x = iso.vertexPerm (x : target₁.V) := ite_eq_right hx
 
 theorem contractGeometricDatumIso_compatible_fst (iso : GeometricDatumIso first second) (e₁ : target₁.edges)
     (hOne₁ : num_edges target₁ ((e₁ : target₁.V × target₁.V)).1

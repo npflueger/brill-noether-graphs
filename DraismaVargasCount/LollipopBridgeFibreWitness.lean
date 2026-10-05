@@ -1,4 +1,8 @@
-import DraismaVargasCount.LollipopBridgeFibre
+module
+
+public import DraismaVargasCount.LollipopBridgeFibre
+
+@[expose] public section
 
 /-!
 # The loop-and-bridge lemma at a member of the labelled fibre

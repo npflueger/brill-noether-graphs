@@ -1,5 +1,9 @@
-import Utilities.Gluing.BridgeGraph
-import Utilities.Gluing.VertexWedgePresentation
+module
+
+public import Utilities.Gluing.BridgeGraph
+public import Utilities.Gluing.VertexWedgePresentation
+
+@[expose] public section
 
 /-!
 # Functoriality of basic graph constructors

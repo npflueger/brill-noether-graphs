@@ -1,4 +1,8 @@
-import Bananas.SameStrand.NSMFullClassification
+module
+
+public import Bananas.SameStrand.NSMFullClassification
+
+@[expose] public section
 
 /-!
 # Corrected Theorem 1.16

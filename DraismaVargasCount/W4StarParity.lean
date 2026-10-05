@@ -1,6 +1,10 @@
-import DraismaVargasCount.RegrowthWallInput
-import DraismaVargasCount.GeometricMultiplicity
-import DraismaVargasCount.StarParityFromBalance
+module
+
+public import DraismaVargasCount.RegrowthWallInput
+public import DraismaVargasCount.GeometricMultiplicity
+public import DraismaVargasCount.StarParityFromBalance
+
+@[expose] public section
 
 /-!
 # The W4 star clause at every discrete four-valent regrowth
@@ -377,7 +381,7 @@ theorem sourceVertex_branchImage (q : Fin 3)
           (W4OutgoingSurvival.sideVertex (w.frame.limitTarget w.column) (mergeVertex w)
             (W4OutgoingStableRows.branchSide (input w hy star) q
               (W4Assembly.WallBlock.ofSheet w.limit (mergeVertex w) v.1.2))) v.1.2 := by
-      rw [W4OutgoingStableRows.branchImage, if_pos hv]
+      rw [W4OutgoingStableRows.branchImage, ite_eq_left hv]
       rfl
     have key := W4LimitContraction.sourceVertexEquiv_sourceEndpoint rfl
       (fst_ne_snd ((frame w hy star q hDet).edgeOf w.column))
@@ -395,7 +399,7 @@ theorem sourceVertex_branchImage (q : Fin 3)
   · have hbranch : W4OutgoingStableRows.branchImage (input w hy star) q v =
         (datum w hy star q).sourceEndpoint (oldVertex (w.frame.limitTarget w.column) v.1.1)
           v.1.2 := by
-      rw [W4OutgoingStableRows.branchImage, if_neg hv]
+      rw [W4OutgoingStableRows.branchImage, ite_eq_right hv]
       rfl
     have key := W4LimitContraction.sourceVertexEquiv_sourceEndpoint rfl
       (fst_ne_snd ((frame w hy star q hDet).edgeOf w.column))

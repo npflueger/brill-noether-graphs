@@ -1,5 +1,9 @@
-import Utilities.Subdivision.StrongSeparator
-import Mathlib.Tactic
+module
+
+public import Utilities.Subdivision.StrongSeparator
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # Occurrence-safe separating edges
@@ -172,8 +176,8 @@ theorem normalizeScript_preserves_endpoints_eq
         indicator_script G cut.side a = indicator_script G cut.side b := by
       unfold indicator_script
       by_cases ha : a ∈ cut.side
-      · rw [if_pos ha, if_pos (hSide.mp ha)]
-      · rw [if_neg ha, if_neg (fun hb => ha (hSide.mpr hb))]
+      · rw [ite_eq_left ha, ite_eq_left (hSide.mp ha)]
+      · rw [ite_eq_right ha, ite_eq_right (fun hb => ha (hSide.mpr hb))]
     rw [hEqual, hIndicator]
   · rcases hSame with ⟨rfl, rfl⟩
     exact cut.normalizeScript_endpoints_eq sigma

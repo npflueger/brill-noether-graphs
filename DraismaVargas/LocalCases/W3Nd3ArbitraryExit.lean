@@ -1,7 +1,11 @@
-import DraismaVargas.LocalCases.W3Nd3IncomingMatching
-import DraismaVargas.LocalCases.W3Nd3CommonBalance
-import DraismaVargas.LocalCases.StableGraphFullDimensional
-import DraismaVargas.LocalCases.FiniteAtlasMarch
+module
+
+public import DraismaVargas.LocalCases.W3Nd3IncomingMatching
+public import DraismaVargas.LocalCases.W3Nd3CommonBalance
+public import DraismaVargas.LocalCases.StableGraphFullDimensional
+public import DraismaVargas.LocalCases.FiniteAtlasMarch
+
+@[expose] public section
 
 /-!
 # Case {w3-r1-nd3-t3}: the identified-member exit, with a full-dimensional outgoing source

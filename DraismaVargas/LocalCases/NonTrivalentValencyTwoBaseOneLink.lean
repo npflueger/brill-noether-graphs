@@ -1,7 +1,11 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoDispatcher
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoBaseOneStarCount
-import DraismaVargas.LocalCases.NonTrivalentValencyThreeDispatcher
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoSplitStarCount
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoDispatcher
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoBaseOneStarCount
+public import DraismaVargas.LocalCases.NonTrivalentValencyThreeDispatcher
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoSplitStarCount
+
+@[expose] public section
 
 /-!
 # Plugging Base I and the split member into the valency-two dispatcher: the walk's `link`
@@ -172,38 +176,38 @@ theorem pair_of_counts {α : Type*} [DecidableEq α] {x y u v : α}
     (x = u ∧ y = v) ∨ (x = v ∧ y = u) := by
   classical
   by_cases huv : u = v
-  · rw [if_pos (show v = u from huv.symm)] at h1
+  · rw [ite_eq_left (show v = u from huv.symm)] at h1
     refine Or.inl ⟨?_, ?_⟩
     · by_contra hx
-      rw [if_neg (show ¬ (x = u) from hx)] at h1
+      rw [ite_eq_right (show ¬ (x = u) from hx)] at h1
       by_cases hy : y = u
-      · rw [if_pos (show y = u from hy)] at h1; omega
-      · rw [if_neg (show ¬ (y = u) from hy)] at h1; omega
+      · rw [ite_eq_left (show y = u from hy)] at h1; omega
+      · rw [ite_eq_right (show ¬ (y = u) from hy)] at h1; omega
     · by_contra hy
-      rw [if_neg (show ¬ (y = u) from fun h ↦ hy (h.trans huv))] at h1
+      rw [ite_eq_right (show ¬ (y = u) from fun h ↦ hy (h.trans huv))] at h1
       by_cases hx : x = u
-      · rw [if_pos (show x = u from hx)] at h1; omega
-      · rw [if_neg (show ¬ (x = u) from hx)] at h1; omega
-  · rw [if_neg (show ¬ (v = u) from fun h ↦ huv h.symm)] at h1
-    rw [if_neg (show ¬ (u = v) from huv)] at h2
+      · rw [ite_eq_left (show x = u from hx)] at h1; omega
+      · rw [ite_eq_right (show ¬ (x = u) from hx)] at h1; omega
+  · rw [ite_eq_right (show ¬ (v = u) from fun h ↦ huv h.symm)] at h1
+    rw [ite_eq_right (show ¬ (u = v) from huv)] at h2
     by_cases hx : x = u
     · have hy : ¬ y = u := by
         intro hy
-        rw [if_pos (show x = u from hx), if_pos (show y = u from hy)] at h1
+        rw [ite_eq_left (show x = u from hx), ite_eq_left (show y = u from hy)] at h1
         omega
       have hxv : ¬ x = v := fun h ↦ huv (hx.symm.trans h)
       refine Or.inl ⟨hx, ?_⟩
       by_contra hyv
-      rw [if_neg (show ¬ (x = v) from hxv), if_neg (show ¬ (y = v) from hyv)] at h2
+      rw [ite_eq_right (show ¬ (x = v) from hxv), ite_eq_right (show ¬ (y = v) from hyv)] at h2
       omega
     · have hy : y = u := by
         by_contra hy
-        rw [if_neg (show ¬ (x = u) from hx), if_neg (show ¬ (y = u) from hy)] at h1
+        rw [ite_eq_right (show ¬ (x = u) from hx), ite_eq_right (show ¬ (y = u) from hy)] at h1
         omega
       have hyv : ¬ y = v := fun h ↦ huv (hy.symm.trans h)
       refine Or.inr ⟨?_, hy⟩
       by_contra hxv
-      rw [if_neg (show ¬ (x = v) from hxv), if_neg (show ¬ (y = v) from hyv)] at h2
+      rw [ite_eq_right (show ¬ (x = v) from hxv), ite_eq_right (show ¬ (y = v) from hyv)] at h2
       omega
 
 section Wall
@@ -313,7 +317,7 @@ theorem rows_of_complement
     · rw [ha, hb]
       exact Nat.add_comm _ _
   have hself : ∀ r : StablePath wd.cover, (if r = r then (1 : ℕ) else 0) = 1 :=
-    fun r ↦ if_pos rfl
+    fun r ↦ ite_eq_left rfl
   have h1 : (if survRow m wd C = rowL m wd then 1 else 0) +
       (if survRow m wd E = rowL m wd then 1 else 0) =
       1 + (if rowS m wd = rowL m wd then 1 else 0) := by

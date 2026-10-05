@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.LeafFacetNoReturn
-import DraismaVargas.LocalCases.StableGraphIncidence
+module
+
+public import DraismaVargas.LocalCases.LeafFacetNoReturn
+public import DraismaVargas.LocalCases.StableGraphIncidence
+
+@[expose] public section
 
 /-!
 # The incidence dictionary across a facet wall contraction

@@ -1,9 +1,13 @@
-import DraismaVargasCount.SheetLayerCensus
-import DraismaVargasCount.PartitionCensusProof
-import DraismaVargasCount.TargetGeodesic
-import DraismaVargas.LocalCases.DanglingSideStructure
-import DraismaVargas.LocalCases.CaterpillarDatum
-import DraismaVargas.LocalCases.CaterpillarPruning
+module
+
+public import DraismaVargasCount.SheetLayerCensus
+public import DraismaVargasCount.PartitionCensusProof
+public import DraismaVargasCount.TargetGeodesic
+public import DraismaVargas.LocalCases.DanglingSideStructure
+public import DraismaVargas.LocalCases.CaterpillarDatum
+public import DraismaVargas.LocalCases.CaterpillarPruning
+
+@[expose] public section
 
 
 /-!
@@ -169,11 +173,11 @@ theorem exists_perm_on (U X Y : Fin d → Prop) [DecidablePred U] [DecidablePred
   obtain ⟨κ, hκ⟩ := exists_perm_of_card_fiber f g hcard
   refine ⟨κ, fun σ hσ ↦ ?_, fun σ hσ ↦ ?_⟩
   · have hk := hκ σ
-    simp only [f, g, if_neg hσ] at hk
+    simp only [f, g, ite_eq_right hσ] at hk
     split_ifs at hk with h'
     exact Sum.inr.inj hk
   · have hk := hκ σ
-    simp only [f, g, if_pos hσ] at hk
+    simp only [f, g, ite_eq_left hσ] at hk
     split_ifs at hk with h'
     refine ⟨h', ?_⟩
     simpa using Sum.inl.inj hk
@@ -220,7 +224,7 @@ theorem ancEq_refl (x : T.V) : AncEq R x x := ⟨0, rfl⟩
 
 theorem up_eq_self_of_isRoot {v : T.V} (h : IsRoot R v) : R.up v = v := by
   unfold TreeRank.up
-  rw [dif_neg (by rintro ⟨e, he⟩; exact h e he)]
+  rw [dite_eq_right (by rintro ⟨e, he⟩; exact h e he)]
 
 theorem exists_high_of_not_isRoot {v : T.V} (h : ¬ IsRoot R v) : ∃ e, R.high e = v := by
   by_contra hNo
@@ -538,14 +542,14 @@ variable (ρ : Equiv.Perm (Fin d)) (κ : T.edges → Equiv.Perm (Fin d) → Equi
 
 theorem buildPerm_root {v : T.V} (hv : IsRoot R v) :
     buildPerm R ρ κ fix v = fix v ρ := by
-  rw [buildPerm, dif_neg (by rintro ⟨e, he⟩; exact hv e he)]
+  rw [buildPerm, dite_eq_right (by rintro ⟨e, he⟩; exact hv e he)]
 
 theorem buildPerm_high (e : T.edges) :
     buildPerm R ρ κ fix (R.high e) =
       fix (R.high e) (buildPerm R ρ κ fix (R.low e) * κ e (buildPerm R ρ κ fix (R.low e))) := by
   have key : ∀ h : ∃ e', R.high e' = R.high e, h.choose = e :=
     fun h ↦ R.high_injective h.choose_spec
-  rw [buildPerm, dif_pos ⟨e, rfl⟩, key]
+  rw [buildPerm, dite_eq_left ⟨e, rfl⟩, key]
 
 end Build
 /-! ## 5. The sheet permutations of two star data over one rooted tree -/
@@ -628,7 +632,7 @@ theorem fixAt_inv (hConvA : Convex R (Anchor P₁ a₁)) (hConvB : Convex R (Anc
 theorem kappaOf_spec (e : T.edges) {p : Equiv.Perm (Fin d)}
     (h : ∃ κ, Good R P₁ P₂ a₁ a₂ e p κ) : Good R P₁ P₂ a₁ a₂ e p (kappaOf R P₁ P₂ a₁ a₂ e p) := by
   unfold kappaOf
-  rw [dif_pos h]
+  rw [dite_eq_left h]
   exact h.choose_spec
 
 theorem inv_base_high (hConvA : Convex R (Anchor P₁ a₁)) (hConvB : Convex R (Anchor P₂ a₂))
@@ -677,7 +681,7 @@ theorem rootPerm_spec (hConvA : Convex R (Anchor P₁ a₁)) (hConvB : Convex R 
       ∀ σ, label R (Anchor P₂ a₂) (ρ σ) = label R (Anchor P₁ a₁) σ :=
     exists_perm_of_card_fiber _ _ (card_label_eq hConvA hConvB hReach hV hE)
   unfold rootPerm
-  rw [dif_pos hex]
+  rw [dite_eq_left hex]
   exact hex.choose_spec σ
 
 theorem inv_root (hConvA : Convex R (Anchor P₁ a₁)) (hConvB : Convex R (Anchor P₂ a₂))
@@ -891,7 +895,7 @@ theorem exists_sheetPerms (hReach : ∀ v, AncEq R r v)
       have hμ : edgeFix R P₁ P₂ a₁ a₂ Q₁ Q₂ kind e = Equiv.swap ((Q₁ e).repr h.2.choose)
           ((edgeBase R P₁ P₂ a₁ a₂ e).symm
             ((Q₂ e).repr (edgeBase R P₁ P₂ a₁ a₂ e h.2.choose))) := by
-        unfold edgeFix; rw [dif_pos h]
+        unfold edgeFix; rw [dite_eq_left h]
       have h1 : (Q₁ e).repr σ = (Q₁ e).repr h.2.choose :=
         (hEdgeA e σ h.2.choose).mpr (Or.inr ⟨hc.1, hc.2, h.2.choose_spec⟩)
       have hx : Both R P₂ a₂ e (edgeBase R P₁ P₂ a₁ a₂ e h.2.choose) :=
@@ -1228,7 +1232,7 @@ theorem card_both_of_not_kind (hD : member.Diagonal) (g : member.target.edges)
   set z := absMap member (Sum.inr ⟨t, hLoop⟩) with hz
   have hLv : IsLeafVertex member.target z := PartitionCensusProof.isLeafVertex_tip member hD ⟨t, hLoop⟩
   have hAbs : absEnds m t = (Sum.inl ((catCore m).tail t), Sum.inr ⟨t, hLoop⟩) := by
-    unfold absEnds; rw [dif_pos hLoop]
+    unfold absEnds; rw [dite_eq_left hLoop]
   have hZ : (g : member.target.V × member.target.V).1 = z ∨
       (g : member.target.V × member.target.V).2 = z := by
     rcases slotEdge_absEnds member hD t with h | h <;> rw [hg, hAbs] at h <;> rw [h]

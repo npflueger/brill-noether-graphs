@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.W4IncomingGlobalMatching
-import DraismaVargas.LocalCases.W4IncomingRepresentatives
-import DraismaVargas.LocalCases.GlobalW4
+module
+
+public import DraismaVargas.LocalCases.W4IncomingGlobalMatching
+public import DraismaVargas.LocalCases.W4IncomingRepresentatives
+public import DraismaVargas.LocalCases.GlobalW4
+
+@[expose] public section
 
 /-!
 # The incoming `PairingReceipts` construction

@@ -1,6 +1,10 @@
-import Bananas.CrossOneOff.SignChangingInversions
-import Bananas.Classification.WeierstrassPartition
-import Mathlib.Data.Set.Card.Arithmetic
+module
+
+public import Bananas.CrossOneOff.SignChangingInversions
+public import Bananas.Classification.WeierstrassPartition
+public import Mathlib.Data.Set.Card.Arithmetic
+
+@[expose] public section
 
 /-!
 # Sign-changing inversions and Weierstrass partitions

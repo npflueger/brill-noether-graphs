@@ -1,4 +1,8 @@
-import Utilities.Foundations.Parameters
+module
+
+public import Utilities.Foundations.Parameters
+
+@[expose] public section
 
 /-!
 # Rank-one certificates

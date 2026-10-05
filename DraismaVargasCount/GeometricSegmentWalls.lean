@@ -1,6 +1,10 @@
-import DraismaVargasCount.GeometricFibre
-import DraismaVargasCount.Star
-import DraismaVargasCount.RowGeodesic
+module
+
+public import DraismaVargasCount.GeometricFibre
+public import DraismaVargasCount.Star
+public import DraismaVargasCount.RowGeodesic
+
+@[expose] public section
 
 /-!
 # Geometric frame transport and constancy between walls

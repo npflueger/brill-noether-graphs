@@ -1,4 +1,8 @@
-import Mathlib
+module
+
+public import Mathlib
+
+@[expose] public section
 
 /-!
 # Brill--Noether existence for graphs of genus six
@@ -75,12 +79,8 @@ def effective {G : CFGraph} (D : CFDiv G) : Prop :=
 /-- The additive monoid of effective divisors. -/
 def Eff (G : CFGraph) : AddSubmonoid (CFDiv G) :=
   { carrier := {D : CFDiv G | effective D}
-    zero_mem' := by
-      simp only [effective, ge_iff_le, Set.mem_ofPred_eq, Pi.zero_apply,
-        Std.le_refl, implies_true]
-    add_mem' := by
-      intro D₁ D₂ h₁ h₂ v
-      exact add_nonneg (h₁ v) (h₂ v) }
+    zero_mem' := fun _ => le_refl 0
+    add_mem' := fun {_D₁ _D₂} h₁ h₂ v => add_nonneg (h₁ v) (h₂ v) }
 
 /-- A divisor is winnable when it is linearly equivalent to an effective
 divisor. -/
@@ -135,10 +135,12 @@ theorem brill_noether_existence_through_six
 The **Brill--Noether rank** `w^r_d(G)` of Lim--Payne--Potashnik and Len is the
 largest `k ≥ 0` such that every effective divisor `E` of degree `r + k` is
 contained, up to linear equivalence, in a divisor of degree `d` and rank at
-least `r`.  Here "contained up to linear equivalence" means that `D - E` is
-winnable for some such `D`.  The two theorems below state lower bounds on
-`w^r_d(G)`, unfolded into the vocabulary above.  Since `w^r_d ≤ d - r` always
-holds, the bound `ρ` cannot hold in every degree; the first theorem caps it at
+least `r`, with value `-1` when no such linear system exists.  Here
+"contained up to linear equivalence" means that `D - E` is winnable for some
+such `D`.  The two theorems below state lower bounds on
+`w^r_d(G)`, unfolded into the vocabulary above.  Since `w^r_d ≤ d - r` holds
+whenever the linear system exists, the bound `ρ` cannot hold in every degree;
+the first theorem caps it at
 `d - r`, and the second states the bound `ρ` in the range `d ≤ g + r`, where the
 cap does not bind. -/
 

@@ -1,7 +1,11 @@
-import DraismaVargasCount.Multiplicity
-import DraismaVargasCount.TrivalentWeight
-import DraismaVargas.LocalCases.OuterWalk
-import DraismaVargas.LocalCases.IncomingTargetExpansion
+module
+
+public import DraismaVargasCount.Multiplicity
+public import DraismaVargasCount.TrivalentWeight
+public import DraismaVargas.LocalCases.OuterWalk
+public import DraismaVargas.LocalCases.IncomingTargetExpansion
+
+@[expose] public section
 
 /-!
 # `lm:change-comb-type`(2): equal signed multiplicity across a non-trivalent limit

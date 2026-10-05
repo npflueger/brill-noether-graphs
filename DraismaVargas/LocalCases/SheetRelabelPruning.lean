@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.NonDanglingValency
-import DraismaVargas.Infrastructure.GluingRelabel
-import Utilities.Subdivision.LeafReduction
+module
+
+public import DraismaVargas.LocalCases.NonDanglingValency
+public import DraismaVargas.Infrastructure.GluingRelabel
+public import Utilities.Subdivision.LeafReduction
+
+@[expose] public section
 
 /-!
 # Pruning transport under the actual sheet-relabelling graph equivalence
@@ -68,8 +72,8 @@ noncomputable def mapCut (equivalence : LaplacianEquiv G H) {left right : G.V}
     ((mem_imageSide equivalence cut.side first).mp hFirst)
     (fun h ↦ hSecond ((mem_imageSide equivalence cut.side second).mpr h))]
   by_cases h : first = left ∧ second = right
-  · exact (if_pos h).trans (if_pos ⟨congrArg equivalence.toEquiv h.1, congrArg equivalence.toEquiv h.2⟩).symm
-  · exact (if_neg h).trans (if_neg (fun hPair ↦ h
+  · exact (ite_eq_left h).trans (ite_eq_left ⟨congrArg equivalence.toEquiv h.1, congrArg equivalence.toEquiv h.2⟩).symm
+  · exact (ite_eq_right h).trans (ite_eq_right (fun hPair ↦ h
       ⟨equivalence.toEquiv.injective hPair.1, equivalence.toEquiv.injective hPair.2⟩)).symm
 
 /-- A genuine dangling side remains genuine under a graph equivalence.

@@ -1,8 +1,12 @@
-import DraismaVargasCount.RowChipCoefficient
-import DraismaVargasCount.RowWalk
-import Utilities.Subdivision.SlotMoment
-import DraismaVargasCount.OddDenominator
-import DraismaVargas.LocalCases.OrientedTraversal
+module
+
+public import DraismaVargasCount.RowChipCoefficient
+public import DraismaVargasCount.RowWalk
+public import Utilities.Subdivision.SlotMoment
+public import DraismaVargasCount.OddDenominator
+public import DraismaVargas.LocalCases.OrientedTraversal
+
+@[expose] public section
 
 /-!
 # Ordered-row positions, and 2-integral weighted positions on an unramified row
@@ -123,7 +127,7 @@ theorem row_target_length_mem
       using hIncident
   have hDen := OddDenominator.odd_leafAdjustedCoords_den fd y z hSystem hOdd
     (fd.labelling.targetEdge.symm edge.1.1)
-  simpa only [OddDenominator.leafAdjustedCoords, if_neg hNot,
+  simpa only [OddDenominator.leafAdjustedCoords, ite_eq_right hNot,
     mem_oddDenominatorSubring] using hDen
 
 /-- At an interior vertex of an unramified row, the local degree equals

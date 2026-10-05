@@ -1,6 +1,10 @@
-import DraismaVargasCount.GeometricSegmentWalls
-import DraismaVargasCount.GeometricContraction
-import DraismaVargasCount.StarPilot
+module
+
+public import DraismaVargasCount.GeometricSegmentWalls
+public import DraismaVargasCount.GeometricContraction
+public import DraismaVargasCount.StarPilot
+
+@[expose] public section
 
 /-!
 # Actual metric limits under geometric frame isomorphisms

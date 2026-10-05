@@ -1,4 +1,8 @@
-import Bananas.SameStrand.SameStrand
+module
+
+public import Bananas.SameStrand.SameStrand
+
+@[expose] public section
 
 /-!
 # A generic cross-strand far-mark rank witness

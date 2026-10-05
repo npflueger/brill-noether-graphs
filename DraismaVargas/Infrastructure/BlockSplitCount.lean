@@ -1,4 +1,8 @@
-import DraismaVargas.Infrastructure.OrderedBlockSplit
+module
+
+public import DraismaVargas.Infrastructure.OrderedBlockSplit
+
+@[expose] public section
 
 /-!
 # Counting the refined slots an ordered block split prescribes
@@ -75,7 +79,7 @@ theorem countPos_eq_zero_of_sum_eq_zero {l : List ℕ} (h : l.sum = 0) : countPo
   | cons x rest ih =>
       simp only [List.sum_cons] at h
       have hx : ¬ 0 < x := by omega
-      rw [countPos_cons, ih (by omega), if_neg hx]
+      rw [countPos_cons, ih (by omega), ite_eq_right hx]
 
 /-- **The cut at total `a` lands on an occurrence boundary.**  This is the
 condition under which the marker of a `CoreExpansion.SlotKind.double` slot
@@ -119,7 +123,7 @@ theorem countPos_le_splitSum (l : List ℕ) (a : ℕ) :
       · rw [splitSum_cons_of_gt rest h]
         have hx : 0 < x := by omega
         have hxa : 0 < x - a := by omega
-        simp only [countPos_cons, countPos_nil, if_pos hx, if_pos hxa]
+        simp only [countPos_cons, countPos_nil, ite_eq_left hx, ite_eq_left hxa]
         split_ifs <;> omega
 
 /-- **and a misaligned cut gains exactly one**: the straddled occurrence is
@@ -151,8 +155,8 @@ theorem countPos_splitSum_of_not_aligned {l : List ℕ} {a : ℕ} (hle : a ≤ l
         have hx : 0 < x := by omega
         have hxa : 0 < x - a := by omega
         rw [splitSum_cons_of_gt rest h]
-        simp only [countPos_cons, countPos_nil, if_pos hx, if_pos hxa,
-          if_pos (Nat.pos_of_ne_zero ha)]
+        simp only [countPos_cons, countPos_nil, ite_eq_left hx, ite_eq_left hxa,
+          ite_eq_left (Nat.pos_of_ne_zero ha)]
         omega
 
 /-- **and an aligned cut gains nothing**: no occurrence is straddled. -/
@@ -184,8 +188,8 @@ theorem countPos_splitSum_of_aligned {l : List ℕ} {a : ℕ} (hAl : Aligned l a
         subst ha
         rw [splitSum_cons_of_gt rest h]
         have hx : 0 < x := by omega
-        simp only [countPos_cons, countPos_nil, Nat.sub_zero, if_pos hx,
-          if_neg (lt_irrefl 0)]
+        simp only [countPos_cons, countPos_nil, Nat.sub_zero, ite_eq_left hx,
+          ite_eq_right (lt_irrefl 0)]
         omega
 
 /-- **The exact effect of one cut.** -/
@@ -193,8 +197,8 @@ theorem countPos_splitSum {l : List ℕ} {a : ℕ} (hle : a ≤ l.sum) :
     countPos (splitSum l a).1 + countPos (splitSum l a).2 =
       countPos l + (if alignedB l a then 0 else 1) := by
   by_cases hAl : Aligned l a
-  · rw [if_pos ((alignedB_iff l a).mpr hAl), countPos_splitSum_of_aligned hAl, Nat.add_zero]
-  · rw [if_neg (by simpa only [alignedB_iff] using hAl),
+  · rw [ite_eq_left ((alignedB_iff l a).mpr hAl), countPos_splitSum_of_aligned hAl, Nat.add_zero]
+  · rw [ite_eq_right (by simpa only [alignedB_iff] using hAl),
       countPos_splitSum_of_not_aligned hle hAl]
 
 /-- **How many occurrences a whole row's cuts straddle.**  One per interior

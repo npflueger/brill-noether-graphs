@@ -1,5 +1,9 @@
-import GenusSixExistence.BrillNoetherRank.Reduction
-import Utilities.Subdivision.BridgeLift
+module
+
+public import GenusSixExistence.BrillNoetherRank.Reduction
+public import Utilities.Subdivision.BridgeLift
+
+@[expose] public section
 
 /-!
 # Reduction of the triple witness to bridgeless graphs

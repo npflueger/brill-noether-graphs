@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.W2MkkArbitraryExit
-import DraismaVargas.LocalCases.W2MkkSelectedCensus
-import DraismaVargas.LocalCases.SheetRelabelIncidence
+module
+
+public import DraismaVargas.LocalCases.W2MkkArbitraryExit
+public import DraismaVargas.LocalCases.W2MkkSelectedCensus
+public import DraismaVargas.LocalCases.SheetRelabelIncidence
+
+@[expose] public section
 
 /-!
 # The remote dictionary of case `{w2-r2-nd3-M-kk}`

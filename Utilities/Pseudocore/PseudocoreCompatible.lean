@@ -1,5 +1,9 @@
-import Utilities.Pseudocore.GenusFourPseudocore
-import Mathlib.Tactic
+module
+
+public import Utilities.Pseudocore.GenusFourPseudocore
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # Split-metadata compatibility (light half)

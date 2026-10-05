@@ -1,6 +1,10 @@
-import Bananas.Transmission.CycleTorsionOrder
-import Bananas.Theta.EvenlyMarkedThetaKGeneral
-import Bananas.Sections.SectionSixChainConclusion
+module
+
+public import Bananas.Transmission.CycleTorsionOrder
+public import Bananas.Theta.EvenlyMarkedThetaKGeneral
+public import Bananas.Sections.SectionSixChainConclusion
+
+@[expose] public section
 
 /-!
 # Example 1.15: an explicit genus-eight Brill--Noether general chain

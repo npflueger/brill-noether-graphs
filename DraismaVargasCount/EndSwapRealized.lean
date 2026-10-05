@@ -1,4 +1,8 @@
-import DraismaVargasCount.CatFlipRealizedAut
+module
+
+public import DraismaVargasCount.CatFlipRealizedAut
+
+@[expose] public section
 
 /-!
 # The end swap is realised by the caterpillar gluing datum, at every even genus
@@ -134,7 +138,7 @@ theorem endSwapTgtFun_fix (m : ℕ) (v : (catTree (m + 1)).V)
     (h0 : v.val ≠ 0) (h1 : v.val ≠ 1) (h3 : v.val ≠ 3) (h4 : v.val ≠ 4) :
     endSwapTgtFun m v = v := by
   apply Fin.ext
-  rw [endSwapTgtFun_val, if_neg h0, if_neg h1, if_neg h3, if_neg h4]
+  rw [endSwapTgtFun_val, ite_eq_right h0, ite_eq_right h1, ite_eq_right h3, ite_eq_right h4]
 
 theorem endSwapTgtFun_involutive (m : ℕ) : Function.Involutive (endSwapTgtFun m) := by
   intro v
@@ -258,27 +262,27 @@ theorem endSwap_edgePart (m : ℕ) (edge : (catTree (m + 1)).edges) :
   rw [edgeIndex_occ, edgeIndex_occ]
   rcases (show i.val = 0 ∨ i.val = 1 ∨ i.val = 2 ∨ i.val = 3 ∨ 4 ≤ i.val by omega)
     with h | h | h | h | h
-  · have hslot : ((endSwap m).slot i).val = 3 := by rw [endSwap_slot_val, if_pos h]
+  · have hslot : ((endSwap m).slot i).val = 3 := by rw [endSwap_slot_val, ite_eq_left h]
     have hp1 : ¬ IsPairEdge (m + 1) 3 := by unfold IsPairEdge; omega
     have hp2 : ¬ IsPairEdge (m + 1) 0 := by unfold IsPairEdge; omega
-    rw [hslot, h, if_neg hp1, if_neg hp2]
+    rw [hslot, h, ite_eq_right hp1, ite_eq_right hp2]
   · have hslot : ((endSwap m).slot i).val = 2 := by
-      rw [endSwap_slot_val, if_neg (by omega), if_pos h]
+      rw [endSwap_slot_val, ite_eq_right (by omega), ite_eq_left h]
     have hp1 : IsPairEdge (m + 1) 2 := by unfold IsPairEdge; omega
     have hp2 : IsPairEdge (m + 1) 1 := by unfold IsPairEdge; omega
-    rw [hslot, h, if_pos hp1, if_pos hp2]
+    rw [hslot, h, ite_eq_left hp1, ite_eq_left hp2]
     congr 1
   · have hslot : ((endSwap m).slot i).val = 1 := by
-      rw [endSwap_slot_val, if_neg (by omega), if_neg (by omega), if_pos h]
+      rw [endSwap_slot_val, ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_left h]
     have hp1 : IsPairEdge (m + 1) 1 := by unfold IsPairEdge; omega
     have hp2 : IsPairEdge (m + 1) 2 := by unfold IsPairEdge; omega
-    rw [hslot, h, if_pos hp1, if_pos hp2]
+    rw [hslot, h, ite_eq_left hp1, ite_eq_left hp2]
     congr 1
   · have hslot : ((endSwap m).slot i).val = 0 := by
-      rw [endSwap_slot_val, if_neg (by omega), if_neg (by omega), if_neg (by omega), if_pos h]
+      rw [endSwap_slot_val, ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_left h]
     have hp1 : ¬ IsPairEdge (m + 1) 0 := by unfold IsPairEdge; omega
     have hp2 : ¬ IsPairEdge (m + 1) 3 := by unfold IsPairEdge; omega
-    rw [hslot, h, if_neg hp1, if_neg hp2]
+    rw [hslot, h, ite_eq_right hp1, ite_eq_right hp2]
   · rw [endSwap_slot_of_four_le m i h]
 
 /-! ## 5.  The sheet layer -/

@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.W3FourIncomingMatching
-import DraismaVargas.LocalCases.W3FourRegrownColumnSeam
-import DraismaVargas.LocalCases.FiniteAtlasMarch
+module
+
+public import DraismaVargas.LocalCases.W3FourIncomingMatching
+public import DraismaVargas.LocalCases.W3FourRegrownColumnSeam
+public import DraismaVargas.LocalCases.FiniteAtlasMarch
+
+@[expose] public section
 
 /-!
 # Equation (2)'s matrices and outgoing velocity, for an arbitrary incoming `w3Four` cover

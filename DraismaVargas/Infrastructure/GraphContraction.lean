@@ -1,4 +1,8 @@
-import DraismaVargas.Infrastructure.GluingDatum
+module
+
+public import DraismaVargas.Infrastructure.GluingDatum
+
+@[expose] public section
 
 /-!
 # Contracting a single edge of a loopless multigraph
@@ -67,14 +71,14 @@ def fold (hab : a ≠ b) (v : G.V) : Vertex G b :=
   if h : v = b then ⟨a, hab⟩ else ⟨v, h⟩
 
 theorem fold_of_ne (hab : a ≠ b) {v : G.V} (h : v ≠ b) :
-    fold G hab v = ⟨v, h⟩ := dif_neg h
+    fold G hab v = ⟨v, h⟩ := dite_eq_right h
 
-@[simp] theorem fold_self (hab : a ≠ b) : fold G hab b = ⟨a, hab⟩ := dif_pos rfl
+@[simp] theorem fold_self (hab : a ≠ b) : fold G hab b = ⟨a, hab⟩ := dite_eq_left rfl
 
 @[simp] theorem fold_coe (hab : a ≠ b) (x : Vertex G b) :
-    fold G hab (x : G.V) = x := dif_neg x.2
+    fold G hab (x : G.V) = x := dite_eq_right x.2
 
-@[simp] theorem fold_a (hab : a ≠ b) : fold G hab a = ⟨a, hab⟩ := dif_neg hab
+@[simp] theorem fold_a (hab : a ≠ b) : fold G hab a = ⟨a, hab⟩ := dite_eq_right hab
 
 /-- `fold` is injective except that it identifies `a` with `b`. -/
 theorem fold_eq_fold_iff (hab : a ≠ b) (u v : G.V) :
@@ -410,12 +414,12 @@ theorem vertex_degree_contract_of_ne (hab : a ≠ b) (hOne : num_edges G a b = 1
           else (num_edges G u (x : G.V) : ℤ) := by
     intro x
     by_cases hx : (x : G.V) = a
-    · rw [if_pos hx, show x = (⟨a, hab⟩ : Vertex G b) from Subtype.ext hx,
+    · rw [ite_eq_left hx, show x = (⟨a, hab⟩ : Vertex G b) from Subtype.ext hx,
         num_edges_symmetric (contract G hab hOne) ⟨u, hu⟩ ⟨a, hab⟩,
         num_edges_contract_merge G hab hOne hu hua,
         num_edges_symmetric G a u, num_edges_symmetric G b u]
       exact Nat.cast_add _ _
-    · rw [if_neg hx]
+    · rw [ite_eq_right hx]
       exact_mod_cast num_edges_contract_of_ne G hab hOne hu x.2 hua hx
   calc vertex_degree (contract G hab hOne) ⟨u, hu⟩
       = ∑ x : Vertex G b, (num_edges (contract G hab hOne) ⟨u, hu⟩ x : ℤ) := rfl
@@ -433,9 +437,9 @@ theorem vertex_degree_contract_of_ne (hab : a ≠ b) (hOne : num_edges G a b = 1
         (Finset.sum_erase_add _ _ (Finset.mem_erase.mpr ⟨hab, Finset.mem_univ a⟩)).symm
     _ = (∑ w ∈ (Finset.univ.erase b).erase a, (num_edges G u w : ℤ))
           + ((num_edges G u a : ℤ) + (num_edges G u b : ℤ)) := by
-        rw [if_pos rfl]
+        rw [ite_eq_left rfl]
         exact congrArg (· + ((num_edges G u a : ℤ) + (num_edges G u b : ℤ)))
-          (Finset.sum_congr rfl (fun w hw => if_neg (Finset.mem_erase.mp hw).1))
+          (Finset.sum_congr rfl (fun w hw => ite_eq_right (Finset.mem_erase.mp hw).1))
     _ = vertex_degree G u := by
         unfold vertex_degree
         rw [sum_split G hab (fun w => (num_edges G u w : ℤ))]
@@ -454,9 +458,9 @@ theorem vertex_degree_contract_merge (hab : a ≠ b) (hOne : num_edges G a b = 1
           else (num_edges G a (x : G.V) : ℤ) + (num_edges G b (x : G.V) : ℤ) := by
     intro x
     by_cases hx : (x : G.V) = a
-    · rw [if_pos hx, show x = (⟨a, hab⟩ : Vertex G b) from Subtype.ext hx]
+    · rw [ite_eq_left hx, show x = (⟨a, hab⟩ : Vertex G b) from Subtype.ext hx]
       exact_mod_cast num_edges_self_zero (contract G hab hOne) ⟨a, hab⟩
-    · rw [if_neg hx]
+    · rw [ite_eq_right hx]
       exact_mod_cast num_edges_contract_merge G hab hOne x.2 hx
   calc vertex_degree (contract G hab hOne) ⟨a, hab⟩
       = ∑ x : Vertex G b, (num_edges (contract G hab hOne) ⟨a, hab⟩ x : ℤ) := rfl
@@ -473,8 +477,8 @@ theorem vertex_degree_contract_merge (hab : a ≠ b) (hOne : num_edges G a b = 1
         (Finset.sum_erase_add _ _ (Finset.mem_erase.mpr ⟨hab, Finset.mem_univ a⟩)).symm
     _ = (∑ w ∈ (Finset.univ.erase b).erase a, (num_edges G a w : ℤ))
           + (∑ w ∈ (Finset.univ.erase b).erase a, (num_edges G b w : ℤ)) := by
-        rw [if_pos rfl, add_zero, ← Finset.sum_add_distrib]
-        exact Finset.sum_congr rfl (fun w hw => if_neg (Finset.mem_erase.mp hw).1)
+        rw [ite_eq_left rfl, add_zero, ← Finset.sum_add_distrib]
+        exact Finset.sum_congr rfl (fun w hw => ite_eq_right (Finset.mem_erase.mp hw).1)
     _ = vertex_degree G a + vertex_degree G b - 2 := by
         unfold vertex_degree
         rw [sum_split G hab (fun w => (num_edges G a w : ℤ)),

@@ -1,5 +1,9 @@
-import DraismaVargasCount.NonTrivalentLeafNormalization
-import DraismaVargasCount.UnitWeightBalance
+module
+
+public import DraismaVargasCount.NonTrivalentLeafNormalization
+public import DraismaVargasCount.UnitWeightBalance
+
+@[expose] public section
 
 /-!
 # Nonfacet row denominators at a supported facet
@@ -98,7 +102,7 @@ theorem index_eq_of_consecutive_at_supported_column
       (if facet = fd.labelling.row first.stablePath then
         (1 : ℚ) / data.sourceEdgeIndex first.1 - 1 / data.sourceEdgeIndex second.1 else 0)
       at hRelation
-    rw [hFirstRow, if_neg hRow.symm, hColumn, Equiv.symm_apply_apply,
+    rw [hFirstRow, ite_eq_right hRow.symm, hColumn, Equiv.symm_apply_apply,
       hSupport _ hColumnNe, sub_zero] at hRelation
     exact corner_ne_zero fd hSupport hRelation
 

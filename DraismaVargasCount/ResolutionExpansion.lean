@@ -1,5 +1,9 @@
-import DraismaVargasCount.GeometricUniformExpansion
-import DraismaVargasCount.UniformExpansionRecognition
+module
+
+public import DraismaVargasCount.GeometricUniformExpansion
+public import DraismaVargasCount.UniformExpansionRecognition
+
+@[expose] public section
 
 /-!
 # Target expansions carrying an arbitrary local resolution
@@ -356,17 +360,17 @@ noncomputable def lift :
           (expandedEndpoint target wall right edge (edge : target.V × target.V).1)).Rel _ _
         rw [expandedVertexPartition_expandedEndpoint, contract_expandedEndpoint]
         by_cases hWall : (edge : target.V × target.V).1 = wall
-        · rw [if_pos hWall, hWall]
+        · rw [ite_eq_left hWall, hWall]
           exact transport.endpoint_compatible edge (Or.inl hWall) sheet
-        · rw [if_neg hWall]
+        · rw [ite_eq_right hWall]
           exact iso.compatible edge _ (Or.inl rfl) sheet
       · show (GlobalResolution.expandedVertexPartition first wall resolution
           (expandedEndpoint target wall right edge (edge : target.V × target.V).2)).Rel _ _
         rw [expandedVertexPartition_expandedEndpoint, contract_expandedEndpoint]
         by_cases hWall : (edge : target.V × target.V).2 = wall
-        · rw [if_pos hWall, hWall]
+        · rw [ite_eq_left hWall, hWall]
           exact transport.endpoint_compatible edge (Or.inr hWall) sheet
-        · rw [if_neg hWall]
+        · rw [ite_eq_right hWall]
           exact iso.compatible edge _ (Or.inr rfl) sheet
 
 theorem lift_targetEdge_occurrence (label : Option target.edges) :

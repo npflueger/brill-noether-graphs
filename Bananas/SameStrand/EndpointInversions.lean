@@ -1,11 +1,15 @@
-import Bananas.Basics.Definitions
-import Utilities.Foundations.RankInvariance
-import Utilities.Foundations.RankChipStep
-import Utilities.Foundations.RankOne
-import Utilities.Segments.SegmentReflection
-import ChipFiringWithLean.RiemannRoch
-import Utilities.Subdivision.SubdivisionConnectivity
-import Demazure.Submodular
+module
+
+public import Bananas.Basics.Definitions
+public import Utilities.Foundations.RankInvariance
+public import Utilities.Foundations.RankChipStep
+public import Utilities.Foundations.RankOne
+public import Utilities.Segments.SegmentReflection
+public import ChipFiringWithLean.RiemannRoch
+public import Utilities.Subdivision.SubdivisionConnectivity
+public import Demazure.Submodular
+
+@[expose] public section
 
 /-!
 # Endpoint transmission on banana graphs
@@ -22,11 +26,11 @@ open Utilities
 open Utilities Certificate SubdivisionGraph
 open Utilities.Certificate.SubdivisionGraph.Spec
 
-private noncomputable def rankSlipFunction (M : TwiceMarked) (D : CFDiv M.graph) :
+noncomputable def rankSlipFunction (M : TwiceMarked) (D : CFDiv M.graph) :
     ℤ → ℤ → ℤ :=
   fun a b => rank M.graph (D + a • one_chip M.u - b • one_chip M.v) + 1
 
-private theorem rankSlipFunction_D_props (M : TwiceMarked)
+theorem rankSlipFunction_D_props (M : TwiceMarked)
     (D : CFDiv M.graph) :
     SlipFace.D_props (rankSlipFunction M D) := by
   constructor
@@ -71,7 +75,7 @@ private theorem rankSlipFunction_D_props (M : TwiceMarked)
       simp only [smul_eq_mul, mul_one]
       omega
 
-private theorem rankSlip_duality (M : TwiceMarked) (D : CFDiv M.graph)
+theorem rankSlip_duality (M : TwiceMarked) (D : CFDiv M.graph)
     (hconn : graph_connected M.graph)
     (a b : ℤ) :
     rankSlipFunction M D a b -
@@ -248,7 +252,7 @@ theorem exists_affineTransmissionPermutation_of_submodular
   rw [rankDelta_marked_twist_add_torsion hk D (τ n) n] at hShift
   rw [← hBase] at hShift
   by_contra hne
-  rw [if_neg hne] at hShift
+  rw [ite_eq_right hne] at hShift
   norm_num at hShift
 
 /-! ## The endpoint pencil -/
@@ -356,7 +360,7 @@ theorem rank_endpointPencilDivisor_ge_one {g : ℕ} (B : Banana g) :
     have hPosition :
         B.pathVertex edge position = B.interiorVertex edge offset := by
       unfold Spec.pathVertex
-      rw [dif_neg (by simp [position]), dif_neg (by
+      rw [dite_eq_right (by simp [position]), dite_eq_right (by
         have := offset.isLt
         simp only [position]
         omega)]

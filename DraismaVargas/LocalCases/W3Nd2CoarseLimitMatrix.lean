@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W3Nd2RowDescent
-import DraismaVargas.LocalCases.StableSourceMatrix
+module
+
+public import DraismaVargas.LocalCases.W3Nd2RowDescent
+public import DraismaVargas.LocalCases.StableSourceMatrix
+
+@[expose] public section
 
 /-!
 # Honest common-wall matrix formulas for the Figure 31 coarse member
@@ -182,12 +186,12 @@ theorem matrix_new
       (1 : ℚ) / candidate.datum.sourceEdgeIndex selected =
         matrix candidate.datum path
           (occurrenceEquiv target wall candidate.right none) at hSum
-    rw [if_pos hRow]
+    rw [ite_eq_left hRow]
     exact hSum.symm.trans (add_comm _ _)
   · have hNot : selected ∉ fibre :=
       fun h ↦ hRow ((selected_mem_occurrences_iff input profile path).mp h)
     have hErase := Finset.erase_eq_of_notMem hNot
-    rw [if_neg hRow, zero_add]
+    rw [ite_eq_right hRow, zero_add]
     change (∑ edge ∈ fibre, (1 : ℚ) / candidate.datum.sourceEdgeIndex edge) =
       ∑ edge ∈ fibre.erase selected,
         (1 : ℚ) / candidate.datum.sourceEdgeIndex edge

@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.OuterWalk
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoRowDictionary
+module
+
+public import DraismaVargas.LocalCases.OuterWalk
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoRowDictionary
+
+@[expose] public section
 
 /-!
 # The valency-two Base II exit: the outgoing full-dimensional presentation

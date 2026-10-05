@@ -1,6 +1,10 @@
-import Mathlib.Combinatorics.SimpleGraph.Acyclic
-import Mathlib.Combinatorics.SimpleGraph.Connectivity.Finite
-import Mathlib.Tactic
+module
+
+public import Mathlib.Combinatorics.SimpleGraph.Acyclic
+public import Mathlib.Combinatorics.SimpleGraph.Connectivity.Finite
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # Tree decompositions and treewidth

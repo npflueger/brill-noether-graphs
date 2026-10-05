@@ -1,18 +1,22 @@
-import GenusSixOddDescent.Statement
-import GenusSixOddDescent.Reduction
-import GenusSixOddDescent.Cost
-import GenusSixOddDescent.Hole
-import GenusSixOddDescent.HoleClass
-import GenusSixOddDescent.Chain
-import GenusSixOddDescent.BridgeChain
-import GenusSixOddDescent.Moves
-import GenusSixOddDescent.Swap
-import GenusSixOddDescent.HubSystem
-import GenusSixOddDescent.Main
+module
+
+public import GenusSixOddDescent.Statement
+public import GenusSixOddDescent.Reduction
+public import GenusSixOddDescent.Cost
+public import GenusSixOddDescent.Hole
+public import GenusSixOddDescent.HoleClass
+public import GenusSixOddDescent.Chain
+public import GenusSixOddDescent.BridgeChain
+public import GenusSixOddDescent.Moves
+public import GenusSixOddDescent.Swap
+public import GenusSixOddDescent.HubSystem
+public import GenusSixOddDescent.Main
 
 -- A one-file public interface: the library's main theorems restated in full
 -- and checked by the kernel against the real declarations.
-import GenusSixOddDescent.Highlights
+public import GenusSixOddDescent.Highlights
+
+@[expose] public section
 
 /-!
 # Genus-six odd-subdivision descent

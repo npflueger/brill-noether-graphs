@@ -1,4 +1,8 @@
-import DraismaVargas.Infrastructure.GluingRelabel
+module
+
+public import DraismaVargas.Infrastructure.GluingRelabel
+
+@[expose] public section
 
 /-!
 # Normalize stored representatives without changing any sheet block

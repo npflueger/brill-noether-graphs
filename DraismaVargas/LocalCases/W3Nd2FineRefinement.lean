@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W3Nd2SourceCandidates
+module
+
+public import DraismaVargas.LocalCases.W3Nd2SourceCandidates
+
+@[expose] public section
 
 /-!
 # Localized refinement for the true W3 nd2 fine member
@@ -76,10 +80,10 @@ theorem thirdTarget_mem (input : W3SourceInput data star)
     thirdTarget input profile ∈ GluingDatum.incidentEdges wall := by
   by_cases hLarge : largeTarget input profile =
       (orientedStar input profile).rightFirst
-  · simp only [thirdTarget, if_pos hLarge]
+  · simp only [thirdTarget, ite_eq_left hLarge]
     rw [(orientedStar input profile).incidentEdges_eq]
     simp
-  · simp only [thirdTarget, if_neg hLarge]
+  · simp only [thirdTarget, ite_eq_right hLarge]
     rw [(orientedStar input profile).incidentEdges_eq]
     simp
 
@@ -88,9 +92,9 @@ theorem thirdTarget_ne_small (input : W3SourceInput data star)
     thirdTarget input profile ≠ smallTarget input profile := by
   by_cases hLarge : largeTarget input profile =
       (orientedStar input profile).rightFirst
-  · simpa only [thirdTarget, if_pos hLarge, smallTarget] using
+  · simpa only [thirdTarget, ite_eq_left hLarge, smallTarget] using
       (orientedStar input profile).rightSecond_ne_left
-  · simpa only [thirdTarget, if_neg hLarge, smallTarget] using
+  · simpa only [thirdTarget, ite_eq_right hLarge, smallTarget] using
       (orientedStar input profile).rightFirst_ne_left
 
 theorem thirdTarget_ne_large (input : W3SourceInput data star)
@@ -98,11 +102,11 @@ theorem thirdTarget_ne_large (input : W3SourceInput data star)
     thirdTarget input profile ≠ largeTarget input profile := by
   by_cases hLarge : largeTarget input profile =
       (orientedStar input profile).rightFirst
-  · simp only [thirdTarget, if_pos hLarge]
+  · simp only [thirdTarget, ite_eq_left hLarge]
     intro hEq
     apply (orientedStar input profile).right_ne
     exact hLarge.symm.trans hEq.symm
-  · simp only [thirdTarget, if_neg hLarge]
+  · simp only [thirdTarget, ite_eq_right hLarge]
     intro hEq
     exact hLarge hEq.symm
 
@@ -114,13 +118,13 @@ theorem incidentEdges_eq (input : W3SourceInput data star)
   by_cases hLarge : largeTarget input profile =
       (orientedStar input profile).rightFirst
   · rw [(orientedStar input profile).incidentEdges_eq]
-    simp only [smallTarget, thirdTarget, if_pos hLarge]
+    simp only [smallTarget, thirdTarget, ite_eq_left hLarge]
     rw [hLarge]
   · rcases large_eq_rightFirst_or_rightSecond input profile with
       hFirst | hSecond
     · exact (hLarge hFirst).elim
     · rw [(orientedStar input profile).incidentEdges_eq]
-      simp only [smallTarget, thirdTarget, if_neg hLarge]
+      simp only [smallTarget, thirdTarget, ite_eq_right hLarge]
       rw [hSecond, Finset.pair_comm]
 
 /-- The canonical source occurrence in the third direction through a selected

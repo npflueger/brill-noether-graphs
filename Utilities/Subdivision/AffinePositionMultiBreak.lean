@@ -1,6 +1,10 @@
-import Utilities.Subdivision.AffinePosition
-import Utilities.Subdivision.CoreVertexReachability
-import Utilities.Subdivision.SlopeScript
+module
+
+public import Utilities.Subdivision.AffinePosition
+public import Utilities.Subdivision.CoreVertexReachability
+public import Utilities.Subdivision.SlopeScript
+
+@[expose] public section
 
 /-!
 # Multi-code divisors and multi-break slope scripts
@@ -72,8 +76,8 @@ theorem pathVertex_of_interior_val (edge : Fin p) (position : spec.PathPosition 
     spec.pathVertex edge position =
       spec.interiorVertex edge ⟨position.val - 1, by omega⟩ := by
   unfold SubdivisionGraph.Spec.pathVertex
-  rw [dif_neg (by omega : ¬ position.val = 0),
-    dif_neg (by omega : ¬ position.val = spec.length edge)]
+  rw [dite_eq_right (by omega : ¬ position.val = 0),
+    dite_eq_right (by omega : ¬ position.val = spec.length edge)]
 
 end Utilities.Certificate.SubdivisionGraph.Spec
 
@@ -301,9 +305,9 @@ theorem divisorOf_apply
     by_cases hEq :
         family.vertex certificate point core_nonempty hValid hBounds hCone index = target
     · simp [one_chip, hEq]
-    · rw [if_neg hEq]
+    · rw [ite_eq_right hEq]
       simp only [one_chip]
-      exact if_neg fun hAbsurd => hEq hAbsurd.symm
+      exact ite_eq_right fun hAbsurd => hEq hAbsurd.symm
   simp only [hTerm]
   exact Finset.sum_boole _ _
 
@@ -468,8 +472,8 @@ theorem breakSlopeFrom_congr (breaks : List (ℕ × ℤ)) {k l : ℕ}
           (if entry.1 ≤ k then entry.2 else initial) =
             (if entry.1 ≤ l then entry.2 else initial) := by
         by_cases hk : entry.1 ≤ k
-        · rw [if_pos hk, if_pos (hHead.mp hk)]
-        · rw [if_neg hk, if_neg fun hl => hk (hHead.mpr hl)]
+        · rw [ite_eq_left hk, ite_eq_left (hHead.mp hk)]
+        · rw [ite_eq_right hk, ite_eq_right fun hl => hk (hHead.mpr hl)]
       rw [breakSlopeFrom_cons, breakSlopeFrom_cons, hIf]
       exact ih (fun e he => hSame e (List.mem_cons_of_mem _ he)) _
 
@@ -637,11 +641,11 @@ theorem exists_of_mem_breaks
   obtain ⟨item, hItem, hSome⟩ := hMem
   obtain ⟨index, hIndex⟩ := List.mem_ofFn.mp hItem
   by_cases hEdge : item.position.edge = edge
-  · rw [if_pos hEdge] at hSome
+  · rw [ite_eq_left hEdge] at hSome
     refine ⟨index, ?_, ?_⟩
     · rw [hIndex]; exact hEdge
     · rw [hIndex, ← Option.some_inj.mp hSome]
-  · rw [if_neg hEdge] at hSome
+  · rw [ite_eq_right hEdge] at hSome
     exact absurd hSome (by simp)
 
 /-- If no break of the script sits on `edge` at coordinate `coordinate`, then

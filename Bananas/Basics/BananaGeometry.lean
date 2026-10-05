@@ -1,7 +1,11 @@
-import Bananas.Basics.BananaBasics
-import Utilities.Subdivision.SubdivisionConnectivity
-import Utilities.Subdivision.SubdivisionTwoEdgeCut
-import Utilities.Gluing.CycleRigidity
+module
+
+public import Bananas.Basics.BananaBasics
+public import Utilities.Subdivision.SubdivisionConnectivity
+public import Utilities.Subdivision.SubdivisionTwoEdgeCut
+public import Utilities.Gluing.CycleRigidity
+
+@[expose] public section
 
 /-!
 # Global geometry of banana graphs

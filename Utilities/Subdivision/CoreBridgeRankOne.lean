@@ -1,6 +1,10 @@
-import Utilities.Foundations.ElementaryExistence
-import Utilities.Gluing.BridgeRankOne
-import Utilities.Subdivision.CoreBridgeCut
+module
+
+public import Utilities.Foundations.ElementaryExistence
+public import Utilities.Gluing.BridgeRankOne
+public import Utilities.Subdivision.CoreBridgeCut
+
+@[expose] public section
 
 /-!
 # Rank one across a checked genus-two/genus-two core bridge

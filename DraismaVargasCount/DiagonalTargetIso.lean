@@ -1,5 +1,9 @@
-import DraismaVargasCount.BallotResidues
-import DraismaVargasCount.BlockMatching
+module
+
+public import DraismaVargasCount.BallotResidues
+public import DraismaVargasCount.BlockMatching
+
+@[expose] public section
 
 /-!
 # The datum supply `hSupply`: the target layer, and the exact shape of the sheet layer
@@ -278,14 +282,14 @@ theorem eq_of_row_eq_of_not_leaf (member : FibreMember (catCore m) y (m + 2))
 /-- The tail of every slot carries a surviving occurrence of that slot's row. -/
 theorem coreIncidence_tail_pos (t : Fin (6 * m + 3)) :
     0 < coreIncidence (catCore m) ((catCore m).tail t) t := by
-  unfold coreIncidence; rw [if_pos rfl]; omega
+  unfold coreIncidence; rw [ite_eq_left rfl]; omega
 
 theorem coreIncidence_head_pos (t : Fin (6 * m + 3)) :
     0 < coreIncidence (catCore m) ((catCore m).head t) t := by
   unfold coreIncidence
   by_cases h : (catCore m).tail t = (catCore m).head t
-  · rw [if_pos h]; omega
-  · rw [if_neg h, if_pos rfl]; omega
+  · rw [ite_eq_left h]; omega
+  · rw [ite_eq_right h, ite_eq_left rfl]; omega
 
 /-- **The branch vertex at the tail of a slot sits over an end of its target
 edge** (every slot, loop or not). -/
@@ -382,15 +386,15 @@ theorem slotEdge_absEnds (member : FibreMember (catCore m) y (m + 2))
   split_ifs with hLoop
   · simp only [absMap, tip]
     rcases branchImage_tail_mem member hD t with h | h
-    · rw [if_pos h]
+    · rw [ite_eq_left h]
       left
       exact Prod.ext h rfl
     · by_cases h1 : (slotEdge member t : member.target.V × member.target.V).1 =
           branchImage member ((catCore m).tail t)
-      · rw [if_pos h1]
+      · rw [ite_eq_left h1]
         left
         exact Prod.ext h1 rfl
-      · rw [if_neg h1]
+      · rw [ite_eq_right h1]
         right
         exact Prod.ext rfl h
   · exact slotEdge_ends_of_not_leaf member hD
@@ -691,35 +695,35 @@ noncomputable def starMatching (P Q : SheetPartition d) (x y : Fin d)
   · intro σ
     by_cases hσ : P.Rel σ x
     · have h' : P.Rel (P.repr σ) x := (P.rel_repr_left σ).trans hσ
-      rw [dif_pos h', dif_pos hσ]
+      rw [dite_eq_left h', dite_eq_left hσ]
     · have hr : P.repr σ = σ := repr_eq_self_of_blockCard_eq_one P (hP σ hσ)
       simp only [hr]
   · intro σ
     by_cases hσ : P.Rel σ x
-    · rw [dif_pos hσ]
+    · rw [dite_eq_left hσ]
       exact Q.repr_idem y
-    · rw [dif_neg hσ]
+    · rw [dite_eq_right hσ]
       exact repr_eq_self_of_blockCard_eq_one Q (hQ _ (e ⟨σ, hσ⟩).2)
   · intro i j hEq
     by_cases hi : P.Rel i x <;> by_cases hj : P.Rel j x
     · exact hi.trans hj.symm
-    · rw [dif_pos hi, dif_neg hj] at hEq
+    · rw [dite_eq_left hi, dite_eq_right hj] at hEq
       exact absurd (show Q.Rel (e ⟨j, hj⟩).1 y by
         show Q.repr _ = Q.repr y
         rw [← hEq, Q.repr_idem]) (e ⟨j, hj⟩).2
-    · rw [dif_neg hi, dif_pos hj] at hEq
+    · rw [dite_eq_right hi, dite_eq_left hj] at hEq
       exact absurd (show Q.Rel (e ⟨i, hi⟩).1 y by
         show Q.repr _ = Q.repr y
         rw [hEq, Q.repr_idem]) (e ⟨i, hi⟩).2
-    · rw [dif_neg hi, dif_neg hj] at hEq
+    · rw [dite_eq_right hi, dite_eq_right hj] at hEq
       have := e.injective (Subtype.ext hEq)
       rw [Subtype.mk.injEq] at this
       subst this
       rfl
   · intro σ
     by_cases hσ : P.Rel σ x
-    · rw [dif_pos hσ, blockCard_congr' Q (Q.rel_repr_left y), hCard, blockCard_congr' P hσ]
-    · rw [dif_neg hσ, hQ _ (e ⟨σ, hσ⟩).2, hP σ hσ]
+    · rw [dite_eq_left hσ, blockCard_congr' Q (Q.rel_repr_left y), hCard, blockCard_congr' P hσ]
+    · rw [dite_eq_right hσ, hQ _ (e ⟨σ, hσ⟩).2, hP σ hσ]
 
 /-- Two star partitions with anchor blocks of the same size are relabellings. -/
 theorem exists_relabel_of_star (P Q : SheetPartition d) (x y : Fin d)
@@ -826,7 +830,7 @@ theorem eq_branchVertex_of_surviving (member : FibreMember (catCore m) y (m + 2)
   by_cases hLoop : (catCore m).tail t = (catCore m).head t
   · exfalso
     have hEnds : absEnds m t = (Sum.inl ((catCore m).tail t), Sum.inr ⟨t, hLoop⟩) := by
-      unfold absEnds; rw [dif_pos hLoop]
+      unfold absEnds; rw [dite_eq_left hLoop]
     have hMem := target_mem_absEnds member hD e hInc
     rw [← ht, hEnds, hv] at hMem
     rcases hMem with h | h
@@ -890,12 +894,12 @@ theorem blockCard_branch_spine (member : FibreMember (catCore m) y (m + 2))
   have hv2 : (BallotResidues.spineSlot m (i + 1) (by omega)).val = 3 * (i + 1) - 2 := rfl
   have hv3 : (BallotResidues.stemSlot m i hi2).val = 3 * i - 1 := rfl
   obtain ⟨e1, hI1, hr1⟩ := BallotResidues.exists_incident_of_coreIncidence_pos member c
-    (BallotResidues.spineSlot m i (by omega)) (by rw [hInc, if_pos (by rw [hv1]; omega)]; norm_num)
+    (BallotResidues.spineSlot m i (by omega)) (by rw [hInc, ite_eq_left (by rw [hv1]; omega)]; norm_num)
   obtain ⟨e2, hI2, hr2⟩ := BallotResidues.exists_incident_of_coreIncidence_pos member c
     (BallotResidues.spineSlot m (i + 1) (by omega))
-    (by rw [hInc, if_pos (by rw [hv2]; omega)]; norm_num)
+    (by rw [hInc, ite_eq_left (by rw [hv2]; omega)]; norm_num)
   obtain ⟨e3, hI3, hr3⟩ := BallotResidues.exists_incident_of_coreIncidence_pos member c
-    (BallotResidues.stemSlot m i hi2) (by rw [hInc, if_pos (by rw [hv3]; omega)]; norm_num)
+    (BallotResidues.stemSlot m i hi2) (by rw [hInc, ite_eq_left (by rw [hv3]; omega)]; norm_num)
   set X := (member.ident.vertex.symm c).1 with hX
   have h12 : e1 ≠ e2 := by
     intro h; subst h; have := congrArg Fin.val (hr1.symm.trans hr2); rw [hv1, hv2] at this; omega
@@ -1234,14 +1238,14 @@ theorem pathTree_vertexCensus (v : inPath.V) :
       pathTree.vertexPartition v = (pathCycle.vertexPartition v).relabel π := by
   by_cases h1 : v = midV
   · refine ⟨Equiv.refl _, ?_⟩
-    simp only [pathTree, pathCycle, if_pos h1]
+    simp only [pathTree, pathCycle, ite_eq_left h1]
     exact (Transport.DatumIso.relabel_refl _).symm
   · by_cases h0 : v = leftV
     · refine ⟨Equiv.refl _, ?_⟩
-      simp only [pathTree, pathCycle, if_neg h1, if_pos h0]
+      simp only [pathTree, pathCycle, ite_eq_right h1, ite_eq_left h0]
       exact (Transport.DatumIso.relabel_refl _).symm
     · refine ⟨Equiv.swap 0 1, ?_⟩
-      simp only [pathTree, pathCycle, if_neg h1, if_neg h0]
+      simp only [pathTree, pathCycle, ite_eq_right h1, ite_eq_right h0]
       exact partOne_eq_relabel
 
 theorem pathTree_edgeCensus (e : inPath.edges) :

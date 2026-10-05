@@ -1,5 +1,9 @@
-import Bananas.Classification.BridgelessDegreeOneClasses
-import Bananas.Theta.ThetaInversionCount
+module
+
+public import Bananas.Classification.BridgelessDegreeOneClasses
+public import Bananas.Theta.ThetaInversionCount
+
+@[expose] public section
 
 /-!
 # Nonrecurrence on bridgeless genus-two graphs

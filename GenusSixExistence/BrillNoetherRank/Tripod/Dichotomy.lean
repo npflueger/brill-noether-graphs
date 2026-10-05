@@ -1,9 +1,13 @@
-import GenusSixExistence.BrillNoetherRank.Tripod.ClawDefs
-import DraismaVargasCount.LeafFibre
-import DraismaVargas.LocalCases.LeafFacetNoReturn
-import Utilities.Foundations.PendantDeletion
-import DraismaVargasCount.RowGeodesic
-import Utilities.IntegralGeometry.DeterminantExpansion
+module
+
+public import GenusSixExistence.BrillNoetherRank.Tripod.ClawDefs
+public import DraismaVargasCount.LeafFibre
+public import DraismaVargas.LocalCases.LeafFacetNoReturn
+public import Utilities.Foundations.PendantDeletion
+public import DraismaVargasCount.RowGeodesic
+public import Utilities.IntegralGeometry.DeterminantExpansion
+
+@[expose] public section
 
 /-!
 # The dichotomy over the tripod gadget, glued if and only if not a claw
@@ -333,7 +337,7 @@ theorem markTarget_mem_gImage (k : Fin 3) :
       (κ.ident.row.symm (markGSlot p k)) := by
     rw [hInc]
     unfold coreIncidence
-    rw [if_pos (tail_markGSlot core s k)]
+    rw [ite_eq_left (tail_markGSlot core s k)]
     omega
   obtain ⟨e, hE, hPath⟩ := (incidenceCount_pos_iff _ _ _).mp hPos
   refine ⟨e, ?_, incident_target hE⟩
@@ -579,11 +583,11 @@ theorem sum_ite_incident (Q : target.V → Prop) [DecidablePred Q] (f : data.Sou
     by_cases h1 : (data.sourceEnds f).1 = X
     · subst h1
       have h2 : (data.sourceEnds f).2 ≠ (data.sourceEnds f).1 := fun h ↦ hNe h.symm
-      simp only [incident_left, and_true, if_true, h2, if_false, add_zero]
+      simp only [incident_left, and_true, ite_true, h2, ite_false, add_zero]
       rfl
     · by_cases h2 : (data.sourceEnds f).2 = X
       · subst h2
-        simp only [incident_right, and_true, if_true, h1, if_false, zero_add]
+        simp only [incident_right, and_true, ite_true, h1, ite_false, zero_add]
         rfl
       · have hI : ¬ Incident data f X := by
           rintro (h | h)
@@ -613,11 +617,11 @@ theorem sum_ite_incidenceCount (Q : target.V → Prop) [DecidablePred Q] (L : St
         refine Finset.sum_congr rfl fun X _ ↦ ?_
         rw [hCount X]
         by_cases hQ : Q X.1.1
-        · rw [if_pos hQ]
+        · rw [ite_eq_left hQ]
           refine Finset.sum_congr rfl fun a _ ↦ ?_
           by_cases h1 : Incident data a.1 X <;> by_cases h2 : a.stablePath = L <;>
             simp [h1, h2, hQ]
-        · rw [if_neg hQ]
+        · rw [ite_eq_right hQ]
           symm
           exact Finset.sum_eq_zero fun a _ ↦ by simp [hQ]
     _ = ∑ a : NonDanglingEdge data, ∑ X : data.SourceVertex,
@@ -626,7 +630,7 @@ theorem sum_ite_incidenceCount (Q : target.V → Prop) [DecidablePred Q] (L : St
     _ = _ := by
         refine Finset.sum_congr rfl fun a _ ↦ ?_
         by_cases hL : a.stablePath = L
-        · simp only [hL, if_true]
+        · simp only [hL, ite_true]
           exact sum_ite_incident Q a.1
         · simp [hL]
 
@@ -669,8 +673,8 @@ theorem exists_incident_of_end {N P : ℕ} {C : Core N P} (κ : Frame C degree) 
     rw [hInc]
     unfold coreIncidence
     rcases hv with h | h
-    · rw [if_pos h]; omega
-    · rw [if_pos h]; omega
+    · rw [ite_eq_left h]; omega
+    · rw [ite_eq_left h]; omega
   exact (incidenceCount_pos_iff _ _ _).mp hPos
 
 /-- **`T̂ = φ(G)` lies on one side of every cut that no G-edge crosses** (§4.1: `T̂` is
@@ -760,7 +764,7 @@ theorem incidenceCount_leg (κ : Frame (tripodCore core s) degree) (k : Fin 3)
       have := three_le_markSource κ k
       rw [← h] at this
       omega
-    rw [if_neg hc, if_neg hm, add_zero]
+    rw [ite_eq_right hc, ite_eq_right hm, add_zero]
     rcases Nat.lt_or_ge (nonDanglingValency κ.data X) 2 with h2 | h2
     · have h1 := NonDanglingValency.nonDanglingValency_ne_one κ.data κ.fullDim.connected X
       have h0 : nonDanglingValency κ.data X = 0 := by omega
@@ -828,7 +832,7 @@ theorem markSource_iff_not_centreSource (κ : Frame (tripodCore core s) degree) 
         ((if Q (a.1.1.1 : κ.target.V × κ.target.V).1 then (1 : ZMod 2) else 0) +
           (if Q (a.1.1.1 : κ.target.V × κ.target.V).2 then 1 else 0)) else 0) = 1 := by
     rw [Finset.sum_eq_single e]
-    · rw [if_pos ((hrow e).mpr he)]
+    · rw [ite_eq_left ((hrow e).mpr he)]
       by_cases h1 : Q (e.1.1.1 : κ.target.V × κ.target.V).1 <;>
         by_cases h2 : Q (e.1.1.1 : κ.target.V × κ.target.V).2
       · exact absurd ⟨fun _ ↦ h2, fun _ ↦ h1⟩ hQe
@@ -837,15 +841,15 @@ theorem markSource_iff_not_centreSource (κ : Frame (tripodCore core s) degree) 
       · exact absurd ⟨fun h ↦ absurd h h1, fun h ↦ absurd h h2⟩ hQe
     · intro a _ hae
       by_cases haL : a.stablePath = κ.ident.row.symm (legSlot p k)
-      · rw [if_pos haL]
+      · rw [ite_eq_left haL]
         have hiff := hOther a ((hrow a).mp haL) hae
         by_cases h1 : Q (a.1.1.1 : κ.target.V × κ.target.V).1
         · have h2 := hiff.mp h1
-          rw [if_pos h1, if_pos h2]
+          rw [ite_eq_left h1, ite_eq_left h2]
           decide
         · have h2 : ¬ Q (a.1.1.1 : κ.target.V × κ.target.V).2 := fun h ↦ h1 (hiff.mpr h)
-          rw [if_neg h1, if_neg h2, add_zero]
-      · rw [if_neg haL]
+          rw [ite_eq_right h1, ite_eq_right h2, add_zero]
+      · rw [ite_eq_right haL]
     · intro h
       exact absurd (Finset.mem_univ e) h
   -- the vertices: only the centre and the mark count
@@ -877,11 +881,11 @@ theorem markSource_iff_not_centreSource (κ : Frame (tripodCore core s) degree) 
     simp
   rw [hLeft, hRight] at hCast
   by_cases h1 : Q (centreSource κ).1.1 <;> by_cases h2 : Q (TripodFrame.markSource κ k).1.1
-  · rw [if_pos h1, if_pos h2] at hCast
+  · rw [ite_eq_left h1, ite_eq_left h2] at hCast
     exact absurd hCast (by decide)
   · exact ⟨fun h ↦ absurd h h2, fun h ↦ absurd h1 h⟩
   · exact ⟨fun _ ↦ h1, fun _ ↦ h2⟩
-  · rw [if_neg h1, if_neg h2] at hCast
+  · rw [ite_eq_right h1, ite_eq_right h2] at hCast
     exact absurd hCast (by decide)
 
 end GadgetCut
@@ -1054,14 +1058,14 @@ theorem endOver_eq_of_incident {f : data.SourceEdge} {w : target.V} {X : data.So
     (hX : Incident data f X) (hXw : X.1.1 = w) : endOver data f w = X := by
   unfold endOver
   rcases hX with h | h
-  · rw [if_pos (by rw [h]; exact hXw)]
+  · rw [ite_eq_left (by rw [h]; exact hXw)]
     exact h
   · by_cases h1 : (data.sourceEnds f).1.1.1 = w
     · exfalso
       have h2 : (data.sourceEnds f).2.1.1 = X.1.1 := congrArg (fun Y : data.SourceVertex ↦ Y.1.1) h
       exact TargetGeodesic.Dart.coe_fst_ne_snd (f.1.1 : target.edges)
         (h1.trans (hXw.symm.trans h2.symm))
-    · rw [if_neg h1]
+    · rw [ite_eq_right h1]
       exact h
 
 /-- **The partner of `f` at its end over `w`**: the other surviving edge there, when that end
@@ -1091,7 +1095,7 @@ theorem end_of_incident_vertex {N P : ℕ} {C : Core N P} (κ : Frame C degree) 
   · exact Or.inl h1
   · by_cases h2 : C.head (κ.ident.row g.stablePath) = v
     · exact Or.inr h2
-    · rw [if_neg h1, if_neg h2] at hPos
+    · rw [ite_eq_right h1, ite_eq_right h2] at hPos
       omega
 
 theorem isGSlot_or_eq_legSlot (j : Fin (p + 1 + 1 + 1 + 3)) :
@@ -1155,8 +1159,8 @@ theorem legEdge_unique_at_mark (κ : Frame (tripodCore core s) degree) (k : Fin 
     show incidenceCount κ.data (κ.ident.vertex.symm (tripodMark n k)).1 _ = 1
     rw [hInc]
     unfold coreIncidence
-    rw [tripodCore_tail_legSlot, tripodCore_head_legSlot, if_neg (centre_ne_tripodMark k),
-      if_pos rfl]
+    rw [tripodCore_tail_legSlot, tripodCore_head_legSlot, ite_eq_right (centre_ne_tripodMark k),
+      ite_eq_left rfl]
   unfold incidenceCount at hOne
   refine Finset.card_le_one.mp hOne.le g ?_ g' ?_
   · exact Finset.mem_filter.mpr ⟨(StablePathCount.mem_incidentEdges _ _ _).mpr hg,
@@ -1283,7 +1287,7 @@ theorem partner_spec (κ : Frame (tripodCore core s) degree) {w : κ.target.V}
   -- the partner
   have hPartner : partner κ.data f.1 w = stepEdge κ.data h2 f.1 := by
     unfold partner
-    rw [dif_pos h2]
+    rw [dite_eq_left h2]
   set g := stepEdge κ.data h2 f.1 with hgdef
   have gS : ¬ IsDangling κ.data g := stepEdge_not_dangling κ.data h2 f.1
   have gI : Incident κ.data g X := stepEdge_incident κ.data h2 f.1
@@ -1304,7 +1308,7 @@ theorem partner_spec (κ : Frame (tripodCore core s) degree) {w : κ.target.V}
   have h2' : nonDanglingValency κ.data (endOver κ.data g w) = 2 := by rw [hEnd]; exact h2
   have hBack : partner κ.data g w = f.1 := by
     unfold partner
-    rw [dif_pos h2']
+    rw [dite_eq_left h2']
     rcases eq_or_eq_stepEdge κ.data h2' gS (by rw [hEnd]; exact gI) f.2
         (by rw [hEnd]; exact hfX) with h | h
     · exact absurd h.symm hgf

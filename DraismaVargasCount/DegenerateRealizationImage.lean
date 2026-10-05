@@ -1,4 +1,8 @@
-import DraismaVargasCount.DegenerateFibreCover
+module
+
+public import DraismaVargasCount.DegenerateFibreCover
+
+@[expose] public section
 
 /-!
 # What the member's realization actually hits on the small subdivision

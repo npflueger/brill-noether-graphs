@@ -1,5 +1,9 @@
-import Utilities.Subdivision.ClosedRowProof.RichLeafAssembly
-import Utilities.Subdivision.DoubledAnchorChecks
+module
+
+public import Utilities.Subdivision.ClosedRowProof.RichLeafAssembly
+public import Utilities.Subdivision.DoubledAnchorChecks
+
+@[expose] public section
 
 /-!
 # Marked leaf checkers: domination, multiplicity residuals, legged and pointed leaves

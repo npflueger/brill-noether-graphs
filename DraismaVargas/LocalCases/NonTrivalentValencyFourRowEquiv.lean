@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyFourDictionary
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyFourDictionary
+
+@[expose] public section
 
 /-!
 # The local picture at a non-anchor wall block of the `K = 0` candidate
@@ -211,7 +215,7 @@ theorem resolution_rel_of_not_anchor {x : Fin degree}
         BlockLocalBackground.localizedResolution source pairing hNoGlue
           hRamification
           (blockLocalBackground source pairing hNoGlue hRamification profile
-            hConnected hGenus hValid) ((coarse).repr x) hReprNe := dif_neg hReprNe
+            hConnected hGenus hValid) ((coarse).repr x) hReprNe := dite_eq_right hReprNe
   have hOnBlock : LocalResolution.onBlock (coarse) ((coarse).repr x)
       ((blockLocalBackground source pairing hNoGlue hRamification profile
         hConnected hGenus hValid).resolution ((coarse).repr x))
@@ -286,12 +290,12 @@ theorem retSide_endpoint (b : Fin degree) :
       (blockRes b).left = GluingDatum.vertexPartition (gauged) wall
   · have hR : retSide source pairing hNoGlue hRamification profile b = false := by
       unfold retSide
-      rw [if_pos hLeft]
+      rw [ite_eq_left hLeft]
     rw [hR]
     exact hLeft
   · have hR : retSide source pairing hNoGlue hRamification profile b = true := by
       unfold retSide
-      rw [if_neg hLeft]
+      rw [ite_eq_right hLeft]
     rw [hR]
     rcases isStar_blockwiseResolution (data :=
       gaugedData source pairing hNoGlue hRamification) (star := star) pairing
@@ -307,7 +311,7 @@ theorem retSide_other (b : Fin degree) :
       (blockRes b).left = GluingDatum.vertexPartition (gauged) wall
   · have hR : retSide source pairing hNoGlue hRamification profile b = false := by
       unfold retSide
-      rw [if_pos hLeft]
+      rw [ite_eq_left hLeft]
     rw [hR]
     rcases isStar_blockwiseResolution (data :=
       gaugedData source pairing hNoGlue hRamification) (star := star) pairing
@@ -317,7 +321,7 @@ theorem retSide_other (b : Fin degree) :
       exact hr
   · have hR : retSide source pairing hNoGlue hRamification profile b = true := by
       unfold retSide
-      rw [if_neg hLeft]
+      rw [ite_eq_right hLeft]
     rw [hR]
     rcases isStar_blockwiseResolution (data :=
       gaugedData source pairing hNoGlue hRamification) (star := star) pairing

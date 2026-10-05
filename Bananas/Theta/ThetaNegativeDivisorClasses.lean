@@ -1,6 +1,10 @@
-import Bananas.Basics.BananaSameStrandLemma
-import Bananas.Theta.ThetaCounterexampleNormalForm
-import Bananas.Theta.ThetaExceptionalArithmetic
+module
+
+public import Bananas.Basics.BananaSameStrandLemma
+public import Bananas.Theta.ThetaCounterexampleNormalForm
+public import Bananas.Theta.ThetaExceptionalArithmetic
+
+@[expose] public section
 
 /-!
 # Negative divisor classes on an interior-marked theta strand

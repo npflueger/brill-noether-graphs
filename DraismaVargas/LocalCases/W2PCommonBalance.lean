@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.W2PSourceCandidates
-import DraismaVargas.LocalCases.M11JoinedDescentGeometry
-import Utilities.IntegralGeometry.WallColumnDeterminant
+module
+
+public import DraismaVargas.LocalCases.W2PSourceCandidates
+public import DraismaVargas.LocalCases.M11JoinedDescentGeometry
+public import Utilities.IntegralGeometry.WallColumnDeterminant
+
+@[expose] public section
 
 /-!
 # Figure 35's common balance: Equation (9)

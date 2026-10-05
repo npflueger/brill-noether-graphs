@@ -1,6 +1,10 @@
-import DraismaVargasCount.SlopeStack
-import DraismaVargasCount.StarPartition
-import DraismaVargas.LocalCases.CaterpillarDatum
+module
+
+public import DraismaVargasCount.SlopeStack
+public import DraismaVargasCount.StarPartition
+public import DraismaVargas.LocalCases.CaterpillarDatum
+
+@[expose] public section
 
 /-!
 # The ballot-parametrized caterpillar gluing datum
@@ -149,16 +153,16 @@ theorem catStar_eq_pairPart (P : ℕ → Prop) [DecidablePred P] (j : ℕ)
   show (if P k.val then (0 : Fin (m + 2)) else k)
     = (if k.val = j then (0 : Fin (m + 2)) else k)
   by_cases h : k.val = j
-  · rw [if_pos h, if_pos ((hP _).mpr (Or.inr h))]
+  · rw [ite_eq_left h, ite_eq_left ((hP _).mpr (Or.inr h))]
   · by_cases h0 : k.val = 0
-    · rw [if_neg h, if_pos ((hP _).mpr (Or.inl h0))]
+    · rw [ite_eq_right h, ite_eq_left ((hP _).mpr (Or.inl h0))]
       exact (Fin.ext h0).symm
     · have hPk : ¬ P k.val := by
         intro hh
         rcases (hP k.val).mp hh with hk | hk
         · exact h0 hk
         · exact h hk
-      rw [if_neg h, if_neg hPk]
+      rw [ite_eq_right h, ite_eq_right hPk]
 
 theorem card_blocks_catStar (P : ℕ → Prop) [DecidablePred P] (hP0 : P 0) :
     Fintype.card (catStar m P).Blocks
@@ -191,45 +195,45 @@ instance (s : Slopes (2 * (m + 1))) (e : ℕ) : DecidablePred (EdgePred m s e) :
   intro k; unfold EdgePred; infer_instance
 
 theorem vertPred_junction (s : Slopes (2 * (m + 1))) {a : ℕ} (h : a % 3 = 2) (k : ℕ) :
-    VertPred m s a k ↔ s.VertMem (lolli a) k := by unfold VertPred; rw [if_pos h]
+    VertPred m s a k ↔ s.VertMem (lolli a) k := by unfold VertPred; rw [ite_eq_left h]
 
 theorem vertPred_pair (s : Slopes (2 * (m + 1))) {a : ℕ} (h : a % 3 ≠ 2) (k : ℕ) :
-    VertPred m s a k ↔ s.PairMem (lolli a) k := by unfold VertPred; rw [if_neg h]
+    VertPred m s a k ↔ s.PairMem (lolli a) k := by unfold VertPred; rw [ite_eq_right h]
 
 theorem edgePred_spine (s : Slopes (2 * (m + 1))) {e : ℕ} (h : e % 3 = 1) (k : ℕ) :
-    EdgePred m s e k ↔ s.SpineMem ((e + 2) / 3) k := by unfold EdgePred; rw [if_pos h]
+    EdgePred m s e k ↔ s.SpineMem ((e + 2) / 3) k := by unfold EdgePred; rw [ite_eq_left h]
 
 theorem edgePred_stem (s : Slopes (2 * (m + 1))) {e : ℕ} (h : e % 3 = 2)
     (h2 : e ≠ 6 * m + 2) (k : ℕ) :
     EdgePred m s e k ↔ s.PairMem ((e + 4) / 3) k := by
-  unfold EdgePred; rw [if_neg (by omega), if_pos ⟨h, h2⟩]
+  unfold EdgePred; rw [ite_eq_right (by omega), ite_eq_left ⟨h, h2⟩]
 
 theorem edgePred_leaf (s : Slopes (2 * (m + 1))) {e : ℕ}
     (h : e % 3 = 0 ∨ e = 6 * m + 2) (k : ℕ) : EdgePred m s e k ↔ k = 0 := by
   unfold EdgePred
   rcases h with h | h
-  · rw [if_neg (by omega), if_neg (by omega)]
+  · rw [ite_eq_right (by omega), ite_eq_right (by omega)]
   · subst h
     rcases Nat.eq_zero_or_pos m with rfl | hm
-    · rw [if_neg (by omega), if_neg (by omega)]
-    · rw [if_neg (by omega), if_neg (by simp)]
+    · rw [ite_eq_right (by omega), ite_eq_right (by omega)]
+    · rw [ite_eq_right (by omega), ite_eq_right (by simp)]
 
 @[simp] theorem vertPred_zero (s : Slopes (2 * (m + 1))) (a : ℕ) :
     VertPred m s a 0 := by
   unfold VertPred
   by_cases h : a % 3 = 2
-  · rw [if_pos h]; exact Slopes.vertMem_zero s _
-  · rw [if_neg h]; exact Slopes.pairMem_zero s _
+  · rw [ite_eq_left h]; exact Slopes.vertMem_zero s _
+  · rw [ite_eq_right h]; exact Slopes.pairMem_zero s _
 
 @[simp] theorem edgePred_zero (s : Slopes (2 * (m + 1))) (e : ℕ) :
     EdgePred m s e 0 := by
   unfold EdgePred
   by_cases h : e % 3 = 1
-  · rw [if_pos h]; exact Slopes.spineMem_zero s _
-  · rw [if_neg h]
+  · rw [ite_eq_left h]; exact Slopes.spineMem_zero s _
+  · rw [ite_eq_right h]
     by_cases h2 : e % 3 = 2 ∧ e ≠ 6 * m + 2
-    · rw [if_pos h2]; exact Slopes.pairMem_zero s _
-    · rw [if_neg h2]
+    · rw [ite_eq_left h2]; exact Slopes.pairMem_zero s _
+    · rw [ite_eq_right h2]
 
 
 /-! ## 3.  The refinement receipts, and the datum
@@ -268,7 +272,7 @@ theorem edgePred_parent (s : Slopes (2 * (m + 1))) {e : ℕ} (he : e ≤ 6 * m +
   by_cases hspine : e % 3 = 1
   · rw [edgePred_spine s hspine] at h
     have hpar : parentIndex (e + 1) = e - 2 := by
-      unfold parentIndex; rw [if_pos (show (e + 1) % 3 = 2 by omega)]; omega
+      unfold parentIndex; rw [ite_eq_left (show (e + 1) % 3 = 2 by omega)]; omega
     rw [hpar]
     rcases Nat.lt_or_ge e 4 with hsmall | hbig
     · -- the first spine edge: its parent is the root `u_1`
@@ -287,7 +291,7 @@ theorem edgePred_parent (s : Slopes (2 * (m + 1))) {e : ℕ} (he : e ≤ 6 * m +
   · by_cases hstem : e % 3 = 2 ∧ e ≠ 6 * m + 2
     · rw [edgePred_stem s hstem.1 hstem.2] at h
       have hpar : parentIndex (e + 1) = e := by
-        unfold parentIndex; rw [if_neg (show ¬ ((e + 1) % 3 = 2) by omega)]; omega
+        unfold parentIndex; rw [ite_eq_right (show ¬ ((e + 1) % 3 = 2) by omega)]; omega
       rw [hpar, vertPred_junction s hstem.1]
       refine Slopes.vertMem_of_pairMem s ?_
       have hidx : lolli e = (e + 4) / 3 := by unfold lolli; omega
@@ -507,7 +511,7 @@ theorem rh_junction_ballot (s : Slopes (2 * (m + 1))) (v : (catTree m).V)
     rwa [show (v.val - 1) + 1 = v.val by omega] at hchild
   have hpary : parentIndex (v.val + 1) = v.val := by
     unfold parentIndex
-    rw [if_neg (show ¬ ((v.val + 1) % 3 = 2) by omega)]
+    rw [ite_eq_right (show ¬ ((v.val + 1) % 3 = 2) by omega)]
     omega
   have hsuby : ∀ k, EdgePred m s y.val k → VertPred m s v.val k := by
     intro k hk
@@ -516,7 +520,7 @@ theorem rh_junction_ballot (s : Slopes (2 * (m + 1))) (v : (catTree m).V)
     rwa [hpary] at hp
   have hparz : parentIndex (v.val + 2 + 1) = v.val := by
     unfold parentIndex
-    rw [if_pos (show (v.val + 2 + 1) % 3 = 2 by omega)]
+    rw [ite_eq_left (show (v.val + 2 + 1) % 3 = 2 by omega)]
     omega
   have hsubz : ∀ k, EdgePred m s z.val k → VertPred m s v.val k := by
     intro k hk
@@ -732,21 +736,21 @@ theorem zigList_getD (n : ℕ) : ∀ j : ℕ,
   induction n with
   | zero =>
     intro j
-    rw [if_neg (by omega)]
+    rw [ite_eq_right (by omega)]
     match j with
     | 0 => rfl
     | (j + 1) => show (([] : List ℕ)).getD j 2 = 2; simp
   | succ n ih =>
     intro j
     match j with
-    | 0 => rw [if_neg (by omega)]; rfl
-    | 1 => rw [if_pos (by omega)]; rfl
+    | 0 => rw [ite_eq_right (by omega)]; rfl
+    | 1 => rw [ite_eq_left (by omega)]; rfl
     | (j + 2) =>
       show (zigList n).getD j 2 = _
       rw [ih j]
       by_cases h : j ≤ 2 * n ∧ j % 2 = 1
-      · rw [if_pos h, if_pos (by omega)]
-      · rw [if_neg h, if_neg (by omega)]
+      · rw [ite_eq_left h, ite_eq_left (by omega)]
+      · rw [ite_eq_right h, ite_eq_right (by omega)]
 
 theorem zigList_mem_one_le (n : ℕ) : ∀ x ∈ zigList n, 1 ≤ x := by
   induction n with
@@ -785,7 +789,7 @@ theorem zigList_getLast? (n : ℕ) : ∀ x ∈ (zigList n).getLast?, x = 2 := by
   have hlt : 2 * n + 1 - 1 < (zigList n).length := by omega
   have hval : (zigList n)[2 * n + 1 - 1] = 2 := by
     rw [List.getElem_eq_getD 2, zigList_getD]
-    rw [if_neg (by omega)]
+    rw [ite_eq_right (by omega)]
   have hget : (zigList n).getLast? = some 2 := by
     rw [List.getLast?_eq_getElem?, hlen, List.getElem?_eq_getElem hlt, hval]
   rw [hget]
@@ -807,15 +811,15 @@ theorem zig_slope (m i : ℕ) :
   show (zigList m).getD (i - 1) 2 = _
   rw [zigList_getD]
   by_cases h : 1 ≤ i ∧ i ≤ 2 * m + 1 ∧ i % 2 = 0
-  · rw [if_pos h, if_pos (by omega)]
-  · rw [if_neg h, if_neg (by omega)]
+  · rw [ite_eq_left h, ite_eq_left (by omega)]
+  · rw [ite_eq_right h, ite_eq_right (by omega)]
 
 theorem zig_slope_mid (m : ℕ) {i : ℕ} (h1 : 1 ≤ i) (h2 : i ≤ 2 * m + 1) :
     (zig m).slope i = if i % 2 = 0 then 1 else 2 := by
   rw [zig_slope]
   by_cases h : i % 2 = 0
-  · rw [if_pos (by omega), if_pos h]
-  · rw [if_neg (by omega), if_neg h]
+  · rw [ite_eq_left (by omega), ite_eq_left h]
+  · rw [ite_eq_right (by omega), ite_eq_right h]
 
 theorem zig_cum (m : ℕ) : ∀ i : ℕ, 1 ≤ i → i ≤ 2 * m + 2 →
     (zig m).cum i = (i + 1) / 2 := by
@@ -832,11 +836,11 @@ theorem zig_cum (m : ℕ) : ∀ i : ℕ, 1 ≤ i → i ≤ 2 * m + 2 →
           zig_slope_mid m (i := i + 1) (by omega) (by omega),
           zig_slope_mid m (i := i) (by omega) (by omega)]
         by_cases hpar : i % 2 = 0
-        · rw [if_pos hpar, if_neg (show ¬ ((i + 1) % 2 = 0) by omega),
-            if_pos (by omega)]
+        · rw [ite_eq_left hpar, ite_eq_right (show ¬ ((i + 1) % 2 = 0) by omega),
+            ite_eq_left (by omega)]
           omega
-        · rw [if_neg hpar, if_pos (show (i + 1) % 2 = 0 by omega),
-            if_neg (by omega)]
+        · rw [ite_eq_right hpar, ite_eq_left (show (i + 1) % 2 = 0 by omega),
+            ite_eq_right (by omega)]
           omega
       · have hstop : (zig m).cum (i + 1) = (zig m).cum i :=
           Slopes.cum_of_ge (zig m) (by omega)
@@ -854,11 +858,11 @@ theorem zig_spineMem (m : ℕ) {i : ℕ} (h1 : 1 ≤ i) (h2 : i ≤ 2 * m + 1) (
   unfold Slopes.SpineMem
   rw [hc]
   by_cases hpar : i % 2 = 1
-  · rw [if_neg (show ¬ (i % 2 = 0) by omega)] at hs
-    rw [hs, if_pos hpar]
+  · rw [ite_eq_right (show ¬ (i % 2 = 0) by omega)] at hs
+    rw [hs, ite_eq_left hpar]
     omega
-  · rw [if_pos (show i % 2 = 0 by omega)] at hs
-    rw [hs, if_neg hpar]
+  · rw [ite_eq_left (show i % 2 = 0 by omega)] at hs
+    rw [hs, ite_eq_right hpar]
     omega
 
 theorem zig_vertMem (m : ℕ) {i : ℕ} (h1 : 1 ≤ i) (h2 : i ≤ 2 * m + 2) (k : ℕ) :
@@ -869,22 +873,22 @@ theorem zig_vertMem (m : ℕ) {i : ℕ} (h1 : 1 ≤ i) (h2 : i ≤ 2 * m + 2) (k
     · -- `i = 1`: both neighbours are the block `{0,1}`
       subst hone
       rw [zig_spineMem m (i := 1) (by omega) (by omega),
-        if_pos (by omega)]
+        ite_eq_left (by omega)]
       have h0 : (zig m).SpineMem 0 k ↔ (k = 0 ∨ k = 1) := by
         unfold Slopes.SpineMem
         rw [Slopes.cum_zero, show (zig m).slope 0 = 2 by
-          rw [zig_slope, if_neg (by omega)]]
+          rw [zig_slope, ite_eq_right (by omega)]]
         omega
       rw [show (1 : ℕ) - 1 = 0 from rfl, h0]
       norm_num
     · by_cases hpar : i % 2 = 1
       · rw [zig_spineMem m (i := i) (by omega) (by omega),
           zig_spineMem m (i := i - 1) (by omega) (by omega),
-          if_pos hpar, if_neg (by omega)]
+          ite_eq_left hpar, ite_eq_right (by omega)]
         omega
       · rw [zig_spineMem m (i := i) (by omega) (by omega),
           zig_spineMem m (i := i - 1) (by omega) (by omega),
-          if_neg hpar, if_pos (by omega)]
+          ite_eq_right hpar, ite_eq_left (by omega)]
         have : (i - 1 + 1) / 2 = (i + 1) / 2 := by omega
         rw [this]
         omega
@@ -892,11 +896,11 @@ theorem zig_vertMem (m : ℕ) {i : ℕ} (h1 : 1 ≤ i) (h2 : i ≤ 2 * m + 2) (k
     have hi : i = 2 * m + 2 := by omega
     subst hi
     rw [zig_spineMem m (i := 2 * m + 2 - 1) (by omega) (by omega),
-      if_pos (by omega)]
+      ite_eq_left (by omega)]
     have htop : (zig m).SpineMem (2 * m + 2) k ↔ (k = 0 ∨ k = m + 1) := by
       unfold Slopes.SpineMem
       rw [zig_cum m (2 * m + 2) (by omega) (by omega),
-        show (zig m).slope (2 * m + 2) = 2 by rw [zig_slope, if_neg (by omega)]]
+        show (zig m).slope (2 * m + 2) = 2 by rw [zig_slope, ite_eq_right (by omega)]]
       omega
     rw [htop]
     have : (2 * m + 2 - 1 + 1) / 2 = m + 1 := by omega
@@ -928,20 +932,20 @@ theorem zig_edgePred (m : ℕ) {e : ℕ} (he : e ≤ 6 * m + 2) (k : ℕ) :
   · rw [edgePred_spine (zig m) hspine,
       zig_spineMem m (i := (e + 2) / 3) (by omega) (by omega)]
     by_cases hodd : ((e + 2) / 3) % 2 = 1
-    · rw [if_pos hodd, if_pos (show IsPairEdge m e by unfold IsPairEdge; omega),
+    · rw [ite_eq_left hodd, ite_eq_left (show IsPairEdge m e by unfold IsPairEdge; omega),
         hpi, hlol]
       have : ((e + 2) / 3 + 1) / 2 = ((e + 5) / 3 + 1) / 2 := by omega
       rw [this]
-    · rw [if_neg hodd, if_neg (show ¬ IsPairEdge m e by unfold IsPairEdge; omega)]
+    · rw [ite_eq_right hodd, ite_eq_right (show ¬ IsPairEdge m e by unfold IsPairEdge; omega)]
   · by_cases hstem : e % 3 = 2 ∧ e ≠ 6 * m + 2
     · rw [edgePred_stem (zig m) hstem.1 hstem.2,
         zig_pairMem m (i := (e + 4) / 3) (by omega) (by omega),
-        if_pos (show IsPairEdge m e by unfold IsPairEdge; exact Or.inr hstem),
+        ite_eq_left (show IsPairEdge m e by unfold IsPairEdge; exact Or.inr hstem),
         hpi, hlol]
       have : ((e + 4) / 3 + 1) / 2 = ((e + 5) / 3 + 1) / 2 := by omega
       rw [this]
     · rw [edgePred_leaf (zig m) (by omega),
-        if_neg (show ¬ IsPairEdge m e by unfold IsPairEdge; omega)]
+        ite_eq_right (show ¬ IsPairEdge m e by unfold IsPairEdge; omega)]
 
 /-- **The vertex partitions agree.** -/
 theorem ballotVertexPart_zig (m : ℕ) (v : (catTree m).V) :
@@ -957,12 +961,12 @@ theorem ballotEdgePart_zig (m : ℕ) (e : (catTree m).edges) :
   have hi := i.isLt
   rw [ballotEdgePart, edgeIndex_occ, catEdgePart, edgeIndex_occ]
   by_cases hpair : IsPairEdge m i.val
-  · rw [if_pos hpair]
+  · rw [ite_eq_left hpair]
     refine catStar_eq_pairPart _ _ (fun k => ?_)
-    rw [zig_edgePred m (by omega), if_pos hpair]
-  · rw [if_neg hpair]
+    rw [zig_edgePred m (by omega), ite_eq_left hpair]
+  · rw [ite_eq_right hpair]
     refine catStar_eq_discrete _ (fun k => ?_)
-    rw [zig_edgePred m (by omega), if_neg hpair]
+    rw [zig_edgePred m (by omega), ite_eq_right hpair]
 
 /-- **The reduction.**  At the distinguished ballot sequence the
 ballot-parametrized datum *is* Part I's caterpillar datum -- an equality of
@@ -1010,7 +1014,7 @@ theorem stem_blockCount (hσ : VertPred m s v.val σ.val) :
       = 1 + (max (s.slope (lolli v.val - 1)) (s.slope (lolli v.val)) - 2) := by
   have hpary : parentIndex (v.val + 1) = v.val := by
     unfold parentIndex
-    rw [if_neg (show ¬ ((v.val + 1) % 3 = 2) by omega)]
+    rw [ite_eq_right (show ¬ ((v.val + 1) % 3 = 2) by omega)]
     omega
   have hsub : ∀ k, EdgePred m s v.val k → VertPred m s v.val k := by
     intro k hk
@@ -1048,7 +1052,7 @@ theorem spine_blockCount_forward (hσ : VertPred m s v.val σ.val) :
           - s.slope (lolli v.val)) := by
   have hparz : parentIndex (v.val + 2 + 1) = v.val := by
     unfold parentIndex
-    rw [if_pos (show (v.val + 2 + 1) % 3 = 2 by omega)]
+    rw [ite_eq_left (show (v.val + 2 + 1) % 3 = 2 by omega)]
     omega
   have hsub : ∀ k, EdgePred m s (v.val + 2) k → VertPred m s v.val k := by
     intro k hk

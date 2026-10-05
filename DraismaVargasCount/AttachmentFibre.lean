@@ -1,5 +1,9 @@
-import DraismaVargasCount.PendantBranch
-import DraismaVargas.LocalCases.W2R1SourceProfile
+module
+
+public import DraismaVargasCount.PendantBranch
+public import DraismaVargas.LocalCases.W2R1SourceProfile
+
+@[expose] public section
 
 namespace DraismaVargas.Count.PendantFibre
 

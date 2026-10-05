@@ -1,6 +1,10 @@
-import Bananas.CrossOneOff.CrossingInversionCount
-import Bananas.Transmission.TransmissionAPI
-import Utilities.Subdivision.TwoVertexPencilCore
+module
+
+public import Bananas.CrossOneOff.CrossingInversionCount
+public import Bananas.Transmission.TransmissionAPI
+public import Utilities.Subdivision.TwoVertexPencilCore
+
+@[expose] public section
 
 /-!
 # Large-period general transmission implies Brill--Noether generality

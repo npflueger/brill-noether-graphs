@@ -1,4 +1,8 @@
-import TreewidthGonality.Gonality.TreewidthGonality
+module
+
+public import TreewidthGonality.Gonality.TreewidthGonality
+
+@[expose] public section
 
 /-!
 # Highlights of the `TreewidthGonality` library

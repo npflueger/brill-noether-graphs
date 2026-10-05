@@ -1,6 +1,10 @@
-import Utilities.Subdivision.CensusSpanningForest
-import DraismaVargas.Infrastructure.GraphContraction
-import Utilities.Subdivision.UnitSubdivisionPresentation
+module
+
+public import Utilities.Subdivision.CensusSpanningForest
+public import DraismaVargas.Infrastructure.GraphContraction
+public import Utilities.Subdivision.UnitSubdivisionPresentation
+
+@[expose] public section
 
 /-!
 # Connectedness, in the census's own language

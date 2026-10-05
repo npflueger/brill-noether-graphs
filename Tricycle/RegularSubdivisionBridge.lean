@@ -1,5 +1,9 @@
-import Utilities.Gonality.GonalityTransport
-import Mathlib.Tactic
+module
+
+public import Utilities.Gonality.GonalityTransport
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # The occurrence presentation of a unit-length subdivision spec

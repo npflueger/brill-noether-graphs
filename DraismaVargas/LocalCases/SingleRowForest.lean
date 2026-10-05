@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.NonTrivalentWallSetup
-import DraismaVargas.LocalCases.CycleRows
-import DraismaVargas.LocalCases.StableGraphIncidence
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentWallSetup
+public import DraismaVargas.LocalCases.CycleRows
+public import DraismaVargas.LocalCases.StableGraphIncidence
+
+@[expose] public section
 
 /-!
 # A single non-loop stable row may collapse without losing genus

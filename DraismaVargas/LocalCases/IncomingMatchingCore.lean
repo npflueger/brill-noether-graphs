@@ -1,9 +1,13 @@
-import DraismaVargas.LocalCases.M11IncomingOuterPartitions
-import DraismaVargas.LocalCases.M11IncomingPartitions
-import DraismaVargas.LocalCases.W4IncomingClassUnion
-import DraismaVargas.LocalCases.W4IncomingCensus
-import DraismaVargas.LocalCases.W4IncomingPrunedFibre
-import DraismaVargas.LocalCases.TargetPartitionNormalization
+module
+
+public import DraismaVargas.LocalCases.M11IncomingOuterPartitions
+public import DraismaVargas.LocalCases.M11IncomingPartitions
+public import DraismaVargas.LocalCases.W4IncomingClassUnion
+public import DraismaVargas.LocalCases.W4IncomingCensus
+public import DraismaVargas.LocalCases.W4IncomingPrunedFibre
+public import DraismaVargas.LocalCases.TargetPartitionNormalization
+
+@[expose] public section
 
 /-!
 # The per-member core of an incoming-member identification

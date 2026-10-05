@@ -1,7 +1,11 @@
-import Bananas.Classification.BridgelessGenusTwoNonrecurrence
-import Bananas.Theta.ThetaGenusTwoCornerSum
-import Bananas.Transmission.TransmissionAPI
-import Bananas.Theta.ThetaInvTauCorrection
+module
+
+public import Bananas.Classification.BridgelessGenusTwoNonrecurrence
+public import Bananas.Theta.ThetaGenusTwoCornerSum
+public import Bananas.Transmission.TransmissionAPI
+public import Bananas.Theta.ThetaInvTauCorrection
+
+@[expose] public section
 
 /-!
 # Genus-two corner algebra without a theta presentation
@@ -381,21 +385,21 @@ theorem complement_rank_add_one_eq_bridgelessGenusTwoCornerWeight
     degree_nonneg_of_rankDelta_eq_one (mark G u v) X hDelta
   unfold bridgelessGenusTwoCornerWeight
   by_cases hDegZero : deg X = 0
-  · simp only [hDegZero, if_pos]
+  · simp only [hDegZero, ite_eq_left]
     exact complement_rank_add_one_eq_two_of_corner_degree_zero'
       G hConnected hGenus u v X hDelta hDegZero
-  simp only [hDegZero, if_false]
+  simp only [hDegZero, ite_false]
   by_cases hDegOne : deg X = 1
-  · simp only [hDegOne, if_pos]
+  · simp only [hDegOne, ite_eq_left]
     exact complement_rank_add_one_eq_one_of_corner_degree_one'
       G hConnected hGenus u v hRankZero X hDelta hDegOne
-  simp only [hDegOne, if_false]
+  simp only [hDegOne, ite_false]
   by_cases hDegTwo : deg X = 2
   · by_cases hCanon : linear_equiv G X (canonical_divisor G)
-    · simp only [hDegTwo, hCanon, and_self, if_pos]
+    · simp only [hDegTwo, hCanon, and_self, ite_eq_left]
       exact (complement_rank_add_one_eq_one_iff_canonical_of_degree_two'
         G hGenus X hDegTwo).mpr hCanon
-    · simp only [hDegTwo, hCanon, and_false, if_false]
+    · simp only [hDegTwo, hCanon, and_false, ite_false]
       have hLower := rank_geq_neg_one G (canonical_divisor G - X)
       have hCompDeg : deg (canonical_divisor G - X) = 0 := by
         rw [deg.map_sub, degree_of_canonical_divisor, hGenus, hDegTwo]
@@ -412,7 +416,7 @@ theorem complement_rank_add_one_eq_bridgelessGenusTwoCornerWeight
           G hGenus X hDegTwo).mp hOne)
       omega
   · have hThree : 3 ≤ deg X := by omega
-    simp only [hDegTwo, false_and, if_false]
+    simp only [hDegTwo, false_and, ite_false]
     exact complement_rank_add_one_eq_zero_of_three_le_degree'
       G hGenus X hThree
 
@@ -484,10 +488,10 @@ theorem bridgelessGenusTwoCornerWeight_eq_threeDegreeTwistContribution
       rankDelta (mark G u v)
         (D + (d - deg D + b) • one_chip u - b • one_chip v) at hs
     by_cases hd : deg C = d
-    · rw [if_pos hd]
+    · rw [ite_eq_left hd]
       have hTauEq : tau b = d - deg D + b := by omega
       simpa [hTauEq] using hs.symm
-    · rw [if_neg hd]
+    · rw [ite_eq_right hd]
       have hTauNe : tau b ≠ d - deg D + b := by
         intro hEq
         apply hd
@@ -503,7 +507,7 @@ theorem bridgelessGenusTwoCornerWeight_eq_threeDegreeTwistContribution
     have hComp := complement_rank_add_one_eq_two_of_corner_degree_zero'
       G hConnected hGenus u v C hDeltaC h0
     rw [hDelta 0, hDelta 1, hDelta 2]
-    simp only [h0, if_pos, OfNat.zero_ne_ofNat, if_false, zero_mul, add_zero, one_mul]
+    simp only [h0, ite_eq_left, OfNat.zero_ne_ofNat, ite_false, zero_mul, add_zero, one_mul]
     rw [← hC0]
     simpa [bridgelessGenusTwoCornerWeight, h0] using hComp.symm
   by_cases h1 : deg C = 1
@@ -515,7 +519,7 @@ theorem bridgelessGenusTwoCornerWeight_eq_threeDegreeTwistContribution
       G hConnected hGenus u v hRankZero C hDeltaC h1
     rw [hDelta 0, hDelta 1, hDelta 2]
     have h10 : deg C ≠ 0 := by omega
-    simp only [h1, if_pos, one_mul]
+    simp only [h1, ite_eq_left, one_mul]
     rw [← hC1]
     simpa [bridgelessGenusTwoCornerWeight, h10, h1] using hComp.symm
   by_cases h2 : deg C = 2
@@ -526,7 +530,7 @@ theorem bridgelessGenusTwoCornerWeight_eq_threeDegreeTwistContribution
     have h20 : deg C ≠ 0 := by omega
     have h21 : deg C ≠ 1 := by omega
     rw [hDelta 0, hDelta 1, hDelta 2]
-    simp only [h2, if_pos, one_mul]
+    simp only [h2, ite_eq_left, one_mul]
     rw [← hC2]
     by_cases hCanon : linear_equiv G C (canonical_divisor G)
     · have hComp :=
@@ -554,7 +558,7 @@ theorem bridgelessGenusTwoCornerWeight_eq_threeDegreeTwistContribution
     have h31 : deg C ≠ 1 := by omega
     rw [hDelta 0, hDelta 1, hDelta 2]
     unfold bridgelessGenusTwoCornerWeight
-    simp only [h30, h31, h2, if_false, false_and, zero_mul, add_zero]
+    simp only [h30, h31, h2, ite_false, false_and, zero_mul, add_zero]
 
 /-- Finite three-degree form of the inversion sum on an arbitrary bridgeless
 genus-two graph. -/
@@ -883,7 +887,7 @@ private theorem sum_correctionProduct_eq_invTauCorrection_of_genus_two
         (canonical_divisor G - fixedDegreeTwist G u v D 2
           (((b₀ - 1) % k).toNat : ℤ))
         (hDegA _) (hDegY _) hA hY
-      rw [hOne, invTauCorrection_mark, if_pos ⟨⟨b₀, hb₀⟩, hUV⟩]
+      rw [hOne, invTauCorrection_mark, ite_eq_left ⟨⟨b₀, hb₀⟩, hUV⟩]
   · have hZero : ∀ b : Fin k,
         rankPlusOne G (fixedDegreeTwist G u v D 0 ((b : ℤ) + 1)) *
           rankPlusOne G (canonical_divisor G - fixedDegreeTwist G u v D 2 (b : ℤ)) = 0 := by
@@ -897,7 +901,7 @@ private theorem sum_correctionProduct_eq_invTauCorrection_of_genus_two
       · exact rankPlusOne_mul_eq_zero_of_not_linearEquiv_zero_left
           _ _ (hDegA _) hA
     rw [Finset.sum_congr rfl (fun b _ => hZero b), invTauCorrection_mark,
-      if_neg hCond]
+      ite_eq_right hCond]
     simp
 
 /-- Full arbitrary-bridgeless genus-two form of Lemma 4.10, including the

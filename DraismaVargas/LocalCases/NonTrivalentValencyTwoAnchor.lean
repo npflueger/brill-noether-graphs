@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyThreeAnchor
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyThreeAnchor
+
+@[expose] public section
 
 /-!
 # Part II valency-two anchor classifier

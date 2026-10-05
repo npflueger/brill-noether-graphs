@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.DivalentSourceLocal
-import DraismaVargas.LocalCases.PrunedFibreStablePath
+module
+
+public import DraismaVargas.LocalCases.DivalentSourceLocal
+public import DraismaVargas.LocalCases.PrunedFibreStablePath
+
+@[expose] public section
 
 /-!
 # An nd2 fibre between nonleaf target endpoints has at most one survivor

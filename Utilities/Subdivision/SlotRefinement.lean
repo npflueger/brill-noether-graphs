@@ -1,4 +1,8 @@
-import Utilities.Subdivision.PathSplitRefinement
+module
+
+public import Utilities.Subdivision.PathSplitRefinement
+
+@[expose] public section
 
 /-!
 # Refining every subdivision slot, not just one
@@ -106,7 +110,7 @@ theorem valid_total_length {chain : CanonicalSplitChain source target}
             if x = sl then first else src.spec.length x) =
           ∑ x ∈ (Finset.univ : Finset (Fin src.p)).erase sl, src.spec.length x :=
         Finset.sum_congr rfl fun x hx => by simp [(Finset.mem_erase.mp hx).1]
-      rw [hc, if_pos rfl]
+      rw [hc, ite_eq_left rfl]
       omega
 
 end OnePathSplit

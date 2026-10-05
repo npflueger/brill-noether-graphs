@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoGauge
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoSplitCandidate
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoGauge
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoSplitCandidate
+
+@[expose] public section
 
 /-!
 # Part II, valency two, Configuration A: the **inclusion** alignment gauge of the split family
@@ -222,7 +226,7 @@ def IsSplitGauge (data : GluingDatum target degree) (star : TwoStar target wall)
       ((data.edgePartition (star.edge 1)).block thinSheet).image gauge ⊆
         ((data.edgePartition (star.edge 0)).block thickSheet).erase thickSheet
 
-private theorem exists_conditional_splitGauge (data : GluingDatum target degree)
+theorem exists_conditional_splitGauge (data : GluingDatum target degree)
     (star : TwoStar target wall) (anchor : WallBlock data wall)
     (thickSheet thinSheet : Fin degree) :
     ∃ gauge : Equiv.Perm (Fin degree),
@@ -677,7 +681,7 @@ theorem thickDirection_eq_zero
     (hSplit : (directionSurvivors data star anchor 0).card = 2) :
     thickDirection data star anchor = 0 := by
   unfold thickDirection
-  rw [if_pos (by rw [hSplit])]
+  rw [ite_eq_left (by rw [hSplit])]
 
 theorem thinDirection_eq_one
     (hSplit : (directionSurvivors data star anchor 0).card = 2) :

@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.BalancedGlobal
+module
+
+public import DraismaVargas.LocalCases.BalancedGlobal
+
+@[expose] public section
 
 /-!
 # The M-11 resolution inside an arbitrary-degree wall

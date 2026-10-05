@@ -1,5 +1,9 @@
-import DraismaVargasCount.M11StarCensusProof
-import DraismaVargas.LocalCases.W3Nd3GraphTracking
+module
+
+public import DraismaVargasCount.M11StarCensusProof
+public import DraismaVargas.LocalCases.W3Nd3GraphTracking
+
+@[expose] public section
 
 /-!
 # The W3Nd3 star census, Stages 1 and 3
@@ -312,7 +316,7 @@ theorem not_rel_01 :
     have hNew' : b = a := hNew
     change M.mulVec _ r = 0
     simp only [Matrix.mulVec, dotProduct, Pi.sub_apply, mul_sub, Finset.sum_sub_distrib,
-      Pi.single_apply, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Pi.single_apply, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     rw [e0', e3', e4']
     linarith
 

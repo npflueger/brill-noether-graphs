@@ -1,4 +1,8 @@
-import DraismaVargasCount.CountTransportLink
+module
+
+public import DraismaVargasCount.CountTransportLink
+
+@[expose] public section
 
 /-!
 # The schedule for whole-fibre count transport

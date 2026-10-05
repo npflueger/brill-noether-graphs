@@ -1,5 +1,9 @@
-import DraismaVargasCount.ValencyThreeCoreSlots
-import DraismaVargasCount.FacetCensus
+module
+
+public import DraismaVargasCount.ValencyThreeCoreSlots
+public import DraismaVargasCount.FacetCensus
+
+@[expose] public section
 
 set_option autoImplicit false
 

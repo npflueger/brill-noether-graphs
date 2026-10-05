@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.ResolutionAssembly
-import DraismaVargas.LocalCases.ResolutionW4
+module
+
+public import DraismaVargas.LocalCases.ResolutionAssembly
+public import DraismaVargas.LocalCases.ResolutionW4
+
+@[expose] public section
 
 /-!
 # Whole-wall assembly for the W4 resolutions

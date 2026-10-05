@@ -1,5 +1,9 @@
-import Utilities.Gonality.LegalFiring
-import Mathlib.Tactic
+module
+
+public import Utilities.Gonality.LegalFiring
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # The burned set, without Dhar's algorithm

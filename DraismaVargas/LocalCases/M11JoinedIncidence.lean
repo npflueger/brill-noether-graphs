@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.M11JoinedBranch
-import DraismaVargas.LocalCases.StableGraphIncidence
+module
+
+public import DraismaVargas.LocalCases.M11JoinedBranch
+public import DraismaVargas.LocalCases.StableGraphIncidence
+
+@[expose] public section
 
 /-!
 # Joined M11 preserves selected-branch incidence multiplicities

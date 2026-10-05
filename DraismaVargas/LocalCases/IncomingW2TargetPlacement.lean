@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.IncomingTargetExpansion
+module
+
+public import DraismaVargas.LocalCases.IncomingTargetExpansion
+
+@[expose] public section
 
 /-!
 # Actual incoming placements at a two-star wall
@@ -166,8 +170,8 @@ theorem right_eq_table
   by_cases hZero : edge = star.edge 0
   · simp only [hZero, ↓reduceIte]
   by_cases hOneEdge : edge = star.edge 1
-  · rw [if_neg hZero, if_pos hOneEdge, hOneEdge]
-  rw [if_neg hZero, if_neg hOneEdge]
+  · rw [ite_eq_right hZero, ite_eq_left hOneEdge, hOneEdge]
+  rw [ite_eq_right hZero, ite_eq_right hOneEdge]
   apply right_eq_false_of_not_incident hc hab hOne
   intro hAt
   obtain ⟨label, hLabel⟩ := star.label.surjective ⟨edge, hAt⟩
@@ -233,7 +237,7 @@ theorem right_eq_singleton_of_divalent
     · have hNotOne : edge ≠ star.edge 1 := by
         rw [hEdge]
         exact star.edge_injective.ne (by decide)
-      rw [if_pos hEdge, decide_eq_false hNotOne]
+      rw [ite_eq_left hEdge, decide_eq_false hNotOne]
     · simp [hEdge]
   | true =>
     have hOneEdge : IncomingTargetExpansion.right hc hab hOne (star.edge 1) = false := by

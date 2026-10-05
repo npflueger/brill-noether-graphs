@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyThreeDescent
-import DraismaVargas.LocalCases.NonTrivalentAnchorValency
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyThreeDescent
+public import DraismaVargas.LocalCases.NonTrivalentAnchorValency
+
+@[expose] public section
 
 /-!
 # The row dictionary of the prescribed valency-three candidate
@@ -100,12 +104,12 @@ noncomputable def witnessOf (data : GluingDatum target degree) (old : data.Sourc
 theorem witnessOf_pos {old : data.SourceEdge} (h : ¬ IsDangling data old) :
     witnessOf data old = some ⟨old, h⟩ := by
   classical
-  rw [witnessOf, dif_neg h]
+  rw [witnessOf, dite_eq_right h]
 
 theorem witnessOf_neg {old : data.SourceEdge} (h : IsDangling data old) :
     witnessOf data old = none := by
   classical
-  rw [witnessOf, dif_pos h]
+  rw [witnessOf, dite_eq_left h]
 
 /-- Over an ordinary wall block the new occurrence of a fine class carries the
 row of that class's doubled-direction survivor. -/
@@ -123,12 +127,12 @@ noncomputable def newWitness (source : ThreeBranchAnchor data star anchor)
 theorem newWitness_anchor {x : Fin degree}
     (hX : (data.vertexPartition wall).Rel anchor.1 x) :
     newWitness source x = none := by
-  rw [newWitness, if_pos hX]
+  rw [newWitness, ite_eq_left hX]
 
 theorem newWitness_ordinary {x : Fin degree}
     (hX : ¬ (data.vertexPartition wall).Rel anchor.1 x) :
     newWitness source x = ordinaryWitness source x := by
-  rw [newWitness, if_neg hX]
+  rw [newWitness, ite_eq_right hX]
 
 theorem ordinaryWitness_pos {x : Fin degree}
     (h : ¬ IsDangling data (doubledOccurrence source x)) :
@@ -192,7 +196,7 @@ theorem rowOfEdge_pos (e : NonDanglingEdge (cand).datum)
       ResolutionAwayFromWall.retainedEdge (cand) hValid.1 old = e) :
     rowOfEdge source hNoGlue hValid e = some (Classical.choose h).stablePath := by
   classical
-  rw [rowOfEdge, dif_pos h]
+  rw [rowOfEdge, dite_eq_left h]
 
 theorem rowOfEdge_neg (e : NonDanglingEdge (cand).datum)
     (h : ¬ ∃ old : NonDanglingEdge data,
@@ -200,7 +204,7 @@ theorem rowOfEdge_neg (e : NonDanglingEdge (cand).datum)
     rowOfEdge source hNoGlue hValid e =
       (newWitness source e.1.1.2).map NonDanglingEdge.stablePath := by
   classical
-  rw [rowOfEdge, dif_neg h]
+  rw [rowOfEdge, dite_eq_right h]
 
 theorem rowOfEdge_retained (old : NonDanglingEdge data) :
     rowOfEdge source hNoGlue hValid

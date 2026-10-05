@@ -1,4 +1,8 @@
-import Utilities.Foundations.RiemannRochWinnable
+module
+
+public import Utilities.Foundations.RiemannRochWinnable
+
+@[expose] public section
 
 /-!
 # Degree bookkeeping for twice-marked twists

@@ -1,6 +1,10 @@
-import Bananas.Classification.GenusOneKGeneral
-import Bananas.Transmission.ChainTwoLoopsSameLeft
-import Bananas.Transmission.EqualTorsionKGeneral
+module
+
+public import Bananas.Classification.GenusOneKGeneral
+public import Bananas.Transmission.ChainTwoLoopsSameLeft
+public import Bananas.Transmission.EqualTorsionKGeneral
+
+@[expose] public section
 
 /-!
 # General transmission on pointed rigid genus-one factors

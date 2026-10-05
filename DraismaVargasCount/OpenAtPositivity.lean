@@ -1,7 +1,11 @@
-import DraismaVargasCount.OpenOddRung
-import DraismaVargasCount.PositiveOrthantWall
-import DraismaVargasCount.BallotCoreIdentification
-import DraismaVargasCount.SimpleWallSupply
+module
+
+public import DraismaVargasCount.OpenOddRung
+public import DraismaVargasCount.PositiveOrthantWall
+public import DraismaVargasCount.BallotCoreIdentification
+public import DraismaVargasCount.SimpleWallSupply
+
+@[expose] public section
 
 /-!
 # Openness forces a positive request

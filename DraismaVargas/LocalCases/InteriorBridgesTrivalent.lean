@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.InteriorProgress
-import DraismaVargas.LocalCases.W3ShiftTrackedFinal
-import DraismaVargas.LocalCases.W3TrackedCensus
+module
+
+public import DraismaVargas.LocalCases.InteriorProgress
+public import DraismaVargas.LocalCases.W3ShiftTrackedFinal
+public import DraismaVargas.LocalCases.W3TrackedCensus
+
+@[expose] public section
 
 /-!
 # The two trivalent tag bridges of `InteriorProgress`: `w3Shift` and `w3Four`

@@ -1,4 +1,8 @@
-import LowGenus.GenusFiveClosedOrbit
+module
+
+public import LowGenus.GenusFiveClosedOrbit
+
+@[expose] public section
 
 /-!
 # The order-two symmetry of the AR row-10 core

@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.RequestedExpandedEndpoints
+module
+
+public import DraismaVargas.LocalCases.RequestedExpandedEndpoints
+
+@[expose] public section
 
 /-!
 # The `RetainedIndex` producer from the requested expansion datum

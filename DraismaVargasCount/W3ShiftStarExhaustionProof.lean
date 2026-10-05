@@ -1,6 +1,10 @@
-import DraismaVargasCount.W3ShiftStarCensusProof
-import DraismaVargasCount.W3Nd3StarExhaustionProof
-import DraismaVargas.LocalCases.W3ShiftClosureFinal
+module
+
+public import DraismaVargasCount.W3ShiftStarCensusProof
+public import DraismaVargasCount.W3Nd3StarExhaustionProof
+public import DraismaVargas.LocalCases.W3ShiftClosureFinal
+
+@[expose] public section
 
 /-!
 # W3Shift star exhaustion: the `w3Shift` clause with no hypothesis
@@ -346,7 +350,7 @@ theorem nonempty_transportFree_shrink (right : target₁.edges → Bool)
   · intro edge hInc s
     have hInc' := (incident_iff iso hWall edge).mp hInc
     by_cases hr : right edge = true
-    · rw [if_pos hr, if_pos hr]
+    · rw [ite_eq_left hr, ite_eq_left hr]
       rcases incident_cases iso L G T hEdges edge hInc' with h | h | h
       · subst h
         rw [← hSide, Equiv.apply_symm_apply] at hr
@@ -358,7 +362,7 @@ theorem nonempty_transportFree_shrink (right : target₁.edges → Bool)
           (mem_T L G T hEdges)) s
         refine (hRight _ _).mpr ⟨hAg, fun _ ↦ (hR₁ _ _).mpr ⟨hAg, ?_⟩, fun _ ↦ hAg⟩
         rw [Equiv.symm_apply_eq, hG, inj_iff_eq hT]
-    · rw [if_neg hr, if_neg hr]
+    · rw [ite_eq_right hr, ite_eq_right hr]
       have hEq : iso.targetEdge edge = L :=
         rightOf_eq_false (by rw [hSide edge]; simpa using hr)
       have hEdge : edge = iso.targetEdge.symm L := (Equiv.eq_symm_apply _).mpr hEq
@@ -429,9 +433,9 @@ theorem nonempty_transportFree_grow (right : target₁.edges → Bool)
   · intro edge hInc s
     have hInc' := (incident_iff iso hWall edge).mp hInc
     by_cases hr : right edge = true
-    · rw [if_pos hr, if_pos hr, hRightSame]
+    · rw [ite_eq_left hr, ite_eq_left hr, hRightSame]
       exact agree_symm_apply iso ρ _ hρ (edgePerm_agree iso hWall edge hInc') s
-    · rw [if_neg hr, if_neg hr]
+    · rw [ite_eq_right hr, ite_eq_right hr]
       have hEq : iso.targetEdge edge = L :=
         rightOf_eq_false (by rw [hSide edge]; simpa using hr)
       have hEdge : edge = iso.targetEdge.symm L := (Equiv.eq_symm_apply _).mpr hEq

@@ -1,4 +1,8 @@
-import Utilities.Subdivision.SubdivisionIso
+module
+
+public import Utilities.Subdivision.SubdivisionIso
+
+@[expose] public section
 
 /-!
 # Orbit reduction at the bare core: the generic transport

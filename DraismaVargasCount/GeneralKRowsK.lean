@@ -1,5 +1,9 @@
-import DraismaVargasCount.GeneralKRowGauge
-import DraismaVargasCount.GeneralKSourceFacts
+module
+
+public import DraismaVargasCount.GeneralKRowGauge
+public import DraismaVargasCount.GeneralKSourceFacts
+
+@[expose] public section
 
 /-!
 # The general-`K` row dictionary at a four-valent wall
@@ -613,11 +617,11 @@ theorem new_eq_bridge
       by_cases hm : s ∈ position.split.minusSheets
       · refine ⟨!smallerSide vSrc pairing, ?_⟩
         unfold sideSheets
-        rw [if_neg (by cases smallerSide vSrc pairing <;> simp)]
+        rw [ite_eq_right (by cases smallerSide vSrc pairing <;> simp)]
         exact fun hp ↦ hB (Finset.mem_inter.mpr ⟨hm, hp⟩)
       · refine ⟨smallerSide vSrc pairing, ?_⟩
         unfold sideSheets
-        rw [if_pos rfl]
+        rw [ite_eq_left rfl]
         exact hm
     obtain ⟨b, hsA⟩ := hNot
     have hle := nd_le_one_of_not_mem m wd wallStar anchorBlock hAnchor pairing position geometry

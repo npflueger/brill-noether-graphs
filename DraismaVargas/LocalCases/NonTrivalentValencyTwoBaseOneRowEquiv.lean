@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoBaseOneRows
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoBaseOneRows
+
+@[expose] public section
 
 /-!
 # The row dictionary of the valency-two **Base I** candidates
@@ -238,14 +242,14 @@ theorem rowOfEdge_pos (hValid : data.Valid) (e : NonDanglingEdge (cand).datum)
       ResolutionAwayFromWall.retainedEdge (cand) hValid.1 old = e) :
     rowOfEdge setup hValid e = some (Classical.choose h).stablePath := by
   classical
-  rw [rowOfEdge, dif_pos h]
+  rw [rowOfEdge, dite_eq_left h]
 
 theorem rowOfEdge_neg (hValid : data.Valid) (e : NonDanglingEdge (cand).datum)
     (h : ¬ ∃ old : NonDanglingEdge data,
       ResolutionAwayFromWall.retainedEdge (cand) hValid.1 old = e) :
     rowOfEdge setup hValid e = none := by
   classical
-  rw [rowOfEdge, dif_neg h]
+  rw [rowOfEdge, dite_eq_right h]
 
 theorem rowOfEdge_retained (hValid : data.Valid) (old : NonDanglingEdge data) :
     rowOfEdge setup hValid (ResolutionAwayFromWall.retainedEdge (cand) hValid.1 old) =

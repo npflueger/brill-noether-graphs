@@ -1,7 +1,11 @@
-import DraismaVargasCount.SheetLayerMatching
-import DraismaVargasCount.BallotSpineReversalSheetIso
-import DraismaVargasCount.DiagonalClassificationEndgame
-import DraismaVargasCount.TrivalentFibreUnique
+module
+
+public import DraismaVargasCount.SheetLayerMatching
+public import DraismaVargasCount.BallotSpineReversalSheetIso
+public import DraismaVargasCount.DiagonalClassificationEndgame
+public import DraismaVargasCount.TrivalentFibreUnique
+
+@[expose] public section
 
 /-!
 # Every caterpillar member is a ballot member: the base count without parity

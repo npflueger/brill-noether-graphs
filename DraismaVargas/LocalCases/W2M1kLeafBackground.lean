@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W2M1kIncomingMatching
+module
+
+public import DraismaVargas.LocalCases.W2M1kIncomingMatching
+
+@[expose] public section
 
 /-!
 # The `r = 0` background census at a `(1, 3)` incoming `w2M1k` wall

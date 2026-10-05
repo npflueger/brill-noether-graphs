@@ -1,4 +1,8 @@
-import Utilities.Subdivision.SubdivisionSeparator
+module
+
+public import Utilities.Subdivision.SubdivisionSeparator
+
+@[expose] public section
 
 /-!
 # Rank-one existence from reaching the core of a subdivision

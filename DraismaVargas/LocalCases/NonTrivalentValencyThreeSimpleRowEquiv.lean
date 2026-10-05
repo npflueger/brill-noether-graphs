@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyThreeSimpleRows
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyThreeSimpleRows
+
+@[expose] public section
 
 /-!
 # The row dictionary of the prescribed Type I / Type II valency-three candidates
@@ -121,22 +125,22 @@ noncomputable def newWitness (x : Fin degree) :
 theorem newWitness_anchor {x : Fin degree}
     (hX : (data.vertexPartition wall).Rel anchor.1 x) :
     newWitness base x = anchorWitness base x := by
-  rw [newWitness, if_pos hX]
+  rw [newWitness, ite_eq_left hX]
 
 theorem newWitness_ordinary {x : Fin degree}
     (hX : ¬ (data.vertexPartition wall).Rel anchor.1 x) :
     newWitness base x = ordinaryWitness base x := by
-  rw [newWitness, if_neg hX]
+  rw [newWitness, ite_eq_right hX]
 
 theorem anchorWitness_delta (hValid : data.Valid) {x : Fin degree}
     (hX : x ∈ base.newDeltaBlock) :
     anchorWitness base x =
       some ⟨deltaOccurrence base, deltaOccurrence_survives base hValid⟩ := by
-  rw [anchorWitness, if_pos hX, witnessOf_pos (deltaOccurrence_survives base hValid)]
+  rw [anchorWitness, ite_eq_left hX, witnessOf_pos (deltaOccurrence_survives base hValid)]
 
 theorem anchorWitness_bridge {x : Fin degree} (hX : x ∉ base.newDeltaBlock) :
     anchorWitness base x = none := by
-  rw [anchorWitness, if_neg hX]
+  rw [anchorWitness, ite_eq_right hX]
 
 theorem ordinaryWitness_pos {x : Fin degree}
     (h : ¬ IsDangling base.gaugedData (alphaOccurrenceAt base x)) :
@@ -200,7 +204,7 @@ theorem rowOfEdge_pos (hValid : data.Valid)
         (base.gaugedData_valid hValid).1 old = e) :
     rowOfEdge base hValid e = some (Classical.choose h).stablePath := by
   classical
-  rw [rowOfEdge, dif_pos h]
+  rw [rowOfEdge, dite_eq_left h]
 
 theorem rowOfEdge_neg (hValid : data.Valid)
     (e : NonDanglingEdge (validCandidate base hValid).datum)
@@ -210,7 +214,7 @@ theorem rowOfEdge_neg (hValid : data.Valid)
     rowOfEdge base hValid e =
       (newWitness base e.1.1.2).map NonDanglingEdge.stablePath := by
   classical
-  rw [rowOfEdge, dif_neg h]
+  rw [rowOfEdge, dite_eq_right h]
 
 theorem rowOfEdge_retained (hValid : data.Valid) (old : NonDanglingEdge base.gaugedData) :
     rowOfEdge base hValid (ResolutionAwayFromWall.retainedEdge

@@ -1,6 +1,10 @@
-import Bananas.Transmission.KGeneralSwap
-import Bananas.Transmission.MixedTorsionChains
-import Bananas.Wedge.OnceMarkedWedgeGenerality
+module
+
+public import Bananas.Transmission.KGeneralSwap
+public import Bananas.Transmission.MixedTorsionChains
+public import Bananas.Wedge.OnceMarkedWedgeGenerality
+
+@[expose] public section
 
 /-!
 # Balanced chains with mixed torsion orders

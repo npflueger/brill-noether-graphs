@@ -1,6 +1,10 @@
-import Utilities.Gluing.CycleRigidity
-import Utilities.Subdivision.CubicCore
-import ChipFiringWithLean.RiemannRoch
+module
+
+public import Utilities.Gluing.CycleRigidity
+public import Utilities.Subdivision.CubicCore
+public import ChipFiringWithLean.RiemannRoch
+
+@[expose] public section
 
 /-!
 # Canonical divisors on positive subdivisions

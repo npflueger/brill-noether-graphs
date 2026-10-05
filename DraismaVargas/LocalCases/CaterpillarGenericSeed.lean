@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.CaterpillarSeed
-import DraismaVargas.LocalCases.AtlasGenericStart
+module
+
+public import DraismaVargas.LocalCases.CaterpillarSeed
+public import DraismaVargas.LocalCases.AtlasGenericStart
+
+@[expose] public section
 
 /-!
 # A genuine caterpillar seed with a generic starting metric

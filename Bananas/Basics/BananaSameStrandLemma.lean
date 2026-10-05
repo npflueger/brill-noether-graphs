@@ -1,6 +1,10 @@
-import Bananas.Transmission.FarMarkAPI
-import Bananas.CrossOneOff.CrossStrandSupport
-import Bananas.Transmission.GenericRankWitness
+module
+
+public import Bananas.Transmission.FarMarkAPI
+public import Bananas.CrossOneOff.CrossStrandSupport
+public import Bananas.Transmission.GenericRankWitness
+
+@[expose] public section
 
 /-!
 # The four-alternative same-strand lemma

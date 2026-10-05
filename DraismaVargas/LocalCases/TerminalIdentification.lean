@@ -1,7 +1,11 @@
-import DraismaVargas.LocalCases.OuterWalk
-import DraismaVargas.LocalCases.CertifiedPencil
-import DraismaVargas.LocalCases.RequestedExpandedEndpoints
-import DraismaVargas.LocalCases.StrongRefinement
+module
+
+public import DraismaVargas.LocalCases.OuterWalk
+public import DraismaVargas.LocalCases.CertifiedPencil
+public import DraismaVargas.LocalCases.RequestedExpandedEndpoints
+public import DraismaVargas.LocalCases.StrongRefinement
+
+@[expose] public section
 
 /-!
 # The terminal identification from a tracked pencil at the requested core

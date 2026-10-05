@@ -1,4 +1,8 @@
-import LowGenus.ConfigurationTwo
+module
+
+public import LowGenus.ConfigurationTwo
+
+@[expose] public section
 
 /-!
 # Guarding sets: the abstract glue of an Atanasov--Ranganathan row proof

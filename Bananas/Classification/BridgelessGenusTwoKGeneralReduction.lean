@@ -1,5 +1,9 @@
-import Bananas.Classification.BridgelessGenusTwoPseudocore
-import Bananas.Basics.MarkedIso
+module
+
+public import Bananas.Classification.BridgelessGenusTwoPseudocore
+public import Bananas.Basics.MarkedIso
+
+@[expose] public section
 
 /-!
 # Reducing bridgeless genus-two general transmission to core normal forms

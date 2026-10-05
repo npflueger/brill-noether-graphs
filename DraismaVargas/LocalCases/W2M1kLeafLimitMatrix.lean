@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W2M1kLeafRowDescent
+module
+
+public import DraismaVargas.LocalCases.W2M1kLeafRowDescent
+
+@[expose] public section
 
 /-!
 # Figure 33's leaf member: the limit matrix
@@ -272,10 +276,10 @@ theorem leafMember_regrown (input : W2SourceInput data star) (shape : Shape prof
     rw [leaf_occurrences_new_first input shape pair,
       Finset.sum_pair (leaf_newSourceEdge_ne input shape pair),
       leaf_newSourceEdge_index input shape pair (pinSheet profile 0),
-      leaf_newSourceEdge_index input shape pair pair.second, if_pos rfl]
+      leaf_newSourceEdge_index input shape pair pair.second, ite_eq_left rfl]
     norm_num
   · rw [leaf_occurrences_new_of_ne input shape pair path hPath, Finset.sum_empty,
-      if_neg hPath]
+      ite_eq_right hPath]
     ring
 
 /-- The same evaluation as a single conditional. -/

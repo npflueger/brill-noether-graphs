@@ -1,4 +1,8 @@
-import Bananas.Wedge.SameFactorWedgeSubmodularity
+module
+
+public import Bananas.Wedge.SameFactorWedgeSubmodularity
+
+@[expose] public section
 
 /-!
 # Automatic submodularity in the two-vertex same-factor wedge exception

@@ -1,8 +1,12 @@
-import Bananas.Wedge.WedgeKGeneralConverse
-import Bananas.Sections.SectionSixChainConclusion
-import Bananas.Classification.GenusTwoDegreeTwo
-import Bananas.Basics.MarkedIso
-import Bananas.Basics.GraphIsoCuts
+module
+
+public import Bananas.Wedge.WedgeKGeneralConverse
+public import Bananas.Sections.SectionSixChainConclusion
+public import Bananas.Classification.GenusTwoDegreeTwo
+public import Bananas.Basics.MarkedIso
+public import Bananas.Basics.GraphIsoCuts
+
+@[expose] public section
 
 /-!
 # Symmetric period comparison on a rigid genus-two wedge

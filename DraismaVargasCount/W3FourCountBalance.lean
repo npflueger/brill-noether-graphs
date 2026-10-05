@@ -1,6 +1,10 @@
-import DraismaVargasCount.W3FourMultiplicityBalance
-import DraismaVargasCount.W3FourIncomingDenominator
-import DraismaVargasCount.W3FourReversedDenominator
+module
+
+public import DraismaVargasCount.W3FourMultiplicityBalance
+public import DraismaVargasCount.W3FourIncomingDenominator
+public import DraismaVargasCount.W3FourReversedDenominator
+
+@[expose] public section
 
 /-!
 # Completion of Equation (2) on the actual four-member family

@@ -1,5 +1,9 @@
-import Utilities.Segments.SeamCalculus
-import Utilities.Gluing.VertexWedgeGenusOne
+module
+
+public import Utilities.Segments.SeamCalculus
+public import Utilities.Gluing.VertexWedgeGenusOne
+
+@[expose] public section
 
 /-!
 # Degree-one rigidity from two-edge-connected cuts

@@ -1,4 +1,8 @@
-import LowGenus.GenusFiveClosedOrbit
+module
+
+public import LowGenus.GenusFiveClosedOrbit
+
+@[expose] public section
 
 /-!
 # The two leg swaps of the AR row-05 core

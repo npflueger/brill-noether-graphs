@@ -1,8 +1,12 @@
-import Tricycle.Core
-import Utilities.Gonality.GonalityTransport
-import Utilities.Gonality.BurnedSet
-import Utilities.Foundations.RankDeterminingSet
-import Mathlib.Tactic
+module
+
+public import Tricycle.Core
+public import Utilities.Gonality.GonalityTransport
+public import Utilities.Gonality.BurnedSet
+public import Utilities.Foundations.RankDeterminingSet
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # The tricycle upper bounds

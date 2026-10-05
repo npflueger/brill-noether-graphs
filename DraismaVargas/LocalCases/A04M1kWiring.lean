@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.A04MoreTags
-import DraismaVargas.LocalCases.W2M1kGaugeFamily
+module
+
+public import DraismaVargas.LocalCases.A04MoreTags
+public import DraismaVargas.LocalCases.W2M1kGaugeFamily
+
+@[expose] public section
 
 /-!
 # The routed wall for `w2M1k`: wall input and full-dimensional supply

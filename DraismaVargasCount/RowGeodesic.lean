@@ -1,6 +1,10 @@
-import DraismaVargasCount.TargetGeodesic
-import DraismaVargasCount.RowWalk
-import DraismaVargasCount.IncomingSimpleColumn
+module
+
+public import DraismaVargasCount.TargetGeodesic
+public import DraismaVargasCount.RowWalk
+public import DraismaVargasCount.IncomingSimpleColumn
+
+@[expose] public section
 
 /-!
 # The stable row as a target walk: the three residues discharged
@@ -125,16 +129,16 @@ theorem otherEndOf_eq {edge : data.SourceEdge} {vertex : data.SourceVertex}
   by_cases hSplit : (data.sourceEnds edge).1 = vertex
   · have hvertex : ((edge.1.1 : target.edges) : target.V × target.V).1 = vertex.1.1 :=
       congrArg (fun item : data.SourceVertex => item.1.1) hSplit
-    rw [if_pos hSplit, if_pos hvertex]
+    rw [ite_eq_left hSplit, ite_eq_left hvertex]
     rfl
-  · rw [if_neg hSplit]
+  · rw [ite_eq_right hSplit]
     have hSnd : (data.sourceEnds edge).2 = vertex := by
       rcases h with h | h
       · exact absurd h hSplit
       · exact h
     have hvertex : ((edge.1.1 : target.edges) : target.V × target.V).2 = vertex.1.1 :=
       congrArg (fun item : data.SourceVertex => item.1.1) hSnd
-    rw [if_neg (fun hEq => hLoop (hEq.trans hvertex.symm))]
+    rw [ite_eq_right (fun hEq => hLoop (hEq.trans hvertex.symm))]
     rfl
 
 /-! ## 3. Three survivors do not fit at a valency-two vertex -/

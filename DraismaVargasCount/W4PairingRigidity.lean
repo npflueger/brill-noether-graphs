@@ -1,6 +1,10 @@
-import DraismaVargasCount.GeometricTransport
-import DraismaVargas.Infrastructure.GluingContraction
-import DraismaVargas.LocalCases.W4TargetPairings
+module
+
+public import DraismaVargasCount.GeometricTransport
+public import DraismaVargas.Infrastructure.GluingContraction
+public import DraismaVargas.LocalCases.W4TargetPairings
+
+@[expose] public section
 
 /-!
 # A target expansion remembers its own `2+2` split
@@ -71,12 +75,12 @@ variable {target wall} {right right' : target.edges → Bool}
 
 theorem expandedEndpoint_wall (edge : target.edges) :
     expandedEndpoint target wall right edge wall = sideVertex target wall (right edge) := by
-  simp only [expandedEndpoint, sideVertex, if_true]
+  simp only [expandedEndpoint, sideVertex, ite_true]
 
 theorem expandedEndpoint_of_ne (edge : target.edges) {vertex : target.V}
     (h : vertex ≠ wall) :
     expandedEndpoint target wall right edge vertex = oldVertex target vertex := by
-  simp only [expandedEndpoint, if_neg h, ite_self]
+  simp only [expandedEndpoint, ite_eq_right h, ite_self]
 
 theorem oldVertex_ne_sideVertex {u : target.V} (hu : u ≠ wall) (side : Bool) :
     oldVertex target u ≠ sideVertex target wall side := by

@@ -6,7 +6,7 @@ defaultTargets = ["Utilities", "Bananas", "LowGenus", "TreewidthGonality", "Tric
 [[require]]
 name = "mathlib"
 scope = "leanprover-community"
-rev = "v4.33.0"
+rev = "v4.34.0"
 
 # Reusable chip-firing and transmission infrastructure.  It imports no
 # downstream library.
@@ -110,11 +110,12 @@ name = "TwiceMarkedBananas"
 name = "TwiceMarkedBananasStatements"
 
 [[require]]
-name = "chipFiringWithLean"
+# Module-compatible release, followed by its docbuild dependency update.
+name = "chip-firing-with-lean"
 git = "https://github.com/DhyeyMavani2003/chip-firing-with-lean.git"
-rev = "98ec6a67dcb89d8ec96576f45aa3ab61cf3093ea"
+rev = "4f9027c5e1305152c51aac0ad45dfcb4bbf1f3a3"
 
 [[require]]
 name = "demazure"
 git = "https://github.com/npflueger/demazure.git"
-rev = "1f4927928af4e22561e4bbdf3943aad1ca308c9d"
+rev = "99f69e15fa82cc9bb81695a78c35b80da1ea3a5e" # v1.1.2

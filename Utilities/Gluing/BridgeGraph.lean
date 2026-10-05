@@ -1,4 +1,8 @@
-import ChipFiringWithLean.Basic
+module
+
+public import ChipFiringWithLean.Basic
+
+@[expose] public section
 
 /-!
 # Joining two graphs by a bridge

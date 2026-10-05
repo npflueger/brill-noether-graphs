@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.M11CommonBalance
-import DraismaVargas.Infrastructure.GluingTransport
+module
+
+public import DraismaVargas.LocalCases.M11CommonBalance
+public import DraismaVargas.Infrastructure.GluingTransport
+
+@[expose] public section
 
 /-!
 # Literal incoming columns at an M11 contraction

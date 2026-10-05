@@ -1,4 +1,8 @@
-import Utilities.CubicGraphs.CubicDarts
+module
+
+public import Utilities.CubicGraphs.CubicDarts
+
+@[expose] public section
 
 /-!
 # Sliding planted lollipops and lifting Whitehead paths

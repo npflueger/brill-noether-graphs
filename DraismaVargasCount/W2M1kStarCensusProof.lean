@@ -1,6 +1,10 @@
-import DraismaVargasCount.W2PStarCensusProof
-import DraismaVargasCount.W3FourStarCensusProof
-import DraismaVargasCount.RegrowthBalances
+module
+
+public import DraismaVargasCount.W2PStarCensusProof
+public import DraismaVargasCount.W3FourStarCensusProof
+public import DraismaVargasCount.RegrowthBalances
+
+@[expose] public section
 
 /-!
 # The M-1k star census, Stages 1 and 3, and Stage 2 reduced to transports

@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W2M1kStableGraph
+module
+
+public import DraismaVargas.LocalCases.W2M1kStableGraph
+
+@[expose] public section
 
 /-!
 # Figure 33's induced stable-row map
@@ -250,12 +254,12 @@ noncomputable def dividedRep (profile : W2R2SourceProfile.SourceProfile data sta
 
 @[simp] theorem dividedRep_pin (profile : W2R2SourceProfile.SourceProfile data star block) :
     dividedRep profile (pinSheet profile profile.doubleLabel) = profile.first.1 :=
-  if_pos rfl
+  ite_eq_left rfl
 
 theorem dividedRep_of_ne (profile : W2R2SourceProfile.SourceProfile data star block)
     {sheet : Fin degree} (hNe : sheet ≠ pinSheet profile profile.doubleLabel) :
     dividedRep profile sheet = profile.second.1 :=
-  if_neg hNe
+  ite_eq_right hNe
 
 theorem dividedRep_survives (profile : W2R2SourceProfile.SourceProfile data star block)
     (sheet : Fin degree) : ¬ IsDangling data (dividedRep profile sheet) := by
@@ -274,7 +278,7 @@ theorem dividedRep_congr (shape : Shape profile) (divided : DividedData profile)
   unfold dividedRep
   by_cases hFirst : first = pinSheet profile profile.doubleLabel
   · by_cases hSecond : second = pinSheet profile profile.doubleLabel
-    · rw [if_pos hFirst, if_pos hSecond]
+    · rw [ite_eq_left hFirst, ite_eq_left hSecond]
     · refine absurd ?_ (divided_newSourceEdge_pin_ne shape divided profile.doubleLabel
         second hSecond)
       rw [← hFirst]
@@ -284,7 +288,7 @@ theorem dividedRep_congr (shape : Shape profile) (divided : DividedData profile)
         first hFirst)
       rw [← hSecond]
       exact hEqual.symm
-    · rw [if_neg hFirst, if_neg hSecond]
+    · rw [ite_eq_right hFirst, ite_eq_right hSecond]
 
 /-- **Every surviving regrown occurrence of `M⁽²⁾` above `A₀` lies in the row of
 its representative.**  Over `e₄`'s sheet there is nothing to say: that

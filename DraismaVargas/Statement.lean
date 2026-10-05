@@ -1,6 +1,10 @@
-import DraismaVargas.LowGenus
-import DraismaVargas.OddGenusTwoCycle
-import DraismaVargas.LocalCases.RetainedClassInjectivity
+module
+
+public import DraismaVargas.LowGenus
+public import DraismaVargas.OddGenusTwoCycle
+public import DraismaVargas.LocalCases.RetainedClassInjectivity
+
+@[expose] public section
 
 /-!
 # The Draisma--Vargas existence theorem

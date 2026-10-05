@@ -1,5 +1,9 @@
-import LowGenus.GenusFiveConfigurations
-import Utilities.Subdivision.DegenerateSeparator
+module
+
+public import LowGenus.GenusFiveConfigurations
+public import Utilities.Subdivision.DegenerateSeparator
+
+@[expose] public section
 
 /-!
 # The common closing step of an Atanasov--Ranganathan closed-face row

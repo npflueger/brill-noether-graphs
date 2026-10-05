@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W4StableSource
+module
+
+public import DraismaVargas.LocalCases.W4StableSource
+
+@[expose] public section
 
 /-!
 # Length-matrix presentations that decompose the pruned source

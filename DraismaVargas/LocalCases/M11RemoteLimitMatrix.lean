@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.M11RemoteInput
-import DraismaVargas.LocalCases.M11RemoteColumn
+module
+
+public import DraismaVargas.LocalCases.M11RemoteInput
+public import DraismaVargas.LocalCases.M11RemoteColumn
+
+@[expose] public section
 
 /-!
 # Literal common-wall rows and columns for the remote M11 split

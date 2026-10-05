@@ -1,6 +1,10 @@
-import LowGenus.GenusFiveBridgeRows
-import LowGenus.GenusFivePseudocoreCoverage
-import LowGenus.GenusFourRowsClosed
+module
+
+public import LowGenus.GenusFiveBridgeRows
+public import LowGenus.GenusFivePseudocoreCoverage
+public import LowGenus.GenusFourRowsClosed
+
+@[expose] public section
 
 /-!
 # Brill--Noether existence through genus five

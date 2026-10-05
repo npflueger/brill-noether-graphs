@@ -1,12 +1,16 @@
-import DraismaVargasCount.StepSupplyGenusSix
-import DraismaVargasCount.BallotCoreIdentification
-import DraismaVargasCount.DiagonalClassificationEndgame
-import DraismaVargasCount.DiagonalRigidityObligation
-import DraismaVargasCount.DiagonalExtract
-import DraismaVargasCount.DiagonalFromSeparation
-import DraismaVargasCount.LollipopLeafRow
-import DraismaVargasCount.LollipopDivalentWitness
-import DraismaVargasCount.SimpleWallSupply
+module
+
+public import DraismaVargasCount.StepSupplyGenusSix
+public import DraismaVargasCount.BallotCoreIdentification
+public import DraismaVargasCount.DiagonalClassificationEndgame
+public import DraismaVargasCount.DiagonalRigidityObligation
+public import DraismaVargasCount.DiagonalExtract
+public import DraismaVargasCount.DiagonalFromSeparation
+public import DraismaVargasCount.LollipopLeafRow
+public import DraismaVargasCount.LollipopDivalentWitness
+public import DraismaVargasCount.SimpleWallSupply
+
+@[expose] public section
 
 /-!
 # The parity of the base count, and what the ballot classification is worth
@@ -419,14 +423,14 @@ theorem eq_of_not_passesAboveLeaf_genusTwo
     · intro v hv
       have hLeaf : IsLeafVertex mem.target v := (mem_leafVertices v).mp (Finset.mem_coe.mp hv)
       have hval : (if h : IsLeafVertex mem.target v then LeafFibre.leafRow mem.fullDim h else 0)
-          = LeafFibre.leafRow mem.fullDim hLeaf := dif_pos hLeaf
+          = LeafFibre.leafRow mem.fullDim hLeaf := dite_eq_left hLeaf
       refine Finset.mem_coe.mpr (Finset.mem_filter.mpr ⟨Finset.mem_univ _, ?_⟩)
       simp only [hval]
       exact EdgeDenominator.passesAboveLeaf_leafRow mem.fullDim hLeaf
     · intro a ha b hb hab
       have hA : IsLeafVertex mem.target a := (mem_leafVertices a).mp (Finset.mem_coe.mp ha)
       have hB : IsLeafVertex mem.target b := (mem_leafVertices b).mp (Finset.mem_coe.mp hb)
-      simp only [dif_pos hA, dif_pos hB] at hab
+      simp only [dite_eq_left hA, dite_eq_left hB] at hab
       exact LollipopDivalentWitness.leaf_eq_of_leafRow_eq mem.fullDim hA hB hab
   have hpair : ({r, r'} : Finset (Fin (6 * 0 + 3))) ⊆
       Finset.univ.filter fun x : Fin (6 * 0 + 3) ↦

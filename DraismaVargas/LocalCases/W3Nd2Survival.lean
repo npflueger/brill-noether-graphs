@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.W3Nd2FineCandidates
-import DraismaVargas.LocalCases.M11SplitSurvival
-import DraismaVargas.LocalCases.ResolutionPruning
+module
+
+public import DraismaVargas.LocalCases.W3Nd2FineCandidates
+public import DraismaVargas.LocalCases.M11SplitSurvival
+public import DraismaVargas.LocalCases.ResolutionPruning
+
+@[expose] public section
 
 /-!
 # Selected-block survival for the two Figure 31 W3 nd2 candidates

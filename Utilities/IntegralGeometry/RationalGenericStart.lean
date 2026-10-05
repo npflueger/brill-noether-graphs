@@ -1,5 +1,9 @@
-import Utilities.IntegralGeometry.ConeWall
-import Utilities.IntegralGeometry.RationalWallOrder
+module
+
+public import Utilities.IntegralGeometry.ConeWall
+public import Utilities.IntegralGeometry.RationalWallOrder
+
+@[expose] public section
 
 /-!
 # Rational generic points in finite open wall regions

@@ -1,7 +1,11 @@
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Algebra.Order.Ring.Int
-import Lean.Elab.Tactic.Omega
+module
+
+public import Mathlib.Algebra.BigOperators.Fin
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Algebra.Order.Ring.Int
+public import Lean.Elab.Tactic.Omega
+
+@[expose] public section
 
 /-!
 # A common offset for integer rounding

@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.M11RemoteCandidates
+module
+
+public import DraismaVargas.LocalCases.M11RemoteCandidates
+
+@[expose] public section
 
 /-!
 # The genuine background leaves of the M11 split candidates
@@ -73,10 +77,10 @@ theorem split_background_count (partition : SheetPartition degree)
       if partition.Rel distinguished sheet then partition.blockCard sheet else 1 := by
   by_cases hSelected : partition.Rel distinguished sheet
   · rw [LocalResolution.onBlock_of_rel _ _ _ _ _
-      (hSelected.trans (partition.rel_repr_right sheet)), if_pos hSelected]
+      (hSelected.trans (partition.rel_repr_right sheet)), ite_eq_left hSelected]
     exact partition.splitBlock_blockCountWithin_of_rel distinguished sheet hSelected
   · rw [LocalResolution.onBlock_of_not_rel _ _ _ _ _
-      (fun h ↦ hSelected (h.trans (partition.rel_repr_left sheet))), if_neg hSelected]
+      (fun h ↦ hSelected (h.trans (partition.rel_repr_left sheet))), ite_eq_right hSelected]
     exact SheetPartition.blockCountWithin_self _ _
 
 theorem firstSplit_left_card (input : W2SourceInput data star)
@@ -139,7 +143,7 @@ theorem firstSplit_background_isDangling (input : W2SourceInput data star)
     IsDangling (firstSplitPattern input profile hCard).candidate.datum
       ((firstSplitPattern input profile hCard).candidate.newSourceEdge sheet) := by
   apply newSourceEdge_isDangling_of_left_card_one _ input.valid
-  exact (firstSplit_left_card input profile hCard sheet).trans (if_neg hBackground)
+  exact (firstSplit_left_card input profile hCard sheet).trans (ite_eq_right hBackground)
 
 /-- The same leaf pruning holds on the remotely swapped second split. -/
 theorem secondSplit_background_isDangling (input : W2SourceInput data star)
@@ -150,6 +154,6 @@ theorem secondSplit_background_isDangling (input : W2SourceInput data star)
       ((secondSplitPattern input profile hCard).candidate.newSourceEdge sheet) := by
   apply newSourceEdge_isDangling_of_left_card_one _
     (wallBranchSwap_preserves_valid data input.valid wall _ _ _ _ _)
-  exact (secondSplit_left_card input profile hCard sheet).trans (if_neg hBackground)
+  exact (secondSplit_left_card input profile hCard sheet).trans (ite_eq_right hBackground)
 
 end DraismaVargas.LocalCases.M11SplitLeaves

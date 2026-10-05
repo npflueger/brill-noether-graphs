@@ -1,5 +1,9 @@
-import DraismaVargasCount.ValencyThreeDigon
-import DraismaVargasCount.ValencyFourSplit
+module
+
+public import DraismaVargasCount.ValencyThreeDigon
+public import DraismaVargasCount.ValencyFourSplit
+
+@[expose] public section
 
 set_option autoImplicit false
 

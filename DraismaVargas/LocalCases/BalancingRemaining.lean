@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.BalancingValencyTwo
-import Mathlib.Tactic
+module
+
+public import DraismaVargas.LocalCases.BalancingValencyTwo
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # The Draisma--Vargas local balancing identities (1)--(5) and (10)

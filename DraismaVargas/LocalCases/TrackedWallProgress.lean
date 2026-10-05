@@ -1,13 +1,17 @@
-import DraismaVargas.LocalCases.TrackedState
-import DraismaVargas.LocalCases.A04MoreTags
-import DraismaVargas.LocalCases.A04ShiftWiring
-import DraismaVargas.LocalCases.A04M11Wiring
-import DraismaVargas.LocalCases.A04R1Wiring
-import DraismaVargas.LocalCases.W2M11GraphTracking
-import DraismaVargas.LocalCases.W2PGraphTracking
-import DraismaVargas.LocalCases.W2R1GraphTracking
-import DraismaVargas.LocalCases.W3Nd2GraphTracking
-import DraismaVargas.LocalCases.W3Nd3GraphTracking
+module
+
+public import DraismaVargas.LocalCases.TrackedState
+public import DraismaVargas.LocalCases.A04MoreTags
+public import DraismaVargas.LocalCases.A04ShiftWiring
+public import DraismaVargas.LocalCases.A04M11Wiring
+public import DraismaVargas.LocalCases.A04R1Wiring
+public import DraismaVargas.LocalCases.W2M11GraphTracking
+public import DraismaVargas.LocalCases.W2PGraphTracking
+public import DraismaVargas.LocalCases.W2R1GraphTracking
+public import DraismaVargas.LocalCases.W3Nd2GraphTracking
+public import DraismaVargas.LocalCases.W3Nd3GraphTracking
+
+@[expose] public section
 
 /-!
 # Wiring the tracked successor into the tracked march

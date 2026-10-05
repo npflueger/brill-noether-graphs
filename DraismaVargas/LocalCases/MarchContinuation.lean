@@ -1,5 +1,9 @@
-import Utilities.IntegralGeometry.PositiveOrthantExit
-import DraismaVargas.LocalCases.ClassifiedContinuation
+module
+
+public import Utilities.IntegralGeometry.PositiveOrthantExit
+public import DraismaVargas.LocalCases.ClassifiedContinuation
+
+@[expose] public section
 
 /-!
 # Attaching a first cone exit to classified local continuation

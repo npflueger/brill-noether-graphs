@@ -1,7 +1,11 @@
-import DraismaVargas.LocalCases.CycleRows
-import DraismaVargas.LocalCases.RetainedIndexProducer
-import DraismaVargas.LocalCases.StrongRefinement
-import DraismaVargas.LocalCases.TerminalGluing
+module
+
+public import DraismaVargas.LocalCases.CycleRows
+public import DraismaVargas.LocalCases.RetainedIndexProducer
+public import DraismaVargas.LocalCases.StrongRefinement
+public import DraismaVargas.LocalCases.TerminalGluing
+
+@[expose] public section
 
 /-!
 # The source zero set is a forest at a general expansion forest

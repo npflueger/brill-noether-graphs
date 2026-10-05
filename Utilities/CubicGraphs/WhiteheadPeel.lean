@@ -1,4 +1,8 @@
-import Utilities.CubicGraphs.CubicDarts
+module
+
+public import Utilities.CubicGraphs.CubicDarts
+
+@[expose] public section
 
 /-!
 # Peeling an actual lollipop from a cubic dart graph
@@ -210,14 +214,14 @@ def peelOp (d : L.PeelD) : L.PeelD :=
   else ⟨G.op d.1, L.op_remaining d hs ht⟩
 
 @[simp] theorem peelOp_root : L.peelOp L.root = L.mate := by
-  simp only [peelOp, dif_pos]
+  simp only [peelOp, dite_eq_left]
 
 @[simp] theorem peelOp_mate : L.peelOp L.mate = L.root := by
-  simp only [peelOp, dif_neg L.root_ne_mate.symm, dif_pos]
+  simp only [peelOp, dite_eq_right L.root_ne_mate.symm, dite_eq_left]
 
 theorem peelOp_other (d : L.PeelD) (hs : d ≠ L.root) (ht : d ≠ L.mate) :
     (L.peelOp d).1 = G.op d.1 := by
-  simp only [peelOp, dif_neg hs, dif_neg ht]
+  simp only [peelOp, dite_eq_right hs, dite_eq_right ht]
 
 theorem peelOp_invol (d : L.PeelD) : L.peelOp (L.peelOp d) = d := by
   by_cases hs : d = L.root
@@ -267,11 +271,11 @@ def retract (d : D) : L.PeelD :=
   if h : G.vert d ≠ L.A ∧ G.vert d ≠ L.B then ⟨d, h⟩ else L.root
 
 @[simp] theorem retract_remaining (d : L.PeelD) : L.retract d.1 = d := by
-  simp only [retract, dif_pos d.2]
+  simp only [retract, dite_eq_left d.2]
 
 theorem retract_removed (d : D) (h : ¬ (G.vert d ≠ L.A ∧ G.vert d ≠ L.B)) :
     L.retract d = L.root := by
-  simp only [retract, dif_neg h]
+  simp only [retract, dite_eq_right h]
 
 theorem eq_root_or_mate_of_op_removed (d : L.PeelD)
     (h : ¬ (G.vert (G.op d.1) ≠ L.A ∧ G.vert (G.op d.1) ≠ L.B)) :
@@ -287,7 +291,7 @@ theorem retract_vert (d e : D) (h : G.vert d = G.vert e) :
   by_cases hd : G.vert d ≠ L.A ∧ G.vert d ≠ L.B
   · have he : G.vert e ≠ L.A ∧ G.vert e ≠ L.B := by rw [← h]; exact hd
     apply DartRel.of_vert
-    simp only [retract, dif_pos hd, dif_pos he]
+    simp only [retract, dite_eq_left hd, dite_eq_left he]
     exact Subtype.ext h
   · have he : ¬ (G.vert e ≠ L.A ∧ G.vert e ≠ L.B) := by rw [← h]; exact hd
     rw [L.retract_removed d hd, L.retract_removed e he]
@@ -309,7 +313,7 @@ theorem retract_op_of_remaining (d : L.PeelD) :
     apply DartRel.of_op
     apply Subtype.ext
     rw [L.peelOp_other d hs ht]
-    simp only [retract, dif_pos he]
+    simp only [retract, dite_eq_left he]
   · rw [L.retract_removed _ he]
     rcases L.eq_root_or_mate_of_op_removed d he with rfl | rfl
     · exact Relation.EqvGen.refl _

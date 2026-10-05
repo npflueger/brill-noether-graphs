@@ -1,6 +1,10 @@
-import Bananas.CrossOneOff.CrossOneOffInversions
-import Bananas.Jacobian.BananaTorsionSlopes
-import Bananas.Transmission.TorsionOrderExact
+module
+
+public import Bananas.CrossOneOff.CrossOneOffInversions
+public import Bananas.Jacobian.BananaTorsionSlopes
+public import Bananas.Transmission.TorsionOrderExact
+
+@[expose] public section
 
 /-!
 # The cross-one-off obstruction to general transmission

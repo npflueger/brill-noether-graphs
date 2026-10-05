@@ -1,11 +1,15 @@
-import Bananas.Theta.ThetaTorsionAPI
-import Bananas.Theta.ThetaExactTorsionRelabel
-import Bananas.Theta.ThetaArithmetic
-import Bananas.Theta.ThetaNonrecurrence
-import Bananas.Theta.ThetaGenusTwoCornerSum
-import Bananas.Theta.ThetaInvTauCorrection
-import Bananas.Theta.ThetaBoundarySubmodularity
-import Bananas.Transmission.TransmissionAPI
+module
+
+public import Bananas.Theta.ThetaTorsionAPI
+public import Bananas.Theta.ThetaExactTorsionRelabel
+public import Bananas.Theta.ThetaArithmetic
+public import Bananas.Theta.ThetaNonrecurrence
+public import Bananas.Theta.ThetaGenusTwoCornerSum
+public import Bananas.Theta.ThetaInvTauCorrection
+public import Bananas.Theta.ThetaBoundarySubmodularity
+public import Bananas.Transmission.TransmissionAPI
+
+@[expose] public section
 
 /-!
 # Evenly marked theta graphs

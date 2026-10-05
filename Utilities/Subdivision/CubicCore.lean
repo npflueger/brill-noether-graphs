@@ -1,4 +1,8 @@
-import Utilities.Subdivision.ExplicitPotential
+module
+
+public import Utilities.Subdivision.ExplicitPotential
+
+@[expose] public section
 
 /-!
 # Cubic ordered cores

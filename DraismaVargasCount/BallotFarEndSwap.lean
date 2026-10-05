@@ -1,4 +1,8 @@
-import DraismaVargasCount.BallotStabiliserReduction
+module
+
+public import DraismaVargasCount.BallotStabiliserReduction
+
+@[expose] public section
 
 /-!
 # The far end swap, constructed and realised: `hStab`'s identity branch closes
@@ -263,27 +267,27 @@ theorem farSwap_incidence (m : ℕ) (v : Fin (4 * (m + 1) + 2)) (e : Fin (6 * (m
         (v.val ≠ 4 * m + 4 ∧ v.val ≠ 4 * m + 5) by omega) with hx | hx | hx
     · rw [coreIncidence_farVtx_zero _ _ _ h (Or.inl hx),
         coreIncidence_farVtx_zero _ _ _ h
-          (by rw [farSwapVtxFun_val, if_pos hx]; exact Or.inr rfl)]
+          (by rw [farSwapVtxFun_val, ite_eq_left hx]; exact Or.inr rfl)]
     · rw [coreIncidence_farVtx_zero _ _ _ h (Or.inr hx),
         coreIncidence_farVtx_zero _ _ _ h
-          (by rw [farSwapVtxFun_val, if_neg (by omega), if_pos hx]; exact Or.inl rfl)]
+          (by rw [farSwapVtxFun_val, ite_eq_right (by omega), ite_eq_left hx]; exact Or.inl rfl)]
     · have hvf : farSwapVtxFun m v = v := by
         apply Fin.ext
-        rw [farSwapVtxFun_val, if_neg hx.1, if_neg hx.2]
+        rw [farSwapVtxFun_val, ite_eq_right hx.1, ite_eq_right hx.2]
       rw [hvf]
-  · rw [coreIncidence_farSpine _ _ _ (by rw [farSwapSlotFun_val, if_pos h]),
+  · rw [coreIncidence_farSpine _ _ _ (by rw [farSwapSlotFun_val, ite_eq_left h]),
       coreIncidence_farStem _ _ _ h, farSwapVtxFun_val]
     split_ifs <;> omega
-  · rw [coreIncidence_farLast _ _ _ (by rw [farSwapSlotFun_val, if_neg (by omega), if_pos h]),
+  · rw [coreIncidence_farLast _ _ _ (by rw [farSwapSlotFun_val, ite_eq_right (by omega), ite_eq_left h]),
       coreIncidence_farLoop _ _ _ h, farSwapVtxFun_val]
     split_ifs <;> omega
   · rw [coreIncidence_farStem _ _ _
-        (by rw [farSwapSlotFun_val, if_neg (by omega), if_neg (by omega), if_pos h]),
+        (by rw [farSwapSlotFun_val, ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_left h]),
       coreIncidence_farSpine _ _ _ h, farSwapVtxFun_val]
     split_ifs <;> omega
   · rw [coreIncidence_farLoop _ _ _
-        (by rw [farSwapSlotFun_val, if_neg (by omega), if_neg (by omega), if_neg (by omega),
-          if_pos h]),
+        (by rw [farSwapSlotFun_val, ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_right (by omega),
+          ite_eq_left h]),
       coreIncidence_farLast _ _ _ h, farSwapVtxFun_val]
     split_ifs <;> omega
 
@@ -318,7 +322,7 @@ theorem farSwap_slot_val (m : ℕ) (e : Fin (6 * (m + 1) + 3)) :
 theorem farSwap_ne_refl (m : ℕ) : ¬ ∀ e, (farSwap m).slot e = e := by
   intro h
   have h0 : ((farSwap m).slot ⟨6 * m + 5, by omega⟩).val = 6 * m + 7 := by
-    rw [farSwap_slot_val]; exact if_pos rfl
+    rw [farSwap_slot_val]; exact ite_eq_left rfl
   rw [h ⟨6 * m + 5, by omega⟩] at h0
   exact absurd (show (6 * m + 5 : ℕ) = 6 * m + 7 from h0) (by omega)
 
@@ -350,7 +354,7 @@ theorem innerIndex_farSwap (m k : ℕ) (hk : k < 2 * (m + 1) - 1) :
 spine slot `6M+1` to the last stem `6M-1`. -/
 theorem farSwap_slot_far (m : ℕ) (e : Fin (6 * (m + 1) + 3)) (he : e.val = 6 * m + 7) :
     ((farSwap m).slot e).val = 6 * m + 5 := by
-  rw [farSwap_slot_val, if_neg (by omega), if_neg (by omega), if_pos he]
+  rw [farSwap_slot_val, ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_left he]
 
 
 /-! ## 3.  The far end of the ballot datum: both partitions are preserved on the nose
@@ -474,7 +478,7 @@ theorem farTgtFun_val (m : ℕ) (v : (catTree (m + 1)).V) :
 theorem farTgtFun_fix (m : ℕ) (v : (catTree (m + 1)).V) (h : v.val ≤ 6 * m + 5) :
     farTgtFun m v = v := by
   apply Fin.ext
-  rw [farTgtFun_val, if_neg (by omega), if_neg (by omega), if_neg (by omega), if_neg (by omega)]
+  rw [farTgtFun_val, ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_right (by omega)]
 
 theorem farTgtFun_involutive (m : ℕ) : Function.Involutive (farTgtFun m) := by
   intro v
@@ -590,18 +594,18 @@ noncomputable def bFarSwapDatumIso :
         i.val = 6 * m + 7 ∨ i.val = 6 * m + 8 by omega) with h | h | h | h | h
     · rw [farSwap_slot_of_le m i h]
     · rw [ballotEdgePart_farPair s _
-          (Or.inr (by rw [farSwap_slot_val, if_pos h])),
+          (Or.inr (by rw [farSwap_slot_val, ite_eq_left h])),
         ballotEdgePart_farPair s i (Or.inl h)]
     · rw [ballotEdgePart_farLeaf s _
-          (Or.inr (by rw [farSwap_slot_val, if_neg (by omega), if_pos h])),
+          (Or.inr (by rw [farSwap_slot_val, ite_eq_right (by omega), ite_eq_left h])),
         ballotEdgePart_farLeaf s i (Or.inl h)]
     · rw [ballotEdgePart_farPair s _
-          (Or.inl (by rw [farSwap_slot_val, if_neg (by omega), if_neg (by omega), if_pos h])),
+          (Or.inl (by rw [farSwap_slot_val, ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_left h])),
         ballotEdgePart_farPair s i (Or.inr h)]
     · rw [ballotEdgePart_farLeaf s _
           (Or.inl (by
-            rw [farSwap_slot_val, if_neg (by omega), if_neg (by omega), if_neg (by omega),
-              if_pos h])),
+            rw [farSwap_slot_val, ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_right (by omega),
+              ite_eq_left h])),
         ballotEdgePart_farLeaf s i (Or.inr h)]
   compatible _ _ _ _ := rfl
 

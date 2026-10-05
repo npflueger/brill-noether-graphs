@@ -1,5 +1,9 @@
-import DraismaVargasCount.DegeneratePlacement
-import DraismaVargasCount.ExpansionSeriesMoment
+module
+
+public import DraismaVargasCount.DegeneratePlacement
+public import DraismaVargasCount.ExpansionSeriesMoment
+
+@[expose] public section
 
 /-!
 # The big-side divisor at the degenerate request

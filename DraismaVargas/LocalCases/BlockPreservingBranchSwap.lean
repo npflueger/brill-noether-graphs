@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.ResolutionM11
+module
+
+public import DraismaVargas.LocalCases.ResolutionM11
+
+@[expose] public section
 
 /-!
 # Block-preserving branch swaps with prescribed one-sheet overlap

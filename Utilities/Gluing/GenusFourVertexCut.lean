@@ -1,8 +1,12 @@
-import Utilities.Foundations.ElementaryExistence
-import Utilities.Gluing.BridgeContraction
-import Utilities.Gluing.BridgeRankOne
-import Utilities.Gluing.GenusThreeCycleWedge
-import Utilities.Gluing.VertexCutConnectivity
+module
+
+public import Utilities.Foundations.ElementaryExistence
+public import Utilities.Gluing.BridgeContraction
+public import Utilities.Gluing.BridgeRankOne
+public import Utilities.Gluing.GenusThreeCycleWedge
+public import Utilities.Gluing.VertexCutConnectivity
+
+@[expose] public section
 
 /-!
 # Genus-four rank one across a one-vertex cut

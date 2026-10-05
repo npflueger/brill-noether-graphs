@@ -1,6 +1,10 @@
-import Utilities.Foundations.Parameters
-import Mathlib.Combinatorics.SimpleGraph.Connectivity.Finite
-import Mathlib.Tactic
+module
+
+public import Utilities.Foundations.Parameters
+public import Mathlib.Combinatorics.SimpleGraph.Connectivity.Finite
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # The underlying simple graph of a `CFGraph`

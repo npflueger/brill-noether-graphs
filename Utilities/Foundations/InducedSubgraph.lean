@@ -1,4 +1,8 @@
-import ChipFiringWithLean.Basic
+module
+
+public import ChipFiringWithLean.Basic
+
+@[expose] public section
 
 /-!
 # Induced subgraphs
@@ -15,17 +19,17 @@ namespace Utilities
 universe u
 
 /-- The raw edges of `G` whose two endpoints belong to `S`. -/
-private noncomputable def inducedEdges (G : CFGraph.{u}) (S : Finset G.V) :
+noncomputable def inducedEdges (G : CFGraph.{u}) (S : Finset G.V) :
     Multiset (G.V × G.V) := by
   classical
   exact G.edges.filter (fun edge => edge.1 ∈ S ∧ edge.2 ∈ S)
 
-private def restrictInducedEdge (G : CFGraph.{u}) (S : Finset G.V) (edge : G.V × G.V)
+def restrictInducedEdge (G : CFGraph.{u}) (S : Finset G.V) (edge : G.V × G.V)
     (hEdge : edge.1 ∈ S ∧ edge.2 ∈ S) :
     {v : G.V // v ∈ S} × {v : G.V // v ∈ S} :=
   (⟨edge.1, hEdge.1⟩, ⟨edge.2, hEdge.2⟩)
 
-private theorem inducedEdges_all (G : CFGraph.{u}) (S : Finset G.V) :
+theorem inducedEdges_all (G : CFGraph.{u}) (S : Finset G.V) :
     ∀ edge ∈ inducedEdges G S, edge.1 ∈ S ∧ edge.2 ∈ S := by
   classical
   intro edge hEdge

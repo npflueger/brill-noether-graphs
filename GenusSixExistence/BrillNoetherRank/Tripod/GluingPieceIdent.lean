@@ -1,4 +1,8 @@
-import GenusSixExistence.BrillNoetherRank.Tripod.GluingOntoOpen
+module
+
+public import GenusSixExistence.BrillNoetherRank.Tripod.GluingOntoOpen
+
+@[expose] public section
 
 /-!
 # The core identification of a glued datum from labels of its pieces
@@ -109,14 +113,14 @@ theorem exists_centre :
     intro u hu
     have h := DraismaVargas.LocalCases.NonDanglingValency.nonDanglingValency_ne_one _ hG
       (newVertex ψ.data π u)
-    rw [nonDanglingValency_newVertex ψ.data π hD hT, π.sum_markVertex_eq, if_neg hu,
+    rw [nonDanglingValency_newVertex ψ.data π hD hT, π.sum_markVertex_eq, ite_eq_right hu,
       add_zero] at h
     exact h
   have hXM : ∀ u ∈ π.markSet, tCount (NewSurvives ψ.data π) u ≠ 0 := by
     intro u hu
     have h := DraismaVargas.LocalCases.NonDanglingValency.nonDanglingValency_ne_one _ hG
       (newVertex ψ.data π u)
-    rw [nonDanglingValency_newVertex ψ.data π hD hT, π.sum_markVertex_eq, if_pos hu] at h
+    rw [nonDanglingValency_newVertex ψ.data π hD hT, π.sum_markVertex_eq, ite_eq_left hu] at h
     omega
   have h := card_branch_eq_one (π.T₃_connected hT) (π.T₃_genus hT0) π.markSet π.card_markSet
     (NewSurvives ψ.data π) hX hXM
@@ -139,20 +143,20 @@ def vinv (L : Fin (n + 1 + 1 + 1 + 1)) : BranchVertex (glueDatum ψ.data π) :=
 
 theorem vinv_oldLabel (v : Fin n) : vinv hπ (oldLabel v) = oldBV hπ (ψ.ident.vertex.symm v) := by
   unfold vinv
-  rw [dif_pos (by simp [oldLabel])]
+  rw [dite_eq_left (by simp [oldLabel])]
   rfl
 
 theorem vinv_tripodMark (k : Fin 3) : vinv hπ (tripodMark n k) = markBV hπ k := by
   unfold vinv
-  rw [dif_neg (by simp only [tripodMark, markVertex, Fin.val_castSucc]; omega),
-    dif_pos (by simp only [tripodMark, markVertex, Fin.val_castSucc]; omega)]
+  rw [dite_eq_right (by simp only [tripodMark, markVertex, Fin.val_castSucc]; omega),
+    dite_eq_left (by simp only [tripodMark, markVertex, Fin.val_castSucc]; omega)]
   congr 1
   exact Fin.ext (by simp only [tripodMark, markVertex, Fin.val_castSucc]; omega)
 
 theorem vinv_centre : vinv hπ (centre n) = centreBV := by
   unfold vinv
-  rw [dif_neg (by simp only [centre, Fin.val_last]; omega),
-    dif_neg (by simp only [centre, Fin.val_last]; omega)]
+  rw [dite_eq_right (by simp only [centre, Fin.val_last]; omega),
+    dite_eq_right (by simp only [centre, Fin.val_last]; omega)]
 
 theorem oldSV₃_injective : Function.Injective (oldSV₃ ψ.data π) := fun _ _ h ↦
   Refine.oldSV_injective _ _ (Refine.oldSV_injective _ _ (Refine.oldSV_injective _ _ h))
@@ -357,7 +361,7 @@ theorem coreIncidence_centre_castAdd (i : Fin (p + 1 + 1 + 1)) :
   unfold coreIncidence
   have h1 : ((markedCore core s).tail i).castSucc ≠ centre n := (Fin.castSucc_lt_last _).ne
   have h2 : ((markedCore core s).head i).castSucc ≠ centre n := (Fin.castSucc_lt_last _).ne
-  rw [Dichotomy.tripodCore_tail_castAdd, Dichotomy.tripodCore_head_castAdd, if_neg h1, if_neg h2]
+  rw [Dichotomy.tripodCore_tail_castAdd, Dichotomy.tripodCore_head_castAdd, ite_eq_right h1, ite_eq_right h2]
 
 theorem incidenceCount_eq_zero_of {S : CFGraph} {k : ℕ} {E : GluingDatum S k} {v : E.SourceVertex}
     {Q : StablePath E}
@@ -463,7 +467,7 @@ theorem incidenceCount_hp_centre (k : Fin 3) :
   rw [Finset.sum_eq_add (markBV hπ k).1 (centreBV (ψ := ψ) (π := π)).1 hmk] at hEnds
   · have h1 : incidenceCount (glueDatum ψ.data π) (markBV hπ k).1 (hp ψ π k) = 1 := by
       show incidenceCount _ (π.markSourceVertex ψ.data k) _ = 1
-      rw [incidenceCount_hp_mark hπ, if_pos rfl]
+      rw [incidenceCount_hp_mark hπ, ite_eq_left rfl]
     omega
   · intro c hc ⟨hc1, hc2⟩
     have hval := (Finset.mem_filter.mp hc).2
@@ -480,7 +484,7 @@ theorem incidenceCount_hp_centre (k : Fin 3) :
     · rw [vinv_tripodMark] at hcL
       rw [hcL]
       show incidenceCount _ (π.markSourceVertex ψ.data k') _ = 0
-      rw [incidenceCount_hp_mark hπ, if_neg]
+      rw [incidenceCount_hp_mark hπ, ite_eq_right]
       rintro rfl
       exact hc1 hcL
     · rw [vinv_centre] at hcL
@@ -522,7 +526,7 @@ theorem incidence_vinv_rinv (L : Fin (n + 1 + 1 + 1 + 1)) (j : Fin (p + 1 + 1 + 
     unfold coreIncidence
     rw [Dichotomy.tripodCore_tail_legSlot, Dichotomy.tripodCore_head_legSlot]
     rcases vinv_cases L with ⟨v, rfl⟩ | ⟨k', rfl⟩ | rfl
-    · rw [vinv_oldLabel, if_neg, if_neg]
+    · rw [vinv_oldLabel, ite_eq_right, ite_eq_right]
       · exact incidenceCount_hp_old hπ _ k
       · intro h
         have := congrArg Fin.val h
@@ -532,13 +536,13 @@ theorem incidence_vinv_rinv (L : Fin (n + 1 + 1 + 1 + 1)) (j : Fin (p + 1 + 1 + 
         have := congrArg Fin.val h
         simp only [centre, oldLabel, Fin.val_castSucc, Fin.val_last] at this
         omega
-    · rw [vinv_tripodMark, if_neg (Dichotomy.centre_ne_tripodMark k')]
+    · rw [vinv_tripodMark, ite_eq_right (Dichotomy.centre_ne_tripodMark k')]
       show incidenceCount _ (π.markSourceVertex ψ.data k') _ = _
       rw [incidenceCount_hp_mark hπ]
       by_cases hkk : k' = k
-      · rw [if_pos hkk, if_pos (by rw [hkk])]
-      · rw [if_neg hkk, if_neg (fun h ↦ hkk (Dichotomy.tripodMark_injective h).symm)]
-    · rw [vinv_centre, if_pos rfl, if_neg (Dichotomy.centre_ne_tripodMark k).symm]
+      · rw [ite_eq_left hkk, ite_eq_left (by rw [hkk])]
+      · rw [ite_eq_right hkk, ite_eq_right (fun h ↦ hkk (Dichotomy.tripodMark_injective h).symm)]
+    · rw [vinv_centre, ite_eq_left rfl, ite_eq_right (Dichotomy.centre_ne_tripodMark k).symm]
       exact incidenceCount_hp_centre hπ k
 
 end Incidence

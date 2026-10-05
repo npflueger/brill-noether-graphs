@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.ClassInjectivity
-import DraismaVargas.LocalCases.WallProgress
+module
+
+public import DraismaVargas.LocalCases.ClassInjectivity
+public import DraismaVargas.LocalCases.WallProgress
+
+@[expose] public section
 
 /-!
 # Pruning preserves connectivity inside a contracted source fibre

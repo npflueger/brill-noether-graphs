@@ -1,5 +1,9 @@
-import DraismaVargasCount.RowSlotOrientation
-import Utilities.Subdivision.SubdivisionSeparator
+module
+
+public import DraismaVargasCount.RowSlotOrientation
+public import Utilities.Subdivision.SubdivisionSeparator
+
+@[expose] public section
 
 /-!
 # Actual row positions on the scaled request specification

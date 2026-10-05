@@ -1,5 +1,9 @@
-import DraismaVargasCount.LinkReceiptExport
-import DraismaVargasCount.FrameColumnRigidity
+module
+
+public import DraismaVargasCount.LinkReceiptExport
+public import DraismaVargasCount.FrameColumnRigidity
+
+@[expose] public section
 
 /-!
 # Valency-three facet limits: retained data, labelled metric limits, split determination
@@ -898,14 +902,14 @@ theorem valid_chosen (a : AnchorIndices) (t : VType) : a.Valid (chosen a.A a.k�
   obtain ⟨A, k₂, k₃, k₄, k₅, h25, h34, tri, dbl, s3, s4⟩ := a
   cases t
   · by_cases h : k₄ + k₂ ≤ A
-    · simp only [chosen, h, if_true, AnchorIndices.Valid, AnchorIndices.kδ,
-        AnchorIndices.kα, AnchorIndices.kβ, Bool.false_eq_true, if_false, and_true]
+    · simp only [chosen, h, ite_true, AnchorIndices.Valid, AnchorIndices.kδ,
+        AnchorIndices.kα, AnchorIndices.kβ, Bool.false_eq_true, ite_false, and_true]
       omega
-    · simp only [chosen, h, if_false, AnchorIndices.Valid, AnchorIndices.kδ,
-        AnchorIndices.kα, AnchorIndices.kβ, if_true]
+    · simp only [chosen, h, ite_false, AnchorIndices.Valid, AnchorIndices.kδ,
+        AnchorIndices.kα, AnchorIndices.kβ, ite_true]
       omega
   · simp only [chosen, AnchorIndices.Valid, AnchorIndices.kδ, AnchorIndices.kα,
-      AnchorIndices.kβ, if_true, Bool.false_eq_true, if_false]
+      AnchorIndices.kβ, ite_true, Bool.false_eq_true, ite_false]
     constructor <;> omega
   · trivial
 
@@ -944,7 +948,7 @@ theorem AnchorIndices.r0_at_Av (a : AnchorIndices) (s : Split) (hv : a.Valid s) 
   rcases s with _ | ⟨_ | _, _ | _⟩
   all_goals simp only [AnchorIndices.degV, AnchorIndices.bridge, AnchorIndices.Valid,
     AnchorIndices.kδ, AnchorIndices.kα, AnchorIndices.kβ, AnchorIndices.kγ,
-    Bool.false_eq_true, if_true, if_false] at hv ⊢
+    Bool.false_eq_true, ite_true, ite_false] at hv ⊢
   all_goals omega
 
 /-- **`A_v` is a valid vertex** at every realisable split: its local degree bounds each
@@ -957,7 +961,7 @@ theorem AnchorIndices.degV_ge (a : AnchorIndices) (s : Split) (hv : a.Valid s) :
   rcases s with _ | ⟨_ | _, _ | _⟩
   all_goals simp only [AnchorIndices.degV, AnchorIndices.bridge, AnchorIndices.Valid,
     AnchorIndices.kδ, AnchorIndices.kα, AnchorIndices.kβ, AnchorIndices.kγ,
-    Bool.false_eq_true, if_true, if_false] at hv ⊢
+    Bool.false_eq_true, ite_true, ite_false] at hv ⊢
   all_goals refine ⟨?_, ?_, ?_⟩
   all_goals omega
 

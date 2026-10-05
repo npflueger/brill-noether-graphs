@@ -1,5 +1,9 @@
-import DraismaVargas.Infrastructure.SheetGluing
-import DraismaVargas.Infrastructure.Change
+module
+
+public import DraismaVargas.Infrastructure.SheetGluing
+public import DraismaVargas.Infrastructure.Change
+
+@[expose] public section
 
 /-!
 # Genus change when the fresh sheet is glued
@@ -45,7 +49,7 @@ theorem gluedPartition_repr_castSucc (partition : SheetPartition degree)
   change (if partition.addSheet.Rel (Fin.last degree) sheet.castSucc then
     partition.addSheet.repr old.castSucc else
     partition.addSheet.repr sheet.castSucc) = _
-  rw [if_neg (fun h ↦ partition.addSheet_not_rel_castSucc_last sheet h.symm),
+  rw [ite_eq_right (fun h ↦ partition.addSheet_not_rel_castSucc_last sheet h.symm),
     addSheet_repr_castSucc]
 
 /-- The fresh sheet acquires the representative of the chosen old block. -/
@@ -56,7 +60,7 @@ theorem gluedPartition_repr_last (partition : SheetPartition degree)
   change (if partition.addSheet.Rel (Fin.last degree) (Fin.last degree) then
     partition.addSheet.repr old.castSucc else
     partition.addSheet.repr (Fin.last degree)) = _
-  rw [if_pos (show partition.addSheet.Rel (Fin.last degree) (Fin.last degree)
+  rw [ite_eq_left (show partition.addSheet.Rel (Fin.last degree) (Fin.last degree)
     from rfl), addSheet_repr_castSucc]
 
 /-- A glued fresh sheet creates no new block. -/

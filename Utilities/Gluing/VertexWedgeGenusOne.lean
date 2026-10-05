@@ -1,5 +1,9 @@
-import Utilities.Gluing.VertexWedge
-import Utilities.Foundations.ElementaryExistence
+module
+
+public import Utilities.Gluing.VertexWedge
+public import Utilities.Foundations.ElementaryExistence
+
+@[expose] public section
 
 /-!
 # Genus-one rigid wedges

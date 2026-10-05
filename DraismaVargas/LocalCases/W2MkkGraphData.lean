@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W2MkkRowDescent
+module
+
+public import DraismaVargas.LocalCases.W2MkkRowDescent
+
+@[expose] public section
 
 /-!
 # Figure 34's stable incidence graph
@@ -291,10 +295,10 @@ noncomputable def movedSheet (detach : DetachData profile) (sheet : Fin degree) 
   if sheet = pinSheet profile then detach.remainder else sheet
 
 theorem movedSheet_pin (detach : DetachData profile) :
-    movedSheet detach (pinSheet profile) = detach.remainder := if_pos rfl
+    movedSheet detach (pinSheet profile) = detach.remainder := ite_eq_left rfl
 
 theorem movedSheet_of_ne (detach : DetachData profile) {sheet : Fin degree}
-    (hNe : sheet ≠ pinSheet profile) : movedSheet detach sheet = sheet := if_neg hNe
+    (hNe : sheet ≠ pinSheet profile) : movedSheet detach sheet = sheet := ite_eq_right hNe
 
 theorem movedSheet_ne_pin (detach : DetachData profile) (sheet : Fin degree) :
     movedSheet detach sheet ≠ pinSheet profile := by
@@ -337,12 +341,12 @@ noncomputable def detachFlag (shape : Shape profile) (detach : DetachData profil
 theorem detachFlag_double (shape : Shape profile) (detach : DetachData profile)
     {edge : data.SourceEdge} (hTarget : edge.1.1 = star.edge profile.doubleLabel) :
     detachFlag shape detach edge =
-      (detach.candidate shape).newSourceEdge (movedSheet detach edge.1.2) := if_pos hTarget
+      (detach.candidate shape).newSourceEdge (movedSheet detach edge.1.2) := ite_eq_left hTarget
 
 theorem detachFlag_not_double (shape : Shape profile) (detach : DetachData profile)
     {edge : data.SourceEdge} (hTarget : ¬ edge.1.1 = star.edge profile.doubleLabel) :
     detachFlag shape detach edge = (detach.candidate shape).oldSourceEdge edge :=
-  if_neg hTarget
+  ite_eq_right hTarget
 
 /-- Inside the pinned endpoint block every sheet names the regrown occurrence
 over `A_p ∖ {x}`. -/
@@ -605,13 +609,13 @@ theorem joinedFlag_single (profile : W2R2SourceProfile.SourceProfile data star b
     (distinguished : Fin degree) {edge : data.SourceEdge}
     (hTarget : edge.1.1 = star.edge profile.singleLabel) :
     joinedFlag profile distinguished edge =
-      (joinedCandidate profile distinguished).newSourceEdge block.1 := if_pos hTarget
+      (joinedCandidate profile distinguished).newSourceEdge block.1 := ite_eq_left hTarget
 
 theorem joinedFlag_not_single (profile : W2R2SourceProfile.SourceProfile data star block)
     (distinguished : Fin degree) {edge : data.SourceEdge}
     (hTarget : ¬ edge.1.1 = star.edge profile.singleLabel) :
     joinedFlag profile distinguished edge =
-      (joinedCandidate profile distinguished).oldSourceEdge edge := if_neg hTarget
+      (joinedCandidate profile distinguished).oldSourceEdge edge := ite_eq_right hTarget
 
 /-- **The flag dictionary at `M⁽³⁾`'s branch vertex.** -/
 theorem joined_selectedFlag_star (input : W2SourceInput data star) (shape : Shape profile)

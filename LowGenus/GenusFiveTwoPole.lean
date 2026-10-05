@@ -1,7 +1,11 @@
-import LowGenus.GenusFiveTwoPoleData
-import Utilities.Subdivision.CanonicalDivisor
-import Utilities.Subdivision.SubdivisionCoreSupport
-import Utilities.Subdivision.TwoPoleSubdivisionGluing
+module
+
+public import LowGenus.GenusFiveTwoPoleData
+public import Utilities.Subdivision.CanonicalDivisor
+public import Utilities.Subdivision.SubdivisionCoreSupport
+public import Utilities.Subdivision.TwoPoleSubdivisionGluing
+
+@[expose] public section
 
 /-!
 # One canonical construction for six positive genus-five rows

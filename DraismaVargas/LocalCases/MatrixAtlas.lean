@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.PresentationDecomposition
+module
+
+public import DraismaVargas.LocalCases.PresentationDecomposition
+
+@[expose] public section
 
 /-!
 # A finite universal atlas of nonsingular length matrices

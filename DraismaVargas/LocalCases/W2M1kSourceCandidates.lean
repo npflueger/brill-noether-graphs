@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.GlobalM1k
-import DraismaVargas.LocalCases.M11SourceGenus
-import DraismaVargas.LocalCases.W3ShiftSourceCandidates
+module
+
+public import DraismaVargas.LocalCases.GlobalM1k
+public import DraismaVargas.LocalCases.M11SourceGenus
+public import DraismaVargas.LocalCases.W3ShiftSourceCandidates
+
+@[expose] public section
 
 /-!
 # Source-derived M-1k geometry (Figure 33, Equation (7))
@@ -174,12 +178,12 @@ variable {block : WallBlock data wall}
 theorem pinnedOccurrence_double :
     pinnedOccurrence profile profile.doubleLabel = profile.first := by
   unfold pinnedOccurrence
-  exact if_pos rfl
+  exact ite_eq_left rfl
 
 theorem pinnedOccurrence_single :
     pinnedOccurrence profile profile.singleLabel = profile.deleted.edge := by
   unfold pinnedOccurrence
-  exact if_neg profile.labels_ne.symm
+  exact ite_eq_right profile.labels_ne.symm
 
 /-- Every pinned sheet lies in the distinguished wall block. -/
 theorem pinSheet_rel (label : Fin 2) :

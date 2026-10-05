@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.ClosedEndpoint
-import DraismaVargas.LocalCases.TerminalContraction
-import DraismaVargas.LocalCases.ZeroForestPreservation
+module
+
+public import DraismaVargas.LocalCases.ClosedEndpoint
+public import DraismaVargas.LocalCases.TerminalContraction
+public import DraismaVargas.LocalCases.ZeroForestPreservation
+
+@[expose] public section
 
 /-!
 # The contracted gluing receipt of a terminal face
@@ -178,7 +182,7 @@ theorem eq_of_num_edges_eq_one_local {G : CFGraph} {x y : G.V}
   have hCount : G.edges.count z = 1 := by
     have h1 : (G.edges.filter (fun e ↦ e = (x, y) ∨ e = (y, x))).count z = 1 := by
       rw [hz]; exact Multiset.count_singleton_self z
-    rwa [Multiset.count_filter, if_pos hPz] at h1
+    rwa [Multiset.count_filter, ite_eq_left hPz] at h1
   obtain ⟨pf, i⟩ := f
   obtain ⟨pc, j⟩ := c
   simp only at hfz hcz

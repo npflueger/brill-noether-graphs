@@ -1,5 +1,9 @@
-import DraismaVargasCount.EdgeDenominator
-import DraismaVargasCount.TrivalentWeight
+module
+
+public import DraismaVargasCount.EdgeDenominator
+public import DraismaVargasCount.TrivalentWeight
+
+@[expose] public section
 
 /-!
 # The ordered walk of a stable row, and the index pattern it gives

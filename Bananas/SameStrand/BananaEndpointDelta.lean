@@ -1,4 +1,8 @@
-import Bananas.SameStrand.EndpointInversions
+module
+
+public import Bananas.SameStrand.EndpointInversions
+
+@[expose] public section
 
 /-!
 # Endpoint values of the banana rank second difference

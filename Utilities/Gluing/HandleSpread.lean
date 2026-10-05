@@ -1,4 +1,8 @@
-import Utilities.Gluing.HandleGraph
+module
+
+public import Utilities.Gluing.HandleGraph
+
+@[expose] public section
 
 /-!
 # Spreading the chips on a handle
@@ -61,8 +65,8 @@ theorem sum_fin_ite_succ_val_eq (m t : ℕ) (w : ℕ → ℤ) :
   · simp only [Nat.add_right_cancel_iff]
     rw [sum_fin_ite_val_eq]
     by_cases h : s ≤ m
-    · rw [if_pos h, if_pos (by omega), Nat.add_sub_cancel]
-    · rw [if_neg h, if_neg (by omega)]
+    · rw [ite_eq_left h, ite_eq_left (by omega), Nat.add_sub_cancel]
+    · rw [ite_eq_right h, ite_eq_right (by omega)]
 
 variable {G : CFGraph.{u}} {x y : G.V} {m : ℕ}
 
@@ -106,7 +110,7 @@ theorem handlePotential_nonneg {D : CFDiv (handleGraph G x y m)} (hD : effective
 theorem handleInterior_sub_one_chip (D : CFDiv (handleGraph G x y m)) (k : Fin (m + 1)) :
     handleInterior (D - one_chip (handleInr k)) = handleInterior D - 1 := by
   simp only [handleInterior, Pi.sub_apply, Finset.sum_sub_distrib,
-    one_chip_handleInr_apply_handleInr, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    one_chip_handleInr_apply_handleInr, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 /-- A divisor with a handle chip has a handle vertex carrying a chip. -/
 theorem exists_handle_chip {D : CFDiv (handleGraph G x y m)} (h : 1 ≤ handleInterior D) :
@@ -145,7 +149,7 @@ def handleBlockScript (i j : Fin (m + 1)) : firing_script (handleGraph G x y m) 
 theorem handleBlockScript_inl (i j : Fin (m + 1)) (b : G.V) :
     handleBlockScript (G := G) (x := x) (y := y) i j (handleInl b) = 0 := by
   simp only [handleBlockScript, indicator_script]
-  rw [if_neg]
+  rw [ite_eq_right]
   intro hb
   obtain ⟨k, -, hk⟩ := Finset.mem_image.mp hb
   exact handleInl_ne_handleInr b k hk.symm
@@ -164,10 +168,10 @@ theorem handleBlockScript_point (i j : Fin (m + 1)) (p : ℕ) (hp : p ≤ m + 2)
   have hj := j.isLt
   rcases Nat.lt_or_ge (m + 1) p with h | h
   · obtain rfl : p = m + 2 := by omega
-    rw [handlePoint_last, handleBlockScript_inl, if_neg]
+    rw [handlePoint_last, handleBlockScript_inl, ite_eq_right]
     omega
   · rcases p with _ | q
-    · rw [handlePoint_zero, handleBlockScript_inl, if_neg]
+    · rw [handlePoint_zero, handleBlockScript_inl, ite_eq_right]
       omega
     · have hq : q < m + 1 := by omega
       have e := handlePoint_succ G x y m ⟨q, hq⟩
@@ -222,7 +226,7 @@ theorem handleWeighted_prin_handleBlockScript (w : ℕ → ℤ) (i j : Fin (m + 
   have hi' : (i : ℕ) ≤ m + 1 := by omega
   simp only [handleWeighted, prin_handleBlockScript_inr i j hij, mul_add, mul_sub, mul_ite,
     mul_one, mul_zero, Finset.sum_add_distrib, Finset.sum_sub_distrib, sum_fin_ite_succ_val_eq,
-    sum_fin_ite_val_eq, if_pos hi, if_pos hj, hi', and_true]
+    sum_fin_ite_val_eq, ite_eq_left hi, ite_eq_left hj, hi', and_true]
 
 /-- The potential weights change by `2 (i - j) - 2` under the block firing. -/
 theorem handleWeight_block_change {i j : ℕ} (hi : i ≤ m) (hj : j ≤ m) :

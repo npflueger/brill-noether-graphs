@@ -1,4 +1,8 @@
-import Utilities.Gluing.TwoPoleProfile
+module
+
+public import Utilities.Gluing.TwoPoleProfile
+
+@[expose] public section
 
 /-!
 # Rank-one and doubled-point tests through two-pole responses

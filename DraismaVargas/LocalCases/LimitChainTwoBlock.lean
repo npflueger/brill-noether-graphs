@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.LimitChainCore
+module
+
+public import DraismaVargas.LocalCases.LimitChainCore
+
+@[expose] public section
 
 /-!
 # The limit-matrix chain at a **finite set** of distinguished blocks
@@ -578,11 +582,11 @@ noncomputable def replace (shape : BackgroundShape data wall anchors)
 
 theorem replace_of_target {edge : data.SourceEdge}
     (hTarget : edge.1.1 = shape.retainedTarget) :
-    replace shape edge = shape.candidate.newSourceEdge edge.1.2 := if_pos hTarget
+    replace shape edge = shape.candidate.newSourceEdge edge.1.2 := ite_eq_left hTarget
 
 theorem replace_of_target_ne {edge : data.SourceEdge}
     (hTarget : edge.1.1 ≠ shape.retainedTarget) :
-    replace shape edge = shape.candidate.oldSourceEdge edge := if_neg hTarget
+    replace shape edge = shape.candidate.oldSourceEdge edge := ite_eq_right hTarget
 
 /-- **The replacement agrees with the core's at a singleton anchor.** -/
 theorem replace_ofOneBlock (shape : LimitChainCore.BackgroundShape data wall) :
@@ -1022,11 +1026,11 @@ noncomputable def newOldSourceEdge (sheet : Fin degree) : data.SourceEdge :=
 
 theorem newOldSourceEdge_selected {sheet : Fin degree}
     (hSheet : IsSelected data wall anchors sheet) :
-    rd.newOldSourceEdge sheet = rd.selectedRep sheet := if_pos hSheet
+    rd.newOldSourceEdge sheet = rd.selectedRep sheet := ite_eq_left hSheet
 
 theorem newOldSourceEdge_background {sheet : Fin degree}
     (hSheet : ¬ IsSelected data wall anchors sheet) :
-    rd.newOldSourceEdge sheet = data.sourceEdge rd.retainedTarget sheet := if_neg hSheet
+    rd.newOldSourceEdge sheet = data.sourceEdge rd.retainedTarget sheet := ite_eq_right hSheet
 
 /-- **The representative map agrees with the core's at a singleton anchor.** -/
 theorem newOldSourceEdge_ofOneBlock (rd : LimitChainCore.SelectedData data wall)
@@ -1175,7 +1179,7 @@ noncomputable def rowOfEdge (edge : NonDanglingEdge rd.candidate.datum) :
   have hOld : ∃ other : NonDanglingEdge data,
       retainedEdge rd.candidate rd.valid.1 other =
         retainedEdge rd.candidate rd.valid.1 old := ⟨old, rfl⟩
-  rw [rowOfEdge, dif_pos hOld]
+  rw [rowOfEdge, dite_eq_left hOld]
   exact congrArg NonDanglingEdge.stablePath
     (retainedEdge_injective rd.candidate rd.valid.1 (Classical.choose_spec hOld))
 
@@ -1194,7 +1198,7 @@ theorem rowOfEdge_not_retained (edge : NonDanglingEdge rd.candidate.datum)
       (rd.newOldEdge (rd.newSheet edge hNotOld)
         (rd.newSheet_survives edge hNotOld)).stablePath := by
   classical
-  exact dif_neg hNotOld
+  exact dite_eq_right hNotOld
 
 theorem rowOfEdge_new (sheet : Fin degree)
     (hSurvives : ¬ IsDangling rd.candidate.datum (rd.candidate.newSourceEdge sheet)) :
@@ -1718,13 +1722,13 @@ noncomputable def anchorOf (data : GluingDatum target degree) (wall : target.V)
 theorem anchorOf_mem {sheet : Fin degree} (h : IsSelected data wall anchors sheet) :
     anchorOf data wall anchors sheet ∈ anchors := by
   unfold anchorOf
-  rw [dif_pos h]
+  rw [dite_eq_left h]
   exact h.choose_spec.1
 
 theorem anchorOf_rel {sheet : Fin degree} (h : IsSelected data wall anchors sheet) :
     (data.vertexPartition wall).Rel (anchorOf data wall anchors sheet) sheet := by
   unfold anchorOf
-  rw [dif_pos h]
+  rw [dite_eq_left h]
   exact h.choose_spec.2
 
 theorem anchorOf_eq {anchor sheet : Fin degree}
@@ -1875,13 +1879,13 @@ noncomputable def branchImage (vertex : data.SourceVertex) :
 theorem branchImage_away {vertex : data.SourceVertex} (hAway : vertex.1.1 ≠ wall) :
     rd.branchImage vertex = retainedVertex rd.candidate vertex := by
   classical
-  exact if_neg hAway
+  exact ite_eq_right hAway
 
 theorem branchImage_anchorOf {vertex : data.SourceVertex} (hAt : vertex.1.1 = wall)
     (hSelected : IsSelected data wall anchors vertex.1.2) :
     rd.branchImage vertex = rd.branchVertex (anchorOf data wall anchors vertex.1.2) := by
   classical
-  exact (if_pos hAt).trans (if_pos hSelected)
+  exact (ite_eq_left hAt).trans (ite_eq_left hSelected)
 
 theorem branchImage_selected {vertex : data.SourceVertex} (hAt : vertex.1.1 = wall)
     {anchor : Fin degree} (hMem : anchor ∈ anchors)
@@ -1895,7 +1899,7 @@ theorem branchImage_background {vertex : data.SourceVertex} (hAt : vertex.1.1 = 
     rd.branchImage vertex =
       rd.candidate.datum.sourceEndpoint (freshVertex target) vertex.1.2 := by
   classical
-  exact (if_pos hAt).trans (if_neg hBackground)
+  exact (ite_eq_left hAt).trans (ite_eq_right hBackground)
 
 /-- Each branch vertex has the incoming distinguished valency. -/
 theorem nonDanglingValency_branchVertex {anchor : Fin degree} (hMem : anchor ∈ anchors) :

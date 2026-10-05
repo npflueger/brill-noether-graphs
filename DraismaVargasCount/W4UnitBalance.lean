@@ -1,5 +1,9 @@
-import DraismaVargasCount.UnitWeightBalance
-import DraismaVargas.LocalCases.W4CommonBalance
+module
+
+public import DraismaVargasCount.UnitWeightBalance
+public import DraismaVargas.LocalCases.W4CommonBalance
+
+@[expose] public section
 
 /-!
 # Equation (1), the case `{w4}`: the leaf counts, and one index hypothesis

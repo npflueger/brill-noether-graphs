@@ -1,6 +1,10 @@
-import DraismaVargas.Basic
-import Utilities.Gonality.SubdivisionPencil
-import LowGenus.AtanasovRanganathanExistence
+module
+
+public import DraismaVargas.Basic
+public import Utilities.Gonality.SubdivisionPencil
+public import LowGenus.AtanasovRanganathanExistence
+
+@[expose] public section
 
 /-!
 # The Draisma--Vargas bound through genus five, at scale one

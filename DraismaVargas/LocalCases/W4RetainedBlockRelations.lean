@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W4StableSource
+module
+
+public import DraismaVargas.LocalCases.W4StableSource
+
+@[expose] public section
 
 /-!
 # Complete retained branch relations from the source survivor census

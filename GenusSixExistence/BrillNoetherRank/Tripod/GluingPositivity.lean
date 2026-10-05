@@ -1,5 +1,9 @@
-import GenusSixExistence.BrillNoetherRank.Tripod.GluingPieceIdent
-import GenusSixExistence.BrillNoetherRank.Tripod.GluingLayoutStages
+module
+
+public import GenusSixExistence.BrillNoetherRank.Tripod.GluingPieceIdent
+public import GenusSixExistence.BrillNoetherRank.Tripod.GluingLayoutStages
+
+@[expose] public section
 
 /-!
 # Positivity of the gluing: the coordinates are the geometric lengths
@@ -83,8 +87,8 @@ theorem coordsAt_eq_of_realises (κ : Frame C degree) {y : Fin P → ℚ} {w : �
     refine Finset.sum_congr rfl fun x _ ↦ ?_
     rw [Equiv.apply_symm_apply]
     by_cases hx : κ.fullDim.labelling.row x.stablePath = r
-    · rw [if_pos hx, if_pos ((Equiv.eq_symm_apply _).mpr hx)]
-    · rw [if_neg hx, if_neg (fun h ↦ hx ((Equiv.eq_symm_apply _).mp h))]
+    · rw [ite_eq_left hx, ite_eq_left ((Equiv.eq_symm_apply _).mpr hx)]
+    · rw [ite_eq_right hx, ite_eq_right (fun h ↦ hx ((Equiv.eq_symm_apply _).mp h))]
   exact (congrFun ((κ.member y).coords_unique _ h) col).symm
 
 end Frames
@@ -220,7 +224,7 @@ theorem pathSum_gluedPath (w₃ : π.T₃.edges → ℚ) (arm : Fin 3 → ℚ)
         ((glueDatum ψ.data π).sourceEdgeIndex (liftSE ψ.data π z.1) : ℚ) else 0) = _
     rw [extendLengths_liftE₃, CutPaths.sourceEdgeIndex_liftSE]
   · intro x hx
-    rw [if_neg]
+    rw [ite_eq_right]
     intro h
     exact hx ((CutPaths.isOld_iff_of_stablePath_eq hD hT hπ h).mpr
       (CutPaths.isOld_liftND hD hT hπ z₀))
@@ -279,7 +283,7 @@ theorem pathSum_hairpinPath (w₃ : π.T₃.edges → ℚ) (arm : Fin 3 → ℚ)
         intro h
         rw [h] at he
         exact π.liftE₃_ne_armEdge e k (he.symm.trans rfl)
-      rw [if_neg h1, if_neg h2, he, extendLengths_liftE₃, extendLengths_liftE₃]
+      rw [ite_eq_right h1, ite_eq_right h2, he, extendLengths_liftE₃, extendLengths_liftE₃]
       ring
     · have hidx : ((glueDatum ψ.data π).sourceEdgeIndex x.1 : ℚ) = 1 := by
         rw [eq_armSheetEdge ψ.data π x.1 hj, sourceEdgeIndex_armSheetEdge]
@@ -296,27 +300,27 @@ theorem pathSum_hairpinPath (w₃ : π.T₃.edges → ℚ) (arm : Fin 3 → ℚ)
       · have hsp : x.stablePath = hairpinPath ψ π j := by rw [hx]; rfl
         by_cases hjk : j = k
         · subst hjk
-          rw [if_pos hsp, if_pos (hx.trans ha₁.symm),
-            if_neg (fun h ↦ legND_ne_armND₂ j ((hx.symm.trans h).trans ha₂))]
+          rw [ite_eq_left hsp, ite_eq_left (hx.trans ha₁.symm),
+            ite_eq_right (fun h ↦ legND_ne_armND₂ j ((hx.symm.trans h).trans ha₂))]
           ring
         · obtain ⟨h1, h2⟩ := harm_ne hj hjk
-          rw [if_neg (fun h ↦ hjk (hairpinPath_injective hL (hsp.symm.trans h))), if_neg h1,
-            if_neg h2]
+          rw [ite_eq_right (fun h ↦ hjk (hairpinPath_injective hL (hsp.symm.trans h))), ite_eq_right h1,
+            ite_eq_right h2]
           ring
       · have hsp : x.stablePath = hairpinPath ψ π j := by rw [hx]; exact armND₂_stablePath j
         by_cases hjk : j = k
         · subst hjk
-          rw [if_pos hsp, if_pos (hx.trans ha₂.symm),
-            if_neg (fun h ↦ legND_ne_armND₂ j (ha₁.symm.trans (h.symm.trans hx)))]
+          rw [ite_eq_left hsp, ite_eq_left (hx.trans ha₂.symm),
+            ite_eq_right (fun h ↦ legND_ne_armND₂ j (ha₁.symm.trans (h.symm.trans hx)))]
           ring
         · obtain ⟨h1, h2⟩ := harm_ne hj hjk
-          rw [if_neg (fun h ↦ hjk (hairpinPath_injective hL (hsp.symm.trans h))), if_neg h1,
-            if_neg h2]
+          rw [ite_eq_right (fun h ↦ hjk (hairpinPath_injective hL (hsp.symm.trans h))), ite_eq_right h1,
+            ite_eq_right h2]
           ring
   unfold pathSum
   rw [Finset.sum_congr rfl fun x _ ↦ hterm x, Finset.sum_add_distrib, Finset.sum_add_distrib,
-    Finset.sum_ite_eq', Finset.sum_ite_eq', if_pos (Finset.mem_univ _),
-    if_pos (Finset.mem_univ _)]
+    Finset.sum_ite_eq', Finset.sum_ite_eq', ite_eq_left (Finset.mem_univ _),
+    ite_eq_left (Finset.mem_univ _)]
   ring
 
 end GluedRows
@@ -365,7 +369,7 @@ theorem pathSum_hairpinPath_le (k : Fin 3) :
     have hR : 0 ≤ ∑ ε, if x.1 = newSE ψ.data π ε then w₃ ε else 0 :=
       Finset.sum_nonneg fun ε _ ↦ by split_ifs; exacts [hw₃ ε, le_rfl]
     rcases sourceEdge_cases_glue ψ.data π x.1 with ⟨z, hz⟩ | ⟨ε₀, hε₀⟩ | ⟨j, i, hji⟩
-    · rw [if_neg]
+    · rw [ite_eq_right]
       · exact hR
       intro hx
       obtain ⟨z', hz'⟩ := (CutPaths.isOld_iff_of_stablePath_eq hD hT hπ hx).mp ⟨z, hz⟩
@@ -373,7 +377,7 @@ theorem pathSum_hairpinPath_le (k : Fin 3) :
     · have hRe : (∑ ε, if x.1 = newSE ψ.data π ε then w₃ ε else 0) = w₃ ε₀ := by
         rw [hε₀]
         simp_rw [(newSE_injective ψ.data π).eq_iff]
-        rw [Finset.sum_ite_eq, if_pos (Finset.mem_univ _)]
+        rw [Finset.sum_ite_eq, ite_eq_left (Finset.mem_univ _)]
       rw [hRe]
       split_ifs
       · rw [hε₀]
@@ -473,17 +477,17 @@ theorem sum_g_le (hpos : ∀ i, 0 < y i)
     intro Q
     by_cases hQ : ∃ z₀, gp z₀ = Q
     · obtain ⟨z₀, rfl⟩ := hQ
-      rw [if_pos (hGs z₀)]
+      rw [ite_eq_left (hGs z₀)]
       exact (hold z₀).le
     · push Not at hQ
-      rw [Finset.sum_eq_zero fun z _ ↦ if_neg (hQ z)]
+      rw [Finset.sum_eq_zero fun z _ ↦ ite_eq_right (hQ z)]
       split_ifs
       · exact (hpos _).le
       · exact le_rfl
   have hsplit : ∑ z, g z = ∑ Q : StablePath (glueDatum ψ.data π), ∑ z, if gp z = Q then g z else 0 := by
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun z _ ↦ ?_
-    rw [Finset.sum_ite_eq, if_pos (Finset.mem_univ _)]
+    rw [Finset.sum_ite_eq, ite_eq_left (Finset.mem_univ _)]
   have hG : (∑ Q : StablePath (glueDatum ψ.data π),
       if IsGSlot (ident.row Q) then y (ident.row Q) else 0) = ∑ i, baseRequest s y i := by
     rw [ident.row.sum_comp (fun j ↦ if IsGSlot j then y j else 0), sum_baseRequest,

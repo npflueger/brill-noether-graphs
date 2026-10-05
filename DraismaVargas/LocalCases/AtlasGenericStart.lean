@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.WallProgress
+module
+
+public import DraismaVargas.LocalCases.WallProgress
+
+@[expose] public section
 
 /-!
 # One generic source-metric start for the finite matrix atlas

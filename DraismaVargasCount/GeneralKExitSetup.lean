@@ -1,5 +1,9 @@
-import DraismaVargasCount.GeneralKReceipts
-import DraismaVargasCount.ColumnReceiptExport
+module
+
+public import DraismaVargasCount.GeneralKReceipts
+public import DraismaVargasCount.ColumnReceiptExport
+
+@[expose] public section
 
 /-!
 # The general-`K` exit at a four-valent wall: shared setup

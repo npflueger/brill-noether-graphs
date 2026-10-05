@@ -1,4 +1,8 @@
-import DraismaVargasCount.SwitchingParity
+module
+
+public import DraismaVargasCount.SwitchingParity
+
+@[expose] public section
 
 /-!
 # From a signed multiplicity balance to the star-parity clause

@@ -1,7 +1,11 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoCandidate
-import DraismaVargas.LocalCases.NonTrivalentValencyFourRows
-import DraismaVargas.LocalCases.NonTrivalentUniqueFourValent
-import DraismaVargas.LocalCases.NonTrivalentAnchorValency
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoCandidate
+public import DraismaVargas.LocalCases.NonTrivalentValencyFourRows
+public import DraismaVargas.LocalCases.NonTrivalentUniqueFourValent
+public import DraismaVargas.LocalCases.NonTrivalentAnchorValency
+
+@[expose] public section
 
 /-!
 # Stable rows of the prescribed candidate above a two-valent wall

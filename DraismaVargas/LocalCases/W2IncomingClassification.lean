@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W2R2Nd2PExclusion
+module
+
+public import DraismaVargas.LocalCases.W2R2Nd2PExclusion
+
+@[expose] public section
 
 /-!
 # Exhaustive actual incoming W2 occurrence profiles

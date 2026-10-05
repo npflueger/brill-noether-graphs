@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W2MkkRowDescent
+module
+
+public import DraismaVargas.LocalCases.W2MkkRowDescent
+
+@[expose] public section
 
 /-!
 # Figure 34's limit matrices

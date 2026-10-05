@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W3ShiftHonestBalance
-import DraismaVargas.LocalCases.StableGraphFullDimensional
+module
+
+public import DraismaVargas.LocalCases.W3ShiftHonestBalance
+public import DraismaVargas.LocalCases.StableGraphFullDimensional
+
+@[expose] public section
 
 /-!
 # Figure 29's pair: the outgoing presentation, and the exit in the identified member's coordinates

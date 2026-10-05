@@ -1,4 +1,8 @@
-import Utilities.Subdivision.IteratedSplitRefinement
+module
+
+public import Utilities.Subdivision.IteratedSplitRefinement
+
+@[expose] public section
 
 /-!
 # Ordered path refinements

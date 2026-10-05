@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.CaterpillarPruning
-import DraismaVargas.LocalCases.FullDimensionalSource
+module
+
+public import DraismaVargas.LocalCases.CaterpillarPruning
+public import DraismaVargas.LocalCases.FullDimensionalSource
+
+@[expose] public section
 
 /-!
 # The caterpillar index map, and the seed presentation from stable data
@@ -67,7 +71,7 @@ theorem blockCard_pairPart (m j : ℕ) (hj1 : 1 ≤ j) (hj2 : j < m + 2)
     (k : Fin (m + 2)) :
     (pairPart m j).blockCard k = if (k : ℕ) = 0 ∨ (k : ℕ) = j then 2 else 1 := by
   by_cases hk : (k : ℕ) = 0 ∨ (k : ℕ) = j
-  · rw [if_pos hk]
+  · rw [ite_eq_left hk]
     have hrel : (pairPart m j).Rel k 0 := by
       rcases hk with h | h
       · have hk0 : k = 0 := Fin.ext (by simpa using h)
@@ -76,20 +80,20 @@ theorem blockCard_pairPart (m j : ℕ) (hj1 : 1 ≤ j) (hj2 : j < m + 2)
       · exact pairPart_rel_zero m j k h
     rw [SheetPartition.blockCard, (pairPart m j).block_eq_of_rel hrel]
     exact blockCard_pairPart_zero m j hj1 hj2
-  · rw [if_neg hk]
+  · rw [ite_eq_right hk]
     have hblock : (pairPart m j).block k = {k} := by
       ext l
       rw [SheetPartition.mem_block_iff, SheetPartition.rel_iff, Finset.mem_singleton,
-        pairPart_repr, pairPart_repr, if_neg (fun h => hk (Or.inr h))]
+        pairPart_repr, pairPart_repr, ite_eq_right (fun h => hk (Or.inr h))]
       by_cases hl : (l : ℕ) = j
-      · rw [if_pos hl]
+      · rw [ite_eq_left hl]
         constructor
         · intro h
           have hzero : (k : ℕ) = 0 := by simpa using congrArg Fin.val h
           exact absurd (Or.inl hzero) hk
         · intro h
           exact absurd (Or.inr (h ▸ hl)) hk
-      · rw [if_neg hl]
+      · rw [ite_eq_right hl]
         exact ⟨fun h => h.symm, fun h => h.symm⟩
     rw [SheetPartition.blockCard, hblock, Finset.card_singleton]
 
@@ -113,10 +117,10 @@ theorem sourceEdgeIndex_caterpillar (m : ℕ) (i : Fin (6 * m + 3))
       blockCard_pairPart m _ (pairIndex_pos _)
         (pairIndex_lt m (i.val + 1) (by omega)) s]
     by_cases hs : (s : ℕ) = 0 ∨ (s : ℕ) = pairIndex (i.val + 1)
-    · rw [if_pos hs, if_pos ⟨h, hs⟩]
-    · rw [if_neg hs, if_neg (fun hh => hs hh.2)]
+    · rw [ite_eq_left hs, ite_eq_left ⟨h, hs⟩]
+    · rw [ite_eq_right hs, ite_eq_right (fun hh => hs hh.2)]
   · rw [catEdgePart_of_not_pair m i h, blockCard_discrete,
-      if_neg (fun hh => h hh.1)]
+      ite_eq_right (fun hh => h hh.1)]
 
 /-! ## 2.  The seed presentation from stable data -/
 

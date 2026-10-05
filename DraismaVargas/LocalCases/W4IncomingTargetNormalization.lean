@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W4Bridge
-import DraismaVargas.LocalCases.M11IncomingTargetNormalization
+module
+
+public import DraismaVargas.LocalCases.W4Bridge
+public import DraismaVargas.LocalCases.M11IncomingTargetNormalization
+
+@[expose] public section
 
 /-!
 # Actual incoming W4 target normalization

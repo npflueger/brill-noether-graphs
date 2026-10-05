@@ -1,5 +1,9 @@
-import Utilities.Transmission.TransmissionWedgeDemazure
-import Demazure.Transpositions
+module
+
+public import Utilities.Transmission.TransmissionWedgeDemazure
+public import Demazure.Transpositions
+
+@[expose] public section
 
 /-!
 # Finite Demazure factorizations
@@ -11,7 +15,7 @@ unconditional opposite-side vertex-wedge transmission gluing.
 
 namespace AspPerm
 
-private theorem singleton_noConsecutive (i : ℤ) :
+theorem singleton_noConsecutive (i : ℤ) :
     Transpositions.NoConsecutive ({i} : Set ℤ) := by
   intro n hn hsucc
   simp only [Set.mem_singleton_iff] at hn hsucc
@@ -48,7 +52,7 @@ noncomputable def simpleReflection (i : ℤ) : AspPerm :=
   · rintro ⟨rfl, rfl⟩
     norm_num
 
-private theorem simpleReflection_lt_of_lt_of_ne
+theorem simpleReflection_lt_of_lt_of_ne
     (i a b : ℤ) (hab : a < b) (hne : (a, b) ≠ (i, i + 1)) :
     simpleReflection i a < simpleReflection i b := by
   rw [simpleReflection_apply, simpleReflection_apply]
@@ -58,17 +62,17 @@ private theorem simpleReflection_lt_of_lt_of_ne
     apply hne
     apply Prod.ext <;> omega
 
-private noncomputable def swapPair (i : ℤ) (p : ℤ × ℤ) : ℤ × ℤ :=
+noncomputable def swapPair (i : ℤ) (p : ℤ × ℤ) : ℤ × ℤ :=
   (simpleReflection i p.1, simpleReflection i p.2)
 
-@[simp] private theorem swapPair_involutive (i : ℤ) (p : ℤ × ℤ) :
+@[simp] theorem swapPair_involutive (i : ℤ) (p : ℤ × ℤ) :
     swapPair i (swapPair i p) = p := by
   rcases p with ⟨a, b⟩
   apply Prod.ext
   · exact simpleReflection_involutive i a
   · exact simpleReflection_involutive i b
 
-private theorem swapPair_ne_exceptional_of_lt
+theorem swapPair_ne_exceptional_of_lt
     (i a b : ℤ) (hab : a < b) : swapPair i (a, b) ≠ (i, i + 1) := by
   intro h
   have hs := congrArg (swapPair i) h
@@ -78,7 +82,7 @@ private theorem swapPair_ne_exceptional_of_lt
   rw [Prod.mk.injEq] at hs
   omega
 
-private theorem mul_simple_apply (τ : AspPerm) (i n : ℤ) :
+theorem mul_simple_apply (τ : AspPerm) (i n : ℤ) :
     AspPerm.mul τ (simpleReflection i) n = τ (simpleReflection i n) := rfl
 
 /-- The nonexceptional inversions before and after right multiplication by an
@@ -268,7 +272,7 @@ private theorem star_simple_of_ascent (τ : AspPerm) (i : ℤ)
     (hasc : τ i < τ (i + 1)) :
     τ ⋆ simpleReflection i = AspPerm.mul τ (simpleReflection i) := by
   rw [Transpositions.star_simple τ (simpleReflection i) i
-    (simpleReflection_chi i) (simpleReflection_inv_set i), if_pos hasc]
+    (simpleReflection_chi i) (simpleReflection_inv_set i), ite_eq_left hasc]
   rfl
 
 private theorem star_simple_of_descent (τ : AspPerm) (i : ℤ)
@@ -276,7 +280,7 @@ private theorem star_simple_of_descent (τ : AspPerm) (i : ℤ)
     τ ⋆ simpleReflection i = τ := by
   rw [Transpositions.star_simple τ (simpleReflection i) i
     (simpleReflection_chi i) (simpleReflection_inv_set i)]
-  rw [if_neg (by omega)]
+  rw [ite_eq_right (by omega)]
 
 /-- A positive-length finite ASP permutation is a shorter permutation
 Demazure-multiplied on the right by one adjacent reflection. -/

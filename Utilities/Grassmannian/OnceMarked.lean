@@ -1,6 +1,11 @@
-import Mathlib.Combinatorics.Young.YoungDiagram
-import Mathlib.Data.List.GetD
-import Utilities.Transmission.TransmissionCorner
+module
+
+public import Mathlib.Data.List.Enum
+public import Mathlib.Combinatorics.Young.YoungDiagram
+public import Mathlib.Data.List.GetD
+public import Utilities.Transmission.TransmissionCorner
+
+@[expose] public section
 
 /-!
 # Once-marked Brill--Noether existence

@@ -1,4 +1,8 @@
-import GenusSixOddDescent.Main
+module
+
+public import GenusSixOddDescent.Main
+
+@[expose] public section
 
 /-!
 # Highlights of the `GenusSixOddDescent` library

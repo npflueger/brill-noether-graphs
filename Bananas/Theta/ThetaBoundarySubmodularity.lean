@@ -1,7 +1,11 @@
-import Bananas.SameStrand.SameStrand
-import Bananas.CrossOneOff.CrossStrandSupport
-import Bananas.SameStrand.SameStrandEndpointNegative
-import Bananas.Theta.ThetaExceptionalArithmetic
+module
+
+public import Bananas.SameStrand.SameStrand
+public import Bananas.CrossOneOff.CrossStrandSupport
+public import Bananas.SameStrand.SameStrandEndpointNegative
+public import Bananas.Theta.ThetaExceptionalArithmetic
+
+@[expose] public section
 
 /-!
 # Boundary submodularity on theta graphs
@@ -616,24 +620,24 @@ theorem theta_allSubmodular_zero_penultimate
   · have hZero : strandVertex B alpha ⟨0, by omega⟩ =
         B.pathVertex alpha ⟨0, by omega⟩ := by
       unfold strandVertex
-      rw [if_pos hTail]
+      rw [ite_eq_left hTail]
     have hPenultimate :
         strandVertex B alpha ⟨B.length alpha - 1, by omega⟩ =
           B.pathVertex alpha ⟨B.length alpha - 1, by omega⟩ := by
       unfold strandVertex
-      rw [if_pos hTail]
+      rw [ite_eq_left hTail]
     rw [hZero, hPenultimate]
     exact theta_allSubmodular_path_zero_penultimate B alpha hlen
   · have hZero : strandVertex B alpha ⟨0, by omega⟩ =
         B.pathVertex alpha ⟨B.length alpha, by omega⟩ := by
       unfold strandVertex
-      rw [if_neg hTail]
+      rw [ite_eq_right hTail]
       congr 1
     have hPenultimate :
         strandVertex B alpha ⟨B.length alpha - 1, by omega⟩ =
           B.pathVertex alpha ⟨1, by omega⟩ := by
       unfold strandVertex
-      rw [if_neg hTail]
+      rw [ite_eq_right hTail]
       apply congrArg (B.pathVertex alpha)
       apply Fin.ext
       change B.length alpha - (B.length alpha - 1) = 1
@@ -655,21 +659,21 @@ theorem theta_allSubmodular_one_length
   · have hOne : strandVertex B alpha ⟨1, by omega⟩ =
         B.pathVertex alpha ⟨1, by omega⟩ := by
       unfold strandVertex
-      rw [if_pos hTail]
+      rw [ite_eq_left hTail]
     have hLength : strandVertex B alpha ⟨B.length alpha, by omega⟩ =
         B.pathVertex alpha ⟨B.length alpha, by omega⟩ := by
       unfold strandVertex
-      rw [if_pos hTail]
+      rw [ite_eq_left hTail]
     rw [hOne, hLength]
     exact theta_allSubmodular_path_one_length B alpha hlen
   · have hOne : strandVertex B alpha ⟨1, by omega⟩ =
         B.pathVertex alpha ⟨B.length alpha - 1, by omega⟩ := by
       unfold strandVertex
-      rw [if_neg hTail]
+      rw [ite_eq_right hTail]
     have hLength : strandVertex B alpha ⟨B.length alpha, by omega⟩ =
         B.pathVertex alpha ⟨0, by omega⟩ := by
       unfold strandVertex
-      rw [if_neg hTail]
+      rw [ite_eq_right hTail]
       apply congrArg (B.pathVertex alpha)
       apply Fin.ext
       change B.length alpha - B.length alpha = 0
@@ -691,22 +695,22 @@ theorem theta_allSubmodular_zero_length
   · have hZero : strandVertex B alpha ⟨0, by omega⟩ =
         B.pathVertex alpha ⟨0, by omega⟩ := by
       unfold strandVertex
-      rw [if_pos hTail]
+      rw [ite_eq_left hTail]
     have hLength : strandVertex B alpha ⟨B.length alpha, by omega⟩ =
         B.pathVertex alpha ⟨B.length alpha, by omega⟩ := by
       unfold strandVertex
-      rw [if_pos hTail]
+      rw [ite_eq_left hTail]
     rw [hZero, hLength]
     exact theta_allSubmodular_path_endpoints B alpha
   · have hZero : strandVertex B alpha ⟨0, by omega⟩ =
         B.pathVertex alpha ⟨B.length alpha, by omega⟩ := by
       unfold strandVertex
-      rw [if_neg hTail]
+      rw [ite_eq_right hTail]
       congr 1
     have hLength : strandVertex B alpha ⟨B.length alpha, by omega⟩ =
         B.pathVertex alpha ⟨0, by omega⟩ := by
       unfold strandVertex
-      rw [if_neg hTail]
+      rw [ite_eq_right hTail]
       congr 1
       apply Fin.ext
       simp

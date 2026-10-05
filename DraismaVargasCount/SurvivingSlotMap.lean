@@ -1,4 +1,8 @@
-import DraismaVargasCount.RowSlotMap
+module
+
+public import DraismaVargasCount.RowSlotMap
+
+@[expose] public section
 
 /-!
 # One actual map from surviving source vertices to the request graph
@@ -93,7 +97,7 @@ theorem survivingPoint_branch (branch : BranchVertex member.data) :
       (spec.scale (memberScale member) (memberScale_pos member)).coreVertex
         (member.ident.vertex branch) := by
   classical
-  simp only [survivingPoint, dif_pos branch.2]
+  simp only [survivingPoint, dite_eq_left branch.2]
   rfl
 
 theorem survivingPoint_address (address : InteriorAddress member.fullDim) :
@@ -103,7 +107,7 @@ theorem survivingPoint_address (address : InteriorAddress member.fullDim) :
   classical
   have hNotBranch : ¬ 3 ≤ nonDanglingValency member.data
       (addressVertex member.fullDim address) := by rw [addressVertex_valency]; omega
-  rw [survivingPoint, dif_neg hNotBranch]
+  rw [survivingPoint, dite_eq_right hNotBranch]
   congr 1
   exact (addressEquiv member.fullDim).symm_apply_apply address
 
@@ -179,7 +183,7 @@ theorem survivingPoint_eq_interior_iff
   constructor
   · intro hEq
     by_cases hBranch : 3 ≤ nonDanglingValency member.data vertex.1
-    · rw [survivingPoint, dif_pos hBranch] at hEq
+    · rw [survivingPoint, dite_eq_left hBranch] at hEq
       simp only [Spec.coreVertex, Spec.interiorVertex, reduceCtorEq] at hEq
     · have hValency : nonDanglingValency member.data vertex.1 = 2 := by
         have := NonDanglingValency.nonDanglingValency_ne_one member.data

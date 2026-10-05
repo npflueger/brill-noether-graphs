@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyThreeRowEquiv
-import DraismaVargas.LocalCases.StablePathFacetContraction
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyThreeRowEquiv
+public import DraismaVargas.LocalCases.StablePathFacetContraction
+
+@[expose] public section
 
 /-!
 # The valency-three `AgreeOffColumn` / common-minor identity

@@ -1,5 +1,9 @@
-import Utilities.Subdivision.ClosedRowProof.Arith
-import Utilities.Subdivision.DegenerateSpecCensus
+module
+
+public import Utilities.Subdivision.ClosedRowProof.Arith
+public import Utilities.Subdivision.DegenerateSpecCensus
+
+@[expose] public section
 
 /-!
 # `leaf_sound`: the row-proof leaf, lowered to Lean

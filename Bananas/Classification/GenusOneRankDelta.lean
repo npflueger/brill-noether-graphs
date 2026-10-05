@@ -1,6 +1,10 @@
-import Bananas.Transmission.ChainTwoLoopsSameLeft
-import Bananas.Transmission.ExactTorsionAPI
-import Bananas.CrossOneOff.AffineReduction
+module
+
+public import Bananas.Transmission.ChainTwoLoopsSameLeft
+public import Bananas.Transmission.ExactTorsionAPI
+public import Bananas.CrossOneOff.AffineReduction
+
+@[expose] public section
 
 /-!
 # Rank differences in genus one

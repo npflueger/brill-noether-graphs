@@ -1,5 +1,9 @@
-import DraismaVargasCount.ColumnReceiptExport
-import DraismaVargas.LocalCases.NonTrivalentAnchorValency
+module
+
+public import DraismaVargasCount.ColumnReceiptExport
+public import DraismaVargas.LocalCases.NonTrivalentAnchorValency
+
+@[expose] public section
 
 /-!
 # The valency-three split, read off an arbitrary incoming cover
@@ -1598,7 +1602,7 @@ theorem ThreePicture.labels (P : ThreePicture data hc hab hOne block u v)
     have hpi : p ≠ i := by rcases hi03 with rfl | rfl <;> simp [hp]
     have hT : (L.e p).1.1 = (L.e i).1.1 := by
       rcases hi03 with rfl | rfl
-      · simp only [hp, if_true]; exact L.dir25.symm
+      · simp only [hp, ite_true]; exact L.dir25.symm
       · simp only [hp]; exact L.dir25
     obtain ⟨X, hX, hpX⟩ := exists_fib_of_lift L hCompat p
     rw [P.fib_eq] at hX
@@ -1874,13 +1878,13 @@ theorem sides (H : AnchorInput data hc hab hOne block)
   classical
   rcases ThirdEquation.valencySplit_of_threeStar data hc hab hOne fd.valid fd.changeMinimal
     H.star with ⟨h2, h3, h1, h0⟩ | ⟨h3, h2, h0, h1⟩
-  · have hu : divEnd a b = a := by simp only [divEnd, h2, if_true]
-    have hv : triEnd a b = b := by simp only [triEnd, h2, if_true]
+  · have hu : divEnd a b = a := by simp only [divEnd, h2, ite_true]
+    have hv : triEnd a b = b := by simp only [triEnd, h2, ite_true]
     rw [hu, hv]
     exact ⟨Or.inl ⟨rfl, rfl⟩, h2, h3, h1, h0⟩
   · have hne : (GluingDatum.incidentEdges a).card ≠ 2 := by omega
-    have hu : divEnd a b = b := by simp only [divEnd, hne, if_false]
-    have hv : triEnd a b = a := by simp only [triEnd, hne, if_false]
+    have hu : divEnd a b = b := by simp only [divEnd, hne, ite_false]
+    have hv : triEnd a b = a := by simp only [triEnd, hne, ite_false]
     rw [hu, hv]
     exact ⟨Or.inr ⟨rfl, rfl⟩, h2, h3, h1, h0⟩
 
@@ -2842,16 +2846,16 @@ noncomputable def swapIso (t : T.edges) (i j : Fin degree)
     edgePartition := fun e ↦ by
       by_cases he : e = t
       · subst he
-        simp only [if_true, Equiv.refl_apply]
+        simp only [ite_true, Equiv.refl_apply]
         apply SheetPartition.ext_repr
         funext k
         simp only [SheetPartition.relabel, hdisc, Equiv.apply_symm_apply]
-      · simp only [he, if_false, Equiv.refl_apply]
+      · simp only [he, ite_false, Equiv.refl_apply]
         exact (Transport.DatumIso.relabel_refl _).symm
     compatible := fun e v hv k ↦ by
       by_cases he : e = t
       · subst he
-        simp only [if_true, Equiv.refl_symm, Equiv.refl_apply]
+        simp only [ite_true, Equiv.refl_symm, Equiv.refl_apply]
         have h := hrel v hv
         by_cases hki : k = i
         · subst hki; rw [Equiv.swap_apply_left]; exact ((D.vertexPartition v).rel_iff _ _).mpr
@@ -2859,7 +2863,7 @@ noncomputable def swapIso (t : T.edges) (i j : Fin degree)
         · by_cases hkj : k = j
           · subst hkj; rw [Equiv.swap_apply_right]; exact h
           · rw [Equiv.swap_apply_of_ne_of_ne hki hkj]; rfl
-      · simp only [he, if_false, Equiv.refl_symm, Equiv.refl_apply]
+      · simp only [he, ite_false, Equiv.refl_symm, Equiv.refl_apply]
         rfl }
 
 theorem swapIso_targetEdge (t : T.edges) (i j : Fin degree)
@@ -2876,7 +2880,7 @@ theorem swapIso_moves (t : T.edges) (i j : Fin degree) (hij : i ≠ j)
   intro h
   have h2 := congrArg (fun f : D.SourceEdge ↦ f.1.2) h
   change (if t = t then Equiv.swap i j else Equiv.refl _) i = i at h2
-  rw [if_pos rfl, Equiv.swap_apply_left] at h2
+  rw [ite_eq_left rfl, Equiv.swap_apply_left] at h2
   exact hij h2.symm
 
 end LabelMoving
@@ -2934,7 +2938,7 @@ theorem ballot_divEnd :
       (((occ 2 1 : (catTree 2).edges) : (catTree 2).V × (catTree 2).V).1)).card = 2 := by
     rw [card_incidentEdges]
     decide
-  simp only [divEnd, h, if_true]
+  simp only [divEnd, h, ite_true]
 
 theorem ballot_rel_zero_one (s : Slopes (2 * (2 + 1))) (v : (catTree 2).V)
     (hv : v.val = 0 ∨ v.val = 1) :

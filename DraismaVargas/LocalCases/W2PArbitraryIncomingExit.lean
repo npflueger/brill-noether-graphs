@@ -1,7 +1,11 @@
-import DraismaVargas.LocalCases.W2PIncomingMatching
-import DraismaVargas.LocalCases.W2PArbitraryExit
-import DraismaVargas.LocalCases.FiniteAtlasMarch
-import DraismaVargas.LocalCases.IncomingSourceCases
+module
+
+public import DraismaVargas.LocalCases.W2PIncomingMatching
+public import DraismaVargas.LocalCases.W2PArbitraryExit
+public import DraismaVargas.LocalCases.FiniteAtlasMarch
+public import DraismaVargas.LocalCases.IncomingSourceCases
+
+@[expose] public section
 
 /-!
 # `{w2-r2-nd3-P}`: the exit at an identified member, and the `w2P` payload

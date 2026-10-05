@@ -1,6 +1,10 @@
-import DraismaVargasCount.W4NonDiscreteStarCensus
-import DraismaVargasCount.M11StarExhaustionProof
-import DraismaVargas.LocalCases.DanglingDescent
+module
+
+public import DraismaVargasCount.W4NonDiscreteStarCensus
+public import DraismaVargasCount.M11StarExhaustionProof
+public import DraismaVargas.LocalCases.DanglingDescent
+
+@[expose] public section
 
 /-!
 # Non-discrete W4 exhaustion, and the `w4` clause of `FamilyStarParity` with no hypothesis
@@ -148,7 +152,7 @@ theorem exists_sub_side {i o : G.V} (cut : DanglingSide G i o) {x : G.V}
         · have hCross := cw.cross_num_edges bv cv hbw hcw
           by_cases hPair : bv = w ∧ cv = i
           · exact Or.inl hPair.2
-          · rw [if_neg hPair] at hCross
+          · rw [ite_eq_right hPair] at hCross
             omega
 
 /-- **Every occurrence between two vertices of a dangling side carries a
@@ -178,7 +182,7 @@ theorem nonempty_danglingSide_of_mem_side :
       have hbw : b ∈ c.side := by
         by_contra hbw
         have hCross := c.cross_num_edges a b haw hbw
-        rw [if_neg fun h ↦ hbi h.2] at hCross
+        rw [ite_eq_right fun h ↦ hbi h.2] at hCross
         omega
       exact ih c (by omega) haw hbw hab
 
@@ -672,7 +676,7 @@ theorem nd2_side_rel (W : SheetPartition d) {a x : Fin d} (hx : W.Rel a x) (y : 
   have hSplit := splitBlock_rel_iff' W hx y
   cases b₁ <;> cases b₂ <;> cases side <;>
     simp only [nd2Resolution, splitResolutionAt, joinedResolutionAt, LocalResolution.reverse,
-      sidePartition, dite_true, dite_false, if_true, if_false, Bool.false_eq_true,
+      sidePartition, dite_true, dite_false, ite_true, ite_false, Bool.false_eq_true,
       reduceCtorEq, Option.some.injEq, Bool.not_false, Bool.not_true, and_true, true_implies,
       IsEmpty.forall_iff] <;>
     first
@@ -690,7 +694,7 @@ theorem nd2_new_rel (W : SheetPartition d) {a x : Fin d} (hx : W.Rel a x) (y : F
   have hSplit := splitBlock_rel_iff' W hx y
   cases b₁ <;> cases b₂ <;>
     simp only [nd2Resolution, splitResolutionAt, joinedResolutionAt, LocalResolution.reverse,
-      dite_true, dite_false, if_true, if_false, Bool.false_eq_true, reduceCtorEq, ne_eq,
+      dite_true, dite_false, ite_true, ite_false, Bool.false_eq_true, reduceCtorEq, ne_eq,
       not_false_eq_true, not_true_eq_false, true_implies, IsEmpty.forall_iff, and_true] <;>
     first
     | exact ⟨fun h ↦ h, fun h ↦ h⟩
@@ -703,8 +707,8 @@ theorem nd3_side_rel (W fine : SheetPartition d) (hFine : fine.Refines W) (x y :
     (sidePartition (nd3Resolution W fine hFine b) side).Rel x y ↔
       W.Rel x y ∧ (some b = some side → fine.Rel x y) := by
   cases b <;> cases side <;>
-    simp only [nd3Resolution, fineResolution, LocalResolution.reverse, sidePartition, if_true,
-      if_false, Bool.false_eq_true, reduceCtorEq, Option.some.injEq, true_implies,
+    simp only [nd3Resolution, fineResolution, LocalResolution.reverse, sidePartition, ite_true,
+      ite_false, Bool.false_eq_true, reduceCtorEq, Option.some.injEq, true_implies,
       IsEmpty.forall_iff, and_true] <;>
     first
     | exact ⟨fun h ↦ h, fun h ↦ h⟩
@@ -818,7 +822,7 @@ theorem side_rel_iff (hNoGlue : DanglingEdgeNoGlue D) (side : Bool) (x y : Fin d
     rw [ns_pair _ _ blk.distinct]
     refine nd2_side_rel _ hax y _ _ side _ fun hb _ ↦ inactive_rel_iff D S hNoGlue ?_
     rw [← hact]
-    exact ref_not_mem_of_card_two _ q _ (by change ns {blk.first, blk.second} q = _; rw [ns_pair _ _ blk.distinct, if_pos hb])
+    exact ref_not_mem_of_card_two _ q _ (by change ns {blk.first, blk.second} q = _; rw [ns_pair _ _ blk.distinct, ite_eq_left hb])
       (card_pair _ _ blk.distinct)
   · rw [hp]
     have hne : act D S x ≠ ∅ := by
@@ -857,7 +861,7 @@ theorem new_rel_iff (hNoGlue : DanglingEdgeNoGlue D) (x y : Fin d) :
     rw [ns_pair _ _ blk.distinct]
     refine nd2_new_rel _ hax y _ _ _ fun hb _ ↦ inactive_rel_iff D S hNoGlue ?_
     rw [← hact]
-    exact ref_not_mem_of_card_two _ q _ (by change ns {blk.first, blk.second} q = _; rw [ns_pair _ _ blk.distinct, if_pos hb])
+    exact ref_not_mem_of_card_two _ q _ (by change ns {blk.first, blk.second} q = _; rw [ns_pair _ _ blk.distinct, ite_eq_left hb])
       (card_pair _ _ blk.distinct)
   · rw [hp]
     have hne : act D S x ≠ ∅ := by
@@ -1178,12 +1182,12 @@ theorem nonempty_transportFree_of_coherent (res : LocalResolution d)
       (sideFun_rel Sm φ hA q side) (fun a h ↦ by
         change sideFun Sm φ q side a = _
         unfold sideFun
-        rw [if_pos h]) a b
+        rw [ite_eq_left h]) a b
   have hNewMap : ∀ a b, NewShape Dm Sm q a b ↔ NewShape Dw Sw q (τN a) (τN b) :=
     fun a b ↦ newShape_map Sm Sw φ hA hS hConn q τN (newFun_rel Sm φ hA q) (fun a h ↦ by
         change newFun Sm φ q a = _
         unfold newFun
-        rw [if_pos h]) a b
+        rw [ite_eq_left h]) a b
   -- agreement with the wall permutation, pulled back
   have hAgree : ∀ (τ : Equiv.Perm (Fin d)),
       (∀ a, (Dw.vertexPartition Aw).Rel (τ a) (φ.vertexPerm Am a)) →
@@ -1220,7 +1224,7 @@ theorem nonempty_transportFree_of_coherent (res : LocalResolution d)
       have hns' : ns (eff (act Dm Sm s)) q = some false := by
         rwa [act_eq_of_rel Dm Sm hrel] at hns
       unfold newFun sideFun
-      rw [if_pos (by rw [hns']; exact Option.some_ne_none _), if_pos hns']
+      rw [ite_eq_left (by rw [hns']; exact Option.some_ne_none _), ite_eq_left hns']
     rw [hEq, Equiv.symm_apply_apply]
     rfl
   · intro s
@@ -1232,7 +1236,7 @@ theorem nonempty_transportFree_of_coherent (res : LocalResolution d)
       have hns' : ns (eff (act Dm Sm s)) q = some true := by
         rwa [act_eq_of_rel Dm Sm hrel] at hns
       unfold newFun sideFun
-      rw [if_pos (by rw [hns']; exact Option.some_ne_none _), if_pos hns']
+      rw [ite_eq_left (by rw [hns']; exact Option.some_ne_none _), ite_eq_left hns']
     rw [hEq, Equiv.symm_apply_apply]
     rfl
   · -- the endpoint compatibility, from coherence
@@ -1258,7 +1262,7 @@ theorem nonempty_transportFree_of_coherent (res : LocalResolution d)
       have hEq : φ.edgePerm (Sm.edge L) s = sidePerm Sm φ hA q side s := by
         change _ = sideFun Sm φ q side s
         unfold sideFun
-        rw [if_pos hns']
+        rw [ite_eq_left hns']
         exact hCoh s L hns'
       rw [hEq, Equiv.symm_apply_apply]
       rfl
@@ -1636,9 +1640,9 @@ theorem adjFun_injective (K : Fin 4) : Function.Injective (adjFun w hy star hFou
     rw [act_eq_of_rel w.limit star hRel]
   rw [act_eq_of_rel w.limit star hRel] at htu
   by_cases h : Adj w hy star hFour other ψ K u
-  · rw [if_pos (hAdj.mpr h), if_pos h] at htu
+  · rw [ite_eq_left (hAdj.mpr h), ite_eq_left h] at htu
     exact (Equiv.injective _) ((Equiv.injective _) htu)
-  · rw [if_neg (fun h' ↦ h (hAdj.mp h')), if_neg h] at htu
+  · rw [ite_eq_right (fun h' ↦ h (hAdj.mp h')), ite_eq_right h] at htu
     exact htu
 
 /-- The re-pointing permutation. -/
@@ -1660,7 +1664,7 @@ theorem adj_moved (K : Fin 4) (t : Fin degree) (h : adjPerm w hy star hFour othe
   apply h
   rw [adjPerm_apply]
   unfold adjFun
-  rw [if_neg hNot]
+  rw [ite_eq_right hNot]
 
 /-- **An adjusted sheet is pendant for its label**: the label is inactive on its block, and
 the block carries a surviving occurrence. -/
@@ -1724,11 +1728,11 @@ theorem beta_edgePerm_star (K L : Fin 4) :
       (farEndpoint_ne (incident_star star K)) (star.edge L)) (adjPerm w hy star hFour other ψ K) = _
   by_cases h : K = L
   · subst h
-    rw [edgeMoved_self_eq_true (incident_star star K), if_pos rfl]
+    rw [edgeMoved_self_eq_true (incident_star star K), ite_eq_left rfl]
     rfl
   · rw [edgeMoved_eq_false (W4StarParity.limitTarget_connected w) (W4StarParity.limitTarget_genus w)
       (incident_star star K) (incident_star star L)
-      (fun he ↦ h (star.edge_injective he)), if_neg h]
+      (fun he ↦ h (star.edge_injective he)), ite_eq_right h]
     rfl
 
 theorem betaAll_edgePerm_star (L : Fin 4) (x : Fin degree) :
@@ -1773,7 +1777,7 @@ theorem coherent_coherentIso :
       intro K h
       exact h.1 ((hActOf K).trans hE)
     unfold adjFun
-    rw [if_neg (hNotAdj L), if_neg (hNotAdj r)]
+    rw [ite_eq_right (hNotAdj L), ite_eq_right (hNotAdj r)]
     exact eq_of_act_empty w.limit star (RegrowthWallInput.w4Input w hy star)
       ((hActOf L).trans hE)
       ((edgePerm_rel w hy star hFour other ψ L s).trans
@@ -1789,7 +1793,7 @@ theorem coherent_coherentIso :
       apply h.2.2
       rw [hActOf r]
     unfold adjFun
-    rw [if_pos hAdjL, if_neg hNotAdjR, hActOf L, Equiv.symm_apply_apply]
+    rw [ite_eq_left hAdjL, ite_eq_right hNotAdjR, hActOf L, Equiv.symm_apply_apply]
 
 end Coherence
 

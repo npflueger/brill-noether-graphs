@@ -1,5 +1,9 @@
-import GenusSixExistence.BrillNoetherRank.Tripod.GluingRestrict
-import GenusSixExistence.BrillNoetherRank.Tripod.Dichotomy
+module
+
+public import GenusSixExistence.BrillNoetherRank.Tripod.GluingRestrict
+public import GenusSixExistence.BrillNoetherRank.Tripod.Dichotomy
+
+@[expose] public section
 
 /-!
 # Injectivity of the gluing on classes
@@ -119,7 +123,7 @@ theorem mergeSlot_castAdd (s : MarkSlots p) (i : Fin (p + 1 + 1 + 1)) :
     mergeSlot s (Fin.castAdd 3 i) =
       some (mergeOne s.first (mergeOne s.second (mergeOne s.third i))) := by
   unfold mergeSlot
-  rw [dif_pos (by simp only [Fin.val_castAdd]; exact i.isLt)]
+  rw [dite_eq_left (by simp only [Fin.val_castAdd]; exact i.isLt)]
   rfl
 
 /-- **The slots of `Γ̃` at mark `k` other than leg `k` merge to one slot of `G̃`.** -/
@@ -332,7 +336,7 @@ theorem pieceLabel_eq_of_consecutive {z₁ z₂ : NonDanglingEdge (refine₃ ψ.
     exact mergeSlot_eq_of_incident_mark core s k a₁ a₂ b₁ b₂
   · push Not at hm
     have hsum : (∑ k : Fin 3, if x = markR₃ ψ.data π k then 1 else 0) = 0 :=
-      Finset.sum_eq_zero fun k _ ↦ if_neg (hm k)
+      Finset.sum_eq_zero fun k _ ↦ ite_eq_right (hm k)
     rw [hsum, hval] at hv
     have hcons : Consecutive (glueDatum ψ.data π) (gluedND hπ z₁) (gluedND hπ z₂) :=
       ⟨fun h ↦ hne (Subtype.ext (liftSE_injective _ _ (congrArg Subtype.val h))), _,

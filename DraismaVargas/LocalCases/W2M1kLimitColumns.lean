@@ -1,7 +1,11 @@
-import DraismaVargas.LocalCases.W2M1kLimitMatrix
-import DraismaVargas.LocalCases.W2M1kLeafLimitMatrix
-import DraismaVargas.LocalCases.W2M1kCommonBalance
-import DraismaVargas.LocalCases.W2M1kTransport
+module
+
+public import DraismaVargas.LocalCases.W2M1kLimitMatrix
+public import DraismaVargas.LocalCases.W2M1kLeafLimitMatrix
+public import DraismaVargas.LocalCases.W2M1kCommonBalance
+public import DraismaVargas.LocalCases.W2M1kTransport
+
+@[expose] public section
 
 /-!
 # Figure 33's limit columns, inhabited: Equation (7) unconditionally
@@ -438,7 +442,7 @@ theorem limitColumns_eq_alignedOrientation (input : W2SourceInput data star)
     limitColumns input shape hTargetConnected hGenus =
       alignedOrientation input shape (exists_leafPair shape hAligned).some
         hTargetConnected hGenus :=
-  dif_pos hAligned
+  dite_eq_left hAligned
 
 theorem limitColumns_eq_separatedOrientation (input : W2SourceInput data star)
     (shape : Shape profile) (hTargetConnected : graph_connected target)
@@ -446,7 +450,7 @@ theorem limitColumns_eq_separatedOrientation (input : W2SourceInput data star)
     limitColumns input shape hTargetConnected hGenus =
       separatedOrientation input shape (exists_dividedData shape hSeparated).some
         hTargetConnected hGenus :=
-  dif_neg hSeparated
+  dite_eq_right hSeparated
 
 /-- **Over an `M⁽¹⁾`-shaped datum the leaf member sits in its own Figure 33
 slot, over the incoming datum.**  Base I.a. -/

@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyThreeCandidate
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoRigidity
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyThreeCandidate
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoRigidity
+
+@[expose] public section
 
 /-!
 # Part II, valency two: the prescribed candidate of case `{v2-nd4}`
@@ -429,8 +433,8 @@ theorem two_le_card_thick (source : TwoBranchAnchor data star anchor) :
   classical
   unfold thickDirection
   by_cases hZero : 2 ≤ (directionSurvivors data star anchor 0).card
-  · rw [if_pos hZero]; exact hZero
-  · rw [if_neg hZero]
+  · rw [ite_eq_left hZero]; exact hZero
+  · rw [ite_eq_right hZero]
     rcases source.distribution with hEven | ⟨tripled, hTripled, hOther⟩
     · exact absurd (le_of_eq (hEven 0).symm) hZero
     · have hTripledNe : tripled ≠ 0 := by
@@ -744,9 +748,9 @@ theorem selected_exterior (edge : target.edges)
     (GluingContraction.mem_incidentEdges_iff wall edge).mpr hIncident
   by_cases hEdge : edge = thickEdge data star anchor
   · subst hEdge
-    rw [rightAssignment_thick data star anchor, if_neg (by simp)]
+    rw [rightAssignment_thick data star anchor, ite_eq_right (by simp)]
     exact edgePartition_thick_refines_finePartition sel
-  · rw [rightAssignment_of_ne data star anchor hEdge, if_pos rfl]
+  · rw [rightAssignment_of_ne data star anchor hEdge, ite_eq_left rfl]
     exact edgePartition_refines_of_mem_incidentEdges data wall edge hMem
 
 /-- The endpoint `u` is divalent, so its Riemann--Hurwitz inequality is
@@ -1091,9 +1095,9 @@ noncomputable def subdivisionBackground (data : GluingDatum target degree)
       (GluingContraction.mem_incidentEdges_iff wall edge).mpr hIncident
     by_cases hEdge : edge = thickEdge data star anchor
     · subst hEdge
-      rw [rightAssignment_thick data star anchor, if_neg (by simp)]
+      rw [rightAssignment_thick data star anchor, ite_eq_right (by simp)]
       exact edgePartition_refines_of_mem_incidentEdges data wall _ hMem
-    · rw [rightAssignment_of_ne data star anchor hEdge, if_pos rfl]
+    · rw [rightAssignment_of_ne data star anchor hEdge, ite_eq_left rfl]
       exact edgePartition_refines_of_mem_incidentEdges data wall edge hMem
   left_riemannHurwitz := by
     intro block _ _

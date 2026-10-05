@@ -1,4 +1,8 @@
-import Bananas.Basics.BananaGeometry
+module
+
+public import Bananas.Basics.BananaGeometry
+
+@[expose] public section
 
 /-!
 # Two-edge cuts of a banana

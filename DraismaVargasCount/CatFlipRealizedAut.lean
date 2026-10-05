@@ -1,5 +1,9 @@
-import DraismaVargasCount.BallotSlopeSeparation
-import DraismaVargasCount.SlopeRigidity
+module
+
+public import DraismaVargasCount.BallotSlopeSeparation
+public import DraismaVargasCount.SlopeRigidity
+
+@[expose] public section
 
 /-!
 # The core symmetries `SymmetryRealized` actually quantifies over
@@ -223,13 +227,13 @@ theorem endSwap_incidence (m : ℕ) (v : Fin (4 * (m + 1) + 2)) (e : Fin (6 * (m
     rw [hfix]
     rcases (show v.val = 0 ∨ v.val = 2 ∨ (v.val ≠ 0 ∧ v.val ≠ 2) by omega) with h | h | h
     · rw [coreIncidence_far _ _ _ hbig (Or.inl h),
-        coreIncidence_far _ _ _ hbig (by rw [endSwapVtxFun_val, if_pos h]; exact Or.inr rfl)]
+        coreIncidence_far _ _ _ hbig (by rw [endSwapVtxFun_val, ite_eq_left h]; exact Or.inr rfl)]
     · rw [coreIncidence_far _ _ _ hbig (Or.inr h),
         coreIncidence_far _ _ _ hbig
-          (by rw [endSwapVtxFun_val, if_neg (by omega), if_pos h]; exact Or.inl rfl)]
+          (by rw [endSwapVtxFun_val, ite_eq_right (by omega), ite_eq_left h]; exact Or.inl rfl)]
     · have : endSwapVtxFun m v = v := by
         apply Fin.ext
-        rw [endSwapVtxFun_val, if_neg h.1, if_neg h.2]
+        rw [endSwapVtxFun_val, ite_eq_right h.1, ite_eq_right h.2]
       rw [this]
 
 /-- **The end swap of the caterpillar core**, for every even genus at least
@@ -290,14 +294,14 @@ theorem endSwap_stabilises {m : ℕ} {d : Fin (6 * (m + 1) + 3) → ℚ}
 /-- Both loops at the near end of the spine carry diagonal value `2`. -/
 theorem catDiag_of_near_loop (m : ℕ) (slot : Fin (6 * (m + 1) + 3))
     (h : slot.val = 0 ∨ slot.val = 3) : catDiag (m + 1) slot = 2 := by
-  rw [catDiag_eq, if_pos (show IsLeafEdge (m + 1) slot from Or.inl (by omega))]
+  rw [catDiag_eq, ite_eq_left (show IsLeafEdge (m + 1) slot from Or.inl (by omega))]
 
 /-- The spine edge `u₁ p₂` and the stem `p₂ u₂` are both pair edges, so both
 carry diagonal value `1 / 2`. -/
 theorem catDiag_of_near_pair (m : ℕ) (slot : Fin (6 * (m + 1) + 3))
     (h : slot.val = 1 ∨ slot.val = 2) : catDiag (m + 1) slot = 1 / 2 := by
-  rw [catDiag_eq, if_neg (show ¬ IsLeafEdge (m + 1) slot by rintro (hx | hx) <;> omega),
-    if_pos (show IsPairEdge (m + 1) slot.val by
+  rw [catDiag_eq, ite_eq_right (show ¬ IsLeafEdge (m + 1) slot by rintro (hx | hx) <;> omega),
+    ite_eq_left (show IsPairEdge (m + 1) slot.val by
       rcases h with hx | hx
       · exact Or.inl (by omega)
       · exact Or.inr ⟨by omega, by omega⟩)]

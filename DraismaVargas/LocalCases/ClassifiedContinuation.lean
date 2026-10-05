@@ -1,9 +1,13 @@
-import DraismaVargas.LocalCases.GlobalBookends
-import DraismaVargas.LocalCases.GlobalCoarseFine
-import DraismaVargas.LocalCases.GlobalM11Arbitrary
-import DraismaVargas.LocalCases.GlobalM1k
-import DraismaVargas.LocalCases.GlobalMkk
-import DraismaVargas.LocalCases.GlobalP
+module
+
+public import DraismaVargas.LocalCases.GlobalBookends
+public import DraismaVargas.LocalCases.GlobalCoarseFine
+public import DraismaVargas.LocalCases.GlobalM11Arbitrary
+public import DraismaVargas.LocalCases.GlobalM1k
+public import DraismaVargas.LocalCases.GlobalMkk
+public import DraismaVargas.LocalCases.GlobalP
+
+@[expose] public section
 
 /-!
 # The finite endpoint of the Draisma--Vargas local classification
@@ -344,12 +348,12 @@ theorem matrixZero_eq :
   by_cases hr : r = a
   · subst hr
     rw [Matrix.updateRow_self]
-    simp only [pathZero, if_true, List.map_cons, List.map_nil,
+    simp only [pathZero, ite_true, List.map_cons, List.map_nil,
       List.sum_cons, List.sum_nil, coefficient_edgeOver, Pi.add_apply,
       Pi.single_apply, base, Matrix.of_apply]
     ring
   · rw [Matrix.updateRow_ne hr]
-    simp only [pathZero, if_neg hr, List.map_cons, List.map_nil,
+    simp only [pathZero, ite_eq_right hr, List.map_cons, List.map_nil,
       List.sum_cons, List.sum_nil, coefficient_edgeOver, base, Matrix.of_apply]
     ring
 
@@ -364,11 +368,11 @@ theorem matrixOne_eq :
   by_cases hr : r = a
   · subst hr
     rw [Matrix.updateRow_self]
-    simp only [pathOne, if_true, List.map_cons, List.map_nil,
+    simp only [pathOne, ite_true, List.map_cons, List.map_nil,
       List.sum_cons, List.sum_nil, coefficient_edgeOver, Pi.single_apply]
     ring
   · rw [Matrix.updateRow_ne hr]
-    simp only [pathOne, if_neg hr, List.map_cons, List.map_nil,
+    simp only [pathOne, ite_eq_right hr, List.map_cons, List.map_nil,
       List.sum_cons, List.sum_nil, coefficient_edgeOver, base, Matrix.of_apply]
     ring
 

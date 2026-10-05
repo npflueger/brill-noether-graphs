@@ -1,4 +1,8 @@
-import Bananas.Jacobian.BananaJacobianQuotientCertificate
+module
+
+public import Bananas.Jacobian.BananaJacobianQuotientCertificate
+
+@[expose] public section
 
 /-!
 # A well-founded measure for banana-coordinate reduction

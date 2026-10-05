@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.StableGraphIncidence
-import DraismaVargas.LocalCases.FullDimensionalSource
+module
+
+public import DraismaVargas.LocalCases.StableGraphIncidence
+public import DraismaVargas.LocalCases.FullDimensionalSource
+
+@[expose] public section
 
 /-!
 # Transporting full-dimensional source data through stable incidence

@@ -1,5 +1,9 @@
-import Utilities.Subdivision.ContractionForestCensusGeneral
-import Utilities.Subdivision.SubdivisionConnectivity
+module
+
+public import Utilities.Subdivision.ContractionForestCensusGeneral
+public import Utilities.Subdivision.SubdivisionConnectivity
+
+@[expose] public section
 
 /-!
 # A union-find connectivity check for ordered cores

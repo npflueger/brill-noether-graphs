@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.W3ShiftClosure
-import DraismaVargas.LocalCases.RelabelFullDimensional
-import DraismaVargas.LocalCases.W3ShiftIncomingMatching
+module
+
+public import DraismaVargas.LocalCases.W3ShiftClosure
+public import DraismaVargas.LocalCases.RelabelFullDimensional
+public import DraismaVargas.LocalCases.W3ShiftIncomingMatching
+
+@[expose] public section
 
 /-!
 # The Position II.a branch-swap transport of the incoming datum

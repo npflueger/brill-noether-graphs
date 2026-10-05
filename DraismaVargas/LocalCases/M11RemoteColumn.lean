@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.M11RemoteSurvival
-import DraismaVargas.LocalCases.M11BranchSeparation
-import DraismaVargas.LocalCases.StableSourceMatrix
+module
+
+public import DraismaVargas.LocalCases.M11RemoteSurvival
+public import DraismaVargas.LocalCases.M11BranchSeparation
+public import DraismaVargas.LocalCases.StableSourceMatrix
+
+@[expose] public section
 
 /-!
 # The remote M11 split's literal new length column
@@ -70,7 +74,7 @@ theorem secondSplit_new_occurrences (input : W2SourceInput data star)
     have hPath : (secondSplit_retainedDouble input profile hCard).stablePath = path :=
       (secondSplit_new_stablePath_eq_retained input profile hCard edge.1.2 hRel).symm.trans
         ((congrArg NonDanglingEdge.stablePath hTyped).symm.trans hRow)
-    rw [if_pos hPath.symm]
+    rw [ite_eq_left hPath.symm]
     exact Finset.mem_image.mpr ⟨edge.1.2, ((data.vertexPartition wall).mem_block_iff _ _).mpr hRel, hEqual.symm⟩
   · intro hEdge
     split_ifs at hEdge with hPath

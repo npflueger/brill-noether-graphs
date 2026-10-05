@@ -1,6 +1,10 @@
-import Utilities.Gonality.LegalFiring
-import Utilities.Foundations.OrientationReversal
-import Utilities.Foundations.RankOne
+module
+
+public import Utilities.Gonality.LegalFiring
+public import Utilities.Foundations.OrientationReversal
+public import Utilities.Foundations.RankOne
+
+@[expose] public section
 
 /-!
 # Orientation divisors and rank one
@@ -58,7 +62,7 @@ theorem effective_ordiv_sub_one_chip_of_inHeavyAt {O : CFOrientation G} {q : G.V
     simp only [Pi.sub_apply, ordiv, one_chip]
     omega
   · have := h.1 v
-    simp only [Pi.sub_apply, ordiv, one_chip, if_neg hv]
+    simp only [Pi.sub_apply, ordiv, one_chip, ite_eq_right hv]
     omega
 
 /-! ## The surviving statement: in-heavy reachability certifies rank one -/

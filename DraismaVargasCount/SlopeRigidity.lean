@@ -1,5 +1,9 @@
-import DraismaVargasCount.CoreRelabelInvariance
-import DraismaVargasCount.CoreSlotCoords
+module
+
+public import DraismaVargasCount.CoreRelabelInvariance
+public import DraismaVargasCount.CoreSlotCoords
+
+@[expose] public section
 
 /-!
 # What rigidity of the core diagonal asks for, and why genericity does not help

@@ -1,6 +1,10 @@
-import GenusSixOddDescent.Hole
-import Utilities.Subdivision.SlotPropagation
-import Utilities.Subdivision.CoreCutsAndFlats
+module
+
+public import GenusSixOddDescent.Hole
+public import Utilities.Subdivision.SlotPropagation
+public import Utilities.Subdivision.CoreCutsAndFlats
+
+@[expose] public section
 
 /-!
 # Lemma H4: the two hole moves are the *only* moves
@@ -83,9 +87,9 @@ private theorem one_chip_slotPoint (hunit : spec.IsUnit) (g : Fin p) {a b : ℕ}
     (one_chip (spec.slotPoint N hN g a) : CFDiv (spec.scale N hN).graph)
         (spec.slotPoint N hN g b) = if b = a then 1 else 0 := by
   by_cases h : b = a
-  · rw [if_pos h, h]
+  · rw [ite_eq_left h, h]
     exact one_chip_apply_v _
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     exact one_chip_apply_other' _ _ (spec.slotPoint_ne N hN hunit g hb ha h)
 
 /-! ## The fine vertices: core points and interior slot points -/
@@ -356,11 +360,11 @@ private theorem step_two (hj : 1 ≤ j) (hjt : 2 * j ≤ t) (htj : t - j < N)
     rw [hsum] at hconf
     have hjIcc : j ∈ Finset.Icc a r := by
       by_contra hc
-      rw [if_neg hc] at hconf
+      rw [ite_eq_right hc] at hconf
       split_ifs at hconf <;> omega
     have htjIcc : t - j ∈ Finset.Icc a r := by
       by_contra hc
-      rw [if_neg hc] at hconf
+      rw [ite_eq_right hc] at hconf
       split_ifs at hconf
       omega
     have hja := Finset.mem_Icc.mp hjIcc

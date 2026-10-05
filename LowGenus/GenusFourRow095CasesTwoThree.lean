@@ -1,4 +1,8 @@
-import LowGenus.GenusFourRow095
+module
+
+public import LowGenus.GenusFourRow095
+
+@[expose] public section
 
 /-!
 # The two `B < C` Dhar profiles for Core 095
@@ -35,7 +39,7 @@ variable (hmy : m length ≤ Y length)
 private theorem m_le_X : m length ≤ X length := min_le_left _ _
 private theorem m_le_Delta : m length ≤ Delta length := min_le_right _ _
 
-private theorem B_add_m_le_C (hBC : B length < C length)
+theorem B_add_m_le_C (hBC : B length < C length)
     (hmy : m length ≤ Y length) : B length + m length ≤ C length := by
   have h := (Nat.le_sub_iff_add_le hBC.le).mp hmy
   omega
@@ -386,11 +390,11 @@ variable (hNorm : length 0 ≤ length 5) (hBC : B length < C length)
 variable (hYpos : 0 < Y length)
 variable (hYsmall : Y length < min (X length) (Delta length))
 
-private theorem Y_lt_X (hYsmall : Y length < min (X length) (Delta length)) :
+theorem Y_lt_X (hYsmall : Y length < min (X length) (Delta length)) :
     Y length < X length :=
   lt_of_lt_of_le hYsmall (min_le_left _ _)
 
-private theorem Y_lt_Delta (hYsmall : Y length < min (X length) (Delta length)) :
+theorem Y_lt_Delta (hYsmall : Y length < min (X length) (Delta length)) :
     Y length < Delta length :=
   lt_of_lt_of_le hYsmall (min_le_right _ _)
 

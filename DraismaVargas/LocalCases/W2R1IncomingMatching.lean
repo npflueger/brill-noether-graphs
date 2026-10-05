@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W2R1IncomingCensus
+module
+
+public import DraismaVargas.LocalCases.W2R1IncomingCensus
+
+@[expose] public section
 
 /-!
 # Identifying the incoming `{w2-r1}` datum with a named Figure 37/38 member
@@ -164,11 +168,11 @@ noncomputable def resolutionSide (resolution : LocalResolution degree) (label : 
   if label = 0 then resolution.left else resolution.right
 
 @[simp] theorem resolutionSide_zero (resolution : LocalResolution degree) :
-    resolutionSide resolution 0 = resolution.left := if_pos rfl
+    resolutionSide resolution 0 = resolution.left := ite_eq_left rfl
 
 @[simp] theorem resolutionSide_one (resolution : LocalResolution degree) :
     resolutionSide resolution 1 = resolution.right := by
-  rw [resolutionSide, if_neg (by decide)]
+  rw [resolutionSide, ite_eq_right (by decide)]
 
 /-- **What a member puts on side `label` above a block.**  `double` is the
 block's doubled direction and `position` the member's own index: the block
@@ -193,27 +197,27 @@ theorem resolutionSide_memberLocal (double position label : Fin 2) :
       localSide data hc hab hOne star double position label := by
   unfold localSide
   by_cases hPosition : position = double
-  · rw [memberLocal_of_eq _ star hPosition, if_pos hPosition, resolutionSide]
+  · rw [memberLocal_of_eq _ star hPosition, ite_eq_left hPosition, resolutionSide]
     split <;> exact wallPartition_eq data hc hab hOne
-  · rw [memberLocal_of_ne _ star hPosition, if_neg hPosition]
+  · rw [memberLocal_of_ne _ star hPosition, ite_eq_right hPosition]
     by_cases hLabel : label = double
-    · rw [if_pos hLabel, resolutionSide]
+    · rw [ite_eq_left hLabel, resolutionSide]
       by_cases hZero : label = 0
-      · rw [if_pos hZero]
+      · rw [ite_eq_left hZero]
         exact (sideFine_left_of_zero (contractDatum data hc hab hOne) star
           (hLabel ▸ hZero)).trans (wallOcc_edgePartition data hc hab hOne star double).symm
-      · rw [if_neg hZero]
+      · rw [ite_eq_right hZero]
         exact (sideFine_right_of_ne_zero (contractDatum data hc hab hOne) star
           (hLabel ▸ hZero)).trans (wallOcc_edgePartition data hc hab hOne star double).symm
-    · rw [if_neg hLabel, resolutionSide]
+    · rw [ite_eq_right hLabel, resolutionSide]
       by_cases hZero : label = 0
       · have hDouble : double ≠ 0 := fun h ↦ hLabel (hZero.trans h.symm)
-        rw [if_pos hZero, sideFine_left_of_ne_zero _ star hDouble]
+        rw [ite_eq_left hZero, sideFine_left_of_ne_zero _ star hDouble]
         exact wallPartition_eq data hc hab hOne
       · have hDouble : double = 0 := by
           by_contra hContra
           exact hLabel (by omega)
-        rw [if_neg hZero, sideFine_right_of_zero _ star hDouble]
+        rw [ite_eq_right hZero, sideFine_right_of_zero _ star hDouble]
         exact wallPartition_eq data hc hab hOne
 
 /-- **`memberLocal`'s regrown partition is `localNew`.** -/
@@ -222,9 +226,9 @@ theorem memberLocal_newEdge_eq (double position : Fin 2) :
       localNew data hc hab hOne star double position := by
   unfold localNew
   by_cases hPosition : position = double
-  · rw [memberLocal_of_eq _ star hPosition, if_pos hPosition]
+  · rw [memberLocal_of_eq _ star hPosition, ite_eq_left hPosition]
     exact wallPartition_eq data hc hab hOne
-  · rw [memberLocal_of_ne _ star hPosition, if_neg hPosition]
+  · rw [memberLocal_of_ne _ star hPosition, ite_eq_right hPosition]
     exact sideFine_newEdge (contractDatum data hc hab hOne) star double
 
 /-- The joined background shape's endpoint partitions. -/
@@ -270,20 +274,20 @@ theorem incoming_side_of_count (position : Fin 2)
   unfold localSide
   by_cases hPosition : position = profile.doubleLabel
   · have hOneCount : doubleCount data hc hab hOne star profile = 1 := by
-      rw [hCount, if_pos hPosition]
-    rw [if_pos hPosition]
+      rw [hCount, ite_eq_left hPosition]
+    rw [ite_eq_left hPosition]
     by_cases hLabel : label = profile.doubleLabel
     · rw [hLabel]
       exact double_end_block_of_one data hc hab hOne star profile hOneCount sheet hSheet
     · rw [other_of_ne hLabel]
       exact single_end_block data hc hab hOne star profile sheet hSheet
   · have hTwoCount : doubleCount data hc hab hOne star profile = 2 := by
-      rw [hCount, if_neg hPosition]
-    rw [if_neg hPosition]
+      rw [hCount, ite_eq_right hPosition]
+    rw [ite_eq_right hPosition]
     by_cases hLabel : label = profile.doubleLabel
-    · rw [if_pos hLabel, hLabel]
+    · rw [ite_eq_left hLabel, hLabel]
       exact double_end_block_of_two data hc hab hOne star profile hTwoCount sheet hSheet
-    · rw [if_neg hLabel, other_of_ne hLabel]
+    · rw [ite_eq_right hLabel, other_of_ne hLabel]
       exact single_end_block data hc hab hOne star profile sheet hSheet
 
 include fullDim hForest pair in
@@ -299,13 +303,13 @@ theorem incoming_new_of_count (position : Fin 2)
   unfold localNew
   by_cases hPosition : position = profile.doubleLabel
   · have hOneCount : doubleCount data hc hab hOne star profile = 1 := by
-      rw [hCount, if_pos hPosition]
-    rw [if_pos hPosition]
+      rw [hCount, ite_eq_left hPosition]
+    rw [ite_eq_left hPosition]
     exact hContracted.trans
       (double_end_block_of_one data hc hab hOne star profile hOneCount sheet hSheet)
   · have hTwoCount : doubleCount data hc hab hOne star profile = 2 := by
-      rw [hCount, if_neg hPosition]
-    rw [if_neg hPosition]
+      rw [hCount, ite_eq_right hPosition]
+    rw [ite_eq_right hPosition]
     exact hContracted.trans
       (double_end_block_of_two data hc hab hOne star profile hTwoCount sheet hSheet)
 
@@ -681,10 +685,10 @@ theorem memberSelector_injective :
   by_cases hx : x = pair.firstProfile.doubleLabel
   · by_cases hy : y = pair.firstProfile.doubleLabel
     · rw [hx, hy]
-    · rw [if_pos hx, if_neg hy] at hEq
+    · rw [ite_eq_left hx, ite_eq_right hy] at hEq
       exact absurd hEq (by decide)
   · by_cases hy : y = pair.firstProfile.doubleLabel
-    · rw [if_neg hx, if_pos hy] at hEq
+    · rw [ite_eq_right hx, ite_eq_left hy] at hEq
       exact absurd hEq (by decide)
     · rw [other_of_ne hx, other_of_ne hy]
 

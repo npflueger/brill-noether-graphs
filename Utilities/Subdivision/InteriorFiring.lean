@@ -1,6 +1,10 @@
-import Utilities.Subdivision.SlotGrid
-import Utilities.Subdivision.SlopeScript
-import Utilities.Foundations.RankInvariance
+module
+
+public import Utilities.Subdivision.SlotGrid
+public import Utilities.Subdivision.SlopeScript
+public import Utilities.Foundations.RankInvariance
+
+@[expose] public section
 
 /-!
 # The interior-firing lemma
@@ -164,7 +168,7 @@ theorem prin_moveScript_interior_same (T : Spec n p) (e : Fin p) (q r d : ℕ)
   unfold moveScript
   rw [T.prin_interiorVertex_eq_slopeDifference
     (T.isStepSlope_slotValueScript (moveValue_compatible T e q r d hdq hrL)) e o]
-  simp only [moveValue, if_true]
+  simp only [moveValue, ite_true]
   have h := trapVal_laplace q r d hd hdq hqr o.val
   have hrw : o.val + 1 + 1 = o.val + 2 := rfl
   rw [hrw]
@@ -286,24 +290,24 @@ theorem sum_ite_succ {N : ℕ} (t : ℕ) (f : ℕ → ℤ) :
   classical
   by_cases h : 1 ≤ t ∧ t ≤ N
   · obtain ⟨h1, h2⟩ := h
-    rw [if_pos ⟨h1, h2⟩]
+    rw [ite_eq_left ⟨h1, h2⟩]
     have hlt : t - 1 < N := by omega
     have hmk : (⟨t - 1, hlt⟩ : Fin N).val = t - 1 := rfl
     refine (Finset.sum_eq_single (⟨t - 1, hlt⟩ : Fin N) ?_ ?_).trans ?_
     · intro o _ hone
-      rw [if_neg]
+      rw [ite_eq_right]
       intro hcon
       exact hone (Fin.ext (by rw [hmk]; omega))
     · intro hmem
       exact absurd (Finset.mem_univ _) hmem
-    · rw [if_pos (by rw [hmk]; omega)]
+    · rw [ite_eq_left (by rw [hmk]; omega)]
       congr 1
       rw [hmk]
       omega
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     refine Finset.sum_eq_zero ?_
     intro o _
-    rw [if_neg]
+    rw [ite_eq_right]
     intro hcon
     exact h ⟨by omega, by have := o.isLt; omega⟩
 
@@ -344,9 +348,9 @@ theorem slotMoment_moved (T : Spec n p) (D : CFDiv T.graph) (e : Fin p) (q r d :
           + (if 1 ≤ r + d ∧ r + d ≤ T.length e - 1 then ((r + d : ℕ) : ℤ) else 0)) := by
   have h := sum_weighted_moved T D e q r d hd hdq hqr hrL (fun k => (k : ℤ))
   have hq : (if 1 ≤ q ∧ q ≤ T.length e - 1 then (q : ℤ) else 0) = (q : ℤ) :=
-    if_pos ⟨h1q, by omega⟩
+    ite_eq_left ⟨h1q, by omega⟩
   have hr : (if 1 ≤ r ∧ r ≤ T.length e - 1 then (r : ℤ) else 0) = (r : ℤ) :=
-    if_pos ⟨by omega, hrlt⟩
+    ite_eq_left ⟨by omega, hrlt⟩
   simp only [slotMoment]
   rw [h, hq, hr]
 
@@ -360,9 +364,9 @@ theorem slotCount_moved (T : Spec n p) (D : CFDiv T.graph) (e : Fin p) (q r d : 
   have h := sum_weighted_moved T D e q r d hd hdq hqr hrL (fun _ => (1 : ℤ))
   simp only [mul_one] at h
   have hq : (if 1 ≤ q ∧ q ≤ T.length e - 1 then (1 : ℤ) else 0) = (1 : ℤ) :=
-    if_pos ⟨h1q, by omega⟩
+    ite_eq_left ⟨h1q, by omega⟩
   have hr : (if 1 ≤ r ∧ r ≤ T.length e - 1 then (1 : ℤ) else 0) = (1 : ℤ) :=
-    if_pos ⟨by omega, hrlt⟩
+    ite_eq_left ⟨by omega, hrlt⟩
   simp only [slotCount]
   rw [h, hq, hr]
 
@@ -426,10 +430,10 @@ theorem interiorTotal_moved_le (T : Spec n p) (D : CFDiv T.graph) (e : Fin p) (q
     intro e'
     by_cases hne : e' = e
     · subst hne
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       have := slotCount_moved_le T D e' q r d hd hdq hqr hrL h1q hrlt hdmin
       omega
-    · rw [if_neg hne, add_zero, slotCount_moved_other T D e e' q r d hdq hrL hne]
+    · rw [ite_eq_right hne, add_zero, slotCount_moved_other T D e e' q r d hdq hrL hne]
   have hsum : (∑ e' : Fin p, slotCount T (moved T D e q r d) e')
       ≤ ∑ e' : Fin p, (slotCount T D e' + (if e' = e then (-1 : ℤ) else 0)) :=
     Finset.sum_le_sum (fun e' _ => hbound e')
@@ -487,17 +491,17 @@ theorem exists_two_chips (T : Spec n p) (D : CFDiv T.graph) (hDeff : effective D
       have hSeq : S = {a} :=
         Finset.Subset.antisymm hsub (Finset.singleton_subset_iff.mpr haS)
       rw [hSeq, Finset.sum_singleton] at hsumS
-      rw [if_pos hoa, if_pos hob, hoa']
+      rw [ite_eq_left hoa, ite_eq_left hob, hoa']
       omega
-    · rw [if_pos hoa, if_neg hob, hoa']
+    · rw [ite_eq_left hoa, ite_eq_right hob, hoa']
       have := (hmemS a).mp haS
       omega
   · by_cases hob : o.val + 1 = b.val + 1
     · have hob' : o = b := Fin.ext (by omega)
-      rw [if_neg hoa, if_pos hob, hob']
+      rw [ite_eq_right hoa, ite_eq_left hob, hob']
       have := (hmemS b).mp hbS
       omega
-    · rw [if_neg hoa, if_neg hob]
+    · rw [ite_eq_right hoa, ite_eq_right hob]
       have := hDeff (T.interiorVertex e o)
       omega
 

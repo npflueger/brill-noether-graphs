@@ -1,4 +1,8 @@
-import Utilities.Transmission.TransmissionRR
+module
+
+public import Utilities.Transmission.TransmissionRR
+
+@[expose] public section
 
 /-!
 # Canonical duality for transmission witnesses

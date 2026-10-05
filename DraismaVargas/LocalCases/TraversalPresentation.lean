@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.FullDimensionalSource
-import DraismaVargas.LocalCases.TerminalForestReceipt
-import DraismaVargas.LocalCases.InputRefinementData
+module
+
+public import DraismaVargas.LocalCases.FullDimensionalSource
+public import DraismaVargas.LocalCases.TerminalForestReceipt
+public import DraismaVargas.LocalCases.InputRefinementData
+
+@[expose] public section
 
 /-!
 # The honest traversal presentation

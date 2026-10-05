@@ -1,5 +1,9 @@
-import DraismaVargas.Infrastructure.ContractionFibre
-import DraismaVargas.Infrastructure.IteratedContraction
+module
+
+public import DraismaVargas.Infrastructure.ContractionFibre
+public import DraismaVargas.Infrastructure.IteratedContraction
+
+@[expose] public section
 
 /-!
 # The source correspondence carried along an iterated contraction

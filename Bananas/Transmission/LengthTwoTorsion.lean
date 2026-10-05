@@ -1,4 +1,8 @@
-import Bananas.CrossOneOff.LengthTwoCross
+module
+
+public import Bananas.CrossOneOff.LengthTwoCross
+
+@[expose] public section
 
 /-!
 # Exact torsion of two length-two midpoint marks

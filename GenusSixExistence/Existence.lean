@@ -1,6 +1,10 @@
-import GenusSixOddDescent.Main
-import DraismaVargasCount.Assembly
-import LowGenus.AtanasovRanganathanExistence
+module
+
+public import GenusSixOddDescent.Main
+public import DraismaVargasCount.Assembly
+public import LowGenus.AtanasovRanganathanExistence
+
+@[expose] public section
 
 /-!
 # Brill--Noether existence in genus six

@@ -1,6 +1,10 @@
-import DraismaVargasCount.W2R1StarCensusProof
-import DraismaVargasCount.W2PMultiplicityBalance
-import DraismaVargas.LocalCases.W2PGraphTracking
+module
+
+public import DraismaVargasCount.W2R1StarCensusProof
+public import DraismaVargasCount.W2PMultiplicityBalance
+public import DraismaVargas.LocalCases.W2PGraphTracking
+
+@[expose] public section
 
 /-!
 # The W2P star census, Stages 1 and 3, and Stage 2 reduced to transports
@@ -329,7 +333,7 @@ theorem firstRow_eq_of_new_eq
   have ha := index_pos profile.first.1
   simp only [W2PCommonBalance.newColumn_zero, W2PCommonBalance.newColumn_one,
     W2PCommonBalance.firstNewColumn, W2PCommonBalance.secondNewColumn, ↓reduceIte,
-    if_neg hNe, zero_div, add_zero] at h1
+    ite_eq_right hNe, zero_div, add_zero] at h1
   set a : ℚ := (data.sourceEdgeIndex profile.first.1 : ℚ)
   have hlt : 1 / (a + 1) < 1 / a := one_div_lt_one_div_of_lt ha (by linarith)
   linarith

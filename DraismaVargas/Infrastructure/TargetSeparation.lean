@@ -1,5 +1,9 @@
-import DraismaVargas.Infrastructure.IteratedContraction
-import DraismaVargas.Infrastructure.TargetBranchRegion
+module
+
+public import DraismaVargas.Infrastructure.IteratedContraction
+public import DraismaVargas.Infrastructure.TargetBranchRegion
+
+@[expose] public section
 
 /-!
 # A vertex of a connected genus-zero target separates its incident branches

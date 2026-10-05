@@ -1,4 +1,8 @@
-import Utilities.Subdivision.ClosedRowProof.Leaf
+module
+
+public import Utilities.Subdivision.ClosedRowProof.Leaf
+
+@[expose] public section
 
 /-!
 # Executable checks for rich row-proof leaves

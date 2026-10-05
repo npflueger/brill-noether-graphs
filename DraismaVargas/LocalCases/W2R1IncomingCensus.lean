@@ -1,9 +1,13 @@
-import DraismaVargas.LocalCases.W2R1GraphData
-import DraismaVargas.LocalCases.W3Nd2IncomingMemberMatching
-import DraismaVargas.LocalCases.IncomingMatchingCore
-import DraismaVargas.LocalCases.IncomingW2TargetPlacement
-import DraismaVargas.LocalCases.IncomingSourceCases
-import DraismaVargas.LocalCases.MonovalentWall
+module
+
+public import DraismaVargas.LocalCases.W2R1GraphData
+public import DraismaVargas.LocalCases.W3Nd2IncomingMemberMatching
+public import DraismaVargas.LocalCases.IncomingMatchingCore
+public import DraismaVargas.LocalCases.IncomingW2TargetPlacement
+public import DraismaVargas.LocalCases.IncomingSourceCases
+public import DraismaVargas.LocalCases.MonovalentWall
+
+@[expose] public section
 
 /-!
 # The incoming census at a `{w2-r1}` wall, at **both** ramification-one blocks
@@ -253,19 +257,19 @@ noncomputable def endOf (label : Fin 2) : target.V :=
 @[simp] theorem endOf_of_false {label : Fin 2}
     (hFalse : IncomingTargetExpansion.right hc hab hOne (star.edge label) = false) :
     endOf hc hab hOne star label = a := by
-  simp only [endOf, hFalse, Bool.false_eq_true, if_false]
+  simp only [endOf, hFalse, Bool.false_eq_true, ite_false]
 
 @[simp] theorem endOf_of_true {label : Fin 2}
     (hTrue : IncomingTargetExpansion.right hc hab hOne (star.edge label) = true) :
     endOf hc hab hOne star label = b := by
-  simp only [endOf, hTrue, if_true]
+  simp only [endOf, hTrue, ite_true]
 
 theorem endOf_cases (label : Fin 2) :
     endOf hc hab hOne star label = a ∨ endOf hc hab hOne star label = b := by
   unfold endOf
   by_cases hTrue : IncomingTargetExpansion.right hc hab hOne (star.edge label) = true
-  · exact Or.inr (if_pos hTrue)
-  · exact Or.inl (if_neg hTrue)
+  · exact Or.inr (ite_eq_left hTrue)
+  · exact Or.inl (ite_eq_right hTrue)
 
 theorem endOf_refines (label : Fin 2) :
     (data.vertexPartition (endOf hc hab hOne star label)).Refines
@@ -280,9 +284,9 @@ theorem wallOcc_mem_endOf (label : Fin 2) :
       GluingDatum.incidentEdges (endOf hc hab hOne star label) := by
   unfold endOf wallOcc
   by_cases hTrue : IncomingTargetExpansion.right hc hab hOne (star.edge label) = true
-  · rw [if_pos hTrue]
+  · rw [ite_eq_left hTrue]
     exact (IncomingW2TargetPlacement.right_eq_true_iff hc hab hOne _).mp hTrue
-  · rw [if_neg hTrue]
+  · rw [ite_eq_right hTrue]
     exact (IncomingW2TargetPlacement.right_eq_false_iff_of_incident hc hab hOne _
       (star.edge_mem_incidentEdges label)).mp (by simpa using hTrue)
 
@@ -684,7 +688,7 @@ theorem transported_endpoints (side : (contract target hab hOne).edges → Bool)
       have hContra' : IncomingTargetExpansion.right hc hab hOne (star.edge 1) = false := by
         simpa using hContra
       exact hNe (hFalse.trans hContra'.symm)
-    rw [if_pos hSupport] at hPair
+    rw [ite_eq_left hSupport] at hPair
     rw [endOf_of_false hc hab hOne star hFalse, endOf_of_true hc hab hOne star hTrue]
     exact ⟨congrArg Prod.fst hPair, congrArg Prod.snd hPair⟩
   · have hTrue : IncomingTargetExpansion.right hc hab hOne (star.edge 0) = true := by
@@ -697,7 +701,7 @@ theorem transported_endpoints (side : (contract target hab hOne).edges → Bool)
       have hContra' : IncomingTargetExpansion.right hc hab hOne (star.edge 1) = true := by
         simpa using hContra
       exact hNe (hTrue.trans hContra'.symm)
-    rw [if_neg hSupport] at hPair
+    rw [ite_eq_right hSupport] at hPair
     rw [endOf_of_true hc hab hOne star hTrue, endOf_of_false hc hab hOne star hFalseOne]
     exact ⟨congrArg Prod.fst hPair, congrArg Prod.snd hPair⟩
 
@@ -1194,12 +1198,12 @@ theorem exists_member_selected_counts :
         pair.secondProfile.toOccurrenceProfile
     rw [hFirst, hSecond] at hSplit
     rcases hBounds with hOneCase | hTwoCase
-    · refine ⟨pair.firstProfile.doubleLabel, by rw [if_pos rfl]; exact hOneCase, ?_⟩
-      rw [if_neg (by rw [← hSame]; exact other_ne pair.firstProfile.doubleLabel)]
+    · refine ⟨pair.firstProfile.doubleLabel, by rw [ite_eq_left rfl]; exact hOneCase, ?_⟩
+      rw [ite_eq_right (by rw [← hSame]; exact other_ne pair.firstProfile.doubleLabel)]
       omega
     · refine ⟨other pair.firstProfile.doubleLabel,
-        by rw [if_neg (other_ne pair.firstProfile.doubleLabel)]; exact hTwoCase, ?_⟩
-      rw [if_pos (by rw [other_other pair.firstProfile.doubleLabel]; exact hSame)]
+        by rw [ite_eq_right (other_ne pair.firstProfile.doubleLabel)]; exact hTwoCase, ?_⟩
+      rw [ite_eq_left (by rw [other_other pair.firstProfile.doubleLabel]; exact hSame)]
       omega
   · have hOpposite : pair.firstProfile.doubleLabel = other pair.secondProfile.doubleLabel :=
       other_of_ne hSame
@@ -1213,12 +1217,12 @@ theorem exists_member_selected_counts :
         pair.secondProfile.toOccurrenceProfile
     rw [hFirst, hSecond] at hSplit
     rcases hBounds with hOneCase | hTwoCase
-    · refine ⟨pair.firstProfile.doubleLabel, by rw [if_pos rfl]; exact hOneCase, ?_⟩
-      rw [if_pos hOtherEq]
+    · refine ⟨pair.firstProfile.doubleLabel, by rw [ite_eq_left rfl]; exact hOneCase, ?_⟩
+      rw [ite_eq_left hOtherEq]
       omega
     · refine ⟨other pair.firstProfile.doubleLabel,
-        by rw [if_neg (other_ne pair.firstProfile.doubleLabel)]; exact hTwoCase, ?_⟩
-      rw [if_neg (by rw [other_other pair.firstProfile.doubleLabel]; exact hSame)]
+        by rw [ite_eq_right (other_ne pair.firstProfile.doubleLabel)]; exact hTwoCase, ?_⟩
+      rw [ite_eq_right (by rw [other_other pair.firstProfile.doubleLabel]; exact hSame)]
       omega
 
 end PairCensus

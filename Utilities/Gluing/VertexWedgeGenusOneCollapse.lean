@@ -1,5 +1,9 @@
-import Utilities.Gluing.VertexWedgeGenusOne
-import Utilities.Gluing.VertexWedgeRankFormula
+module
+
+public import Utilities.Gluing.VertexWedgeGenusOne
+public import Utilities.Gluing.VertexWedgeRankFormula
+
+@[expose] public section
 
 /-!
 # Collapsing a rigid genus-one wedge

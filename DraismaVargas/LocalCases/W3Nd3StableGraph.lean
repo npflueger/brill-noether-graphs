@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W3Nd3SourceCandidates
-import DraismaVargas.LocalCases.W3Nd2EndRows
+module
+
+public import DraismaVargas.LocalCases.W3Nd3SourceCandidates
+public import DraismaVargas.LocalCases.W3Nd2EndRows
+
+@[expose] public section
 
 /-!
 # Surviving occurrences, stable rows and endpoints of the two Figure 30 members

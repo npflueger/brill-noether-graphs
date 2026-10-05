@@ -1,4 +1,8 @@
-import Utilities.Foundations.RankInvariance
+module
+
+public import Utilities.Foundations.RankInvariance
+
+@[expose] public section
 
 /-!
 # Rank change under one marked chip

@@ -1,6 +1,10 @@
-import DraismaVargasCount.ValencyTwoCensus
-import DraismaVargasCount.ValencyThreeLoopMerge
-import DraismaVargas.LocalCases.LeafFacetNoReturn
+module
+
+public import DraismaVargasCount.ValencyTwoCensus
+public import DraismaVargasCount.ValencyThreeLoopMerge
+public import DraismaVargas.LocalCases.LeafFacetNoReturn
+
+@[expose] public section
 
 /-!
 # Valency-two stage 3: the pairing is read on the core
@@ -942,11 +946,11 @@ theorem inc_lt_two (hcub : core.Cubic) {e₀ s₁ σ : Fin p} (he₀ : core.tail
     unfold coreIncidence at h2
     have ht : core.tail σ = x := by
       by_contra h
-      rw [if_neg h] at h2
+      rw [ite_eq_right h] at h2
       split_ifs at h2 <;> omega
     have hh : core.head σ = x := by
       by_contra h
-      rw [if_pos ht, if_neg h] at h2
+      rw [ite_eq_left ht, ite_eq_right h] at h2
       omega
     obtain ⟨-, h1, h2'⟩ := hs₁
     unfold coreIncidence at h1 h2'
@@ -1466,12 +1470,12 @@ theorem swapAt_loop {cL : Core n p} {wL : Regrowth cL y degree} {blockL}
     ?_, ?_, ?_⟩
   · apply Subtype.ext
     change (t₂, (if t₂ = t₂ then Equiv.swap s₀ s₃ else Equiv.refl _) s₀) = (L.e i').1
-    rw [if_pos rfl, Equiv.swap_apply_left]
+    rw [ite_eq_left rfl, Equiv.swap_apply_left]
     exact Prod.ext h30.symm rfl
   · apply Subtype.ext
     change ((L.e i').1.1, (if (L.e i').1.1 = t₂ then Equiv.swap s₀ s₃ else Equiv.refl _) s₃) =
       (L.e i).1
-    rw [if_pos h30, Equiv.swap_apply_right]
+    rw [ite_eq_left h30, Equiv.swap_apply_right]
     exact Prod.ext h30 rfl
   · intro k hk hk'
     apply Subtype.ext

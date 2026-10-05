@@ -1,5 +1,9 @@
-import DraismaVargasCount.CrossCoreParity
-import DraismaVargasCount.SimpleWallSupply
+module
+
+public import DraismaVargasCount.CrossCoreParity
+public import DraismaVargasCount.SimpleWallSupply
+
+@[expose] public section
 
 /-!
 # The positive type-change obligation, and the shared contraction of a Whitehead move
@@ -281,7 +285,7 @@ constructing the contracted core (which `DegSpec.contractedCore` in `Utilities`
 builds from a degenerate length vector). -/
 def contractVertex (v₀ v₁ v : Fin n) : Fin n := if v = v₁ then v₀ else v
 
-theorem contractVertex_snd (v₀ v₁ : Fin n) : contractVertex v₀ v₁ v₁ = v₀ := if_pos rfl
+theorem contractVertex_snd (v₀ v₁ : Fin n) : contractVertex v₀ v₁ v₁ = v₀ := ite_eq_left rfl
 
 theorem contractVertex_fst (v₀ v₁ : Fin n) : contractVertex v₀ v₁ v₀ = v₀ := ite_self _
 

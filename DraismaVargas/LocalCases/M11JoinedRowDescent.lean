@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.M11JoinedDescentGeometry
+module
+
+public import DraismaVargas.LocalCases.M11JoinedDescentGeometry
+
+@[expose] public section
 
 /-!
 # Descending actual joined M11 occurrences to old stable rows
@@ -38,7 +42,7 @@ theorem newOldEdge_of_selected (sheet : Fin degree)
       ((joinedPattern data star block hCard).candidate.newSourceEdge sheet))
     (hRel : (data.vertexPartition wall).Rel block.1 sheet) :
     newOldEdge input profile hCard sheet hSurvives = ⟨profile.third.1, profile.third_survives⟩ := by
-  exact dif_pos hRel
+  exact dite_eq_left hRel
 
 theorem newOldEdge_of_background (sheet : Fin degree)
     (hSurvives : ¬ IsDangling (joinedPattern data star block hCard).candidate.datum
@@ -48,7 +52,7 @@ theorem newOldEdge_of_background (sheet : Fin degree)
   have hEqual : newOldEdge input profile hCard sheet hSurvives =
       (⟨data.sourceEdge (star.edge 0) sheet,
         fun h ↦ hSurvives ((background_isDangling_iff input profile hCard 0 sheet hRel).mpr h)⟩ :
-        NonDanglingEdge data) := dif_neg hRel
+        NonDanglingEdge data) := dite_eq_right hRel
   exact congrArg Subtype.val hEqual
 
 theorem newOldEdge_eq_of_rel (first second : Fin degree)
@@ -107,7 +111,7 @@ theorem rowOfEdge_retained (old : NonDanglingEdge data) :
   have hOld : ∃ other : NonDanglingEdge data,
       retainedEdge (joinedPattern data star block hCard).candidate input.valid.1 other =
         retainedEdge (joinedPattern data star block hCard).candidate input.valid.1 old := ⟨old, rfl⟩
-  rw [rowOfEdge, dif_pos hOld]
+  rw [rowOfEdge, dite_eq_left hOld]
   exact congrArg NonDanglingEdge.stablePath
     (retainedEdge_injective _ input.valid.1 (Classical.choose_spec hOld))
 
@@ -125,7 +129,7 @@ theorem rowOfEdge_new (sheet : Fin degree)
       (congrArg (fun occurrence : NonDanglingEdge candidate.datum ↦ occurrence.1.1.1) hEqual)
     cases hLabels
   unfold rowOfEdge
-  rw [dif_neg hNot]
+  rw [dite_eq_right hNot]
   apply congrArg NonDanglingEdge.stablePath
   apply newOldEdge_eq_of_rel
   rw [newSourceEdge_sheet]

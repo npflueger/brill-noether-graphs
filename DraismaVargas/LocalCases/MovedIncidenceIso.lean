@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.InteriorGraphTracking
+module
+
+public import DraismaVargas.LocalCases.InteriorGraphTracking
+
+@[expose] public section
 
 /-!
 # An incidence dictionary onto an arbitrary cubic dart graph, and onto a move

@@ -1,4 +1,8 @@
-import DraismaVargasCount.OutgoingRowCalculus
+module
+
+public import DraismaVargasCount.OutgoingRowCalculus
+
+@[expose] public section
 
 /-!
 # Sharp row denominators of full-dimensional covers

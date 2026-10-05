@@ -1,5 +1,9 @@
-import Utilities.Subdivision.RankOne
-import Mathlib.Tactic
+module
+
+public import Utilities.Subdivision.RankOne
+public import Mathlib.Tactic
+
+@[expose] public section
 
 /-!
 # A kernel interface for the strong-separator rank-one lemma

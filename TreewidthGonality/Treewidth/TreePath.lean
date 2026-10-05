@@ -1,4 +1,8 @@
-import TreewidthGonality.Treewidth.PartialDecomposition
+module
+
+public import TreewidthGonality.Treewidth.PartialDecomposition
+
+@[expose] public section
 
 /-!
 # Paths to a fixed node of a tree

@@ -1,6 +1,10 @@
-import Utilities.Gluing.MarkedTwistDegree
-import Utilities.Foundations.RankInvariance
-import Demazure.AspPerm
+module
+
+public import Utilities.Gluing.MarkedTwistDegree
+public import Utilities.Foundations.RankInvariance
+public import Demazure.AspPerm
+
+@[expose] public section
 
 /-!
 # Graph transmission conditions

@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.OrientedTraversal
+module
+
+public import DraismaVargas.LocalCases.OrientedTraversal
+
+@[expose] public section
 
 /-!
 # Injectivity of `vertexClass` is `Faithful`
@@ -465,7 +469,7 @@ theorem mem_side_of_avoiding {G : CFGraph} {x y : G.V}
   | @tail b c _ hbc ih =>
       by_contra hc
       have hCount := cut.cross_num_edges b c ih hc
-      rw [if_neg fun hPair ↦ hbc.2 hPair.2] at hCount
+      rw [ite_eq_right fun hPair ↦ hbc.2 hPair.2] at hCount
       omega
 
 /-- A walk inside an induced subgraph is a walk of the ambient graph that never
@@ -497,7 +501,7 @@ theorem exists_sourceEnds_of_num_edges_pos (data : GluingDatum target degree)
   have hZero : num_edges data.sourceGraph a b = 0 := by
     rw [GluingDatum.SheetRelabeling.num_edges_sourceGraph_eq_sum]
     refine Finset.sum_eq_zero fun e _ ↦ ?_
-    exact if_neg fun hEnds ↦ hNone ⟨e, hEnds⟩
+    exact ite_eq_right fun hEnds ↦ hNone ⟨e, hEnds⟩
   omega
 
 /-- **The inner endpoint of a dangling cut has no surviving occurrence.**  The
@@ -660,7 +664,7 @@ theorem sourceEnds_fst_ne_snd (e : candidate.datum.SourceEdge) :
     (candidate.datum.sourceEnds e).1 ≠ (candidate.datum.sourceEnds e).2 := by
   have h := TraversalPresentation.otherEnd_ne candidate.datum e (candidate.datum.sourceEnds e).1
   unfold otherEnd at h
-  rw [if_pos rfl] at h
+  rw [ite_eq_left rfl] at h
   exact h.symm
 
 /-- The far end of an occurrence entered at one of its named ends is the
@@ -672,9 +676,9 @@ theorem otherEnd_eq_of_sourceEnds {e : candidate.datum.SourceEdge}
   unfold otherEnd
   have hne := sourceEnds_fst_ne_snd e
   rcases hEnds with hEnds | hEnds <;> rw [hEnds] at hne ⊢
-  · rw [if_pos (rfl : (a, b).1 = a)]
+  · rw [ite_eq_left (rfl : (a, b).1 = a)]
   · have hne' : ¬ ((b, a).1 = a) := hne
-    rw [if_neg hne']
+    rw [ite_eq_right hne']
 
 /-- Entering an occurrence at one end and leaving by the other returns. -/
 theorem otherEnd_otherEnd {e : candidate.datum.SourceEdge} {v : candidate.datum.SourceVertex}
@@ -683,11 +687,11 @@ theorem otherEnd_otherEnd {e : candidate.datum.SourceEdge} {v : candidate.datum.
   have hne := sourceEnds_fst_ne_snd e
   rcases hInc with hInc | hInc
   · unfold otherEnd
-    rw [if_pos hInc, if_neg hne]
+    rw [ite_eq_left hInc, ite_eq_right hne]
     exact hInc
   · unfold otherEnd
-    rw [if_neg (show ¬ ((candidate.datum.sourceEnds e).1 = v) from
-      fun h ↦ hne (h.trans hInc.symm)), if_pos rfl]
+    rw [ite_eq_right (show ¬ ((candidate.datum.sourceEnds e).1 = v) from
+      fun h ↦ hne (h.trans hInc.symm)), ite_eq_left rfl]
     exact hInc
 
 /-- **A contraction class is a set of vertices joined by contracted

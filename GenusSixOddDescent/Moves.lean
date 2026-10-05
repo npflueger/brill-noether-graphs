@@ -1,6 +1,10 @@
-import GenusSixOddDescent.Chain
-import GenusSixOddDescent.BridgeChain
-import GenusSixOddDescent.HoleClass
+module
+
+public import GenusSixOddDescent.Chain
+public import GenusSixOddDescent.BridgeChain
+public import GenusSixOddDescent.HoleClass
+
+@[expose] public section
 
 /-!
 # The moves at a state, at a general scale
@@ -150,16 +154,16 @@ theorem nearEndpoint_incident (W : Finset (Fin n)) (e : Fin p) :
     spec.core.Incident e (spec.nearEndpoint W e) := by
   unfold nearEndpoint
   by_cases h : spec.core.tail e ∈ W
-  · exact Or.inl (by rw [if_pos h])
-  · exact Or.inr (by rw [if_neg h])
+  · exact Or.inl (by rw [ite_eq_left h])
+  · exact Or.inr (by rw [ite_eq_right h])
 
 /-- On a crossing slot the near endpoint really is on the near side. -/
 theorem nearEndpoint_mem {W : Finset (Fin n)} {e : Fin p}
     (hcross : spec.core.Crosses W e) : spec.nearEndpoint W e ∈ W := by
   unfold nearEndpoint
   by_cases h : spec.core.tail e ∈ W
-  · rw [if_pos h]; exact h
-  · rw [if_neg h]
+  · rw [ite_eq_left h]; exact h
+  · rw [ite_eq_right h]
     rcases hcross with ⟨ht, -⟩ | ⟨hh, -⟩
     · exact absurd ht h
     · exact hh
@@ -379,17 +383,17 @@ noncomputable def stateBridgeData (hunit : spec.IsUnit)
           by_contra hgE
           exact hW.2.2 g (fun hmem => (Finset.mem_insert.mp hmem).elim hgf hgE) hg, hg⟩)
   onePos := fun e he => spec.one_le_offsetFromSide N hN hunit hD.1
-    (by rw [hD.2.2.2.2 e, if_pos (spec.crossing_subset E W he)]) W
+    (by rw [hD.2.2.2.2 e, ite_eq_left (spec.crossing_subset E W he)]) W
   offLt := fun e he => by
     have := spec.offsetFromSide_lt N hN hunit hD.1
       (show spec.edgeChipCount N hN D e = 1 by
-        rw [hD.2.2.2.2 e, if_pos (spec.crossing_subset E W he)]) W
+        rw [hD.2.2.2.2 e, ite_eq_left (spec.crossing_subset E W he)]) W
     omega
   supPos := by
     obtain ⟨e, he⟩ := spec.crossing_nonempty hbridgeless hbridge hW
     exact le_trans
       (spec.one_le_offsetFromSide N hN hunit hD.1
-        (by rw [hD.2.2.2.2 e, if_pos (spec.crossing_subset E W he)]) W)
+        (by rw [hD.2.2.2.2 e, ite_eq_left (spec.crossing_subset E W he)]) W)
       (Finset.le_sup he)
 
 /-- `sMax` of the adapter is `Spec.sMax`, by definition. -/
@@ -463,7 +467,7 @@ theorem stateBridgeData_R (hunit : spec.IsUnit)
   have hDedge : ∀ e : Fin p,
       spec.edgeChipCount N hN D e = if e ∈ E then 1 else 0 := hD.2.2.2.2
   have hchipX : ∀ e ∈ spec.crossing E W, spec.edgeChipCount N hN D e = 1 := fun e he => by
-    rw [hDedge e, if_pos (spec.crossing_subset E W he)]
+    rw [hDedge e, ite_eq_left (spec.crossing_subset E W he)]
   set Rd := (spec.stateBridgeData N hN hunit hbridgeless hD hconn hinc hbridge hW).R
     with hRd
   have hRval : Rd = D - one_chip ((spec.scale N hN).coreVertex v)
@@ -497,8 +501,8 @@ theorem stateBridgeData_R (hunit : spec.IsUnit)
     simp only [Pi.sub_apply, Finset.sum_apply]
     rw [Finset.sum_eq_zero (fun e he => hfrontcore e he u), hDcore u]
     by_cases huv : u = v
-    · rw [if_pos huv, huv, one_chip_apply_v]; ring
-    · rw [if_neg huv, one_chip_apply_other' _ _
+    · rw [ite_eq_left huv, huv, one_chip_apply_v]; ring
+    · rw [ite_eq_right huv, one_chip_apply_other' _ _
         (fun h => huv (coreVertex_inj (spec.scale N hN) h))]; ring
   -- **The rest divisor on a slot.**  A crossing slot is emptied exactly; every
   -- other slot keeps whatever `D` put there.
@@ -511,20 +515,20 @@ theorem stateBridgeData_R (hunit : spec.IsUnit)
     rw [one_chip_apply_other' _ _
       (Ne.symm (spec.coreVertex_ne_slotPoint N hN hunit v g hj0 hjN))]
     by_cases hgX : g ∈ spec.crossing E W
-    · rw [if_pos hgX,
+    · rw [ite_eq_left hgX,
         Finset.sum_eq_single_of_mem g hgX (fun e he hne => hfront e he g j hj0 hjN hne),
         ← spec.apply_slotPoint_eq_one_chip N hN hunit hDeff (hchipX g hgX) W hj0 hjN]
       ring
-    · rw [if_neg hgX, Finset.sum_eq_zero
+    · rw [ite_eq_right hgX, Finset.sum_eq_zero
         (fun e he => hfront e he g j hj0 hjN (fun h => hgX (h ▸ he)))]
       ring
   -- A slot outside `E` is chipless for `D`, hence for the rest divisor.
   have hoff : ∀ g : Fin p, g ∉ E → ∀ j : ℕ, 0 < j → j < N →
       Rd (spec.slotPoint N hN g j) = 0 := by
     intro g hgE j hj0 hjN
-    rw [hB g j hj0 hjN, if_neg (fun h => hgE (spec.crossing_subset E W h))]
+    rw [hB g j hj0 hjN, ite_eq_right (fun h => hgE (spec.crossing_subset E W h))]
     exact spec.slotPoint_eq_zero_of_edgeChipCount_zero N hN hunit hDeff
-      (by rw [hDedge g, if_neg hgE]) j (Finset.mem_Ioo.mpr ⟨hj0, hjN⟩)
+      (by rw [hDedge g, ite_eq_right hgE]) j (Finset.mem_Ioo.mpr ⟨hj0, hjN⟩)
   refine ⟨?_, hA, hoff, ?_, ?_⟩
   · -- effectivity
     intro x
@@ -543,7 +547,7 @@ theorem stateBridgeData_R (hunit : spec.IsUnit)
     intro g hgcross j hj0 hjN
     by_cases hgE : g ∈ E
     · have hgX : g ∈ spec.crossing E W := spec.mem_crossing.mpr ⟨hgE, hgcross⟩
-      rw [hB g j hj0 hjN, if_pos hgX]
+      rw [hB g j hj0 hjN, ite_eq_left hgX]
     · exact hoff g hgE j hj0 hjN
   · -- one chip on each non-crossing chip slot, none elsewhere
     intro g
@@ -552,21 +556,21 @@ theorem stateBridgeData_R (hunit : spec.IsUnit)
       have hzero : (∑ j ∈ Finset.Ioo 0 N, Rd (spec.slotPoint N hN g j)) = 0 :=
         Finset.sum_eq_zero fun j hj => by
           obtain ⟨hj0, hjN⟩ := Finset.mem_Ioo.mp hj
-          rw [hB g j hj0 hjN, if_pos hgX]
+          rw [hB g j hj0 hjN, ite_eq_left hgX]
       have hnot : ¬ (g ∈ E ∧ ¬ spec.core.Crosses W g) := fun h => h.2 hgcross
-      rw [hzero, if_neg hnot]
+      rw [hzero, ite_eq_right hnot]
     · have hcong : (∑ j ∈ Finset.Ioo 0 N, Rd (spec.slotPoint N hN g j))
           = ∑ j ∈ Finset.Ioo 0 N, D (spec.slotPoint N hN g j) :=
         Finset.sum_congr rfl fun j hj => by
           obtain ⟨hj0, hjN⟩ := Finset.mem_Ioo.mp hj
-          rw [hB g j hj0 hjN, if_neg hgX]
+          rw [hB g j hj0 hjN, ite_eq_right hgX]
       rw [hcong, ← spec.edgeChipCount_eq_sum_slotPoint N hN hunit D g, hDedge g]
       by_cases hgE : g ∈ E
       · have hyes : g ∈ E ∧ ¬ spec.core.Crosses W g :=
           ⟨hgE, fun hc => hgX (spec.mem_crossing.mpr ⟨hgE, hc⟩)⟩
-        rw [if_pos hgE, if_pos hyes]
+        rw [ite_eq_left hgE, ite_eq_left hyes]
       · have hno : ¬ (g ∈ E ∧ ¬ spec.core.Crosses W g) := fun h => hgE h.1
-        rw [if_neg hgE, if_neg hno]
+        rw [ite_eq_right hgE, ite_eq_right hno]
 
 /-! ## The move theorems
 
@@ -656,7 +660,7 @@ private theorem two_le_scale_of_typeI (hunit : spec.IsUnit)
     (hD : spec.TypeI N hN D v E) : 2 ≤ N := by
   obtain ⟨e, he⟩ : E.Nonempty := Finset.card_pos.mp (by rw [hD.2.2.2.1]; norm_num)
   obtain ⟨c, hc0, hcN, -, -⟩ := spec.exists_chip_offset N hN hunit hD.1
-    (show spec.edgeChipCount N hN D e = 1 by rw [hD.2.2.2.2 e, if_pos he])
+    (show spec.edgeChipCount N hN D e = 1 by rw [hD.2.2.2.2 e, ite_eq_left he])
   omega
 
 /-- **The unique escaping slot at the pivot.**  With `outdeg_S T (coreVertex v)
@@ -806,7 +810,7 @@ theorem moves_classified (hunit : spec.IsUnit)
   have hfree : ∀ g : Fin p, g ∉ E →
       ∀ j ∈ Finset.Ioo 0 N, D (spec.slotPoint N hN g j) = 0 := fun g hg =>
     spec.slotPoint_eq_zero_of_edgeChipCount_zero N hN hunit hDeff
-      (by rw [hDedge g, if_neg hg])
+      (by rw [hDedge g, ite_eq_right hg])
   -- **The pivot and its escaping slot.**
   obtain ⟨hvT, hout⟩ := spec.pivot N hN hunit hD hconn hT hne hproper
   obtain ⟨f, hfinc, hf1, hentered⟩ := spec.exists_escape_slot N hN hunit h2N hout
@@ -836,7 +840,7 @@ theorem moves_classified (hunit : spec.IsUnit)
             (N - 1) (by omega)
           rwa [show 1 + (N - 1) = N by omega] at h
         · exact spec.propagate_chipless N hN hunit hT g hzinc ((hUmem z).mp hzU)
-            (by rw [hDcore z, if_neg hzv]) hgfree N le_rfl
+            (by rw [hDcore z, ite_eq_right hzv]) hgfree N le_rfl
       by_cases hc : spec.core.tail g = z
       · rw [spec.sidePoint_last_of_tail N hN hunit g hc] at hfarT
         exact ⟨hc ▸ hzU, (hUmem _).mpr hfarT⟩
@@ -863,17 +867,17 @@ theorem moves_classified (hunit : spec.IsUnit)
       · have hwv : spec.core.otherEnd g v ≠ v :=
           spec.core.otherEnd_ne hvinc (spec.core_loopless g)
         have hfl := spec.fill_slot_at_pivot N hN hunit hDeff hT g hvinc hvT
-          (hentered g hvinc hgf) (hallT _) (by rw [hDcore _, if_neg hwv]) (hchip g)
+          (hentered g hvinc hgf) (hallT _) (by rw [hDcore _, ite_eq_right hwv]) (hchip g)
           (spec.sideOffset N g v k) (spec.sideOffset_le N g v hk)
         rwa [← spec.slotPoint_eq_sidePoint N hN g v hk] at hfl
       · have htv : spec.core.tail g ≠ v := fun h => hvinc (Or.inl h)
         have hhv : spec.core.head g ≠ v := fun h => hvinc (Or.inr h)
         exact spec.propagate_both_ends N hN hunit hDeff hT g (hallT _)
-          (by rw [hDcore _, if_neg htv]) (hallT _)
-          (by rw [hDcore _, if_neg hhv]) (hchip g) hk
+          (by rw [hDcore _, ite_eq_right htv]) (hallT _)
+          (by rw [hDcore _, ite_eq_right hhv]) (hchip g) hk
     -- **The hole on `f`**, read from `v`: filled from the chip outwards, empty
     -- between `v` and the chip.
-    have hchipf : spec.edgeChipCount N hN D f = 1 := by rw [hDedge f, if_pos hfE]
+    have hchipf : spec.edgeChipCount N hN D f = 1 := by rw [hDedge f, ite_eq_left hfE]
     obtain ⟨c, hc0, hcN, hDc, hcrest⟩ :=
       spec.exists_chip_offset_side N hN hunit hDeff v hchipf
     have hwv : spec.core.otherEnd f v ≠ v :=
@@ -889,7 +893,7 @@ theorem moves_classified (hunit : spec.IsUnit)
       intro k hck hkN
       have h := spec.propagate_upto_chip N hN hunit hDeff hT f
         (spec.core.incident_otherEnd f v) (hallT _)
-        (by rw [hDcore _, if_neg hwv]) (hchip f) (t := N - c) (by omega) (by omega)
+        (by rw [hDcore _, ite_eq_right hwv]) (hchip f) (t := N - c) (by omega) (by omega)
         hDfar (N - k) (by omega)
       rwa [hswap (N - k) (by omega), show N - (N - k) = k by omega] at h
     have hbelow : ∀ k, 0 < k → k < c → spec.sidePoint N hN f v k ∉ T := by
@@ -967,7 +971,7 @@ theorem moves_classified (hunit : spec.IsUnit)
       have hwv : spec.core.otherEnd f v ≠ v :=
         spec.core.otherEnd_ne hfinc (spec.core_loopless f)
       have h := spec.propagate_chipless N hN hunit hT f
-        (spec.core.incident_otherEnd f v) hwT (by rw [hDcore _, if_neg hwv])
+        (spec.core.incident_otherEnd f v) hwT (by rw [hDcore _, ite_eq_right hwv])
         (hfree f hfE) (N - 1) (by omega)
       rw [spec.sidePoint_swap N hN hfinc (spec.core.incident_otherEnd f v)
           (Ne.symm hwv) (show N - 1 ≤ N by omega),
@@ -1020,7 +1024,7 @@ theorem bridgeSet_forced (hunit : spec.IsUnit)
   have hfree : ∀ g : Fin p, g ∉ E →
       ∀ j ∈ Finset.Ioo 0 N, D (spec.slotPoint N hN g j) = 0 := fun g hg =>
     spec.slotPoint_eq_zero_of_edgeChipCount_zero N hN hunit hDeff
-      (by rw [hDedge g, if_neg hg])
+      (by rw [hDedge g, ite_eq_right hg])
   have hvW : v ∈ W := hW.1
   have hvT : (spec.scale N hN).coreVertex v ∈ T := (hTcore v).mpr hvW
   -- `T` is non-empty and proper, so `pivot` applies.
@@ -1076,14 +1080,14 @@ theorem bridgeSet_forced (hunit : spec.IsUnit)
         exact hfar (by rw [← hgf']; exact hw)
       have hfill := spec.fill_slot_at_pivot N hN hunit hDeff hT g hvinc hvT
         (hentered g hvinc hgf) ((hTcore _).mpr hw)
-        (by rw [hDcore _, if_neg hwv]) (hchip g)
+        (by rw [hDcore _, ite_eq_right hwv]) (hchip g)
         (spec.sideOffset N g v k) (spec.sideOffset_le N g v hk)
       rwa [← spec.slotPoint_eq_sidePoint N hN g v hk] at hfill
     · have htv : spec.core.tail g ≠ v := fun h => hvinc (Or.inl h)
       have hhv : spec.core.head g ≠ v := fun h => hvinc (Or.inr h)
       exact spec.propagate_both_ends N hN hunit hDeff hT g ((hTcore _).mpr htW)
-        (by rw [hDcore _, if_neg htv]) ((hTcore _).mpr hhW)
-        (by rw [hDcore _, if_neg hhv]) (hchip g) hk
+        (by rw [hDcore _, ite_eq_right htv]) ((hTcore _).mpr hhW)
+        (by rw [hDcore _, ite_eq_right hhv]) (hchip g) hk
   -- **Slots outside `W`** are untouched (`slotInterior_disjoint_of_chip_le_one`).
   have houtside : ∀ g : Fin p, spec.core.tail g ∉ W → spec.core.head g ∉ W →
       ∀ i, 0 < i → i < N → spec.slotPoint N hN g i ∉ T := fun g htW hhW i hi0 hiN =>
@@ -1104,7 +1108,7 @@ theorem bridgeSet_forced (hunit : spec.IsUnit)
         k ≤ spec.offsetFromSide N hN D W e) := by
     intro e he k hk
     obtain ⟨heE, hecross⟩ := spec.mem_crossing.mp he
-    have hchipe : spec.edgeChipCount N hN D e = 1 := by rw [hDedge e, if_pos heE]
+    have hchipe : spec.edgeChipCount N hN D e = 1 := by rw [hDedge e, ite_eq_left heE]
     set z := spec.nearEndpoint W e with hzdef
     set c := spec.offsetFromSide N hN D W e with hcdef
     have hzW : z ∈ W := spec.nearEndpoint_mem hecross
@@ -1137,7 +1141,7 @@ theorem bridgeSet_forced (hunit : spec.IsUnit)
           rwa [show 1 + (m - 1) = m by omega] at h
       · intro m hm
         exact spec.propagate_upto_chip N hN hunit hDeff hT e hzinc hzT
-          (by rw [hDcore z, if_neg hzv]) (hchip e) hc0 hcN hDc1 m hm
+          (by rw [hDcore z, ite_eq_right hzv]) (hchip e) hc0 hcN hDc1 m hm
     have hdown : ∀ m, c < m → m ≤ N → spec.sidePoint N hN e z m ∉ T := by
       intro m hcm hmN
       by_cases hmeq : m = N
@@ -1155,7 +1159,7 @@ theorem bridgeSet_forced (hunit : spec.IsUnit)
     have hcut : g ∈ spec.crossing E W ∨ g = f := d.cutSub g hcross
     rcases hcut with hgX | hgf
     · have hchipe : spec.edgeChipCount N hN D g = 1 := by
-        rw [hDedge g, if_pos (spec.crossing_subset E W hgX)]
+        rw [hDedge g, ite_eq_left (spec.crossing_subset E W hgX)]
       have hcN : spec.offsetFromSide N hN D W g < N :=
         spec.offsetFromSide_lt N hN hunit hDeff hchipe W
       have hcle : spec.sideOffset N g (spec.nearEndpoint W g) i ≤ N :=

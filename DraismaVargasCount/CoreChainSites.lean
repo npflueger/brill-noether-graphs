@@ -1,5 +1,9 @@
-import DraismaVargasCount.CountSchedule
-import Utilities.CubicGraphs.CoreOfDarts
+module
+
+public import DraismaVargasCount.CountSchedule
+public import Utilities.CubicGraphs.CoreOfDarts
+
+@[expose] public section
 
 /-!
 # The outer half of the count schedule: a chain of sites over a chain of cores

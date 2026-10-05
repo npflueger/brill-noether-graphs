@@ -1,4 +1,8 @@
-import GenusSixExistence.BrillNoetherRank.Tripod.GluingInjective
+module
+
+public import GenusSixExistence.BrillNoetherRank.Tripod.GluingInjective
+
+@[expose] public section
 
 /-!
 # Layouts: the stable paths of a member, cut at marks, as oriented chains
@@ -162,10 +166,10 @@ theorem sum_incident_chain (l : List (OEdge E)) (hl : l.IsChain (Link E V))
       have hne' := hc.2.2.2
       by_cases h1 : c.2.1 = w
       · have h2 : c.2.2 ≠ w := fun h ↦ hne' (h1.trans h.symm)
-        rw [if_pos (key.mpr (Or.inl h1)), if_pos h1, if_neg h2]
+        rw [ite_eq_left (key.mpr (Or.inl h1)), ite_eq_left h1, ite_eq_right h2]
       · by_cases h2 : c.2.2 = w
-        · rw [if_pos (key.mpr (Or.inr h2)), if_neg h1, if_pos h2]
-        · rw [if_neg (fun h ↦ (key.mp h).elim h1 h2), if_neg h1, if_neg h2]
+        · rw [ite_eq_left (key.mpr (Or.inr h2)), ite_eq_right h1, ite_eq_left h2]
+        · rw [ite_eq_right (fun h ↦ (key.mp h).elim h1 h2), ite_eq_right h1, ite_eq_right h2]
     | cons c' l =>
       rw [List.isChain_cons_cons] at hl
       obtain ⟨⟨hlink, hin⟩, hl'⟩ := hl
@@ -174,11 +178,11 @@ theorem sum_incident_chain (l : List (OEdge E)) (hl : l.IsChain (Link E V))
       have ih' := ih hl' (fun c'' h ↦ hg c'' (List.mem_cons_of_mem _ h)) (List.cons_ne_nil _ _)
         (u := c'.2.1) rfl hv
       rw [List.map_cons, List.sum_cons, ih']
-      rw [if_neg (show c'.2.1 ≠ w from hlink ▸ hvw), zero_add]
+      rw [ite_eq_right (show c'.2.1 ≠ w from hlink ▸ hvw), zero_add]
       congr 1
       by_cases h1 : c.2.1 = w
-      · rw [if_pos (key.mpr (Or.inl h1)), if_pos h1]
-      · rw [if_neg (fun h ↦ (key.mp h).elim h1 hvw), if_neg h1]
+      · rw [ite_eq_left (key.mpr (Or.inl h1)), ite_eq_left h1]
+      · rw [ite_eq_right (fun h ↦ (key.mp h).elim h1 hvw), ite_eq_right h1]
 
 /-- **The other edge at an interior vertex** of a chain whose ends are named vertices. -/
 theorem exists_other (l : List (OEdge E)) (hl : l.IsChain (Link E V)) (hg : ∀ c ∈ l, Good E c)
@@ -303,15 +307,15 @@ theorem piece_val (u : E.SourceVertex) (f : E.SourceEdge) :
 theorem pieceT_of_ne {w : S.V} {e : S.edges} (h : e ≠ t) :
     pieceT t w e = subdivOcc S t (some e) := by
   unfold pieceT
-  rw [if_neg (fun h' ↦ h h'.1)]
+  rw [ite_eq_right (fun h' ↦ h h'.1)]
 
 theorem pieceT_fst : pieceT t (t : S.V × S.V).1 t = subdivOcc S t (some t) := by
   unfold pieceT
-  rw [if_neg (fun h' ↦ fst_ne_snd t h'.2.symm)]
+  rw [ite_eq_right (fun h' ↦ fst_ne_snd t h'.2.symm)]
 
 theorem pieceT_snd : pieceT t (t : S.V × S.V).2 t = subdivOcc S t none := by
   unfold pieceT
-  rw [if_pos ⟨rfl, rfl⟩]
+  rw [ite_eq_left ⟨rfl, rfl⟩]
 
 /-- The piece of an edge not over `t` does not depend on the end. -/
 theorem piece_eq_of_ne {f : E.SourceEdge} (h : f.1.1 ≠ t) (u v : E.SourceVertex) :
@@ -399,12 +403,12 @@ theorem refineOE_of {c : OEdge E} (h : c.1.1.1 = t) :
       [(Refine.piece E t c.2.1 c.1, Refine.oldSV E t c.2.1, Refine.freshOf E t c.1 h),
         (Refine.piece E t c.2.2 c.1, Refine.freshOf E t c.1 h, Refine.oldSV E t c.2.2)] := by
   unfold refineOE
-  rw [dif_pos h]
+  rw [dite_eq_left h]
 
 theorem refineOE_of_ne {c : OEdge E} (h : c.1.1.1 ≠ t) :
     refineOE t c = [(Refine.piece E t c.2.1 c.1, Refine.oldSV E t c.2.1, Refine.oldSV E t c.2.2)] := by
   unfold refineOE
-  rw [dif_neg h]
+  rw [dite_eq_right h]
 
 theorem refineOE_ne_nil (c : OEdge E) : refineOE t c ≠ [] := by
   by_cases h : c.1.1.1 = t
@@ -483,13 +487,13 @@ theorem good_refineOE {c : OEdge E} (hc : Good E c) :
         apply Subtype.ext
         rw [piece_val, hct]
         unfold pieceT
-        rw [if_pos ⟨rfl, hw⟩]
+        rw [ite_eq_left ⟨rfl, hw⟩]
         rfl
       · right
         apply Subtype.ext
         rw [piece_val, hct]
         unfold pieceT
-        rw [if_neg (fun h ↦ hw h.2)]
+        rw [ite_eq_right (fun h ↦ hw h.2)]
         rfl
     rw [refineOE_of t hct] at hc'
     simp only [List.mem_cons, List.not_mem_nil, or_false] at hc'
@@ -991,7 +995,7 @@ theorem forward (hE : E.Connected) (L : Layout E C V y) (e : Fin q) {y' : Fin (q
   have hg := L.good e
   set f : OEdge E → ℚ := fun c ↦ srcLen E L.w c.1 with hf
   have htot : (l.map f).sum = y' e.castSucc + y' (Fin.last q) := by
-    rw [hf, L.sum e, hy]; unfold mergeRequest; rw [if_pos rfl]
+    rw [hf, L.sum e, hy]; unfold mergeRequest; rw [ite_eq_left rfl]
   obtain ⟨j, hjm, hlt, hle⟩ := exists_split_index (l.map f)
     (fun a ha ↦ by
       obtain ⟨c, -, rfl⟩ := List.mem_map.mp ha
@@ -1029,9 +1033,9 @@ theorem forward (hE : E.Connected) (L : Layout E C V y) (e : Fin q) {y' : Fin (q
     intro e₀
     simp only [hw', Equiv.symm_apply_apply, Option.elim_some]
   have hw₁ : ∀ e₀, e₀ ≠ t → w' (subdivOcc S t (some e₀)) = L.w e₀ := fun e₀ he ↦ by
-    rw [hw'some, if_neg he]
+    rw [hw'some, ite_eq_right he]
   have hw₂ : w' (subdivOcc S t (some t)) + w' (subdivOcc S t none) = L.w t := by
-    rw [hw'some, if_pos rfl, hw'none]
+    rw [hw'some, ite_eq_left rfl, hw'none]
     split_ifs <;> ring
   have hw'nn : ∀ ε, 0 ≤ w' ε := by
     intro ε
@@ -1051,8 +1055,8 @@ theorem forward (hE : E.Connected) (L : Layout E C V y) (e : Fin q) {y' : Fin (q
       change w' (pieceT t c.2.1.1.1 t) = a
       unfold pieceT
       by_cases hn : N
-      · rw [if_pos ⟨rfl, hn⟩, hw'none, if_pos hn]
-      · rw [if_neg (fun h ↦ hn h.2), hw'some, if_pos rfl, if_neg hn]
+      · rw [ite_eq_left ⟨rfl, hn⟩, hw'none, ite_eq_left hn]
+      · rw [ite_eq_right (fun h ↦ hn h.2), hw'some, ite_eq_left rfl, ite_eq_right hn]
     rw [hpt, ha]
     field_simp
   have hfar : srcLen _ w' (farOE t l[j] htc).1 = f c - o := by
@@ -1085,9 +1089,9 @@ theorem forward (hE : E.Connected) (L : Layout E C V y) (e : Fin q) {y' : Fin (q
   set ch : Fin (q + 1) → List (OEdge (refineDatum E t)) := fun i' ↦
     Fin.lastCases Rt (fun i ↦ if i = e then Lf else refineChain t (L.chain i)) i' with hch
   have hch_last : ch (Fin.last q) = Rt := by simp only [hch, Fin.lastCases_last]
-  have hch_e : ch e.castSucc = Lf := by simp only [hch, Fin.lastCases_castSucc, if_true]
+  have hch_e : ch e.castSucc = Lf := by simp only [hch, Fin.lastCases_castSucc, ite_true]
   have hch_ne : ∀ i, i ≠ e → ch i.castSucc = refineChain t (L.chain i) := fun i hi ↦ by
-    simp only [hch, Fin.lastCases_castSucc, if_neg hi]
+    simp only [hch, Fin.lastCases_castSucc, ite_eq_right hi]
   have hRt_ne : Rt ≠ [] := List.cons_ne_nil _ _
   have hLf_ne : Lf ≠ [] := leftPart_ne_nil t hj htc
   have hne : ∀ i', ch i' ≠ [] := by
@@ -1139,15 +1143,15 @@ theorem forward (hE : E.Connected) (L : Layout E C V y) (e : Fin q) {y' : Fin (q
           rw [hsplit, List.map_append]; exact List.mem_append_right _ hz
         have hzl := (hK1 z).mp hz'
         have hnot : z.1 ∉ Lf.map Prod.fst := fun h ↦ List.disjoint_of_nodup_append hnodup h hz
-        simp only [hlab', if_pos hzl, if_neg hnot]
+        simp only [hlab', ite_eq_left hzl, ite_eq_right hnot]
       · intro hz
         have hzl : L.lab (Refine.parentND E t hE z) = e := by
           by_contra hne'
-          simp only [hlab', if_neg hne'] at hz
+          simp only [hlab', ite_eq_right hne'] at hz
           exact absurd hz (Fin.castSucc_lt_last _).ne
         have hnot : z.1 ∉ Lf.map Prod.fst := by
           intro hin
-          simp only [hlab', if_pos hzl, if_pos hin] at hz
+          simp only [hlab', ite_eq_left hzl, ite_eq_left hin] at hz
           exact absurd hz (Fin.castSucc_lt_last _).ne
         have hz' := (hK1 z).mpr hzl
         rw [hsplit, List.map_append] at hz'
@@ -1159,31 +1163,31 @@ theorem forward (hE : E.Connected) (L : Layout E C V y) (e : Fin q) {y' : Fin (q
         · intro hz
           have hz' : z.1 ∈ (refineChain t l).map Prod.fst := by
             rw [hsplit, List.map_append]; exact List.mem_append_left _ hz
-          simp only [hlab', if_pos ((hK1 z).mp hz')]
+          simp only [hlab', ite_eq_left ((hK1 z).mp hz')]
           split_ifs with h'
           · rfl
           · exact absurd hz h'
         · intro hz
           by_cases hzl : L.lab (Refine.parentND E t hE z) = e
           · by_contra hnot
-            simp only [hlab', if_pos hzl] at hz
+            simp only [hlab', ite_eq_left hzl] at hz
             split_ifs at hz with h'
             · exact hnot h'
             · exact absurd hz.symm (Fin.castSucc_lt_last _).ne
-          · simp only [hlab', if_neg hzl] at hz
+          · simp only [hlab', ite_eq_right hzl] at hz
             exact absurd (Fin.castSucc_injective _ hz) hzl
       · rw [hch_ne i hie, hK3]
         constructor
         · intro hz
-          simp only [hlab', if_neg (hz ▸ hie : L.lab (Refine.parentND E t hE z) ≠ e), hz]
+          simp only [hlab', ite_eq_right (hz ▸ hie : L.lab (Refine.parentND E t hE z) ≠ e), hz]
         · intro hz
           by_cases hzl : L.lab (Refine.parentND E t hE z) = e
           · exfalso
-            simp only [hlab', if_pos hzl] at hz
+            simp only [hlab', ite_eq_left hzl] at hz
             split_ifs at hz with h'
             · exact hie (Fin.castSucc_injective _ hz).symm
             · exact absurd hz.symm (Fin.castSucc_lt_last _).ne
-          · simp only [hlab', if_neg hzl] at hz
+          · simp only [hlab', ite_eq_right hzl] at hz
             exact Fin.castSucc_injective _ hz
   · -- nodup
     intro i'
@@ -1231,10 +1235,10 @@ theorem forward (hE : E.Connected) (L : Layout E C V y) (e : Fin q) {y' : Fin (q
       by_cases hie : i = e
       · subst hie
         rw [getLast_congr' hch_e _ hLf_ne, last_leftPart t hj htc, subdivide_head_castSucc,
-          if_pos rfl, newV_last]
+          ite_eq_left rfl, newV_last]
         rfl
       · rw [getLast_congr' (hch_ne i hie) _ (refineChain_ne_nil t (L.ne_nil i)),
-          last_refineChain t (L.ne_nil i), L.last i, subdivide_head_castSucc, if_neg hie,
+          last_refineChain t (L.ne_nil i), L.last i, subdivide_head_castSucc, ite_eq_right hie,
           newV_castSucc]
   · -- the lengths
     intro i'
@@ -1259,7 +1263,7 @@ theorem forward (hE : E.Connected) (L : Layout E C V y) (e : Fin q) {y' : Fin (q
         ring
       · rw [hch_ne i hie, sum_refineChain t hw₁ hw₂ (L.good i), L.sum i, hy]
         unfold mergeRequest
-        rw [if_neg hie]
+        rw [ite_eq_right hie]
   · -- the merge
     intro z
     simp only [hlab']
@@ -1355,8 +1359,8 @@ theorem lab_markEdge : L.lab x = e := by
   have hinc := R.inc (Fin.last m) e.castSucc
   have hci : coreIncidence (subdivide C e) (Fin.last m) e.castSucc = 1 := by
     unfold coreIncidence
-    rw [subdivide_tail_castSucc, subdivide_head_castSucc, if_pos rfl,
-      if_neg (Fin.castSucc_lt_last _).ne, if_pos rfl]
+    rw [subdivide_tail_castSucc, subdivide_head_castSucc, ite_eq_left rfl,
+      ite_eq_right (Fin.castSucc_lt_last _).ne, ite_eq_left rfl]
   rw [hci] at hinc
   obtain ⟨z, hz⟩ := Finset.card_pos.mp (by rw [hinc]; norm_num)
   obtain ⟨hzi, hzl⟩ := (Finset.mem_filter.mp hz).2
@@ -1438,8 +1442,8 @@ theorem analyze {j : ℕ} (hj : j < (L.chain e).length)
       have hinc := R.inc (C.tail e).castSucc (Fin.last q)
       have hci : coreIncidence (subdivide C e) (C.tail e).castSucc (Fin.last q) = 0 := by
         unfold coreIncidence
-        rw [subdivide_tail_last, subdivide_head_last, if_neg (Fin.castSucc_lt_last _).ne',
-          if_neg (fun h ↦ hloop (Fin.castSucc_injective _ h).symm)]
+        rw [subdivide_tail_last, subdivide_head_last, ite_eq_right (Fin.castSucc_lt_last _).ne',
+          ite_eq_right (fun h ↦ hloop (Fin.castSucc_injective _ h).symm)]
       rw [hci, Finset.card_eq_zero, Finset.filter_eq_empty_iff] at hinc
       refine hinc (Finset.mem_univ ⟨(Lf.head hLf_ne).1, hc₀.1⟩) ⟨?_, h⟩
       rw [newV_castSucc, ← L.head e]
@@ -1478,7 +1482,7 @@ theorem analyze {j : ℕ} (hj : j < (L.chain e).length)
             rw [show (⟨c.1, (hgRt c hc).1⟩ : NonDanglingEdge _) = z from Subtype.ext hcz] at this
             exact absurd (hz.symm.trans this) (Fin.castSucc_lt_last _).ne'
         have hlen := R.len (Fin.last q)
-        rw [Finset.sum_eq_zero fun z _ ↦ if_neg (hempty z)] at hlen
+        rw [Finset.sum_eq_zero fun z _ ↦ ite_eq_right (hempty z)] at hlen
         linarith
       · exact h
     intro z hz
@@ -1505,8 +1509,8 @@ theorem analyze {j : ℕ} (hj : j < (L.chain e).length)
     rw [← sum_mem_list Lf hgLf hnodup.of_append_left]
     exact Finset.sum_congr rfl fun z _ ↦ by
       by_cases hz : R.lab z = e.castSucc
-      · rw [if_pos hz, if_pos ((hclass z).mp hz)]
-      · rw [if_neg hz, if_neg (fun h ↦ hz ((hclass z).mpr h))]
+      · rw [ite_eq_left hz, ite_eq_left ((hclass z).mp hz)]
+      · rw [ite_eq_right hz, ite_eq_right (fun h ↦ hz ((hclass z).mpr h))]
   rw [hsum, sum_leftPart t hw₁ hw₂ hg hj htc] at hlen
   linarith
 
@@ -1645,9 +1649,9 @@ theorem unique_data (x : NonDanglingEdge E)
       have hsn : subdivOcc S t (some t) ≠ subdivOcc S t none := fun h ↦
         absurd ((subdivOcc S t).injective h) (by simp)
       rcases hu with hu | hu
-      · rw [hu, pieceT_fst, if_pos rfl, if_neg hsn]
+      · rw [hu, pieceT_fst, ite_eq_left rfl, ite_eq_right hsn]
         exact ⟨rfl, by linarith⟩
-      · rw [hu, pieceT_snd, if_neg hsn.symm, if_pos rfl]
+      · rw [hu, pieceT_snd, ite_eq_right hsn.symm, ite_eq_left rfl]
         exact ⟨by linarith, rfl⟩
     cases o with
     | none =>
@@ -1689,22 +1693,22 @@ theorem sum_coreIncidence_subdivide (C : Core m q) (e : Fin q) (a : Fin m) (i : 
   classical
   rw [Fin.sum_univ_castSucc]
   simp only [mergeOne_castSucc, mergeOne_last]
-  rw [Finset.sum_ite_eq' Finset.univ i, if_pos (Finset.mem_univ _)]
+  rw [Finset.sum_ite_eq' Finset.univ i, ite_eq_left (Finset.mem_univ _)]
   unfold coreIncidence
   simp only [subdivide_tail_castSucc, subdivide_head_castSucc, subdivide_tail_last,
-    subdivide_head_last, Fin.castSucc_inj, if_neg (Fin.castSucc_lt_last a).ne']
+    subdivide_head_last, Fin.castSucc_inj, ite_eq_right (Fin.castSucc_lt_last a).ne']
   by_cases hie : i = e
   · subst hie
-    simp only [if_true, if_neg (Fin.castSucc_lt_last a).ne']
+    simp only [ite_true, ite_eq_right (Fin.castSucc_lt_last a).ne']
     ring
-  · rw [if_neg hie, if_neg (Ne.symm hie)]
+  · rw [ite_eq_right hie, ite_eq_right (Ne.symm hie)]
     simp
 
 theorem coreIncidence_subdivide_last (C : Core m q) (e : Fin q) (i : Fin q) (hi : i ≠ e) :
     coreIncidence (subdivide C e) (Fin.last m) i.castSucc = 0 := by
   unfold coreIncidence
-  rw [subdivide_tail_castSucc, subdivide_head_castSucc, if_neg hi,
-    if_neg (Fin.castSucc_lt_last _).ne, if_neg (Fin.castSucc_lt_last _).ne]
+  rw [subdivide_tail_castSucc, subdivide_head_castSucc, ite_eq_right hi,
+    ite_eq_right (Fin.castSucc_lt_last _).ne, ite_eq_right (Fin.castSucc_lt_last _).ne]
 
 variable (hE : E.Connected) (e : Fin q) (x : NonDanglingEdge E) {y' : Fin (q + 1) → ℚ}
 
@@ -1722,7 +1726,7 @@ theorem fibre_parentND (x' : NonDanglingEdge E) :
   · rintro rfl
     rcases Refine.eq_someHalfND_or_noneHalfND E x.1.1.1 hE z with h | ⟨ht, h⟩
     · split_ifs <;> simp [← h]
-    · rw [if_pos ht]; simp [← h]
+    · rw [ite_eq_left ht]; simp [← h]
   · intro hz
     split_ifs at hz with ht
     · simp only [Finset.mem_insert, Finset.mem_singleton] at hz
@@ -1854,19 +1858,19 @@ theorem merge (R : LabelData (refineDatum E x.1.1.1) (subdivide C e) (newV V x) 
       rw [← Finset.sum_filter, fibre_parentND hE x x']
       have hidx := sourceEdgeIndex_pos' (E := E) x'.1
       by_cases hx' : x'.1.1.1 = x.1.1.1
-      · rw [if_pos hx', Finset.sum_pair (Refine.someHalfND_ne_noneHalfND E x.1.1.1 hE hx')]
+      · rw [ite_eq_left hx', Finset.sum_pair (Refine.someHalfND_ne_noneHalfND E x.1.1.1 hE hx')]
         unfold srcLen
         rw [Refine.sourceEdgeIndex_someHalfND, Refine.sourceEdgeIndex_noneHalfND E x.1.1.1 hE hx',
           Refine.noneHalfND_val E x.1.1.1 hE hx', ← add_div]
         congr 1
         show w₀ x'.1.1.1 = R.w (subdivOcc S x.1.1.1 (some x'.1.1.1)) + R.w (subdivOcc S x.1.1.1 none)
-        simp only [hw₀, if_pos hx']
-      · rw [if_neg hx', Finset.sum_singleton]
+        simp only [hw₀, ite_eq_left hx']
+      · rw [ite_eq_right hx', Finset.sum_singleton]
         unfold srcLen
         rw [Refine.sourceEdgeIndex_someHalfND]
         congr 1
         show w₀ x'.1.1.1 = R.w (subdivOcc S x.1.1.1 (some x'.1.1.1))
-        simp only [hw₀, if_neg hx', add_zero]
+        simp only [hw₀, ite_eq_right hx', add_zero]
     have h1 : (∑ x' : NonDanglingEdge E, if lab₀ x' = i then srcLen E w₀ x'.1 else 0) =
         ∑ z : NonDanglingEdge (refineDatum E x.1.1.1),
           if mergeOne e (R.lab z) = i then srcLen _ R.w z.1 else 0 := by
@@ -1879,12 +1883,12 @@ theorem merge (R : LabelData (refineDatum E x.1.1.1) (subdivide C e) (newV V x) 
     simp only [h2]
     rw [Fin.sum_univ_castSucc]
     simp only [mergeOne_castSucc, mergeOne_last]
-    rw [Finset.sum_ite_eq' Finset.univ i, if_pos (Finset.mem_univ _)]
+    rw [Finset.sum_ite_eq' Finset.univ i, ite_eq_left (Finset.mem_univ _)]
     unfold mergeRequest
     by_cases hie : i = e
-    · rw [if_pos hie, if_pos hie.symm]
-    · rw [if_neg hie, if_neg (Ne.symm hie), add_zero]
-  · simp only [hw₀, if_neg he, add_zero]
+    · rw [ite_eq_left hie, ite_eq_left hie.symm]
+    · rw [ite_eq_right hie, ite_eq_right (Ne.symm hie), add_zero]
+  · simp only [hw₀, ite_eq_right he, add_zero]
   · simp [hw₀]
 
 end Merge

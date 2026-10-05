@@ -1,5 +1,9 @@
-import DraismaVargas.Infrastructure.FlattenIndex
-import DraismaVargas.LocalCases.RetainedCut
+module
+
+public import DraismaVargas.Infrastructure.FlattenIndex
+public import DraismaVargas.LocalCases.RetainedCut
+
+@[expose] public section
 
 /-!
 # The two readings of a retained row: prescribed segments and marker pieces

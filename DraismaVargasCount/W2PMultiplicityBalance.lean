@@ -1,5 +1,9 @@
-import DraismaVargasCount.W2PIncomingDenominator
-import DraismaVargas.LocalCases.W2PArbitraryExit
+module
+
+public import DraismaVargasCount.W2PIncomingDenominator
+public import DraismaVargas.LocalCases.W2PArbitraryExit
+
+@[expose] public section
 
 /-!
 # Equation (9): signed multiplicity balance for the actual W2P family
@@ -167,11 +171,11 @@ theorem denominatorProduct_eq_factor (position : Fin 3)
           rw [hSharp])
         (by change Nat.Coprime _ (incomingRowDenominator data _); rw [hSharp];
             exact factor_coprime profile shape position)
-    · simp only [if_neg hPath, add_zero, one_mul]
+    · simp only [ite_eq_right hPath, add_zero, one_mul]
       exact lcm_den_eq_right (den_dvd_incomingRowDenominator _ _)
   rw [Finset.prod_congr rfl fun path _ ↦ hTerm path, Finset.prod_mul_distrib,
     Finset.prod_ite_eq' Finset.univ (affectedRow profile position) (fun _ ↦ factor profile position),
-    if_pos (Finset.mem_univ _)]
+    ite_eq_left (Finset.mem_univ _)]
   rfl
 
 end Denominators

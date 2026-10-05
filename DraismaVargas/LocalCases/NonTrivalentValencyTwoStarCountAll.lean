@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoStarCount
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoTracksLeaf
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoStarCount
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoTracksLeaf
+
+@[expose] public section
 
 /-!
 # The valency-two Base II star count at all three incoming sub-cases
@@ -774,7 +778,7 @@ theorem incidence_inr_false_retained (E : VanishingEnds m wd anchorBlk)
       (NonTrivalentValencyTwoTracks.wallValid m wd) hOrd r₀ h.symm
   rw [hRHS, NonTrivalentValencyThreeStarCount.filter_moved_base m wd first second hStar,
     Finset.filter_insert,
-    if_neg (Ne.symm (NonTrivalentValencyThreeStarCount.labelling_row_incomingRow_ne_base m wd r₀)),
+    ite_eq_right (Ne.symm (NonTrivalentValencyThreeStarCount.labelling_row_incomingRow_ne_base m wd r₀)),
     NonTrivalentValencyThreeStarCount.card_filter_pair _ _
       (NonTrivalentValencyThreeStarCount.dart_ne m wd first second hStar)]
   show incidenceCount (Prescribed.validCandidate sel).datum
@@ -784,7 +788,7 @@ theorem incidence_inr_false_retained (E : VanishingEnds m wd anchorBlk)
       (NonTrivalentValencyTwoTracks.wallValid m wd) r₀) = _
   unfold incidenceCount
   rw [NonTrivalentValencyTwoStarCount.incidentEdges_endpointVertex_false m wd src sel,
-    Finset.filter_insert, if_neg hBridgeRow,
+    Finset.filter_insert, ite_eq_right hBridgeRow,
     NonTrivalentValencyThreeStarCount.card_filter_pair _ _
       (NonTrivalentValencyTwoStarCount.mergedRetained_ne m wd sel)]
   have hcond : ∀ side : Bool,
@@ -836,7 +840,7 @@ theorem incidence_inr_false_bridge (E : VanishingEnds m wd anchorBlk)
   have hR : ((Finset.univ.filter fun d : D ↦ graph.vert (m.perm d) = graph.vert m.base).filter
       fun d ↦ label d = label m.base).card = 1 := by
     rw [NonTrivalentValencyThreeStarCount.filter_moved_base m wd first second hStar,
-      Finset.filter_insert, if_pos rfl, hEmptyD]
+      Finset.filter_insert, ite_eq_left rfl, hEmptyD]
     simp
   rw [hRHS, hR]
   show incidenceCount (Prescribed.validCandidate sel).datum
@@ -863,7 +867,7 @@ theorem incidence_inr_false_bridge (E : VanishingEnds m wd anchorBlk)
   unfold incidenceCount
   rw [NonTrivalentValencyTwoStarCount.incidentEdges_endpointVertex_false m wd src sel,
     Finset.filter_insert,
-    if_pos (NonTrivalentValencyTwoStarCount.stablePath_bridgeND m wd src sel), hEmptyC]
+    ite_eq_left (NonTrivalentValencyTwoStarCount.stablePath_bridgeND m wd src sel), hEmptyC]
   simp
 
 include hOrd in

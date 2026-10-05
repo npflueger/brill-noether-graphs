@@ -1,4 +1,8 @@
-import DraismaVargasCount.Assembly
+module
+
+public import DraismaVargasCount.Assembly
+
+@[expose] public section
 
 /-!
 # Highlights: the genus-six odd-subdivision witness

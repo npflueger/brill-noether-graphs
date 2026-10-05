@@ -1,6 +1,10 @@
-import DraismaVargas.LocalCases.W2RankObstructions
-import DraismaVargas.LocalCases.W2R2Nd2PColumns
-import Mathlib.LinearAlgebra.Matrix.ToLin
+module
+
+public import DraismaVargas.LocalCases.W2RankObstructions
+public import DraismaVargas.LocalCases.W2R2Nd2PColumns
+public import Mathlib.LinearAlgebra.Matrix.ToLin
+
+@[expose] public section
 
 /-!
 # The distinguished nd2 cofactor vanishes in the actual incoming matrix

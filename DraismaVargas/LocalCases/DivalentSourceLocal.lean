@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W3R1SourceProfile
-import DraismaVargas.LocalCases.FullDimensionalSource
+module
+
+public import DraismaVargas.LocalCases.W3R1SourceProfile
+public import DraismaVargas.LocalCases.FullDimensionalSource
+
+@[expose] public section
 
 /-!
 # Local index and no-return formulas at a divalent surviving source vertex

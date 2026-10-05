@@ -1,7 +1,11 @@
-import DraismaVargas.LocalCases.BlockPreservingBranchSwap
-import DraismaVargas.LocalCases.GlobalM11Arbitrary
-import DraismaVargas.LocalCases.NonTrivalentWallSetup
-import DraismaVargas.LocalCases.SheetRelabelStable
+module
+
+public import DraismaVargas.LocalCases.BlockPreservingBranchSwap
+public import DraismaVargas.LocalCases.GlobalM11Arbitrary
+public import DraismaVargas.LocalCases.NonTrivalentWallSetup
+public import DraismaVargas.LocalCases.SheetRelabelStable
+
+@[expose] public section
 
 /-!
 # Part II, valency four: source classifier for the K = 0 construction
@@ -454,14 +458,14 @@ end Gauge
 
 /-! ## The literal fine endpoint partition -/
 
-private def selectedBlockRepr (coarse : SheetPartition degree)
+def selectedBlockRepr (coarse : SheetPartition degree)
     (anchor representative : Fin degree) (selected : Finset (Fin degree))
     (sheet : Fin degree) : Fin degree :=
   if sheet ∈ selected then representative
   else if coarse.Rel anchor sheet then sheet
   else coarse.repr sheet
 
-private theorem selectedBlockRepr_idem (coarse : SheetPartition degree)
+theorem selectedBlockRepr_idem (coarse : SheetPartition degree)
     (anchor representative : Fin degree) (selected : Finset (Fin degree))
     (hRepresentative : representative ∈ selected)
     (hSelected : selected ⊆ coarse.block anchor) (sheet : Fin degree) :
@@ -473,7 +477,7 @@ private theorem selectedBlockRepr_idem (coarse : SheetPartition degree)
   by_cases hWall : coarse.Rel anchor sheet
   · have hValue :
         selectedBlockRepr coarse anchor representative selected sheet = sheet := by
-      rw [selectedBlockRepr, if_neg hSheet, if_pos hWall]
+      rw [selectedBlockRepr, ite_eq_right hSheet, ite_eq_left hWall]
     rw [hValue]
     exact hValue
   · have hReprWall : ¬coarse.Rel anchor (coarse.repr sheet) := by
@@ -486,9 +490,9 @@ private theorem selectedBlockRepr_idem (coarse : SheetPartition degree)
       exact hReprWall ((coarse.mem_block_iff anchor _).mp (hSelected h))
     have hValue : selectedBlockRepr coarse anchor representative selected sheet =
         coarse.repr sheet := by
-      rw [selectedBlockRepr, if_neg hSheet, if_neg hWall]
+      rw [selectedBlockRepr, ite_eq_right hSheet, ite_eq_right hWall]
     rw [hValue]
-    rw [selectedBlockRepr, if_neg hReprSelected, if_neg hReprWall,
+    rw [selectedBlockRepr, ite_eq_right hReprSelected, ite_eq_right hReprWall,
       coarse.repr_idem]
 
 /-- Refine one coarse block to a prescribed nonempty sub-block, leaving the
@@ -519,7 +523,7 @@ theorem repr_of_not_mem_of_rel {sheet : Fin degree} (hSheet : sheet ∉ selected
     (withSelectedBlock coarse anchor representative selected hRepresentative
       hSelected).repr sheet = sheet := by
   change selectedBlockRepr coarse anchor representative selected sheet = sheet
-  rw [selectedBlockRepr, if_neg hSheet, if_pos hWall]
+  rw [selectedBlockRepr, ite_eq_right hSheet, ite_eq_left hWall]
 
 theorem repr_of_not_rel {sheet : Fin degree} (hWall : ¬coarse.Rel anchor sheet) :
     (withSelectedBlock coarse anchor representative selected hRepresentative
@@ -528,7 +532,7 @@ theorem repr_of_not_rel {sheet : Fin degree} (hWall : ¬coarse.Rel anchor sheet)
     intro h
     exact hWall ((coarse.mem_block_iff anchor _).mp (hSelected h))
   change selectedBlockRepr coarse anchor representative selected sheet = coarse.repr sheet
-  rw [selectedBlockRepr, if_neg hSheet, if_neg hWall]
+  rw [selectedBlockRepr, ite_eq_right hSheet, ite_eq_right hWall]
 
 theorem repr_rel (sheet : Fin degree) :
     coarse.Rel
@@ -1487,10 +1491,10 @@ theorem selected_exterior
   unfold endpointForSide
   by_cases hSmall : W4TargetPairings.Pairing.labelRight pairing label =
       smallerSide source pairing
-  · rw [if_pos hSmall]
+  · rw [ite_eq_left hSmall]
     exact gauged_edgePartition_refines_fine_of_small source pairing hNoGlue
       hRamification hConnected hGenus label hSmall
-  · rw [if_neg hSmall]
+  · rw [ite_eq_right hSmall]
     exact star.edgePartition_refines_wall
       (gaugedData source pairing hNoGlue hRamification) label
 
@@ -1523,7 +1527,7 @@ theorem selected_riemannHurwitzAtBlock_side
   rw [W4Assembly.sum_oldEdgesAtSide_eq_sideSum]
   simp only [Function.comp_apply]
   by_cases hSide : sideValue = smallerSide source pairing
-  · rw [endpointForSide, if_pos hSide]
+  · rw [endpointForSide, ite_eq_left hSide]
     rw [hSide]
     rcases finePartition_rel_or_singleton source pairing hNoGlue hRamification
       sheet hWall with hFine | hSingleton
@@ -1569,7 +1573,7 @@ theorem selected_riemannHurwitzAtBlock_side
   · have hOther : sideValue = !(smallerSide source pairing) := by
       cases hValue : sideValue <;>
         cases hSmall : smallerSide source pairing <;> simp_all
-    rw [endpointForSide, if_neg hSide,
+    rw [endpointForSide, ite_eq_right hSide,
       gaugedData_vertexPartition_wall source pairing hNoGlue hRamification]
     have hFineCount := fine_blockCount_wall_add_selectedCard_of_rel
       source pairing hNoGlue hRamification sheet hWall
@@ -1969,9 +1973,9 @@ theorem endpointForSide_blockCard_add_one (sideValue : Bool) :
         sideIndex source pairing (smallerSide source pairing)
       else (data.vertexPartition wall).blockCard anchor.1 + 1 := by
   by_cases hSide : sideValue = smallerSide source pairing
-  · rw [endpointForSide, if_pos hSide, if_pos hSide]
+  · rw [endpointForSide, ite_eq_left hSide, ite_eq_left hSide]
     exact finePartition_selected_card source pairing hNoGlue hRamification
-  · rw [endpointForSide, if_neg hSide, if_neg hSide,
+  · rw [endpointForSide, ite_eq_right hSide, ite_eq_right hSide,
       gaugedData_vertexPartition_wall source pairing hNoGlue hRamification]
     have hRel := source.sheet_wall_rel (firstSelectedLabel source pairing)
     change (data.vertexPartition wall).blockCard

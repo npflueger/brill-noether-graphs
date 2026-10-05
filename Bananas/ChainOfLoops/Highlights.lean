@@ -1,4 +1,8 @@
-import Bananas.ChainOfLoops.CDPR
+module
+
+public import Bananas.ChainOfLoops.CDPR
+
+@[expose] public section
 
 /-!
 # Highlights of the chain-of-loops application

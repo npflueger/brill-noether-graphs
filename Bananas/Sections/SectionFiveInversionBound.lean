@@ -1,6 +1,10 @@
-import Bananas.Sections.SectionFiveDefinitions
-import Bananas.Theta.ThetaNonrecurrence
-import Bananas.Transmission.KGeneralSwap
+module
+
+public import Bananas.Sections.SectionFiveDefinitions
+public import Bananas.Theta.ThetaNonrecurrence
+public import Bananas.Transmission.KGeneralSwap
+
+@[expose] public section
 
 /-!
 # The inversion count in Section 5

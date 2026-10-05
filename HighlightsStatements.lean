@@ -1,4 +1,8 @@
-import Mathlib
+module
+
+public import Mathlib
+
+@[expose] public section
 
 /-!
 # Highlights (statement-only audit copy)
@@ -81,12 +85,8 @@ def effective {G : CFGraph} (D : CFDiv G) : Prop :=
 /-- The additive monoid of effective divisors. -/
 def Eff (G : CFGraph) : AddSubmonoid (CFDiv G) :=
   { carrier := {D : CFDiv G | effective D}
-    zero_mem' := by
-      simp only [effective, ge_iff_le, Set.mem_ofPred_eq, Pi.zero_apply,
-        Std.le_refl, implies_true]
-    add_mem' := by
-      intro D₁ D₂ h₁ h₂ v
-      exact add_nonneg (h₁ v) (h₂ v) }
+    zero_mem' := fun _ => le_refl 0
+    add_mem' := fun {_D₁ _D₂} h₁ h₂ v => add_nonneg (h₁ v) (h₂ v) }
 
 /-- A divisor is winnable when it is linearly equivalent to an effective
 divisor. -/
@@ -184,10 +184,9 @@ def bridge_glue (G₁ G₂ : TwiceMarkedGraph) : TwiceMarkedGraph where
             (Sum.inr e.1, Sum.inr e.2)))
       loopless := by
         intro z hz
-        simp only [Multiset.mem_cons, Multiset.mem_add] at hz
-        rcases hz with hBridge | hFactor
+        rcases Multiset.mem_cons.mp hz with hBridge | hFactor
         · cases z <;> simp at hBridge
-        · rcases hFactor with hLeft | hRight
+        · rcases Multiset.mem_add.mp hFactor with hLeft | hRight
           · rw [Multiset.mem_map] at hLeft
             obtain ⟨e, he, hEq⟩ := hLeft
             rcases e with ⟨a, b⟩
@@ -233,9 +232,8 @@ def twiceMarkedCycleStepLeft (m n : ℕ) (step : TwiceMarkedCycleStep m n) :
   if hzero : step.2.val = 0 then
     Sum.inl 0
   else
-    Sum.inr ⟨step.1, ⟨step.2.val - 1, by
-      have hlt := step.2.isLt
-      omega⟩⟩
+    Sum.inr ⟨step.1, ⟨step.2.val - 1,
+      Nat.sub_lt_sub_right (Nat.pos_of_ne_zero hzero) step.2.isLt⟩⟩
 
 /-- Right endpoint of a unit step along a cycle arc. -/
 def twiceMarkedCycleStepRight (m n : ℕ) (step : TwiceMarkedCycleStep m n) :
@@ -243,9 +241,8 @@ def twiceMarkedCycleStepRight (m n : ℕ) (step : TwiceMarkedCycleStep m n) :
   if hlast : step.2.val + 1 = twiceMarkedCycleLength m n step.1 then
     Sum.inl 1
   else
-    Sum.inr ⟨step.1, ⟨step.2.val, by
-      have hlt := step.2.isLt
-      omega⟩⟩
+    Sum.inr ⟨step.1, ⟨step.2.val, Nat.lt_sub_of_add_lt
+      (lt_of_le_of_ne (Nat.succ_le_of_lt step.2.isLt) hlast)⟩⟩
 
 /-- A cycle marked at the endpoints of two complementary arcs of lengths
 `m` and `n`.  If either length is zero, the value is the documented junk
@@ -260,9 +257,7 @@ def twice_marked_cycle (m n : ℕ) : TwiceMarkedGraph :=
                 twiceMarkedCycleStepRight m n step))
           loopless := by
             intro vertex hmem
-            simp only [Multiset.mem_map, Finset.mem_val, Finset.mem_univ,
-              true_and] at hmem
-            obtain ⟨step, hpair⟩ := hmem
+            obtain ⟨step, _, hpair⟩ := Multiset.mem_map.mp hmem
             have hne : twiceMarkedCycleStepLeft m n step ≠
                 twiceMarkedCycleStepRight m n step := by
               unfold twiceMarkedCycleStepLeft twiceMarkedCycleStepRight
@@ -273,7 +268,8 @@ def twice_marked_cycle (m n : ℕ) : TwiceMarkedGraph :=
               · intro heq
                 have hpositions : step.2.val - 1 = step.2.val := by
                   exact congrArg (fun x => x.2.val) (Sum.inr.inj heq)
-                omega
+                exact (Nat.ne_of_lt (Nat.sub_lt (Nat.pos_of_ne_zero hzero)
+                  Nat.zero_lt_one)) hpositions
             exact hne ((Prod.mk.inj hpair).1.trans (Prod.mk.inj hpair).2.symm) }
       u := Sum.inl 0
       v := Sum.inl 1 }
@@ -321,9 +317,8 @@ def thetaStepLeft (a b c : ℕ) (step : ThetaStep a b c) :
   if hzero : step.2.val = 0 then
     Sum.inl 0
   else
-    Sum.inr ⟨step.1, ⟨step.2.val - 1, by
-      have hlt := step.2.isLt
-      omega⟩⟩
+    Sum.inr ⟨step.1, ⟨step.2.val - 1,
+      Nat.sub_lt_sub_right (Nat.pos_of_ne_zero hzero) step.2.isLt⟩⟩
 
 /-- Right endpoint of one unit step along a theta strand. -/
 def thetaStepRight (a b c : ℕ) (step : ThetaStep a b c) :
@@ -331,9 +326,8 @@ def thetaStepRight (a b c : ℕ) (step : ThetaStep a b c) :
   if hlast : step.2.val + 1 = thetaLength a b c step.1 then
     Sum.inl 1
   else
-    Sum.inr ⟨step.1, ⟨step.2.val, by
-      have hlt := step.2.isLt
-      omega⟩⟩
+    Sum.inr ⟨step.1, ⟨step.2.val, Nat.lt_sub_of_add_lt
+      (lt_of_le_of_ne (Nat.succ_le_of_lt step.2.isLt) hlast)⟩⟩
 
 /-- `Theta a b c` is the graph made from three internally disjoint paths of
 lengths `a`, `b`, and `c` joining a common top vertex to a common bottom
@@ -344,9 +338,7 @@ def Theta (a b c : ℕ) : CFGraph.{0} where
     (thetaStepLeft a b c step, thetaStepRight a b c step)
   loopless := by
     intro vertex hmem
-    simp only [Multiset.mem_map, Finset.mem_val, Finset.mem_univ, true_and]
-      at hmem
-    obtain ⟨step, hpair⟩ := hmem
+    obtain ⟨step, _, hpair⟩ := Multiset.mem_map.mp hmem
     have hne : thetaStepLeft a b c step ≠ thetaStepRight a b c step := by
       unfold thetaStepLeft thetaStepRight
       split_ifs with hzero hlast
@@ -356,7 +348,8 @@ def Theta (a b c : ℕ) : CFGraph.{0} where
       · intro heq
         have hpositions : step.2.val - 1 = step.2.val := by
           exact congrArg (fun x => x.2.val) (Sum.inr.inj heq)
-        omega
+        exact (Nat.ne_of_lt (Nat.sub_lt (Nat.pos_of_ne_zero hzero)
+          Nat.zero_lt_one)) hpositions
     exact hne ((Prod.mk.inj hpair).1.trans (Prod.mk.inj hpair).2.symm)
 
 /-- `TMTheta a b c u v` marks position `u` on the first (`a`-) strand and
@@ -367,11 +360,9 @@ def TMTheta (a b c u v : ℕ) : TwiceMarkedGraph :=
   if hpos : 1 ≤ u ∧ u < a ∧ 1 ≤ v ∧ v < c then
     { graph := Theta a b c
       u := Sum.inr ⟨0, ⟨u - 1, by
-        change u - 1 < a - 1
-        omega⟩⟩
+        exact Nat.sub_lt_sub_right hpos.1 hpos.2.1⟩⟩
       v := Sum.inr ⟨2, ⟨v - 1, by
-        change v - 1 < c - 1
-        omega⟩⟩ }
+        exact Nat.sub_lt_sub_right hpos.2.2.1 hpos.2.2.2⟩⟩ }
   else
     trivial_twice_marked_graph
 
@@ -470,8 +461,7 @@ noncomputable def subdivisionStepLeft (G : CFGraph) (n : ℕ)
     Sum.inl (Fintype.equivFin G.V (subdivisionEdgeAt G edge).1)
   else
     Sum.inr ⟨edge, ⟨offset.val - 1, by
-      have hoffset := offset.isLt
-      omega⟩⟩
+      exact Nat.sub_lt_sub_right (Nat.pos_of_ne_zero hzero) offset.isLt⟩⟩
 
 /-- The right endpoint of one unit step in a subdivided edge. -/
 noncomputable def subdivisionStepRight (G : CFGraph) (n : ℕ)
@@ -480,8 +470,8 @@ noncomputable def subdivisionStepRight (G : CFGraph) (n : ℕ)
     Sum.inl (Fintype.equivFin G.V (subdivisionEdgeAt G edge).2)
   else
     Sum.inr ⟨edge, ⟨offset.val, by
-      have hoffset := offset.isLt
-      omega⟩⟩
+      exact Nat.lt_sub_of_add_lt
+        (lt_of_le_of_ne (Nat.succ_le_of_lt offset.isLt) hlast)⟩⟩
 
 /-- The `n`th regular subdivision of `G`: every edge occurrence is replaced
 by a path of exactly `n` edges. -/
@@ -494,9 +484,7 @@ noncomputable def regularSubdivision (G : CFGraph) (n : ℕ) (_hn : 0 < n) :
       subdivisionStepRight G n step.1 step.2)
   loopless := by
     intro vertex hmem
-    simp only [Multiset.mem_map, Finset.mem_val, Finset.mem_univ, true_and]
-      at hmem
-    obtain ⟨⟨edge, offset⟩, hstep⟩ := hmem
+    obtain ⟨⟨edge, offset⟩, _, hstep⟩ := Multiset.mem_map.mp hmem
     simp only [Prod.mk.injEq] at hstep
     have hne : subdivisionStepLeft G n edge offset ≠
         subdivisionStepRight G n edge offset := by
@@ -517,7 +505,8 @@ noncomputable def regularSubdivision (G : CFGraph) (n : ℕ) (_hn : 0 < n) :
         have hSigma := Sum.inr.inj heq
         have hOffsets : offset.val - 1 = offset.val := by
           exact congrArg (fun x => x.2.val) hSigma
-        omega
+        exact (Nat.ne_of_lt (Nat.sub_lt (Nat.pos_of_ne_zero hzero)
+          Nat.zero_lt_one)) hOffsets
     exact hne (hstep.1.trans hstep.2.symm)
 
 /-! ### The minimal tricycle
@@ -547,7 +536,9 @@ def underlyingSimpleGraph (G : CFGraph) : SimpleGraph G.V where
   Adj v w := num_edges G v w > 0
   symm := ⟨fun v w h => by
     change num_edges G v w > 0 at h
-    simpa [num_edges, or_comm] using h⟩
+    have hswap : num_edges G v w = num_edges G w v :=
+      congrArg Multiset.card (Multiset.filter_congr fun _ _ => or_comm)
+    exact hswap ▸ h⟩
   loopless := ⟨fun v h => by
     change num_edges G v v > 0 at h
     unfold num_edges at h

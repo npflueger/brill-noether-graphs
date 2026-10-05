@@ -1,5 +1,9 @@
-import Utilities.Subdivision.ExplicitPotentialRankOne
-import Utilities.Subdivision.DegenerateSpec
+module
+
+public import Utilities.Subdivision.ExplicitPotentialRankOne
+public import Utilities.Subdivision.DegenerateSpec
+
+@[expose] public section
 
 /-!
 # `ValidClosed`: the affine certificate grammar on the CLOSED length orthant

@@ -1,4 +1,8 @@
-import Utilities.Foundations.EdgeAddition
+module
+
+public import Utilities.Foundations.EdgeAddition
+
+@[expose] public section
 
 /-!
 # The seam displacement calculus

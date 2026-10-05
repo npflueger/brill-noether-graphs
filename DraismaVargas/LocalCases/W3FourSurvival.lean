@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W3FourLimitRows
-import DraismaVargas.LocalCases.W3Nd3StableGraph
+module
+
+public import DraismaVargas.LocalCases.W3FourLimitRows
+public import DraismaVargas.LocalCases.W3Nd3StableGraph
+
+@[expose] public section
 
 /-!
 # Outgoing survival and the endpoint census of Figure 28's four members

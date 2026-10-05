@@ -1,7 +1,11 @@
-import DraismaVargas.LocalCases.IncomingSourceCases
-import DraismaVargas.LocalCases.StablePathCount
-import DraismaVargas.LocalCases.PrunedFibreStablePath
-import DraismaVargas.LocalCases.WallAdmissibility
+module
+
+public import DraismaVargas.LocalCases.IncomingSourceCases
+public import DraismaVargas.LocalCases.StablePathCount
+public import DraismaVargas.LocalCases.PrunedFibreStablePath
+public import DraismaVargas.LocalCases.WallAdmissibility
+
+@[expose] public section
 
 /-!
 # `hTrivalent` and `hStable` are derivable at a wall event
@@ -1386,7 +1390,7 @@ theorem exitClass_of_ne_contracted
     (hg : g.1.1.1 ≠ contracted) :
     exitClass data hc hab hOne hMetric hCompat g =
       (descend data hc hab hOne hCompat g hg).stablePath := by
-  rw [exitClass, dif_neg hg]
+  rw [exitClass, dite_eq_right hg]
 
 theorem exitClass_eq_of_chainExit
     (hMetric : ∀ e : NonDanglingEdge data, ∃ f : NonDanglingEdge data,
@@ -1399,7 +1403,7 @@ theorem exitClass_eq_of_chainExit
     (hf : f.1.1.1 ≠ contracted) (hChain : ChainExit data contracted g f) :
     exitClass data hc hab hOne hMetric hCompat g =
       (descend data hc hab hOne hCompat f hf).stablePath := by
-  rw [exitClass, dif_pos hg]
+  rw [exitClass, dite_eq_left hg]
   exact stablePath_descend_eq_of_chainExit data hc hab hOne hMetric hCompat hForest
     hTrivalentUp hNeOne hg _ hf
     (exists_chainExit data hMetric g hg).choose_spec.2 hChain

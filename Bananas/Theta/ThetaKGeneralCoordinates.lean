@@ -1,5 +1,9 @@
-import Bananas.Theta.ThetaCoordinateRigidity
-import Bananas.Theta.ThetaInvTauCorrection
+module
+
+public import Bananas.Theta.ThetaCoordinateRigidity
+public import Bananas.Theta.ThetaInvTauCorrection
+
+@[expose] public section
 
 /-!
 # The theta-coordinate branch of Theorem 4.13

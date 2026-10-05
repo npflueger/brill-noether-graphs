@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.NonTrivalentValencyTwoRowEquiv
-import DraismaVargas.LocalCases.StablePathFacetContraction
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentValencyTwoRowEquiv
+public import DraismaVargas.LocalCases.StablePathFacetContraction
+
+@[expose] public section
 
 /-!
 # The valency-two `AgreeOffColumn` / common-minor identity

@@ -1,5 +1,9 @@
-import DraismaVargasCount.Integrality
-import Utilities.IntegralGeometry.DeterminantDenominator
+module
+
+public import DraismaVargasCount.Integrality
+public import Utilities.IntegralGeometry.DeterminantDenominator
+
+@[expose] public section
 
 /-!
 # Odd multiplicity gives odd denominators after adjusting leaf lengths
@@ -43,9 +47,9 @@ theorem columnScale_mul_leafAdjustedCoords
       z column := by
   classical
   by_cases h : column ∈ leafColumns presentation
-  · simp only [columnScale, leafAdjustedCoords, if_pos h]
+  · simp only [columnScale, leafAdjustedCoords, ite_eq_left h]
     ring
-  · simp only [columnScale, leafAdjustedCoords, if_neg h, one_mul]
+  · simp only [columnScale, leafAdjustedCoords, ite_eq_right h, one_mul]
 
 /-- Column halving and leaf-coordinate doubling cancel inside the length system. -/
 theorem clearedMatrix_mulVec_leafAdjustedCoords

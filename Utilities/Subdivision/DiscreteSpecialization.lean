@@ -1,12 +1,16 @@
-import Utilities.Subdivision.DegenerateSlopeScript
-import Utilities.Subdivision.SubdivisionCoreSupport
-import Utilities.Subdivision.TwoPoleSubdivision
-import Utilities.Foundations.ConvexIntegerRounding
-import Utilities.Foundations.CommonOffsetRounding
-import Utilities.Foundations.ScriptClamping
-import Utilities.Subdivision.ContractionForestCensusGeneral
-import Utilities.Subdivision.DegenerateSeparator
-import Utilities.Foundations.RankOne
+module
+
+public import Utilities.Subdivision.DegenerateSlopeScript
+public import Utilities.Subdivision.SubdivisionCoreSupport
+public import Utilities.Subdivision.TwoPoleSubdivision
+public import Utilities.Foundations.ConvexIntegerRounding
+public import Utilities.Foundations.CommonOffsetRounding
+public import Utilities.Foundations.ScriptClamping
+public import Utilities.Subdivision.ContractionForestCensusGeneral
+public import Utilities.Subdivision.DegenerateSeparator
+public import Utilities.Foundations.RankOne
+
+@[expose] public section
 
 /-!
 # Transferring a script by comparing path endpoint slopes

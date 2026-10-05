@@ -1,6 +1,10 @@
-import Bananas.Transmission.TransmissionBridge
-import Utilities.Grassmannian.OnceMarked
-import Utilities.Iso.GraphContractionFibreTree
+module
+
+public import Bananas.Transmission.TransmissionBridge
+public import Utilities.Grassmannian.OnceMarked
+public import Utilities.Iso.GraphContractionFibreTree
+
+@[expose] public section
 
 /-!
 # Weierstrass partitions of pointed divisors

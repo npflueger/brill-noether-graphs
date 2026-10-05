@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W3ShiftIncomingCensus
+module
+
+public import DraismaVargas.LocalCases.W3ShiftIncomingCensus
+
+@[expose] public section
 
 /-!
 # Matching an incoming `w3Shift` datum to a named Figure 29 member

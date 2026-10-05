@@ -1,5 +1,9 @@
-import Utilities.Gluing.InteriorScriptTransport
-import Utilities.Gluing.VertexCutWedge
+module
+
+public import Utilities.Gluing.InteriorScriptTransport
+public import Utilities.Gluing.VertexCutWedge
+
+@[expose] public section
 
 /-!
 # A one-vertex cut is the free case of the transport lemma

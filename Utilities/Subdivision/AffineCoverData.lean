@@ -1,4 +1,8 @@
-import Utilities.Subdivision.AffineCover
+module
+
+public import Utilities.Subdivision.AffineCover
+
+@[expose] public section
 
 /-!
 # List-backed affine-cover tree data
@@ -50,7 +54,7 @@ def decode (data : CoverTreeData) (m fuel : ℕ) : Option (CoverTree m) :=
 /-- Direct propositional validity of list-backed data under the currently
 active rows.  Fuel is consumed once at every level, exactly as in
 `decodeFuel`, but no intermediate function-backed tree is constructed. -/
-private def ValidActive {m : ℕ}
+def ValidActive {m : ℕ}
     (cones : List (List (AffineForm m)))
     (active : List (AffineForm m)) : ℕ → CoverTreeData → Prop
   | 0, _ => False
@@ -75,7 +79,7 @@ private def ValidActive {m : ℕ}
 /-- Direct Boolean replay of list-backed data.  This deliberately fuses
 decoding and checking: generated trees remain ordinary lists all the way down,
 so kernel reduction never materializes a large function-backed tree. -/
-private def checkActive {m : ℕ}
+def checkActive {m : ℕ}
     (cones : List (List (AffineForm m)))
     (active : List (AffineForm m)) : ℕ → CoverTreeData → Bool
   | 0, _ => false

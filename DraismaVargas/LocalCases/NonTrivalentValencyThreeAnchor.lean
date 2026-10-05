@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W3R1SourceProfile
+module
+
+public import DraismaVargas.LocalCases.W3R1SourceProfile
+
+@[expose] public section
 
 /-!
 # Part II valency-three anchor classifier

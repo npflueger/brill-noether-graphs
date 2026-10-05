@@ -1,6 +1,10 @@
-import LowGenus.AtanasovRanganathanExistence
-import LowGenus.GenusFiveConstructions
-import LowGenus.LowGenusExistence
+module
+
+public import LowGenus.AtanasovRanganathanExistence
+public import LowGenus.GenusFiveConstructions
+public import LowGenus.LowGenusExistence
+
+@[expose] public section
 
 /-!
 # Highlights of the `LowGenus` library

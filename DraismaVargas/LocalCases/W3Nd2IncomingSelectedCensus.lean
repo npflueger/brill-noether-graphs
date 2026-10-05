@@ -1,8 +1,12 @@
-import DraismaVargas.LocalCases.W3Nd2IncomingDirection
-import DraismaVargas.LocalCases.PrunedDivalentFibre
-import DraismaVargas.LocalCases.W4IncomingRetainedFlags
-import DraismaVargas.LocalCases.W4IncomingClassUnion
-import DraismaVargas.LocalCases.M11IncomingPartitions
+module
+
+public import DraismaVargas.LocalCases.W3Nd2IncomingDirection
+public import DraismaVargas.LocalCases.PrunedDivalentFibre
+public import DraismaVargas.LocalCases.W4IncomingRetainedFlags
+public import DraismaVargas.LocalCases.W4IncomingClassUnion
+public import DraismaVargas.LocalCases.M11IncomingPartitions
+
+@[expose] public section
 
 /-!
 # The selected incoming fibre in the W3 nd2 case

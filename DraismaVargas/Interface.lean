@@ -1,10 +1,14 @@
-import DraismaVargas.Basic
-import Utilities.Gonality.SubdivisionPencil
-import DraismaVargas.Infrastructure.TargetTreePotential
-import Utilities.Harmonic.Basic
-import Utilities.Iso.FossilTopology
-import Utilities.Subdivision.LeafExtension
-import Utilities.Subdivision.PathSplitRefinement
+module
+
+public import DraismaVargas.Basic
+public import Utilities.Gonality.SubdivisionPencil
+public import DraismaVargas.Infrastructure.TargetTreePotential
+public import Utilities.Harmonic.Basic
+public import Utilities.Iso.FossilTopology
+public import Utilities.Subdivision.LeafExtension
+public import Utilities.Subdivision.PathSplitRefinement
+
+@[expose] public section
 
 /-!
 # Checked interfaces for the Draisma--Vargas construction

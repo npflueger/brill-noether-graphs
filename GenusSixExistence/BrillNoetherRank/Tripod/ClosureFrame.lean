@@ -1,6 +1,10 @@
-import GenusSixExistence.BrillNoetherRank.Tripod.Classification
-import DraismaVargasCount.SegmentWalls
-import DraismaVargasCount.StepSupplyReduction
+module
+
+public import GenusSixExistence.BrillNoetherRank.Tripod.Classification
+public import DraismaVargasCount.SegmentWalls
+public import DraismaVargasCount.StepSupplyReduction
+
+@[expose] public section
 
 /-!
 # The closure, by one segment

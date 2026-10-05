@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.WallProgress
+module
+
+public import DraismaVargas.LocalCases.WallProgress
+
+@[expose] public section
 
 /-!
 # Change-minimal leaf fibres and the monovalent-wall obstruction

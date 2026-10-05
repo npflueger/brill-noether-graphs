@@ -1,4 +1,8 @@
-import Utilities.Gluing.VertexCutWedge
+module
+
+public import Utilities.Gluing.VertexCutWedge
+
+@[expose] public section
 
 /-!
 # Connectivity of the factors of a one-vertex cut

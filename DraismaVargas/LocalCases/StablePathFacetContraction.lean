@@ -1,7 +1,11 @@
-import DraismaVargas.LocalCases.NonTrivalentUniqueFourValent
-import DraismaVargas.LocalCases.PrunedFibreStablePath
-import DraismaVargas.LocalCases.NonTrivalentValencyFourAnchor
-import DraismaVargas.LocalCases.DivalentSourceLocal
+module
+
+public import DraismaVargas.LocalCases.NonTrivalentUniqueFourValent
+public import DraismaVargas.LocalCases.PrunedFibreStablePath
+public import DraismaVargas.LocalCases.NonTrivalentValencyFourAnchor
+public import DraismaVargas.LocalCases.DivalentSourceLocal
+
+@[expose] public section
 
 /-!
 # The stable-row dictionary across a one-zero-row facet
@@ -657,10 +661,10 @@ theorem matrix_eq_sum_of_target (labelling : StableLengthMatrixLabelling data co
         apply Finset.sum_congr rfl
         intro edge _
         by_cases hCase : edge.1.1 = item
-        · rw [if_pos hCase]
+        · rw [ite_eq_left hCase]
           simp [GluingDatum.LengthMatrixPresentation.coefficient,
             StableLengthMatrixLabelling.presentation, hCase]
-        · rw [if_neg hCase]
+        · rw [ite_eq_right hCase]
           apply GluingDatum.LengthMatrixPresentation.coefficient_eq_zero_of_target_ne
           simp only [StableLengthMatrixLabelling.presentation, Equiv.apply_symm_apply]
           exact fun hEqual ↦ hCase hEqual.symm
@@ -878,14 +882,14 @@ include hNoReturn hRows hZeroCoord hPosCoord hFacetZero in
 @[simp] theorem wallRow_facet :
     wallRow data fd hc hab hOne hCompat hForest hNoReturn coordinates facet hRows
       hZeroCoord hPosCoord hFacetZero (fd.labelling.row.symm facet) = none :=
-  dif_pos rfl
+  dite_eq_left rfl
 
 include hNoReturn hRows hZeroCoord hPosCoord hFacetZero in
 @[simp] theorem wallRow_incomingRow (row : StablePath (contractDatum data hc hab hOne)) :
     wallRow data fd hc hab hOne hCompat hForest hNoReturn coordinates facet hRows
         hZeroCoord hPosCoord hFacetZero
         (incomingRow data fd hc hab hOne hCompat hForest row) = some row := by
-  rw [wallRow, dif_neg (incomingRow_ne_facet data fd hc hab hOne hCompat hForest
+  rw [wallRow, dite_eq_right (incomingRow_ne_facet data fd hc hab hOne hCompat hForest
     coordinates facet hZeroCoord hPosCoord hFacetZero row)]
   exact congrArg some (((rowEquiv data fd hc hab hOne hCompat hForest hNoReturn coordinates
     facet hRows hZeroCoord hPosCoord hFacetZero).symm_apply_eq).mpr (Subtype.ext rfl))

@@ -1,6 +1,10 @@
-import DraismaVargas.Infrastructure.IteratedContraction
-import DraismaVargas.Infrastructure.IteratedContractionSource
-import DraismaVargas.LocalCases.ClosedFaceRealization
+module
+
+public import DraismaVargas.Infrastructure.IteratedContraction
+public import DraismaVargas.Infrastructure.IteratedContractionSource
+public import DraismaVargas.LocalCases.ClosedFaceRealization
+
+@[expose] public section
 
 /-!
 # The terminal-face contraction datum

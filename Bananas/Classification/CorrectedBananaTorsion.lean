@@ -1,7 +1,11 @@
-import Bananas.Jacobian.BananaTorsionSlopes
-import Bananas.Transmission.MidpointTorsion
-import Bananas.SameStrand.EndpointCardinality
-import Bananas.SameStrand.NSMFullClassification
+module
+
+public import Bananas.Jacobian.BananaTorsionSlopes
+public import Bananas.Transmission.MidpointTorsion
+public import Bananas.SameStrand.EndpointCardinality
+public import Bananas.SameStrand.NSMFullClassification
+
+@[expose] public section
 
 /-!
 # Corrected high-genus banana torsion dichotomy

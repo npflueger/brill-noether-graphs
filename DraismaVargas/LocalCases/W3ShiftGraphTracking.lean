@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.W3InteriorGraphTracking
-import DraismaVargas.LocalCases.W3ShiftClosureFinal
+module
+
+public import DraismaVargas.LocalCases.W3InteriorGraphTracking
+public import DraismaVargas.LocalCases.W3ShiftClosureFinal
+
+@[expose] public section
 
 /-!
 # Same-candidate tracking for Figure 29's pair

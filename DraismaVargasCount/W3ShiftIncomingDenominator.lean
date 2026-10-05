@@ -1,5 +1,9 @@
-import DraismaVargasCount.W2MkkIncomingDenominator
-import DraismaVargas.LocalCases.W3ShiftHonestBalance
+module
+
+public import DraismaVargasCount.W2MkkIncomingDenominator
+public import DraismaVargas.LocalCases.W3ShiftHonestBalance
+
+@[expose] public section
 
 /-!
 # Sharp incoming denominators from Figure 29's members

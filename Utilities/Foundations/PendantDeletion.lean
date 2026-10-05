@@ -1,7 +1,11 @@
-import Utilities.Foundations.InducedSubgraph
-import Utilities.Subdivision.LeafPruning
-import Utilities.Subdivision.LeafReduction
-import Utilities.Subdivision.SubdivisionGraph
+module
+
+public import Utilities.Foundations.InducedSubgraph
+public import Utilities.Subdivision.LeafPruning
+public import Utilities.Subdivision.LeafReduction
+public import Utilities.Subdivision.SubdivisionGraph
+
+@[expose] public section
 
 /-!
 # Deleting pendant trees: from a graph to an induced subgraph
@@ -98,7 +102,7 @@ private theorem sum_card_filter_pair (v : V) (s : Multiset (V × V))
       by_cases hx : x = v
       · subst hx
         have hyx : y ≠ x := fun h ↦ hHead h.symm
-        rw [if_pos (Or.inl rfl)]
+        rw [ite_eq_left (Or.inl rfl)]
         rw [Finset.sum_eq_single y]
         · simp
         · intro u _ hu
@@ -107,7 +111,7 @@ private theorem sum_card_filter_pair (v : V) (s : Multiset (V × V))
         · simp
       · by_cases hy : y = v
         · subst hy
-          rw [if_pos (Or.inr rfl)]
+          rw [ite_eq_left (Or.inr rfl)]
           rw [Finset.sum_eq_single x]
           · simp
           · intro u _ hu
@@ -743,16 +747,16 @@ theorem inclusion_stepLeft (e' : Fin L.card)
   by_cases h0 : (o : ℕ) = 0
   · rw [show (restrict spec K L hK hTail hHead).stepLeft e' o =
         (restrict spec K L hK hTail hHead).coreVertex
-          ((restrict spec K L hK hTail hHead).core.tail e') from dif_pos h0,
+          ((restrict spec K L hK hTail hHead).core.tail e') from dite_eq_left h0,
       show spec.stepLeft (keptSlotAt L e') o =
-        spec.coreVertex (spec.core.tail (keptSlotAt L e')) from dif_pos h0]
+        spec.coreVertex (spec.core.tail (keptSlotAt L e')) from dite_eq_left h0]
     exact congrArg Sum.inl (restrict_core_tail hK hTail hHead e')
   · rw [show (restrict spec K L hK hTail hHead).stepLeft e' o =
         (restrict spec K L hK hTail hHead).interiorVertex e'
-          ⟨(o : ℕ) - 1, by omega⟩ from dif_neg h0,
+          ⟨(o : ℕ) - 1, by omega⟩ from dite_eq_right h0,
       show spec.stepLeft (keptSlotAt L e') o =
         spec.interiorVertex (keptSlotAt L e')
-          ⟨(o : ℕ) - 1, by omega⟩ from dif_neg h0]
+          ⟨(o : ℕ) - 1, by omega⟩ from dite_eq_right h0]
     rfl
 
 theorem inclusion_stepRight (e' : Fin L.card)
@@ -766,16 +770,16 @@ theorem inclusion_stepRight (e' : Fin L.card)
   by_cases h1 : (o : ℕ) + 1 = spec.length (keptSlotAt L e')
   · rw [show (restrict spec K L hK hTail hHead).stepRight e' o =
         (restrict spec K L hK hTail hHead).coreVertex
-          ((restrict spec K L hK hTail hHead).core.head e') from dif_pos h1,
+          ((restrict spec K L hK hTail hHead).core.head e') from dite_eq_left h1,
       show spec.stepRight (keptSlotAt L e') o =
-        spec.coreVertex (spec.core.head (keptSlotAt L e')) from dif_pos h1]
+        spec.coreVertex (spec.core.head (keptSlotAt L e')) from dite_eq_left h1]
     exact congrArg Sum.inl (restrict_core_head hK hTail hHead e')
   · rw [show (restrict spec K L hK hTail hHead).stepRight e' o =
         (restrict spec K L hK hTail hHead).interiorVertex e'
-          ⟨(o : ℕ), by omega⟩ from dif_neg h1,
+          ⟨(o : ℕ), by omega⟩ from dite_eq_right h1,
       show spec.stepRight (keptSlotAt L e') o =
         spec.interiorVertex (keptSlotAt L e')
-          ⟨(o : ℕ), by omega⟩ from dif_neg h1]
+          ⟨(o : ℕ), by omega⟩ from dite_eq_right h1]
     rfl
 
 theorem unitEdge_stepInclusion (s : (restrict spec K L hK hTail hHead).Step) :
@@ -796,10 +800,10 @@ theorem mem_keptVertices_stepLeft {e : Fin p} {o : Fin (spec.length e)}
     (o : ℕ) = 0 ∧ spec.core.tail e ∈ K := by
   by_cases h0 : (o : ℕ) = 0
   · refine ⟨h0, ?_⟩
-    rw [show spec.stepLeft e o = spec.coreVertex (spec.core.tail e) from dif_pos h0] at h
+    rw [show spec.stepLeft e o = spec.coreVertex (spec.core.tail e) from dite_eq_left h0] at h
     exact (mem_keptVertices_inl _).mp h
   · rw [show spec.stepLeft e o =
-      spec.interiorVertex e ⟨(o : ℕ) - 1, by have := o.isLt; omega⟩ from dif_neg h0] at h
+      spec.interiorVertex e ⟨(o : ℕ) - 1, by have := o.isLt; omega⟩ from dite_eq_right h0] at h
     exact absurd ((mem_keptVertices_inr _).mp h) heL
 
 theorem mem_keptVertices_stepRight {e : Fin p} {o : Fin (spec.length e)}
@@ -807,10 +811,10 @@ theorem mem_keptVertices_stepRight {e : Fin p} {o : Fin (spec.length e)}
     (o : ℕ) + 1 = spec.length e ∧ spec.core.head e ∈ K := by
   by_cases h1 : (o : ℕ) + 1 = spec.length e
   · refine ⟨h1, ?_⟩
-    rw [show spec.stepRight e o = spec.coreVertex (spec.core.head e) from dif_pos h1] at h
+    rw [show spec.stepRight e o = spec.coreVertex (spec.core.head e) from dite_eq_left h1] at h
     exact (mem_keptVertices_inl _).mp h
   · rw [show spec.stepRight e o =
-      spec.interiorVertex e ⟨(o : ℕ), by have := o.isLt; omega⟩ from dif_neg h1] at h
+      spec.interiorVertex e ⟨(o : ℕ), by have := o.isLt; omega⟩ from dite_eq_right h1] at h
     exact absurd ((mem_keptVertices_inr _).mp h) heL
 
 /-- **The separation hypothesis, in force.**  If a step of `spec` has both

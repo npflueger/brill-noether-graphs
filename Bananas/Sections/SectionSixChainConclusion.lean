@@ -1,9 +1,13 @@
-import Bananas.Wedge.VertexWedgeAssociativity
-import Bananas.Transmission.MixedTorsionChainBalance
-import Bananas.Transmission.ChainBalanceArithmetic
-import Bananas.Wedge.ZeroGenusWedge
-import Bananas.Transmission.KGeneralBNGeneral
-import Utilities.Gluing.ChainGluing
+module
+
+public import Bananas.Wedge.VertexWedgeAssociativity
+public import Bananas.Transmission.MixedTorsionChainBalance
+public import Bananas.Transmission.ChainBalanceArithmetic
+public import Bananas.Wedge.ZeroGenusWedge
+public import Bananas.Transmission.KGeneralBNGeneral
+public import Utilities.Gluing.ChainGluing
+
+@[expose] public section
 
 /-!
 # The canonical mixed-torsion chain conclusion
@@ -65,7 +69,7 @@ noncomputable def vertexWedgeCommPresentation
     by_cases ha : a = x
     · subst a
       simp
-    · rw [if_neg ha]
+    · rw [ite_eq_right ha]
       rw [wedgeRightVertex_unmarked H G y x a ha]
       rw [num_edges_vertexWedge_right_left]
       simp [hb]

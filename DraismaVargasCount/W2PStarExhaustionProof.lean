@@ -1,5 +1,9 @@
-import DraismaVargasCount.W2PStarCensusProof
-import DraismaVargasCount.W2R1StarExhaustionProof
+module
+
+public import DraismaVargasCount.W2PStarCensusProof
+public import DraismaVargasCount.W2R1StarExhaustionProof
+
+@[expose] public section
 
 /-!
 # W2P star exhaustion: the `w2P` clause with no hypothesis
@@ -486,12 +490,12 @@ theorem nonempty_transport (res : LocalResolution degree) (q : Fin 3)
   · intro edge hInc s
     rcases eq_edge_of_incident (orientedStar profile₁) edge hInc with rfl | rfl
     · rw [TwoStar.right_edge_zero]
-      simp only [Bool.false_eq_true, if_false]
+      simp only [Bool.false_eq_true, ite_false]
       rw [show iso.edgePerm ((orientedStar profile₁).edge 0) s = E2 s by
         rw [orientedStar_edge_zero, hDouble], Equiv.symm_apply_apply]
       exact rfl
     · rw [TwoStar.right_edge_one]
-      simp only [if_true]
+      simp only [ite_true]
       rw [show iso.edgePerm ((orientedStar profile₁).edge 1) s = E3 s by
         rw [orientedStar_edge_one, hSingle], Equiv.symm_apply_apply]
       exact rfl

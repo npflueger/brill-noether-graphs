@@ -1,5 +1,9 @@
-import DraismaVargas.LocalCases.StableSourceDartsTransport
-import DraismaVargas.LocalCases.W4PositiveExit
+module
+
+public import DraismaVargas.LocalCases.StableSourceDartsTransport
+public import DraismaVargas.LocalCases.W4PositiveExit
+
+@[expose] public section
 
 /-!
 # Same-candidate graph tracking at an interior exit of Case {w4}

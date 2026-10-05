@@ -1,4 +1,8 @@
-import Bananas.Transmission.MixedTorsionChainBalance
+module
+
+public import Bananas.Transmission.MixedTorsionChainBalance
+
+@[expose] public section
 
 /-!
 # Arithmetic balancing cuts for mixed-torsion chains

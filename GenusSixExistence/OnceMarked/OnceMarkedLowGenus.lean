@@ -1,5 +1,9 @@
-import Utilities.Grassmannian.OnceMarked
-import GenusSixExistence.OnceMarked.OnceMarkedGenusFourCatalog
+module
+
+public import Utilities.Grassmannian.OnceMarked
+public import GenusSixExistence.OnceMarked.OnceMarkedGenusFourCatalog
+
+@[expose] public section
 
 /-!
 # Once-marked Brill--Noether existence through genus four
@@ -287,7 +291,7 @@ theorem onceMarkedBNExists_iff_BNExists_of_rowLens_eq_square
 
 /-! ## Kernel-checked catalog routing -/
 
-private abbrev genusFourRepresentativeRows : List (List ℕ) :=
+abbrev genusFourRepresentativeRows : List (List ℕ) :=
   Generated.OnceMarkedGenusFourCatalog.entries.map
     OnceMarkedCatalog.Entry.rows
 
@@ -305,7 +309,7 @@ theorem generatedGenusFourCatalog_entry_count :
   decide
 
 /-- Handwritten validator for the generated route tag of one catalog entry. -/
-private def checkGenusFourCatalogRoute
+def checkGenusFourCatalogRoute
     (entry : OnceMarkedCatalog.Entry) : Bool :=
   match entry.route with
   | .empty => decide (entry.rows = [])

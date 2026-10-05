@@ -1,4 +1,8 @@
-import DraismaVargas.Infrastructure.SheetPartition
+module
+
+public import DraismaVargas.Infrastructure.SheetPartition
+
+@[expose] public section
 
 /-!
 # The join of two sheet partitions

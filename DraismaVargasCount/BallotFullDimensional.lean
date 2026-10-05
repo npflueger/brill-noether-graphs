@@ -1,5 +1,9 @@
-import DraismaVargasCount.BallotGenus
-import DraismaVargas.LocalCases.CaterpillarRows
+module
+
+public import DraismaVargasCount.BallotGenus
+public import DraismaVargas.LocalCases.CaterpillarRows
+
+@[expose] public section
 
 /-!
 # The full-dimensional presentation of the ballot-parametrized caterpillar
@@ -330,9 +334,9 @@ theorem vertPred_cum (s : Slopes (2 * (m + 1))) (a : ℕ) :
     VertPred m s a (s.cum (lolli a)) := by
   unfold VertPred
   by_cases h : a % 3 = 2
-  · rw [if_pos h]
+  · rw [ite_eq_left h]
     exact Slopes.vertMem_of_pairMem s (Or.inr rfl)
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     exact Or.inr rfl
 
 /-- The sheet carrying the counter label of the lollipop containing `a`. -/
@@ -376,8 +380,8 @@ theorem lolli_parentIndex_leaf {i : Fin (6 * m + 3)}
   unfold CaterpillarPruning.IsLeafEdge at hLeaf
   unfold lolli parentIndex
   rcases hLeaf with h | h
-  · rw [if_neg (by omega)]; omega
-  · rw [if_neg (by omega)]; omega
+  · rw [ite_eq_right (by omega)]; omega
+  · rw [ite_eq_right (by omega)]; omega
 
 /-- The spine-sheet flag over a leaf edge. -/
 noncomputable def bLoopFirst (m : ℕ) (s : Slopes (2 * (m + 1)))

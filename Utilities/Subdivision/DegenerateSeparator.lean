@@ -1,7 +1,11 @@
-import Utilities.Subdivision.LaplacianEquivSeparator
-import Utilities.Subdivision.SubdivisionSeparator
-import Utilities.Subdivision.SubdivisionConnectivity
-import Utilities.Subdivision.DegenerateRankOne
+module
+
+public import Utilities.Subdivision.LaplacianEquivSeparator
+public import Utilities.Subdivision.SubdivisionSeparator
+public import Utilities.Subdivision.SubdivisionConnectivity
+public import Utilities.Subdivision.DegenerateRankOne
+
+@[expose] public section
 
 /-!
 # The strong separator and connectivity on the CLOSED length orthant

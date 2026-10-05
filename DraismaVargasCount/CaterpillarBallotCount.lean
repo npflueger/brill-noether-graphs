@@ -1,6 +1,10 @@
-import DraismaVargasCount.GeometricCountFamily
-import DraismaVargasCount.FibreCaterpillar
-import Utilities.Combinatorics.Slopes
+module
+
+public import DraismaVargasCount.GeometricCountFamily
+public import DraismaVargasCount.FibreCaterpillar
+public import Utilities.Combinatorics.Slopes
+
+@[expose] public section
 
 /-!
 # The base count over the caterpillar of loops, reduced to the ballot family

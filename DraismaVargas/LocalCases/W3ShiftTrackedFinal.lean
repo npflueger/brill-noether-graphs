@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W3ShiftGraphTracking
+module
+
+public import DraismaVargas.LocalCases.W3ShiftGraphTracking
+
+@[expose] public section
 
 /-!
 # Full source-facing Figure 29 tracking, including the two incoming branch swaps

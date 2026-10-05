@@ -1,5 +1,9 @@
-import DraismaVargasCount.StepSupplyGenusSix
-import DraismaVargasCount.WallSwitchingBridge
+module
+
+public import DraismaVargasCount.StepSupplyGenusSix
+public import DraismaVargasCount.WallSwitchingBridge
+
+@[expose] public section
 
 /-!
 # The propagation: simple positive walls, positive type changes, and the chain

@@ -1,4 +1,8 @@
-import DraismaVargas.LocalCases.W3FourSourceCandidates
+module
+
+public import DraismaVargas.LocalCases.W3FourSourceCandidates
+
+@[expose] public section
 
 /-!
 # Source-derived W3 shift geometry (Figure 29, Equation (3))
@@ -652,7 +656,7 @@ noncomputable def background (shift : ShiftProfile input) :
       exact SheetPartition.Refines.refl fine
     · have hRight : rightOf shift.movingTarget edge = true := by
         simp [rightOf, hEq]
-      rw [hRight, if_pos rfl]
+      rw [hRight, ite_eq_left rfl]
       change (data.edgePartition edge).Refines (data.vertexPartition wall)
       exact refines_of_mem_incidentEdges data hAt
   · rw [wallEdgesAssigned_false orientation]
@@ -743,7 +747,7 @@ noncomputable def growPattern (shift : ShiftProfile input) :
       change (data.edgePartition edge).Refines
         (if rightOf shift.movingTarget edge then
           (data.vertexPartition wall) else shift.growPartition)
-      rw [hRight, if_pos rfl]
+      rw [hRight, ite_eq_left rfl]
       exact refines_of_mem_incidentEdges data hAt
   · intro anchor hAnchor sheet hSheet
     have hDistSheet : (data.vertexPartition wall).Rel
@@ -1444,7 +1448,7 @@ noncomputable def shrinkPattern (shrink : ShrinkData shift) :
       change (data.edgePartition edge).Refines
         (if rightOf shift.movingTarget edge then shrink.selected.right
           else shrink.selected.left)
-      rw [hRight, if_pos rfl, selected_right]
+      rw [hRight, ite_eq_left rfl, selected_right]
       have hSingleton : (data.edgePartition edge).block shrink.transfer =
           {shrink.transfer} := by
         rw [shift.incidentEdges_eq] at hAt

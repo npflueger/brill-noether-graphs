@@ -1,4 +1,8 @@
-import Utilities.Subdivision.OneEdgeSplitRefinement
+module
+
+public import Utilities.Subdivision.OneEdgeSplitRefinement
+
+@[expose] public section
 
 /-!
 # Iterated canonical bivalent splits

@@ -1,6 +1,10 @@
-import DraismaVargasCount.RowSingleColumnWitness
-import DraismaVargasCount.LollipopBridgeFibreWitness
-import DraismaVargasCount.SpinePath
+module
+
+public import DraismaVargasCount.RowSingleColumnWitness
+public import DraismaVargasCount.LollipopBridgeFibreWitness
+public import DraismaVargasCount.SpinePath
+
+@[expose] public section
 
 /-!
 # The lollipop columns of `A_φ`, and what is left of the spine after them

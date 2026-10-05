@@ -1,4 +1,8 @@
-import Utilities.IntegralGeometry.RationalGenericStart
+module
+
+public import Utilities.IntegralGeometry.RationalGenericStart
+
+@[expose] public section
 
 /-!
 # The first exit from a positive rational orthant
