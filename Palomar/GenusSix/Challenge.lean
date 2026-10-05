@@ -4,11 +4,11 @@ import Mathlib
 # Brill--Noether existence for graphs of genus six
 
 This is the Mathlib-only Challenge surface for Brill--Noether existence through
-genus six (extending the Atanasov--Ranganathan theorem through genus five) and
-its consequence, once-marked Brill--Noether existence through genus five.  The
-file contains the advertised theorem statements and the complete local
-vocabulary needed to read them.  The advertised declarations deliberately end in
-`sorry`.
+genus six (extending the Atanasov--Ranganathan theorem through genus five), the
+expected Brill--Noether rank through genus six, and once-marked Brill--Noether
+existence through genus five.  The file contains the advertised theorem
+statements and the complete local vocabulary needed to read them.  The
+advertised declarations deliberately end in `sorry`.
 -/
 
 namespace GenusSix
@@ -128,6 +128,56 @@ theorem brill_noether_existence_through_six
     (g r d : ℤ) (h_genus : genus G = g) (h_genus_le_six : g ≤ 6)
     (h_brill_noether : (r + 1) * (g - d + r) ≤ g) :
     ∃ D : CFDiv G, deg D = d ∧ rank_geq G D r := by
+  sorry
+
+/-! ## The Brill--Noether rank through genus six
+
+The **Brill--Noether rank** `w^r_d(G)` of Lim--Payne--Potashnik and Len is the
+largest `k ≥ 0` such that every effective divisor `E` of degree `r + k` is
+contained, up to linear equivalence, in a divisor of degree `d` and rank at
+least `r`.  Here "contained up to linear equivalence" means that `D - E` is
+winnable for some such `D`.  The two theorems below state lower bounds on
+`w^r_d(G)`, unfolded into the vocabulary above.  Since `w^r_d ≤ d - r` always
+holds, the bound `ρ` cannot hold in every degree; the first theorem caps it at
+`d - r`, and the second states the bound `ρ` in the range `d ≤ g + r`, where the
+cap does not bind. -/
+
+/-- **The expected Brill--Noether rank through genus six.**  Let `G` be a
+connected finite graph of genus `g ≤ 6`, and let `r ≥ 0` and `d` be integers
+with `ρ(g, r, d) = g - (r + 1) * (g - d + r) ≥ 0`.  Then every effective
+divisor `E` of degree `r + min(ρ, d - r)` is contained, up to linear
+equivalence, in a divisor `D` of degree `d` and rank at least `r`.  In other
+words `w^r_d(G) ≥ min(ρ, d - r)`.
+
+Apart from Brill--Noether existence itself, the non-elementary cases are
+`(g, r, d) = (5, 1, 4)` and `(6, 1, 5)`: every pair of vertices of a genus-five
+graph lies in a divisor of degree four and rank at least one, and every triple
+of vertices of a genus-six graph lies in a divisor of degree five and rank at
+least one.  The other cases follow from existence, from Riemann--Roch, or from
+adding chips. -/
+theorem brill_noether_rank_through_six
+    (G : CFGraph.{0}) (h_connected : graph_connected G)
+    (g r d : ℤ) (h_genus : genus G = g) (h_genus_le_six : g ≤ 6)
+    (h_rank_nonneg : 0 ≤ r) (h_brill_noether : (r + 1) * (g - d + r) ≤ g)
+    (E : CFDiv G) (h_effective : effective E)
+    (h_degree : deg E = r + min (g - (r + 1) * (g - d + r)) (d - r)) :
+    ∃ D : CFDiv G, deg D = d ∧ rank_geq G D r ∧ winnable G (D - E) := by
+  sorry
+
+/-- **`w^r_d ≥ ρ` through genus six.**  Let `G` be a connected finite graph of
+genus `g ≤ 6`, and let `r ≥ 0` and `d ≤ g + r` be integers with
+`ρ(g, r, d) = g - (r + 1) * (g - d + r) ≥ 0`.  Then every effective divisor `E`
+of degree `r + ρ` is contained, up to linear equivalence, in a divisor `D` of
+degree `d` and rank at least `r`.  That is, the Brill--Noether rank satisfies
+`ρ ≤ w^r_d(G)`, as for a general curve of genus `g`. -/
+theorem brill_noether_rank_ge_rho_through_six
+    (G : CFGraph.{0}) (h_connected : graph_connected G)
+    (g r d : ℤ) (h_genus : genus G = g) (h_genus_le_six : g ≤ 6)
+    (h_rank_nonneg : 0 ≤ r) (h_brill_noether : (r + 1) * (g - d + r) ≤ g)
+    (h_degree_le : d ≤ g + r)
+    (E : CFDiv G) (h_effective : effective E)
+    (h_degree : deg E = r + (g - (r + 1) * (g - d + r))) :
+    ∃ D : CFDiv G, deg D = d ∧ rank_geq G D r ∧ winnable G (D - E) := by
   sorry
 
 /-! ## Once-marked Brill--Noether existence through genus five -/

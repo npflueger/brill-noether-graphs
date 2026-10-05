@@ -1,5 +1,6 @@
 import GenusSixExistence.Existence
 import GenusSixExistence.OnceMarked
+import GenusSixExistence.BrillNoetherRank
 
 /-!
 # Solutions for the genus-six Brill--Noether existence submission
@@ -7,7 +8,8 @@ import GenusSixExistence.OnceMarked
 This is the proved Solution surface corresponding to `GenusSix.Challenge`.
 Its statement vocabulary is copied verbatim from the Challenge.  Each theorem
 is a thin wrapper around a proved declaration of the library
-`GenusSixExistence`: `GenusSixExistence.brillNoetherExistenceThroughSix` and
+`GenusSixExistence`: `GenusSixExistence.brillNoetherExistenceThroughSix`,
+`GenusSixExistence.bnRankGe_through_six` and
 `GenusSixExistence.onceMarkedBNExistenceThroughFive`.
 -/
 
@@ -159,6 +161,77 @@ theorem brill_noether_existence_through_six
       library_brill_noether
   refine ⟨D, h_degree, ?_⟩
   exact (_root_.rank_geq_iff (libraryGraph G) D r).mpr h_rank
+
+/-! ## The Brill--Noether rank through genus six
+
+The **Brill--Noether rank** `w^r_d(G)` of Lim--Payne--Potashnik and Len is the
+largest `k ≥ 0` such that every effective divisor `E` of degree `r + k` is
+contained, up to linear equivalence, in a divisor of degree `d` and rank at
+least `r`.  Here "contained up to linear equivalence" means that `D - E` is
+winnable for some such `D`.  The two theorems below state lower bounds on
+`w^r_d(G)`, unfolded into the vocabulary above.  Since `w^r_d ≤ d - r` always
+holds, the bound `ρ` cannot hold in every degree; the first theorem caps it at
+`d - r`, and the second states the bound `ρ` in the range `d ≤ g + r`, where the
+cap does not bind. -/
+
+/-- **The expected Brill--Noether rank through genus six.**  Let `G` be a
+connected finite graph of genus `g ≤ 6`, and let `r ≥ 0` and `d` be integers
+with `ρ(g, r, d) = g - (r + 1) * (g - d + r) ≥ 0`.  Then every effective
+divisor `E` of degree `r + min(ρ, d - r)` is contained, up to linear
+equivalence, in a divisor `D` of degree `d` and rank at least `r`.  In other
+words `w^r_d(G) ≥ min(ρ, d - r)`.
+
+Apart from Brill--Noether existence itself, the non-elementary cases are
+`(g, r, d) = (5, 1, 4)` and `(6, 1, 5)`: every pair of vertices of a genus-five
+graph lies in a divisor of degree four and rank at least one, and every triple
+of vertices of a genus-six graph lies in a divisor of degree five and rank at
+least one.  The other cases follow from existence, from Riemann--Roch, or from
+adding chips. -/
+theorem brill_noether_rank_through_six
+    (G : CFGraph.{0}) (h_connected : graph_connected G)
+    (g r d : ℤ) (h_genus : genus G = g) (h_genus_le_six : g ≤ 6)
+    (h_rank_nonneg : 0 ≤ r) (h_brill_noether : (r + 1) * (g - d + r) ≤ g)
+    (E : CFDiv G) (h_effective : effective E)
+    (h_degree : deg E = r + min (g - (r + 1) * (g - d + r)) (d - r)) :
+    ∃ D : CFDiv G, deg D = d ∧ rank_geq G D r ∧ winnable G (D - E) := by
+  have library_connected : _root_.graph_connected (libraryGraph G) :=
+    h_connected
+  have library_genus : _root_.genus (libraryGraph G) = g := h_genus
+  have library_genus_le_six : _root_.genus (libraryGraph G) ≤ 6 := by
+    rw [library_genus]
+    exact h_genus_le_six
+  have library_bn_number :
+      _root_.Utilities.bnNumber (libraryGraph G) r d = g - (r + 1) * (g - d + r) := by
+    unfold _root_.Utilities.bnNumber _root_.Utilities.rectangleWidth
+    rw [library_genus]
+  have library_brill_noether : 0 ≤ _root_.Utilities.bnNumber (libraryGraph G) r d := by
+    rw [library_bn_number]
+    linarith
+  obtain ⟨D, h_degree_D, h_rank, h_winnable⟩ :=
+    _root_.GenusSixExistence.bnRankGe_through_six (libraryGraph G) library_connected
+      library_genus_le_six h_rank_nonneg library_brill_noether E h_effective
+      (by rw [library_bn_number]; exact h_degree)
+  exact ⟨D, h_degree_D, (_root_.rank_geq_iff (libraryGraph G) D r).mpr h_rank, h_winnable⟩
+
+/-- **`w^r_d ≥ ρ` through genus six.**  Let `G` be a connected finite graph of
+genus `g ≤ 6`, and let `r ≥ 0` and `d ≤ g + r` be integers with
+`ρ(g, r, d) = g - (r + 1) * (g - d + r) ≥ 0`.  Then every effective divisor `E`
+of degree `r + ρ` is contained, up to linear equivalence, in a divisor `D` of
+degree `d` and rank at least `r`.  That is, the Brill--Noether rank satisfies
+`ρ ≤ w^r_d(G)`, as for a general curve of genus `g`. -/
+theorem brill_noether_rank_ge_rho_through_six
+    (G : CFGraph.{0}) (h_connected : graph_connected G)
+    (g r d : ℤ) (h_genus : genus G = g) (h_genus_le_six : g ≤ 6)
+    (h_rank_nonneg : 0 ≤ r) (h_brill_noether : (r + 1) * (g - d + r) ≤ g)
+    (h_degree_le : d ≤ g + r)
+    (E : CFDiv G) (h_effective : effective E)
+    (h_degree : deg E = r + (g - (r + 1) * (g - d + r))) :
+    ∃ D : CFDiv G, deg D = d ∧ rank_geq G D r ∧ winnable G (D - E) := by
+  have h_min : min (g - (r + 1) * (g - d + r)) (d - r) = g - (r + 1) * (g - d + r) := by
+    apply min_eq_left
+    nlinarith [mul_nonneg h_rank_nonneg (show 0 ≤ g - d + r by omega)]
+  exact brill_noether_rank_through_six G h_connected g r d h_genus h_genus_le_six
+    h_rank_nonneg h_brill_noether E h_effective (by rw [h_min]; exact h_degree)
 
 /-! ## Once-marked Brill--Noether existence through genus five -/
 

@@ -3,6 +3,8 @@
   "solution_module": "Solutions.GenusSix",
   "theorem_names": [
     "GenusSix.brill_noether_existence_through_six",
+    "GenusSix.brill_noether_rank_through_six",
+    "GenusSix.brill_noether_rank_ge_rho_through_six",
     "GenusSix.once_marked_brill_noether_existence_through_five"
   ],
   "permitted_axioms": [

@@ -2,7 +2,7 @@
 
 `Challenge.lean` imports only Mathlib. It defines finite multigraphs, divisors,
 chip-firing equivalence and the Baker–Norine rank test locally. It then states
-two theorems whose bodies are deliberately `sorry`.
+four theorems whose bodies are deliberately `sorry`.
 
 ## The theorems
 
@@ -24,7 +24,25 @@ two theorems whose bodies are deliberately `sorry`.
    Library declarations: `GenusSixExistence.brillNoetherExistenceThroughSix`,
    and `GenusSixExistence.bnExists` for genus six alone.
 
-2. **`once_marked_brill_noether_existence_through_five`.** Let `G` be a
+2. **`brill_noether_rank_through_six`** and
+   **`brill_noether_rank_ge_rho_through_six`.** The Brill–Noether rank
+   `w^r_d(G)` of [LPP] and [Len] is the largest `k ≥ 0` such that every
+   effective divisor of degree `r + k` is contained, up to linear equivalence,
+   in a divisor of degree `d` and rank at least `r`. For a connected graph of
+   genus `g ≤ 6` and `r ≥ 0`, `ρ(g, r, d) ≥ 0`, the first theorem gives
+   `w^r_d(G) ≥ min(ρ, d − r)`, and the second gives `ρ ≤ w^r_d(G)` when
+   `d ≤ g + r`, as for a general curve. The statements unfold the definition:
+   every effective `E` of the given degree has a `D` of degree `d` with
+   `rank_geq G D r` and `D − E` winnable. Beyond existence, the new cases are
+   pairs in genus five (`w^1_4 ≥ 1`), proved by attaching a long path between
+   the two vertices and applying genus-six existence, and triples in genus six
+   (`w^1_5 ≥ 2`), proved by attaching a tripod at the three vertices and
+   counting tropical morphisms on the genus-eight result mod 2. The proof is
+   in `Research/genus-six-brill-noether-rank.md`.
+   Library declarations: `GenusSixExistence.bnRankGe_through_six` and
+   `GenusSixExistence.bnNumber_le_bnRank_through_six`.
+
+3. **`once_marked_brill_noether_existence_through_five`.** Let `G` be a
    connected graph of genus `g ≤ 5` with a marked vertex `u`. Let `μ` be a
    Young diagram with at most `g` boxes and row lengths
    `μ₀ ≥ μ₁ ≥ ⋯ > 0`. Then some divisor `D` of degree `g` satisfies
@@ -62,7 +80,7 @@ two theorems whose bodies are deliberately `sorry`.
   is `μ.rowLens[i]`. The witness is normalized to degree exactly `g`. Only rows
   `i` of `μ` are tested. For larger `i` the inequality
   `rank(D + i·u) ≥ i` follows from Riemann–Roch.
-- **Universes.** Both theorems are stated for vertex types in `Type`, as is the
+- **Universes.** All four theorems are stated for vertex types in `Type`, as is the
   Atanasov–Ranganathan theorem they extend. The library's genus-six theorem
   `GenusSixExistence.bnExists` holds for vertex types in any universe, but that
   generality is not claimed here.
@@ -79,6 +97,10 @@ two theorems whose bodies are deliberately `sorry`.
   Part I: Constructions*, arXiv:1909.12924.
 - [V2] A. Vargas, *Catalan-many tropical morphisms to trees; Part II: A space
   and a count*, arXiv:2609.09109.
+- [Len] Y. Len, *The Brill–Noether rank of a metric graph*, arXiv:1209.6309.
+- [LPP] C. M. Lim, S. Payne and N. Potashnik, *A note on Brill–Noether theory and
+  rank-determining sets for metric graphs*, Int. Math. Res. Not. IMRN (2012);
+  arXiv:1106.5519.
 - [PS] N. Pflueger and N. Solomon, *Twice-marked banana graphs & Brill–Noether
   generality*, Algebraic Combinatorics 8 (2025);
   [doi:10.5802/alco.443](https://doi.org/10.5802/alco.443).
