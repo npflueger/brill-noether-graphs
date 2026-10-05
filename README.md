@@ -105,7 +105,10 @@ and its solution is still to be written.
 - `GenusSixExistence/` proves Brill–Noether existence for every connected graph
   of genus six, and hence through genus six, extending the Atanasov–Ranganathan
   theorem of `LowGenus`. It also deduces once-marked Brill–Noether existence at
-  every vertex of every connected graph of genus at most five.
+  every vertex of every connected graph of genus at most five. Its
+  `BrillNoetherRank` modules prove that every connected graph of genus at most
+  six has the expected Brill–Noether rank, `w^r_d ≥ min(ρ, d − r)`, with a prose
+  proof in `Research/genus-six-brill-noether-rank.md`.
 - `Highlights.lean` and `HighlightsStatements.lean` collect ten headline
   results in proved and Mathlib-only statement forms. `TwiceMarkedBananas.lean`
   and `TwiceMarkedBananasStatements.lean` provide a paper-order proved index
