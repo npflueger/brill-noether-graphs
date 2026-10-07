@@ -57,11 +57,11 @@ also use the module system.
 
 ## Palomar entries
 
-`Palomar/BNChains/` is a complete entry: a Mathlib-only challenge, its solution,
-a comparator configuration and formalization metadata. `Palomar/GenusSix/`
-(Brill–Noether existence and rank through genus six, and once-marked existence
-through genus five) has its challenge, its solution `Palomar/Solutions/GenusSix.lean` and
-a comparator configuration; its formalization metadata is a draft.
+`Palomar/BNChains/` and `Palomar/GenusSix/` are complete entries, each with a
+Mathlib-only challenge, its solution in `Palomar/Solutions/`, a comparator
+configuration and formalization metadata. `Palomar/GenusSix/` covers
+Brill–Noether existence and rank through genus six, and once-marked existence
+through genus five.
 `Palomar/SubdivisionGonality/` (the Draisma–Vargas bound on gonality up to
 subdivision) is a draft: it states the theorems over a Mathlib-only vocabulary,
 and its solution is still to be written.

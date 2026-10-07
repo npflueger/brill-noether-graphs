@@ -79,8 +79,8 @@ roots = ["BNChains"]
 globs = ["BNChains.+"]
 
 # Newer Palomar entries.  Each Challenge imports only Mathlib, and each
-# advertised theorem ends in `sorry`.  `GenusSix` has its solution
-# (`Solutions.GenusSix`), comparator configuration and draft formalization
+# advertised theorem ends in `sorry`.  `GenusSix` is a complete entry, with its
+# solution (`Solutions.GenusSix`), comparator configuration and formalization
 # metadata; `SubdivisionGonality` has only its statements, for now.
 [[lean_lib]]
 name = "PalomarGenusSix"

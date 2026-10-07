@@ -38,7 +38,7 @@ four theorems whose bodies are deliberately `sorry`.
    pairs in genus five (`w^1_4 ≥ 1`), proved by attaching a long path between
    the two vertices and applying genus-six existence, and triples in genus six
    (`w^1_5 ≥ 2`), proved by attaching a tripod at the three vertices and
-   counting tropical morphisms on the genus-eight result mod 2. The proof is
+   counting tropical morphisms on the resulting genus-eight graph mod 2. The proof is
    in `Research/genus-six-brill-noether-rank.md`.
    Library declarations: `GenusSixExistence.bnRankGe_through_six` and
    `GenusSixExistence.bnNumber_le_bnRank_through_six`.
@@ -69,10 +69,11 @@ four theorems whose bodies are deliberately `sorry`.
   `D − E` is equivalent to an effective divisor for every effective `E` of
   degree `k`, which is the Baker–Norine condition `r(D) ≥ k`. For `k < 0` it
   holds vacuously.
-- **Exact degree and lower bound on rank.** Each conclusion gives a divisor of
-  degree exactly `d` and rank at least `r`. Baker asks for rank exactly `r` and
-  degree at most `d`. For nonnegative `r`, the two forms are equivalent, since adding a chip does not
-  lower the rank and removing one lowers it by at most one.
+- **Exact degree and lower bound on rank.** Each existence and rank conclusion
+  gives a divisor of degree exactly `d` and rank at least `r`. Baker asks for
+  rank exactly `r` and degree at most `d`. For nonnegative `r`, the two forms
+  are equivalent, since adding a chip does not lower the rank and removing one
+  lowers it by at most one.
 - **ρ.** The condition `ρ ≥ 0` is written without division as
   `(r + 1)(g − d + r) ≤ g`, with `genus G = g`. The existence theorem
   permits `r < 0`, where its rank test is vacuous. The two Brill–Noether

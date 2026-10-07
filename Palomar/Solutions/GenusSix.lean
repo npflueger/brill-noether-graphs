@@ -10,11 +10,13 @@ public import GenusSixExistence.BrillNoetherRank
 # Solutions for the genus-six Brill--Noether existence submission
 
 This is the proved Solution surface corresponding to `GenusSix.Challenge`.
-Its statement vocabulary is copied verbatim from the Challenge.  Each theorem
-is a thin wrapper around a proved declaration of the library
+Its statement vocabulary is copied verbatim from the Challenge.  Three of the
+theorems are thin wrappers around proved declarations of the library
 `GenusSixExistence`: `GenusSixExistence.brillNoetherExistenceThroughSix`,
 `GenusSixExistence.bnRankGe_through_six` and
-`GenusSixExistence.onceMarkedBNExistenceThroughFive`.
+`GenusSixExistence.onceMarkedBNExistenceThroughFive`.  The fourth,
+`brill_noether_rank_ge_rho_through_six`, is derived from
+`brill_noether_rank_through_six`.
 -/
 
 namespace GenusSix

@@ -1,0 +1,564 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
+version: "v0.4"
+
+project:
+  name: "Brill--Noether existence and rank for graphs through genus six"
+  description: >-
+    This repository proves Baker's Brill--Noether existence conjecture for finite graphs
+    of genus at most six.  The conjecture states that if G is a finite
+    connected loopless multigraph, with genus defined to be g = E-V+1, then for
+    all nonnegative integers d, r, there exists a configuration of d chips on G
+    with Baker--Norine rank at least r provided that the Brill--Noether number
+    rho = g - (r+1)(g-d+r) is nonnegative.  This is a novel result, extending a
+    result of Atanasov and Ranganathan from genus five to six.  Two
+    generalizations are also included.  First, in genus at most six, the
+    Brill--Noether rank, in the sense of Lim--Payne--Potashnik, is at least the
+    expected dimension of the Brill--Noether locus, when d is at most g+r. This
+    is a combinatorial analog of the classical lower bound on the dimension of
+    Brill--Noether loci, usually established on algebraic curves using
+    intersection theory.  Second, the Brill--Noether existence conjecture for
+    graphs with one marked vertex, as stated by Pflueger--Solomon, holds in
+    genus up to five.  The proof synthesizes recent work of Christ--Ma and
+    Draisma--Vargas. The work of Christ--Ma predicts the subdivision required
+    to obtain special divisors on graphs, using enumerative geometry. The work
+    of Draisma--Vargas provides a combinatorial construction to realize these
+    special divisors.  The novel contribution in this repository is a descent
+    argument, producing special divisors on the original graph from special
+    divisors on an odd subdivision.  This work has not yet been written up for
+    publication; the present repository is the first announcement of it.
+  authors:
+    - "Nathan Pflueger"
+  license: "Apache-2.0"
+  responsible_maintainers:
+    - "Nathan Pflueger"
+
+classification:
+  arxiv: ["math.CO", "math.AG"]
+  msc2020: ["05C57", "14T15", "14H51"]
+
+sources:
+  - title: >-
+      Brill--Noether existence and rank through genus six, and once-marked
+      Brill--Noether existence through genus five
+    authors:
+      - "Nathan Pflueger"
+    type: "original-proof"
+    location: >-
+      Palomar/Solutions/GenusSix.lean, built on GenusSixExistence,
+      GenusSixOddDescent and DraismaVargasCount; the rank argument is in
+      GenusSixExistence/BrillNoetherRank and is described in
+      Research/genus-six-brill-noether-rank.md
+    relationship: "other"
+    note: >-
+      The genus-six existence theorem, the rank bound through genus six, and
+      the once-marked theorem through genus five are presented here as original
+      results.  The original arguments include odd-subdivision descent, the
+      long-handle lemma used for arbitrary pairs in genus five, and a
+      tripod-subtraction argument for arbitrary triples in genus six. The last
+      compares the genus-eight and genus-six Catalan counts modulo 2: 14 minus 5
+      is odd.  The proofs also use results of Atanasov--Ranganathan,
+      Cools--Draisma, Draisma--Vargas and Vargas, with substantial finite
+      combinatorial infrastructure and some replacement arguments. Christ--Ma and
+      Baker supply specialization-based motivation; their algebraic-geometric
+      proofs are not formalized. The individual source notes distinguish
+      adaptations, independent proofs and background from the original arguments.
+
+      Nathan Pflueger conducted a literature search in September 2026 to
+      confirm novelty of the genus six results, and has also monitored the
+      literature actively for the past several years for progress on this
+      problem. An AI agent also conducted an automated review as follows: all
+      arXiv preprints citing Baker's 2008 paper stating the Brill--Noether
+      conjecture, and all papers citing them recursively, were examined and
+      checked for any partial results on the conjecture. This mechanical search
+      confirmed the novelty of the genus six results and the genus five
+      marked-graph result.
+    license: "Apache-2.0"
+    author_endorsement: "participated"
+
+  - title: "Specialization of linear systems from curves to graphs"
+    authors:
+      - "Matthew Baker"
+    id: "https://doi.org/10.2140/ant.2008.2.613"
+    type: "paper"
+    location: "Algebra & Number Theory 2 (2008), no. 6, 613--653; Conjecture 3.9(1)"
+    relationship: "background"
+    note: >-
+      States the Brill--Noether existence conjecture for finite graphs,
+      Conjecture 3.9(1), which the first submitted statement proves in genus at
+      most six.  It also proves the conjecture for metric graphs with rational
+      edge lengths by specialization (Theorem 3.12).  Its specialization lemma
+      (Lemma 2.8) underlies the Christ--Ma theorem about the degree of
+      subdivision needed.  This specialization lemma is not formalized, but its
+      predictions guide the statements that have been formalized
+      combinatorially.
+    author_endorsement: "not-contacted"
+
+  - title: "Twice-marked banana graphs & Brill--Noether generality"
+    authors:
+      - "Nathan Pflueger"
+      - "Noah Solomon"
+    id: "https://doi.org/10.5802/alco.443"
+    type: "paper"
+    location: >-
+      Algebraic Combinatorics 8 (2025), no. 5, 1415--1457; Conjecture 1.8
+      and Definitions 1.6--1.7
+    relationship: "background"
+    note: >-
+      States the once-marked Brill--Noether existence conjecture (Conjecture
+      1.8), which the once-marked statement proves for connected graphs
+      of genus at most five, at every vertex; the paper does not contain the
+      proof formalized here.  Definition 1.6 supplies the Weierstrass
+      partition used to read that statement; Definition 1.7 defines the
+      divisor census by containment in such a partition, not by equality.
+    author_endorsement: "participated"
+
+  - title: "A note on Brill--Noether existence for graphs of low genus"
+    authors:
+      - "Stanislav Atanasov"
+      - "Dhruv Ranganathan"
+    id: "https://doi.org/10.1307/mmj/1519095622"
+    type: "paper"
+    location: >-
+      Michigan Mathematical Journal 67 (2018), no. 1, 175--198;
+      arXiv:1609.02091.  The Main Theorem, with Lemma 4.1,
+      Proposition 5.1 and Figure 8
+    relationship: "other"
+    note: >-
+      Proves Brill--Noether existence for graphs of genus at most five, which
+      is the case of genus at most five of the first submitted statement.
+      The library LowGenus follows the paper's reduction to low-genus core
+      graphs and its explicit divisor constructions. It supplies additional
+      finite classifications, boundary cases and chip-firing certificates;
+      some local configurations and constructions replace or extend those in
+      the paper. In particular, six genus-five rows use a common two-pole
+      construction and integer-rounding specialization
+      (LowGenus/GenusFiveTwoPoleClosed.lean). Thus the dependency establishes
+      the published theorem, but
+      is not a line-by-line transcription of its proof. It supports all three
+      submitted result families.
+    author_endorsement: "not-contacted"
+
+  - title: "Bounding the number of graph refinements for Brill--Noether existence"
+    authors:
+      - "Karl Christ"
+      - "Qixiao Ma"
+    id: "https://doi.org/10.1007/s40879-025-00881-2"
+    type: "paper"
+    location: >-
+      European Journal of Mathematics 12 (2026), article 11;
+      arXiv:2304.07405v2. Theorem 1 and its proof (Section 3), in particular
+      Proposition 4 (numbering from the arXiv version)
+    relationship: "other"
+    note: >-
+      This paper motivates the subdivision step, but its algebraic geometry
+      is not formalized. A closed point of degree k on the Brill--Noether
+      scheme of a suitable smoothing gives a divisor on the k-th homothetic
+      refinement, by Proposition 4 and the specialization argument in
+      Proposition 3. For (g, r, d) = (6, 1, 4), the enumerative degree is five.
+      An effective zero-cycle of this odd degree has at least one closed
+      point of odd residue-field degree: its total degree is the sum of the
+      point degrees with positive integer multiplicities. Applying the
+      refinement argument to that point predicts a degree-four pencil on
+      some odd regular subdivision. The formalization proves this existence
+      prediction by combinatorial parity and uses it for descent. It does
+      not formalize the smoothing, zero-cycle construction or the numerical
+      bound k <= 5, and it does not deduce oddness merely from that bound.
+    author_endorsement: "not-contacted"
+
+  - title: "Catalan-many tropical morphisms to trees; Part I: Constructions"
+    authors:
+      - "Jan Draisma"
+      - "Alejandro Vargas"
+    id: "https://doi.org/10.1016/j.jsc.2020.09.005"
+    type: "paper"
+    location: >-
+      Journal of Symbolic Computation 104 (2021), 580--629; arXiv:1909.12924.
+      Definition 15 (contraction of a gluing datum), Sections 5.2 and 5.4, and
+      Section 6 (the local configurations at walls, Equations (1)--(10) and
+      Figures 26--38, and balancing in 6.2)
+    relationship: "other"
+    note: >-
+      The paper constructs tropical morphisms of degree ceil(g/2) + 1 from
+      metric graphs to trees, built from a caterpillar of loops and glued along
+      sheets, while the library DraismaVargas carries these constructions over
+      to finite graphs, in divisorial form on regular subdivisions.  Together
+      with Part II, they give a self-contained, combinatorial realization of the
+      subdivision predicted by Christ and Ma: the odd-subdivision witness in
+      genus six.
+    author_endorsement: "not-contacted"
+
+  - title: "Catalan-many tropical morphisms to trees; Part II: A space and a count"
+    authors:
+      - "Alejandro Vargas"
+    id: "https://arxiv.org/abs/2609.09109"
+    type: "paper"
+    location: >-
+      arXiv:2609.09109 (2026). Proposition 3.10 and Lemma 3.11 (ballot and
+      Catalan counts), Proposition 3.12 (caterpillar), Propositions 4.8--4.9
+      (balancing and wall crossing), Lemma 5.2 (change of multiplicities),
+      and Sections 5.1--5.4 (local wall cases)
+    relationship: "other"
+    note: >-
+      For even g, Vargas counts tropical morphisms of degree g/2 + 1 from a
+      generic genus-g metric graph to trees, with multiplicity, and shows that the
+      count is the Catalan number C_{g/2}, which is five in genus six.  The
+      count is established on caterpillars of loops through ballot sequences
+      and propagated across the space of metric graphs by balancing across
+      codimension-one walls, reached by Whitehead moves.  The library
+      DraismaVargasCount adapts this count to finite graphs and proves it
+      modulo 2 in every even genus at least six
+      (DraismaVargasCount/EvenGenusParity.lean). The submission uses the odd
+      genus-six count C_3 = 5 and the even genus-eight count C_4 = 14, the
+      latter in the triple-completion argument. This is a count in the
+      library's finite combinatorial model, not a formalization of the full
+      integer-valued metric enumerative theorem. The library DraismaVargas
+      uses the same walk through walls.
+    author_endorsement: "not-contacted"
+
+  - title: "On metric graphs with prescribed gonality"
+    authors:
+      - "Filip Cools"
+      - "Jan Draisma"
+    id: "https://doi.org/10.1016/j.jcta.2017.11.017"
+    type: "paper"
+    location: >-
+      Journal of Combinatorial Theory, Series A 156 (2018), 1--21;
+      arXiv:1602.05542, the section "Gluing in a tripod."
+    relationship: "other"
+    note: >-
+      The tripod step of their recursive construction, which raises the genus
+      by two and the degree by one, is the recursion that Draisma--Vargas
+      Part I uses for its initial families.  It is adapted to finite graphs as
+      part of that construction (library DraismaVargas, for instance
+      Infrastructure/SheetGluing.lean and LocalCases/SeedDeterminant.lean).
+      The rank proof also adapts tripod gluing in
+      GenusSixExistence/BrillNoetherRank/Tripod, separating the glued members
+      from the remaining members in the genus-eight parity count.
+    author_endorsement: "not-contacted"
+
+  - title: "Geometry of tropical moduli spaces and linkage of graphs"
+    authors:
+      - "Lucia Caporaso"
+    id: "https://arxiv.org/abs/1001.2815"
+    type: "paper"
+    location: >-
+      Journal of Combinatorial Theory, Series A 119 (2012), no. 3, 579--598;
+      Theorem 2.4.3 (cubic case), with Proposition 3.3.2
+    relationship: "other"
+    note: >-
+      Theorem 2.4.3 shows that any two cubic graphs of the same genus are
+      linked by Whitehead moves.  This is the connectivity that lets the mod-2
+      count be carried from the caterpillar of loops to every cubic core (step
+      four of DraismaVargasCount.Assembly).  It is formalized with a different
+      proof, a genus induction in a dart model, rather than Caporaso's argument
+      (Utilities/CubicGraphs/WhiteheadConnectivity.lean).
+    author_endorsement: "not-contacted"
+
+  - title: "Treewidth is a lower bound on graph gonality"
+    authors:
+      - "Josse van Dobben de Bruyn"
+      - "Dion Gijswijt"
+    id: "https://doi.org/10.5802/alco.124"
+    type: "paper"
+    location: "Algebraic Combinatorics 3 (2020), no. 4, 941--953; Lemma 2.6 and Corollary 2.7"
+    relationship: "other"
+    note: >-
+      Utilities/Subdivision/StrongSeparator.lean implements a finite
+      certificate form of the strong-separator argument of Lemma 2.6 and
+      Corollary 2.7. It reduces rank-one tests to the core vertices in
+      GenusSixOddDescent and DraismaVargasCount. The new rank proof uses the
+      same certificate machinery for bivalent paths and the tripod core.
+      Although the prose proof (Research/genus-six-brill-noether-rank.md) and
+      some library docstrings describe this as a finite version of
+      Luo's rank-determining criterion, the formal dependency is this
+      strong-separator argument, not the general metric theorem of Luo.
+    author_endorsement: "not-contacted"
+
+  - title: "Riemann--Roch and Abel--Jacobi theory on a finite graph"
+    authors:
+      - "Matthew Baker"
+      - "Serguei Norine"
+    id: "https://arxiv.org/abs/math/0608360"
+    type: "paper"
+    location: "Advances in Mathematics 215 (2007), no. 2, 766--788"
+    relationship: "other"
+    note: >-
+      Source of the rank of a divisor on a finite graph, used in every
+      statement, and of the Riemann--Roch theorem for graphs, which reduces
+      genus-six existence to the single case (r, d) = (1, 4).  Both are
+      formalized in chip-firing-with-lean, a dependency of this repository.
+    author_endorsement: "not-contacted"
+
+  - title: "A note on Brill--Noether theory and rank-determining sets for metric graphs"
+    authors: ["Chang Mou Lim", "Sam Payne", "Natasha Potashnik"]
+    id: "https://doi.org/10.1093/imrn/rnr233"
+    type: "paper"
+    location: >-
+      International Mathematics Research Notices (2012);
+      arXiv:1106.5519v2, Definition 1.5, Theorem 1.7 and Corollary 1.8
+    relationship: "background"
+    note: >-
+      Introduces Brill--Noether rank and proves w^r_d >= min(rho, g) for
+      metric graphs by specialization. The submitted rank statements use
+      its containment definition for vertex-supported integral divisors on
+      finite graphs. The metric theorem does not itself supply such
+      vertex-supported completions, and its proof is not formalized here.
+    author_endorsement: "not-contacted"
+
+  - title: "The Brill--Noether rank of a tropical curve"
+    authors: ["Yoav Len"]
+    id: "https://doi.org/10.1007/s10801-014-0510-0"
+    type: "paper"
+    location: >-
+      Journal of Algebraic Combinatorics 40 (2014), 841--860;
+      arXiv:1209.6309, Definitions 5.1--5.2
+    relationship: "background"
+    note: >-
+      Extends Brill--Noether rank to weighted tropical curves and proves
+      semicontinuity and specialization results. This supplies context for
+      the invariant; neither the weighted extension nor the specialization
+      proof is formalized in this submission.
+    author_endorsement: "not-contacted"
+
+related_formalizations:
+  - id: "https://github.com/DhyeyMavani2003/chip-firing-with-lean"
+    relationship: "builds-on"
+    note: >-
+      Supplies the divisor theory of finite graphs used throughout: divisors,
+      linear equivalence, the Baker--Norine rank and the Riemann--Roch
+      theorem. The dependency uses the module system upstream and is pinned to
+      commit 4f9027c5e1305152c51aac0ad45dfcb4bbf1f3a3, immediately after
+      its v1.1.2 release.
+  - id: "https://github.com/npflueger/demazure"
+    relationship: "builds-on"
+    note: >-
+      Supplies Demazure products of integer permutations, used by the
+      repository's transmission-permutation machinery. The dependency uses the module
+      system upstream and is pinned to its v1.1.2 release
+      (commit 99f69e15fa82cc9bb81695a78c35b80da1ea3a5e).
+
+status:
+  scope: >-
+    Four compared declarations express three result families for connected
+    finite loopless multigraphs: Brill--Noether existence through genus six;
+    the rank bound w^r_d >= min(rho, d - r) through genus six for r >= 0 and
+    rho >= 0, together with its corollary w^r_d >= rho when d <= g + r; and
+    once-marked existence through genus five. The additional rank cases are
+    arbitrary pairs in genus five (w^1_4 >= 1) and arbitrary triples in genus
+    six (w^1_5 >= 2), with repetitions allowed. Existence through genus five
+    is the Atanasov--Ranganathan theorem. Universal existence or the rank
+    bound in genus seven and higher, and once-marked existence in genus six
+    and higher, are not addressed.
+  sorry_count: 0
+  sorry_in_definitions: 0
+  axioms: [propext, Classical.choice, Quot.sound]
+  main_results:
+    - declaration: "GenusSix.brill_noether_existence_through_six"
+      file: "Palomar/Solutions/GenusSix.lean"
+      sorry_count: 0
+      axioms: [propext, Classical.choice, Quot.sound]
+      comparator_config: "Palomar/GenusSix/comparator.json"
+      literature_dependencies: []
+    - declaration: "GenusSix.brill_noether_rank_through_six"
+      file: "Palomar/Solutions/GenusSix.lean"
+      sorry_count: 0
+      axioms: [propext, Classical.choice, Quot.sound]
+      comparator_config: "Palomar/GenusSix/comparator.json"
+      literature_dependencies: []
+    - declaration: "GenusSix.brill_noether_rank_ge_rho_through_six"
+      file: "Palomar/Solutions/GenusSix.lean"
+      sorry_count: 0
+      axioms: [propext, Classical.choice, Quot.sound]
+      comparator_config: "Palomar/GenusSix/comparator.json"
+      literature_dependencies: []
+    - declaration: "GenusSix.once_marked_brill_noether_existence_through_five"
+      file: "Palomar/Solutions/GenusSix.lean"
+      sorry_count: 0
+      axioms: [propext, Classical.choice, Quot.sound]
+      comparator_config: "Palomar/GenusSix/comparator.json"
+      literature_dependencies: []
+
+# Palomar credits only humans as authors and maintainers; AI contributions
+# belong here and in the narrative account (CONTRIBUTING.md, section 3.1).
+automation:
+  methods:
+    - method: "manual"
+      models: []
+      framework: "n/a"
+      tool_setup: "Human direction, formulation of definitions, and review"
+      cost:
+        wall_time: "Not tracked"
+        spend_usd: "n/a"
+        hardware: "local machine"
+      prompting_notes: >-
+        Nathan Pflueger described proof strategies, supplied unpublished notes,
+        and directed agents to implement these suggestions or devise new
+        proofs.  He also directed agents to specific papers to formalize or
+        draw on for further ideas. The work spanned many sessions, over a long
+        period, on a handful of related problems in chip firing on finite
+        graphs; the present results were extracted from that work for release,
+        rather than produced by a concentrated effort on these problems.
+    - method: "agent"
+      models:
+        - "claude-fable-5-1"
+        - "claude-opus-5-5"
+        - "gpt-5.6-sol"
+        - "gpt-6-astra"
+        - "gpt-6.1-sol"
+        - "gpt-6-luna"
+      framework: "Claude Code and OpenAI Codex"
+      tool_setup: >-
+        Agents were used for implementation, refactoring, proof search,
+        debugging, documentation, and preparation of the submission surface.
+        The Solution wrapper, Comparator configuration, and first draft of this
+        metadata file were prepared with Claude Opus 5.5 in Claude Code.
+        Codex agents subsequently reviewed sources, revised metadata and
+        migrated the repository to Lean's module system.
+      cost:
+        wall_time: "Not tracked"
+        spend_usd: "Not tracked"
+        hardware: "local machine and hosted APIs"
+      prompting_notes: >-
+        Agents used the cited papers as guides for prerequisite libraries,
+        adapting the arguments to finite combinatorial models and supplying
+        replacement proofs and intermediate lemmas where needed. The
+        odd-subdivision descent argument was devised by agents in response
+        to general strategic suggestions. Claude agents (Fable 5.1 and
+        Opus 5.5) developed, reviewed in prose and formalized the
+        tripod-subtraction route for the rank theorem in October 2026,
+        starting from a skeleton of statements.
+  spend_usd: "Not tracked"
+  notes: >-
+    The Lean code is primarily written by generative AI.  Nathan
+    Pflueger supplied the mathematical direction and curated the
+    formalization.
+
+# Palomar reads the narrative account only from the Challenge's module
+# documentation, the docstrings of the compared declarations, the README of the
+# selected project (here the repository root), and this file
+# (CONTRIBUTING.md, section 3.4).  Palomar/GenusSix/README.md is not among them,
+# so its formulation choices are restated here.
+fidelity:
+  divergences: >-
+    All statements concern finite graphs, not metric graphs.  A graph is a
+    finite, nonempty multigraph without loops, with its edges stored as a
+    multiset of vertex pairs; connectivity means that every nontrivial vertex
+    cut is crossed by an edge, and the genus is the cyclomatic number |E| - |V|
+    + 1, an integer. In the Challenge, rank_geq G D k expresses the
+    Baker--Norine condition that D - E is equivalent to an effective divisor for
+    every effective E of degree k.  Each existence and rank conclusion gives a divisor of degree
+    exactly d and rank at least r, whereas Baker's conjecture asks for rank
+    exactly r and degree at most d; for nonnegative r the two existence
+    formulations are equivalent. The condition rho >= 0 is written as
+    (r + 1)(g - d + r) <= g. The existence statement also permits r < 0,
+    where its rank condition is vacuous; the rank-bound statements require
+    0 <= r.  The once-marked statement uses Mathlib's
+    YoungDiagram, is normalized to a witness of degree exactly g, and tests only
+    the rows of the diagram (the inequalities for larger row indices follow
+    from Riemann--Roch); this is equivalent to containment of the Weierstrass
+    partition of Pflueger--Solomon, Definition 1.6. All four statements use
+    vertex types in Type, as does the library's Atanasov--Ranganathan theorem;
+    the library's genus-six theorem holds in every universe.  The
+    Draisma--Vargas and Vargas constructions concern metric graphs and are
+    adapted to finite graphs in divisorial form.  The prediction of Christ--Ma
+    is proved combinatorially, in genus six only and only for the parity of the
+    refinement, rather than through their algebro-geometric argument.
+
+    The Challenge expresses Brill--Noether rank by quantifying over every
+    effective vertex divisor E of degree r + k and producing a degree-d
+    divisor D of rank at least r with D - E equivalent to an effective
+    divisor. Replacing D by a linearly equivalent divisor gives literal
+    containment of E, as in Lim--Payne--Potashnik, Definition 1.5. The first
+    bound takes k = min(rho, d - r), since containment imposes k <= d - r;
+    the second takes k = rho under d <= g + r. All divisors here have
+    integral coefficients and vertex support. Metric existence and metric
+    Brill--Noether rank theorems do not automatically imply these discrete
+    completion statements.
+
+review:
+  status: "self-assessed"
+  reviewers:
+    - "Nathan Pflueger"
+  notes: >-
+    Nathan Pflueger wrote the original existence and once-marked Challenge
+    definitions and statements by hand and compared them with the published
+    definitions and conjectures.
+
+alignment:
+  namespace: "GenusSix"
+  statements:
+    - source: "Original proof: Brill--Noether existence through genus six"
+      lean: "GenusSix.brill_noether_existence_through_six"
+      module: "Solutions.GenusSix"
+      status: "proved"
+      note: >-
+        Genus six is new (GenusSixExistence.bnExists); genus at most five is
+        the Atanasov--Ranganathan theorem.  Wrapper of
+        GenusSixExistence.brillNoetherExistenceThroughSix.
+    - source: "Baker (2008), Conjecture 3.9(1), for graphs of genus at most six"
+      lean: "GenusSix.brill_noether_existence_through_six"
+      module: "Solutions.GenusSix"
+      status: "proved"
+      note: >-
+        The paper is the background source of the conjecture, not a source of
+        the proof.
+    - source: "Atanasov--Ranganathan (2018), main theorem (genus at most five)"
+      lean: "GenusSix.brill_noether_existence_through_six"
+      module: "Solutions.GenusSix"
+      status: "proved (as the case of genus at most five)"
+      note: >-
+        Formalized in the library LowGenus as
+        AtanasovRanganathan.brillNoetherExistenceThroughFive.
+    - source: "Original proof: Brill--Noether rank through genus six"
+      lean: "GenusSix.brill_noether_rank_through_six"
+      module: "Solutions.GenusSix"
+      status: "proved"
+      note: >-
+        Wrapper of GenusSixExistence.bnRankGe_through_six. Uses the discrete
+        containment analogue of Lim--Payne--Potashnik, Definition 1.5;
+        the metric lower bound in that paper is background, not the proof.
+    - source: "Original proof: the rho bound when d <= g + r, through genus six"
+      lean: "GenusSix.brill_noether_rank_ge_rho_through_six"
+      module: "Solutions.GenusSix"
+      status: "proved"
+      note: >-
+        Derived in the Solution from
+        GenusSix.brill_noether_rank_through_six, since min(rho, d - r) = rho
+        when d <= g + r. The library counterpart is
+        GenusSixExistence.bnNumber_le_bnRank_through_six.
+    - source: "Original proof: once-marked Brill--Noether existence through genus five"
+      lean: "GenusSix.once_marked_brill_noether_existence_through_five"
+      module: "Solutions.GenusSix"
+      status: "proved"
+      note: >-
+        The case of rectangular Young diagrams is exactly the theorem of
+        Atanasov--Ranganathan.  Wrapper of
+        GenusSixExistence.onceMarkedBNExistenceThroughFive.
+    - source: "Pflueger--Solomon (2025), Conjecture 1.8, for graphs of genus at most five"
+      lean: "GenusSix.once_marked_brill_noether_existence_through_five"
+      module: "Solutions.GenusSix"
+      status: "proved"
+      note: >-
+        The paper is the background source of the conjecture, not a source of
+        the proof.
+    - source: >-
+        Christ--Ma, Theorem 1 and Proposition 4, predicting a pencil of degree
+        four on an odd regular subdivision of every genus-six graph
+      lean: "DraismaVargas.Count.genusSix_witness"
+      module: "DraismaVargasCount.Assembly"
+      status: "proved (supporting result, not submitted)"
+      note: >-
+        Proved by a mod-2 form of the Draisma--Vargas count (Draisma--Vargas,
+        Part I; Vargas, Part II), not by the algebraic geometry of Christ--Ma.
+
+    - source: "Vargas, Part II: the Catalan count in even genus, reduced modulo 2"
+      lean: "DraismaVargas.Count.EvenGenusParity.openOddCount_mod_two"
+      module: "DraismaVargasCount.EvenGenusParity"
+      status: "proved (supporting result, not submitted)"
+      note: >-
+        Proves parity in the finite combinatorial model for every even genus
+        at least six. The submission uses genus six and genus eight.
+
+acknowledgements: >-
+  Mathlib; chip-firing-with-lean; demazure; lean4export; Comparator; NanoDa;
+  and the authors of the cited mathematical sources.
