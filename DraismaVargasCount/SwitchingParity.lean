@@ -2,6 +2,7 @@ module
 
 public import DraismaVargasCount.CountTransportLink
 public import DraismaVargasCount.W4WallExhaustion
+public import Mathlib.Algebra.BigOperators.Ring.Nat
 
 @[expose] public section
 

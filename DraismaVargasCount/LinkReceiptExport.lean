@@ -390,6 +390,9 @@ variable {coordinate : Type} [Fintype coordinate] [DecidableEq coordinate]
   (m : graph.MoveData) {arrival : FacetArrival degree graph label (label m.base)}
   (wd : WallData arrival)
 
+-- Measured 2026-10-07 on Lean v4.35.0-rc4: fails at 300000, passes at
+-- 400000.  The bound below is 2x that, so a regression errors.
+set_option maxHeartbeats 800000 in
 theorem receiptLink_of_orientation_four
     (h4 : (GluingDatum.incidentEdges (target := contract wd.coverTarget wd.hab wd.hOne)
       ⟨wd.a, wd.hab⟩).card = 4)

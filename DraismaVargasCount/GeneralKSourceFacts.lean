@@ -1394,7 +1394,10 @@ theorem nonDanglingValency_ret_le (hGValid : gData.Valid)
   rw [card_nonDanglingIncident]
   exact hVal
 
+-- Measured 2026-10-07 on Lean v4.35.0-rc4: fails at the default 200000,
+-- passes at 300000.  The bound below is ~2x that, so a regression errors.
 include hRight hRes in
+set_option maxHeartbeats 600000 in
 /-- **A fine endpoint of a non-anchor block is trivalent at most.** -/
 theorem nonDanglingValency_fine_le (hGValid : gData.Valid)
     (hGenusC : genus C.datum.sourceGraph = genus gData.sourceGraph)

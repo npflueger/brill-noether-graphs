@@ -105,10 +105,6 @@ set_option backward.isDefEq.respectTransparency false in
   -- `apply congrArg Multiset.card` can no longer unify its conclusion's
   -- universe metavariable against the goal; `congr 1` sidesteps that.
   congr 1
-  apply Multiset.filter_congr
-  intro e _he
-  rcases e with ⟨p, q⟩
-  simp
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Edge multiplicities within the right factor are unchanged. -/
@@ -125,10 +121,6 @@ set_option backward.isDefEq.respectTransparency false in
   -- `apply congrArg Multiset.card` can no longer unify its conclusion's
   -- universe metavariable against the goal; `congr 1` sidesteps that.
   congr 1
-  apply Multiset.filter_congr
-  intro e _he
-  rcases e with ⟨p, q⟩
-  simp
 
 set_option backward.isDefEq.respectTransparency false in
 /-- The bridge is the only edge between the two factors. -/

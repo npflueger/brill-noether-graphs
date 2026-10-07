@@ -598,6 +598,9 @@ theorem nonDanglingValency_ret_le (x : Fin deg)
   exact NonTrivalentValencyFourRowEquivFinal.gauged_valency_of_single_row cover fd hc hab
     hOne wallStar hForest coordinates facet hRows hZeroCoord anchorBlock hAnchor pairing x hb
 
+-- Measured 2026-10-07 on Lean v4.35.0-rc4: fails at the default 200000,
+-- passes at 300000.  The bound below is ~2x that, so a regression errors.
+set_option maxHeartbeats 600000 in
 /-- **A fine endpoint of a non-anchor block is trivalent at most**: the block's
 new occurrence on that sheet, together with the retained survivors of the block
 on the fine side, of which there are at most two. -/

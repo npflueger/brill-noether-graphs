@@ -164,6 +164,11 @@ theorem atlasEntry_row19 : ∀ a b : Fin 8,
 
 /-! ## The leaf decision -/
 
+-- Lean v4.35 generates `payloadDecide`'s equation lemmas on first use, under
+-- the options in force here rather than at the use site.  Measured 2026-10-07:
+-- generation fails at 128000 and passes at 256000, so this bound carries 2x-4x
+-- headroom on that measurement, as the file-wide bound above does on its own.
+set_option maxHeartbeats 512000 in
 /-- The check applied to a leaf, given the result of looking its row
 list up in `payloadBuckets`.  A hit must exhibit an injective vertex
 map matching the table against the indexed atlas row; a miss must

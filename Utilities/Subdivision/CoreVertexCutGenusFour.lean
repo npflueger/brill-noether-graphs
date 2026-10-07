@@ -49,6 +49,9 @@ def genusFourRankOneCheck (c : CoreVertexCut.Data core)
       (c.leftTwoRegularCheck && decide (c.leftGenus = 1) &&
         decide (c.rightGenus = 3)))
 
+-- Measured 2026-10-07 on Lean v4.35.0-rc4: fails at the default 200000,
+-- passes at 300000.  The bound below is ~2x that, so a regression errors.
+set_option maxHeartbeats 600000 in
 /-- The executable checker implements the cut, spanning-tree, and factor
 conditions exactly. -/
 @[simp] theorem genusFourRankOneCheck_eq_true_iff

@@ -555,6 +555,9 @@ variable {coordinate : Type} [Fintype coordinate] [DecidableEq coordinate]
   (m : graph.MoveData) {arrival : FacetArrival degree graph label (label m.base)}
   (wd : WallData arrival)
 
+-- Measured 2026-10-07 on Lean v4.35.0-rc4: fails at 300000, passes at
+-- 400000.  The bound below is 2x that, so a regression errors.
+set_option maxHeartbeats 800000 in
 /-- **`OuterWalk.TypeChangeLink` at a four-valent wall whose vanishing occurrence
 is oriented with its `A_1` end at `graph.vert m.base`.**  The two occurrences the
 move brings together are read as two four-branch labels; the star is relabelled so
