@@ -1,7 +1,7 @@
 module
 
 public import Mathlib.Algebra.Group.Subgroup.Finite
-public import Mathlib.Order.Int.ConditionallyCompleteOrder
+public import Mathlib.Data.Int.ConditionallyCompleteOrder
 public import Mathlib.Combinatorics.Young.YoungDiagram
 public import Mathlib.Data.Set.Card
 public import Mathlib.Data.Fintype.Sigma

@@ -3,11 +3,6 @@ version = "0.1.0"
 keywords = ["mathematics", "graph-theory", "brill-noether", "chip-firing"]
 defaultTargets = ["Utilities", "Bananas", "LowGenus", "TreewidthGonality", "Tricycle", "GenusSixOddDescent", "DraismaVargas", "DraismaVargasCount", "GenusSixExistence", "TwiceMarkedBananas", "Highlights", "PalomarSolutions"]
 
-[[require]]
-name = "mathlib"
-scope = "leanprover-community"
-rev = "v4.35.0-rc4"
-
 # Reusable chip-firing and transmission infrastructure.  It imports no
 # downstream library.
 [[lean_lib]]
@@ -110,7 +105,8 @@ name = "TwiceMarkedBananas"
 name = "TwiceMarkedBananasStatements"
 
 [[require]]
-# Module-compatible release, updated to Lean and Mathlib v4.35.0-rc4.
+# Module-compatible release, updated to Lean and Mathlib v4.35.0-rc4; it also
+# builds against the Mathlib v4.35.0-rc3 required below.
 name = "chip-firing-with-lean"
 git = "https://github.com/DhyeyMavani2003/chip-firing-with-lean.git"
 rev = "7391bd379f5e0d11aae57c5a5bd61d61709bd200"
@@ -118,4 +114,11 @@ rev = "7391bd379f5e0d11aae57c5a5bd61d61709bd200"
 [[require]]
 name = "demazure"
 git = "https://github.com/npflueger/demazure.git"
-rev = "c93e8d74c14f83a657f426c865d5745a40ffea63" # v1.1.2, updated to v4.35.0-rc4
+rev = "99f69e15fa82cc9bb81695a78c35b80da1ea3a5e" # v1.1.2
+
+# Required last, so that Mathlib's pins of shared transitive dependencies take
+# precedence over those in the other dependencies' manifests.
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.35.0-rc3"

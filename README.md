@@ -14,10 +14,11 @@ These formalizations build upon [Mathlib](https://github.com/leanprover-communit
 * [Chip-firing with Lean4](https://github.com/DhyeyMavani2003/chip-firing-with-lean), developed by Dhyey Mavani and Nathan Pflueger. This provides the basic notions of divisor theory on graphs, including the Riemann--Roch theorem.
 * [Demazure products](https://github.com/npflueger/demazure), developed by Nathan Pflueger. This provides the theory of Demazure products on integer permutations, needed for vertex gluing arguments.
 
-The build uses Lean and Mathlib v4.35.0-rc4. Both dependencies use Lean's
-`module` system upstream, and each is pinned to the commit that updates its
-v1.1.2 release to Lean and Mathlib v4.35.0-rc4. Exact Git commits are pinned in `lakefile.toml` and recorded in
-`lake-manifest.json`; no vendored copies are needed. All project Lean sources
+The build uses Lean and Mathlib v4.35.0-rc3. Both dependencies use Lean's
+`module` system upstream: Demazure is pinned to its v1.1.2 release, and
+chip-firing to the commit that updates its v1.1.2 release to v4.35.0-rc4, which
+also builds against Mathlib v4.35.0-rc3. Exact Git commits are pinned in
+`lakefile.toml` and recorded in `lake-manifest.json`; no vendored copies are needed. All project Lean sources
 also use the module system.
 
 ## Source papers

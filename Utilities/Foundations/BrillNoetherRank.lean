@@ -3,7 +3,7 @@ module
 public import Utilities.Foundations.RankInvariance
 public import Utilities.Subdivision.RankOne
 public import Utilities.Subdivision.LaplacianEquiv
-public import Mathlib.Order.Int.ConditionallyCompleteOrder
+public import Mathlib.Data.Int.ConditionallyCompleteOrder
 
 @[expose] public section
 

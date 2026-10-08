@@ -8,9 +8,9 @@ comparator_dir="$cache_root/comparator"
 lean4export_dir="$cache_root/lean4export"
 nanoda_dir="$cache_root/nanoda"
 
-# Immutable verifier pins. The lean4export revision targets Lean v4.35.0-rc4.
-comparator_commit=ca04cfc72b550331658ec314bf47685281bfd4bf
-lean4export_commit=05d43a2bc773b40ecfdebb32294192a5ef756951
+# Immutable verifier pins. The lean4export revision targets Lean v4.35.0-rc3.
+comparator_commit=fd5d5bcf14177b187f66d4502071268d877887c3
+lean4export_commit=66f1fb4bc256072069767fce52d39480e4524869
 landrun_commit=811cfff51ceaf3d9843708aa6d22e9b84ccac8b4
 nanoda_commit=68d5ca9db226849b41a6fff59d796ff19d0a8840
 

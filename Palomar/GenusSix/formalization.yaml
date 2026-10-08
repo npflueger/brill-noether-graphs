@@ -328,15 +328,15 @@ related_formalizations:
       linear equivalence, the Baker--Norine rank and the Riemann--Roch
       theorem. The dependency uses the module system upstream and is pinned to
       commit 7391bd379f5e0d11aae57c5a5bd61d61709bd200, which updates its
-      v1.1.2 release to Lean and Mathlib v4.35.0-rc4.
+      v1.1.2 release to Lean and Mathlib v4.35.0-rc4 and also builds against
+      the Mathlib v4.35.0-rc3 pinned here.
   - id: "https://github.com/npflueger/demazure"
     relationship: "builds-on"
     note: >-
       Supplies Demazure products of integer permutations, used by the
       repository's transmission-permutation machinery. The dependency uses
-      the module system upstream and is pinned to commit
-      c93e8d74c14f83a657f426c865d5745a40ffea63, which updates its v1.1.2
-      release to Lean and Mathlib v4.35.0-rc4.
+      the module system upstream and is pinned to its v1.1.2 release
+      (commit 99f69e15fa82cc9bb81695a78c35b80da1ea3a5e).
 
 status:
   scope: >-
