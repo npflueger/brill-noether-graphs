@@ -4,14 +4,15 @@ version: "v0.4"
 project:
   name: "Brill--Noether existence and rank for graphs through genus six"
   description: >-
-    This repository proves Baker's Brill--Noether existence conjecture for finite graphs
-    of genus at most six.  The conjecture states that if G is a finite
-    connected loopless multigraph, with genus defined to be g = E-V+1, then for
-    all nonnegative integers d, r, there exists a configuration of d chips on G
-    with Baker--Norine rank at least r provided that the Brill--Noether number
-    rho = g - (r+1)(g-d+r) is nonnegative.  This is a novel result, extending a
-    result of Atanasov and Ranganathan from genus five to six.  Two
-    generalizations are also included.  First, in genus at most six, the
+    This repository proves Baker's Brill--Noether existence conjecture for
+    finite graphs of genus at most six.  The conjecture states that if G is a
+    finite connected loopless multigraph, with genus defined to be g = E-V+1,
+    then for all nonnegative integers d, r, there exists a configuration of d
+    chips on G with Baker--Norine rank at least r provided that the
+    Brill--Noether number rho = g - (r+1)(g-d+r) is nonnegative.  To the
+    author's knowledge, this is a new result, extending a result of Atanasov
+    and Ranganathan from genus five to six.  Two generalizations are also
+    included.  First, in genus at most six, the
     Brill--Noether rank, in the sense of Lim--Payne--Potashnik, is at least the
     expected dimension of the Brill--Noether locus, when d is at most g+r. This
     is a combinatorial analog of the classical lower bound on the dimension of
@@ -64,14 +65,20 @@ sources:
       adaptations, independent proofs and background from the original arguments.
 
       Nathan Pflueger conducted a literature search in September 2026 to
-      confirm novelty of the genus six results, and has also monitored the
+      assess the novelty of the genus six results, has monitored the
       literature actively for the past several years for progress on this
-      problem. An AI agent also conducted an automated review as follows: all
-      arXiv preprints citing Baker's 2008 paper stating the Brill--Noether
-      conjecture, and all papers citing them recursively, were examined and
-      checked for any partial results on the conjecture. This mechanical search
-      confirmed the novelty of the genus six results and the genus five
-      marked-graph result.
+      problem, and has discussed its current state with experts in the field
+      at several conferences in 2026. An AI agent also conducted an automated
+      citation search: all arXiv preprints citing Baker's 2008 paper stating
+      the Brill--Noether conjecture, and all papers citing them recursively,
+      were examined for partial results on the conjecture. Pflueger--Solomon
+      (2025), which states the once-marked conjecture, itself cites Baker's
+      paper, so every preprint citing Pflueger--Solomon was also examined.
+      The search found no earlier proof of the genus six results or of the
+      genus five once-marked result. A citation search cannot rule out
+      relevant work that cites neither paper, so it provides additional
+      evidence supporting the originality assessment rather than
+      confirmation of it.
     license: "Apache-2.0"
     author_endorsement: "participated"
 
