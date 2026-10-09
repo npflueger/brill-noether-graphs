@@ -2,7 +2,8 @@
 set -euo pipefail
 
 # Landrun needs an outer `--` before the sandboxed command. Comparator builds
-# Landrun's options itself but does not add that delimiter.
+# Landrun's options itself; older revisions omit that delimiter and newer ones
+# supply it, so this wrapper accepts both and always passes exactly one.
 landrun_binary=${PALOMAR_LANDRUN_BIN:?PALOMAR_LANDRUN_BIN must name the pinned Landrun binary}
 landrun_options=()
 
@@ -25,6 +26,10 @@ while [ "$#" -gt 0 ]; do
       fi
       landrun_options+=("$1" "$2")
       shift 2
+      ;;
+    --)
+      shift
+      break
       ;;
     -*)
       echo "error: unrecognized Landrun option $1; update scripts/landrun-wrapper.sh" >&2
