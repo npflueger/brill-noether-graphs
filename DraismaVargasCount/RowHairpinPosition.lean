@@ -41,6 +41,78 @@ open RowWalk PendantRetraction RowChipCoefficient SlotMoment RowPosition
 variable {target : CFGraph.{0}} {degree : ℕ} {data : GluingDatum target degree}
   {coordinate : Type*} [Fintype coordinate] [DecidableEq coordinate]
 
+end DraismaVargas.Count.RowHairpinPosition
+
+namespace DraismaVargas.LocalCases.FullDimensionalSource.StablePresentation
+
+/-! ### The row-local layer on `StablePresentation`
+
+These are the statements of this module that use only the fields of
+`FullDimensionalSource.StablePresentation`; the full-dimensional forms below
+are their specialisations through `toStablePresentation`. -/
+
+open DraismaVargas.Count RowHairpinPosition
+
+open DraismaVargas.Infrastructure GluingDatum
+open DraismaVargas.LocalCases W4StableSource FullDimensionalSource
+open StableLocalProperties OrientedTraversal
+open RowWalk PendantRetraction RowChipCoefficient SlotMoment RowPosition
+
+variable {target : CFGraph.{0}} {degree : ℕ} {data : GluingDatum target degree}
+  {coordinate : Type*} [Fintype coordinate] [DecidableEq coordinate]
+
+/-- Half-leaf correction at the current target vertex. It records exactly
+the unmatched incoming leaf occurrence of a walk prefix. -/
+noncomputable def leafPotential (sp : StablePresentation data coordinate)
+    (z : coordinate → ℚ) (vertex : target.V) : ℚ :=
+  if h : IsLeafVertex target vertex then z (sp.labelling.targetEdge.symm (leafEdge h)) else 0
+
+/-- The endpoints of a source traversal step project to the endpoints of
+its literal target occurrence, independently of its stored orientation. -/
+theorem row_target_ends (sp : StablePresentation data coordinate)
+    (path : StablePath data) {i : ℕ} (hi : i < (orderedRow sp.pathEnds path).length) :
+    (((orderedRow sp.pathEnds path)[i]).1.1 : target.V × target.V) =
+        ((rowVertex sp path i).1.1, (rowVertex sp path (i + 1)).1.1) ∨
+      (((orderedRow sp.pathEnds path)[i]).1.1 : target.V × target.V) =
+        ((rowVertex sp path (i + 1)).1.1, (rowVertex sp path i).1.1) := by
+  let edge := (orderedRow sp.pathEnds path)[i]
+  let vertex := rowVertex sp path i
+  have hInc := rowVertex_incident sp path hi
+  have hEnds : data.sourceEnds edge = (vertex, otherEnd data edge vertex) ∨
+      data.sourceEnds edge = (otherEnd data edge vertex, vertex) := by
+    unfold otherEnd
+    split_ifs with h
+    · exact Or.inl (Prod.ext h rfl)
+    · exact Or.inr (Prod.ext rfl (hInc.resolve_left h))
+  have hNext : rowVertex sp path (i + 1) = otherEnd data edge vertex := walkVertex_succ _ _ hi
+  rw [hNext]
+  rcases hEnds with h | h
+  · exact Or.inl (congrArg (fun ends : data.SourceVertex × data.SourceVertex ↦
+      (ends.1.1.1, ends.2.1.1)) h)
+  · exact Or.inr (congrArg (fun ends : data.SourceVertex × data.SourceVertex ↦
+      (ends.1.1.1, ends.2.1.1)) h)
+
+theorem prefixPosition_succ (sp : StablePresentation data coordinate)
+    (z : coordinate → ℚ) (path : StablePath data)
+    {i : ℕ} (hi : i < (orderedRow sp.pathEnds path).length) :
+    prefixPosition sp z path (i + 1) = prefixPosition sp z path i +
+      z (sp.labelling.targetEdge.symm ((orderedRow sp.pathEnds path)[i]).1.1) /
+        (data.sourceEdgeIndex (orderedRow sp.pathEnds path)[i] : ℚ) := by
+  simp only [prefixPosition, List.take_succ_eq_append_getElem hi, List.map_append,
+    List.map_singleton, List.sum_append, List.sum_singleton]
+
+end DraismaVargas.LocalCases.FullDimensionalSource.StablePresentation
+
+namespace DraismaVargas.Count.RowHairpinPosition
+
+open DraismaVargas.Infrastructure GluingDatum
+open DraismaVargas.LocalCases W4StableSource FullDimensionalSource
+open StableLocalProperties OrientedTraversal
+open RowWalk PendantRetraction RowChipCoefficient SlotMoment RowPosition
+
+variable {target : CFGraph.{0}} {degree : ℕ} {data : GluingDatum target degree}
+  {coordinate : Type*} [Fintype coordinate] [DecidableEq coordinate]
+
 /-- Half-leaf correction at the current target vertex. It records exactly
 the unmatched incoming leaf occurrence of a walk prefix. -/
 noncomputable def leafPotential (fd : FullDimensionalSourcePresentation data coordinate)
@@ -118,23 +190,8 @@ theorem row_target_ends (fd : FullDimensionalSourcePresentation data coordinate)
     (((orderedRow fd.pathEnds path)[i]).1.1 : target.V × target.V) =
         ((rowVertex fd path i).1.1, (rowVertex fd path (i + 1)).1.1) ∨
       (((orderedRow fd.pathEnds path)[i]).1.1 : target.V × target.V) =
-        ((rowVertex fd path (i + 1)).1.1, (rowVertex fd path i).1.1) := by
-  let edge := (orderedRow fd.pathEnds path)[i]
-  let vertex := rowVertex fd path i
-  have hInc := rowVertex_incident fd path hi
-  have hEnds : data.sourceEnds edge = (vertex, otherEnd data edge vertex) ∨
-      data.sourceEnds edge = (otherEnd data edge vertex, vertex) := by
-    unfold otherEnd
-    split_ifs with h
-    · exact Or.inl (Prod.ext h rfl)
-    · exact Or.inr (Prod.ext rfl (hInc.resolve_left h))
-  have hNext : rowVertex fd path (i + 1) = otherEnd data edge vertex := walkVertex_succ _ _ hi
-  rw [hNext]
-  rcases hEnds with h | h
-  · exact Or.inl (congrArg (fun ends : data.SourceVertex × data.SourceVertex ↦
-      (ends.1.1.1, ends.2.1.1)) h)
-  · exact Or.inr (congrArg (fun ends : data.SourceVertex × data.SourceVertex ↦
-      (ends.1.1.1, ends.2.1.1)) h)
+        ((rowVertex fd path (i + 1)).1.1, (rowVertex fd path i).1.1) :=
+  fd.toStablePresentation.row_target_ends path hi
 
 /-- Every surviving source vertex above a target leaf is the unique leaf
 core vertex; the remaining leaf blocks are entirely pendant. -/
@@ -174,9 +231,8 @@ theorem prefixPosition_succ (fd : FullDimensionalSourcePresentation data coordin
     {i : ℕ} (hi : i < (orderedRow fd.pathEnds path).length) :
     prefixPosition fd z path (i + 1) = prefixPosition fd z path i +
       z (fd.labelling.targetEdge.symm ((orderedRow fd.pathEnds path)[i]).1.1) /
-        (data.sourceEdgeIndex (orderedRow fd.pathEnds path)[i] : ℚ) := by
-  simp only [prefixPosition, List.take_succ_eq_append_getElem hi, List.map_append,
-    List.map_singleton, List.sum_append, List.sum_singleton]
+        (data.sourceEdgeIndex (orderedRow fd.pathEnds path)[i] : ℚ) :=
+  fd.toStablePresentation.prefixPosition_succ z path hi
 
 /-- Telescoping the leaf correction proves 2-integrality on every prefix
 of an actual unit-index row, without enumerating its hairpin. -/

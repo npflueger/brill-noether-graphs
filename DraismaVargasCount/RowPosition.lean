@@ -38,6 +38,121 @@ open Utilities.Certificate.ExplicitPotential (Core)
 variable {target : CFGraph} {degree : ℕ} {data : GluingDatum target degree}
   {coordinate : Type*} [Fintype coordinate] [DecidableEq coordinate]
 
+end DraismaVargas.Count.RowPosition
+
+namespace DraismaVargas.LocalCases.FullDimensionalSource.StablePresentation
+
+/-! ### The row-local layer on `StablePresentation`
+
+These are the statements of this module that use only the fields of
+`FullDimensionalSource.StablePresentation`; the full-dimensional forms below
+are their specialisations through `toStablePresentation`. -/
+
+open DraismaVargas.Count RowPosition
+
+open DraismaVargas.Infrastructure GluingDatum
+open DraismaVargas.LocalCases W4StableSource FullDimensionalSource
+open StableLocalProperties OrientedTraversal
+open RowWalk PendantRetraction RowChipCoefficient SlotMoment
+open Utilities.Certificate.ExplicitPotential (Core)
+
+variable {target : CFGraph} {degree : ℕ} {data : GluingDatum target degree}
+  {coordinate : Type*} [Fintype coordinate] [DecidableEq coordinate]
+
+/-- The actual source vertex reached after `j` occurrences of an ordered stable row. -/
+noncomputable def rowVertex (sp : StablePresentation data coordinate)
+    (path : StablePath data) (j : ℕ) : data.SourceVertex :=
+  walkVertex data (orderedRow sp.pathEnds path) (startVertex sp.pathEnds path) j
+
+/-- The rational position of that vertex, as the sum of the actual source
+edge lengths along the prefix. -/
+noncomputable def prefixPosition (sp : StablePresentation data coordinate)
+    (z : coordinate → ℚ) (path : StablePath data) (j : ℕ) : ℚ :=
+  (((orderedRow sp.pathEnds path).take j).map fun edge ↦
+    z (sp.labelling.targetEdge.symm edge.1.1) / (data.sourceEdgeIndex edge : ℚ)).sum
+
+theorem orderedRow_start (sp : StablePresentation data coordinate)
+    (path : StablePath data) (h : 0 < (orderedRow sp.pathEnds path).length) :
+    IsPathEnd data (orderedRow sp.pathEnds path)[0] (startVertex sp.pathEnds path) := by
+  have hHead := orderedRow_head? sp.pathEnds path
+  rw [head?_eq_getElem _ h, Option.some.injEq] at hHead
+  rw [hHead]
+  exact startEdge_isPathEnd sp.pathEnds path
+
+theorem rowVertex_valency (sp : StablePresentation data coordinate)
+    (path : StablePath data) {j : ℕ} (h : j + 1 < (orderedRow sp.pathEnds path).length) :
+    nonDanglingValency data (rowVertex sp path (j + 1)) = 2 :=
+  walkVertex_succ_valency (orderedRow_nodup sp.pathEnds path)
+    (fun edge hEdge ↦ ((mem_orderedRow_iff sp.pathEnds path edge).mp hEdge).survives)
+    (orderedRow_chain sp.pathEnds path) (orderedRow_start sp path) h
+
+theorem rowVertex_incident (sp : StablePresentation data coordinate)
+    (path : StablePath data) {j : ℕ} (h : j < (orderedRow sp.pathEnds path).length) :
+    Incident data (orderedRow sp.pathEnds path)[j] (rowVertex sp path j) :=
+  walkVertex_incident (orderedRow_nodup sp.pathEnds path)
+    (fun edge hEdge ↦ ((mem_orderedRow_iff sp.pathEnds path edge).mp hEdge).survives)
+    (orderedRow_chain sp.pathEnds path) (orderedRow_start sp path) h
+
+/-- Traversal ordering does not change the actual length-matrix row. -/
+theorem prefixPosition_full (sp : StablePresentation data coordinate)
+    (z : coordinate → ℚ) (path : StablePath data) :
+    prefixPosition sp z path (orderedRow sp.pathEnds path).length =
+      (LengthMatrixPresentation.matrix sp.labelling.presentation).mulVec z
+        (sp.labelling.row path) := by
+  have hPerm : (orderedRow sp.pathEnds path).Perm
+      (sp.labelling.path (sp.labelling.row path)) := by
+    have hNodup : (sp.labelling.path (sp.labelling.row path)).Nodup :=
+      List.Nodup.filter _ Finset.univ.nodup_toList
+    apply List.perm_ext_iff_of_nodup (orderedRow_nodup sp.pathEnds path)
+      hNodup |>.mpr
+    intro edge
+    rw [mem_orderedRow_iff, sp.labelling.mem_path_iff]
+    constructor
+    · rintro ⟨hSurvives, hPath⟩
+      exact ⟨hSurvives, congrArg sp.labelling.row hPath⟩
+    · rintro ⟨hSurvives, hPath⟩
+      exact ⟨hSurvives, sp.labelling.row.injective hPath⟩
+  unfold prefixPosition
+  rw [List.take_length, LengthMatrixPresentation.matrix_mulVec]
+  exact (hPerm.map (fun edge ↦
+    z (sp.labelling.targetEdge.symm edge.1.1) / (data.sourceEdgeIndex edge : ℚ))).sum_eq
+
+/-- At an interior vertex of an unramified row, the local degree equals
+the index of every occurrence on that row. -/
+theorem local_degree_eq_row_index
+    (sp : StablePresentation data coordinate) (hNoGlue : DanglingEdgeNoGlue data)
+    {path : StablePath data} (hUnram : RowUnramified data path)
+    {vertex : data.SourceVertex} (hValency : nonDanglingValency data vertex = 2)
+    {edge : data.SourceEdge} (hEdge : OnRow data path edge)
+    (hIncident : Incident data edge vertex) {other : data.SourceEdge}
+    (hOther : OnRow data path other) :
+    (data.vertexPartition vertex.1.1).blockCard vertex.1.2 = data.sourceEdgeIndex other := by
+  obtain ⟨first, second, hFirst, hSecond, hNe⟩ := exists_two_survivors hValency
+  have hFirstRow := onRow_of_incident hValency hEdge hIncident hFirst first.2
+  have hSecondRow := onRow_of_incident hValency hEdge hIncident hSecond second.2
+  have hSum := sourceEdgeIndex_add_sourceEdgeIndex_of_noGlue hNoGlue hValency
+    hFirst first.2 hSecond second.2 hNe
+  have hZero := hUnram vertex edge hEdge hIncident hValency
+  have hEqFirst := sourceEdgeIndex_eq_of_rowUnramified hNoGlue sp.pathEnds
+    hUnram hFirstRow hOther
+  have hEqSecond := sourceEdgeIndex_eq_of_rowUnramified hNoGlue sp.pathEnds
+    hUnram hSecondRow hOther
+  rw [hZero, hEqFirst, hEqSecond] at hSum
+  omega
+
+end DraismaVargas.LocalCases.FullDimensionalSource.StablePresentation
+
+namespace DraismaVargas.Count.RowPosition
+
+open DraismaVargas.Infrastructure GluingDatum
+open DraismaVargas.LocalCases W4StableSource FullDimensionalSource
+open StableLocalProperties OrientedTraversal
+open RowWalk PendantRetraction RowChipCoefficient SlotMoment
+open Utilities.Certificate.ExplicitPotential (Core)
+
+variable {target : CFGraph} {degree : ℕ} {data : GluingDatum target degree}
+  {coordinate : Type*} [Fintype coordinate] [DecidableEq coordinate]
+
 /-- The actual source vertex reached after `j` occurrences of an ordered stable row. -/
 noncomputable def rowVertex (fd : FullDimensionalSourcePresentation data coordinate)
     (path : StablePath data) (j : ℕ) : data.SourceVertex :=
@@ -52,49 +167,26 @@ noncomputable def prefixPosition (fd : FullDimensionalSourcePresentation data co
 
 theorem orderedRow_start (fd : FullDimensionalSourcePresentation data coordinate)
     (path : StablePath data) (h : 0 < (orderedRow fd.pathEnds path).length) :
-    IsPathEnd data (orderedRow fd.pathEnds path)[0] (startVertex fd.pathEnds path) := by
-  have hHead := orderedRow_head? fd.pathEnds path
-  rw [head?_eq_getElem _ h, Option.some.injEq] at hHead
-  rw [hHead]
-  exact startEdge_isPathEnd fd.pathEnds path
+    IsPathEnd data (orderedRow fd.pathEnds path)[0] (startVertex fd.pathEnds path) :=
+  fd.toStablePresentation.orderedRow_start path h
 
 theorem rowVertex_valency (fd : FullDimensionalSourcePresentation data coordinate)
     (path : StablePath data) {j : ℕ} (h : j + 1 < (orderedRow fd.pathEnds path).length) :
     nonDanglingValency data (rowVertex fd path (j + 1)) = 2 :=
-  walkVertex_succ_valency (orderedRow_nodup fd.pathEnds path)
-    (fun edge hEdge ↦ ((mem_orderedRow_iff fd.pathEnds path edge).mp hEdge).survives)
-    (orderedRow_chain fd.pathEnds path) (orderedRow_start fd path) h
+  fd.toStablePresentation.rowVertex_valency path h
 
 theorem rowVertex_incident (fd : FullDimensionalSourcePresentation data coordinate)
     (path : StablePath data) {j : ℕ} (h : j < (orderedRow fd.pathEnds path).length) :
     Incident data (orderedRow fd.pathEnds path)[j] (rowVertex fd path j) :=
-  walkVertex_incident (orderedRow_nodup fd.pathEnds path)
-    (fun edge hEdge ↦ ((mem_orderedRow_iff fd.pathEnds path edge).mp hEdge).survives)
-    (orderedRow_chain fd.pathEnds path) (orderedRow_start fd path) h
+  fd.toStablePresentation.rowVertex_incident path h
 
 /-- Traversal ordering does not change the actual length-matrix row. -/
 theorem prefixPosition_full (fd : FullDimensionalSourcePresentation data coordinate)
     (z : coordinate → ℚ) (path : StablePath data) :
     prefixPosition fd z path (orderedRow fd.pathEnds path).length =
       (LengthMatrixPresentation.matrix fd.labelling.presentation).mulVec z
-        (fd.labelling.row path) := by
-  have hPerm : (orderedRow fd.pathEnds path).Perm
-      (fd.labelling.path (fd.labelling.row path)) := by
-    have hNodup : (fd.labelling.path (fd.labelling.row path)).Nodup :=
-      List.Nodup.filter _ Finset.univ.nodup_toList
-    apply List.perm_ext_iff_of_nodup (orderedRow_nodup fd.pathEnds path)
-      hNodup |>.mpr
-    intro edge
-    rw [mem_orderedRow_iff, fd.labelling.mem_path_iff]
-    constructor
-    · rintro ⟨hSurvives, hPath⟩
-      exact ⟨hSurvives, congrArg fd.labelling.row hPath⟩
-    · rintro ⟨hSurvives, hPath⟩
-      exact ⟨hSurvives, fd.labelling.row.injective hPath⟩
-  unfold prefixPosition
-  rw [List.take_length, LengthMatrixPresentation.matrix_mulVec]
-  exact (hPerm.map (fun edge ↦
-    z (fd.labelling.targetEdge.symm edge.1.1) / (data.sourceEdgeIndex edge : ℚ))).sum_eq
+        (fd.labelling.row path) :=
+  fd.toStablePresentation.prefixPosition_full z path
 
 /-- A member's stable row is already identified with one request slot, and
 the actual prefix length of the entire row equals precisely that slot length. -/
@@ -139,19 +231,9 @@ theorem local_degree_eq_row_index
     {edge : data.SourceEdge} (hEdge : OnRow data path edge)
     (hIncident : Incident data edge vertex) {other : data.SourceEdge}
     (hOther : OnRow data path other) :
-    (data.vertexPartition vertex.1.1).blockCard vertex.1.2 = data.sourceEdgeIndex other := by
-  obtain ⟨first, second, hFirst, hSecond, hNe⟩ := exists_two_survivors hValency
-  have hFirstRow := onRow_of_incident hValency hEdge hIncident hFirst first.2
-  have hSecondRow := onRow_of_incident hValency hEdge hIncident hSecond second.2
-  have hSum := IndexPattern.sourceEdgeIndex_add_sourceEdgeIndex fd hValency
-    hFirst first.2 hSecond second.2 hNe
-  have hZero := hUnram vertex edge hEdge hIncident hValency
-  have hEqFirst := sourceEdgeIndex_eq_of_rowUnramified fd.danglingEdgeNoGlue fd.pathEnds
-    hUnram hFirstRow hOther
-  have hEqSecond := sourceEdgeIndex_eq_of_rowUnramified fd.danglingEdgeNoGlue fd.pathEnds
-    hUnram hSecondRow hOther
-  rw [hZero, hEqFirst, hEqSecond] at hSum
-  omega
+    (data.vertexPartition vertex.1.1).blockCard vertex.1.2 = data.sourceEdgeIndex other :=
+  fd.toStablePresentation.local_degree_eq_row_index fd.danglingEdgeNoGlue hUnram hValency hEdge
+    hIncident hOther
 
 /-- Actual weighted source positions on an unramified leaf-avoiding row
 are 2-integral. Both the position and the coefficient are produced from the

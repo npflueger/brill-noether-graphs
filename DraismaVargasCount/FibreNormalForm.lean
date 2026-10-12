@@ -176,8 +176,8 @@ theorem matchesRaw_unique {core : Core n p} {y : Fin p → ℚ} {degree : ℕ}
   subst hdataA
   have hdataB : dataB = r.2.1 := eq_of_heq hdB'
   subst hdataB
-  obtain ⟨vA, cA, gA, sA, labA, dA, tA, peA⟩ := fdA
-  obtain ⟨vB, cB, gB, sB, labB, dB, tB, peB⟩ := fdB
+  obtain ⟨⟨vA, cA, gA, labA, tA, peA⟩, sA, dA⟩ := fdA
+  obtain ⟨⟨vB, cB, gB, labB, tB, peB⟩, sB, dB⟩ := fdB
   have hlA' : HEq labA r.2.2.1 := hlA
   have hlB' : HEq labB r.2.2.1 := hlB
   have hlabA : labA = r.2.2.1 := eq_of_heq hlA'
@@ -192,7 +192,7 @@ theorem matchesRaw_unique {core : Core n p} {y : Fin p → ℚ} {degree : ℕ}
   subst hidentB
   have hcoords : coordsA = coordsB :=
     FibreMember.coords_injective
-      ⟨indexTarget r.1, r.2.1, ⟨vA, cA, gA, sA, r.2.2.1, dA, tA, peA⟩, r.2.2.2,
+      ⟨indexTarget r.1, r.2.1, ⟨⟨vA, cA, gA, r.2.2.1, tA, peA⟩, sA, dA⟩, r.2.2.2,
         coordsA, realizesA⟩
       (realizesA.trans realizesB.symm)
   subst hcoords

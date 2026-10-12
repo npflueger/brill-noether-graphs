@@ -22,68 +22,164 @@ open Utilities.Certificate.SubdivisionGraph
 variable {target : CFGraph.{0}} {degree : ℕ} {data : GluingDatum target degree}
   {coordinate : Type*} [Fintype coordinate] [DecidableEq coordinate]
 
+end DraismaVargas.Count.RowSlotOrientation
+
+namespace DraismaVargas.LocalCases.FullDimensionalSource.StablePresentation
+
+/-! ### The row-local layer on `StablePresentation`
+
+These are the statements of this module that use only the fields of
+`FullDimensionalSource.StablePresentation`; the full-dimensional forms below
+are their specialisations through `toStablePresentation`. -/
+
+open DraismaVargas.Count RowSlotOrientation
+
+open DraismaVargas.Infrastructure GluingDatum
+open DraismaVargas.LocalCases W4StableSource FullDimensionalSource
+open StableLocalProperties OrientedTraversal StablePathCount StableGraphIncidence
+open RowWalk RowPosition RowVertexEnumeration
+open Utilities.Certificate.SubdivisionGraph
+
+variable {target : CFGraph.{0}} {degree : ℕ} {data : GluingDatum target degree}
+  {coordinate : Type*} [Fintype coordinate] [DecidableEq coordinate]
+
+theorem orderedRow_length_pos
+    (sp : StablePresentation data coordinate) (path : StablePath data) :
+    0 < (orderedRow sp.pathEnds path).length :=
+  List.length_pos_of_mem (startEdge_mem_orderedRow sp.pathEnds path)
+
+/-- The actual terminal walk vertex is a path end, not merely an arbitrarily
+selected endpoint incident to the last occurrence. -/
+theorem finish_valency_ne_two
+    (sp : StablePresentation data coordinate) (path : StablePath data) :
+    nonDanglingValency data
+      (rowVertex sp path (orderedRow sp.pathEnds path).length) ≠ 2 := by
+  intro hValency
+  have hPos := orderedRow_length_pos sp path
+  have hLast : (orderedRow sp.pathEnds path).length - 1 <
+      (orderedRow sp.pathEnds path).length := by omega
+  have hOn := (mem_orderedRow_iff sp.pathEnds path _).mp (List.getElem_mem hLast)
+  have hIncident : Incident data
+      (orderedRow sp.pathEnds path)[(orderedRow sp.pathEnds path).length - 1]
+      (rowVertex sp path (orderedRow sp.pathEnds path).length) := by
+    have hI := (walkVertex_succ_incident hLast : Incident data
+      (orderedRow sp.pathEnds path)[(orderedRow sp.pathEnds path).length - 1]
+      (rowVertex sp path ((orderedRow sp.pathEnds path).length - 1 + 1)))
+    have hLen : (orderedRow sp.pathEnds path).length - 1 + 1 =
+        (orderedRow sp.pathEnds path).length := by omega
+    rw [hLen] at hI
+    exact hI
+  obtain ⟨i, hEq⟩ := exists_interior_index sp path hValency hOn hIncident
+  exact interior_ne_finish sp path (by have := i.isLt; omega) hEq
+
+theorem start_branch (sp : StablePresentation data coordinate)
+    (path : StablePath data) : 3 ≤ nonDanglingValency data (rowVertex sp path 0) := by
+  have hNotTwo := (startEdge_isPathEnd sp.pathEnds path).2
+  have hNotOne := NonDanglingValency.nonDanglingValency_ne_one data sp.connected
+    (rowVertex sp path 0)
+  have hNotZero := ClassInjectivity.nonDanglingValency_ne_zero_of_incident data
+    (startEdge sp.pathEnds path).2 (startEdge_isPathEnd sp.pathEnds path).1
+  change nonDanglingValency data (rowVertex sp path 0) ≠ 2 at hNotTwo
+  change nonDanglingValency data (rowVertex sp path 0) ≠ 0 at hNotZero
+  omega
+
+theorem finish_branch (sp : StablePresentation data coordinate)
+    (path : StablePath data) :
+    3 ≤ nonDanglingValency data (rowVertex sp path (orderedRow sp.pathEnds path).length) := by
+  have hNotTwo := finish_valency_ne_two sp path
+  have hNotOne := NonDanglingValency.nonDanglingValency_ne_one data sp.connected
+    (rowVertex sp path (orderedRow sp.pathEnds path).length)
+  have hPos := orderedRow_length_pos sp path
+  have hLast : (orderedRow sp.pathEnds path).length - 1 <
+      (orderedRow sp.pathEnds path).length := by omega
+  have hOn := (mem_orderedRow_iff sp.pathEnds path _).mp (List.getElem_mem hLast)
+  have hIncident : Incident data
+      (orderedRow sp.pathEnds path)[(orderedRow sp.pathEnds path).length - 1]
+      (rowVertex sp path (orderedRow sp.pathEnds path).length) := by
+    have hI := (walkVertex_succ_incident hLast : Incident data
+      (orderedRow sp.pathEnds path)[(orderedRow sp.pathEnds path).length - 1]
+      (rowVertex sp path ((orderedRow sp.pathEnds path).length - 1 + 1)))
+    have hLen : (orderedRow sp.pathEnds path).length - 1 + 1 =
+        (orderedRow sp.pathEnds path).length := by omega
+    rw [hLen] at hI
+    exact hI
+  have hNotZero := ClassInjectivity.nonDanglingValency_ne_zero_of_incident data hOn.survives hIncident
+  omega
+
+noncomputable def startBranch (sp : StablePresentation data coordinate)
+    (path : StablePath data) : BranchVertex data := ⟨rowVertex sp path 0, start_branch sp path⟩
+
+noncomputable def finishBranch (sp : StablePresentation data coordinate)
+    (path : StablePath data) : BranchVertex data :=
+  ⟨rowVertex sp path (orderedRow sp.pathEnds path).length, finish_branch sp path⟩
+
+/-- A branch vertex met by a literal row occurrence is one of that actual
+walk's two ends. No interior source vertex can have branch valency. -/
+theorem branch_incident_eq_endpoint
+    (sp : StablePresentation data coordinate) (path : StablePath data)
+    (branch : BranchVertex data) {edge : data.SourceEdge}
+    (hEdge : OnRow data path edge) (hIncident : Incident data edge branch.1) :
+    branch = startBranch sp path ∨ branch = finishBranch sp path := by
+  obtain ⟨i, hi, hI⟩ := List.mem_iff_getElem.mp ((mem_orderedRow_iff sp.pathEnds path edge).mpr hEdge)
+  have hIncident' : Incident data (orderedRow sp.pathEnds path)[i] branch.1 := hI ▸ hIncident
+  rcases eq_or_eq_otherEnd data (rowVertex_incident sp path hi) hIncident' with h | h
+  · change branch.1 = rowVertex sp path i at h
+    by_cases hi0 : i = 0
+    · apply Or.inl
+      apply Subtype.ext
+      change branch.1 = rowVertex sp path 0
+      exact hi0 ▸ h
+    · have hPred : i - 1 + 1 = i := by omega
+      have hValency := rowVertex_valency sp path (j := i - 1) (by omega)
+      rw [hPred, ← h] at hValency
+      have := branch.2
+      omega
+  · have hNext : branch.1 = rowVertex sp path (i + 1) :=
+      h.trans (walkVertex_succ _ _ hi).symm
+    by_cases hLen : i + 1 = (orderedRow sp.pathEnds path).length
+    · apply Or.inr
+      apply Subtype.ext
+      change branch.1 = rowVertex sp path (orderedRow sp.pathEnds path).length
+      exact hLen ▸ hNext
+    · have hValency := rowVertex_valency sp path (j := i) (by omega)
+      rw [← hNext] at hValency
+      have := branch.2
+      omega
+
+end DraismaVargas.LocalCases.FullDimensionalSource.StablePresentation
+
+namespace DraismaVargas.Count.RowSlotOrientation
+
+open DraismaVargas.Infrastructure GluingDatum
+open DraismaVargas.LocalCases W4StableSource FullDimensionalSource
+open StableLocalProperties OrientedTraversal StablePathCount StableGraphIncidence
+open RowWalk RowPosition RowVertexEnumeration
+open Utilities.Certificate.SubdivisionGraph
+
+variable {target : CFGraph.{0}} {degree : ℕ} {data : GluingDatum target degree}
+  {coordinate : Type*} [Fintype coordinate] [DecidableEq coordinate]
+
 theorem orderedRow_length_pos
     (fd : FullDimensionalSourcePresentation data coordinate) (path : StablePath data) :
     0 < (orderedRow fd.pathEnds path).length :=
-  List.length_pos_of_mem (startEdge_mem_orderedRow fd.pathEnds path)
+  fd.toStablePresentation.orderedRow_length_pos path
 
 /-- The actual terminal walk vertex is a path end, not merely an arbitrarily
 selected endpoint incident to the last occurrence. -/
 theorem finish_valency_ne_two
     (fd : FullDimensionalSourcePresentation data coordinate) (path : StablePath data) :
     nonDanglingValency data
-      (rowVertex fd path (orderedRow fd.pathEnds path).length) ≠ 2 := by
-  intro hValency
-  have hPos := orderedRow_length_pos fd path
-  have hLast : (orderedRow fd.pathEnds path).length - 1 <
-      (orderedRow fd.pathEnds path).length := by omega
-  have hOn := (mem_orderedRow_iff fd.pathEnds path _).mp (List.getElem_mem hLast)
-  have hIncident : Incident data
-      (orderedRow fd.pathEnds path)[(orderedRow fd.pathEnds path).length - 1]
-      (rowVertex fd path (orderedRow fd.pathEnds path).length) := by
-    have hI := (walkVertex_succ_incident hLast : Incident data
-      (orderedRow fd.pathEnds path)[(orderedRow fd.pathEnds path).length - 1]
-      (rowVertex fd path ((orderedRow fd.pathEnds path).length - 1 + 1)))
-    have hLen : (orderedRow fd.pathEnds path).length - 1 + 1 =
-        (orderedRow fd.pathEnds path).length := by omega
-    rw [hLen] at hI
-    exact hI
-  obtain ⟨i, hEq⟩ := exists_interior_index fd path hValency hOn hIncident
-  exact interior_ne_finish fd path (by have := i.isLt; omega) hEq
+      (rowVertex fd path (orderedRow fd.pathEnds path).length) ≠ 2 :=
+  fd.toStablePresentation.finish_valency_ne_two path
 
 theorem start_branch (fd : FullDimensionalSourcePresentation data coordinate)
-    (path : StablePath data) : 3 ≤ nonDanglingValency data (rowVertex fd path 0) := by
-  have hNotTwo := (startEdge_isPathEnd fd.pathEnds path).2
-  have hNotOne := NonDanglingValency.nonDanglingValency_ne_one data fd.connected
-    (rowVertex fd path 0)
-  have hNotZero := ClassInjectivity.nonDanglingValency_ne_zero_of_incident data
-    (startEdge fd.pathEnds path).2 (startEdge_isPathEnd fd.pathEnds path).1
-  change nonDanglingValency data (rowVertex fd path 0) ≠ 2 at hNotTwo
-  change nonDanglingValency data (rowVertex fd path 0) ≠ 0 at hNotZero
-  omega
+    (path : StablePath data) : 3 ≤ nonDanglingValency data (rowVertex fd path 0) :=
+  fd.toStablePresentation.start_branch path
 
 theorem finish_branch (fd : FullDimensionalSourcePresentation data coordinate)
     (path : StablePath data) :
-    3 ≤ nonDanglingValency data (rowVertex fd path (orderedRow fd.pathEnds path).length) := by
-  have hNotTwo := finish_valency_ne_two fd path
-  have hNotOne := NonDanglingValency.nonDanglingValency_ne_one data fd.connected
-    (rowVertex fd path (orderedRow fd.pathEnds path).length)
-  have hPos := orderedRow_length_pos fd path
-  have hLast : (orderedRow fd.pathEnds path).length - 1 <
-      (orderedRow fd.pathEnds path).length := by omega
-  have hOn := (mem_orderedRow_iff fd.pathEnds path _).mp (List.getElem_mem hLast)
-  have hIncident : Incident data
-      (orderedRow fd.pathEnds path)[(orderedRow fd.pathEnds path).length - 1]
-      (rowVertex fd path (orderedRow fd.pathEnds path).length) := by
-    have hI := (walkVertex_succ_incident hLast : Incident data
-      (orderedRow fd.pathEnds path)[(orderedRow fd.pathEnds path).length - 1]
-      (rowVertex fd path ((orderedRow fd.pathEnds path).length - 1 + 1)))
-    have hLen : (orderedRow fd.pathEnds path).length - 1 + 1 =
-        (orderedRow fd.pathEnds path).length := by omega
-    rw [hLen] at hI
-    exact hI
-  have hNotZero := ClassInjectivity.nonDanglingValency_ne_zero_of_incident data hOn.survives hIncident
-  omega
+    3 ≤ nonDanglingValency data (rowVertex fd path (orderedRow fd.pathEnds path).length) :=
+  fd.toStablePresentation.finish_branch path
 
 noncomputable def startBranch (fd : FullDimensionalSourcePresentation data coordinate)
     (path : StablePath data) : BranchVertex data := ⟨rowVertex fd path 0, start_branch fd path⟩
@@ -98,32 +194,8 @@ theorem branch_incident_eq_endpoint
     (fd : FullDimensionalSourcePresentation data coordinate) (path : StablePath data)
     (branch : BranchVertex data) {edge : data.SourceEdge}
     (hEdge : OnRow data path edge) (hIncident : Incident data edge branch.1) :
-    branch = startBranch fd path ∨ branch = finishBranch fd path := by
-  obtain ⟨i, hi, hI⟩ := List.mem_iff_getElem.mp ((mem_orderedRow_iff fd.pathEnds path edge).mpr hEdge)
-  have hIncident' : Incident data (orderedRow fd.pathEnds path)[i] branch.1 := hI ▸ hIncident
-  rcases eq_or_eq_otherEnd data (rowVertex_incident fd path hi) hIncident' with h | h
-  · change branch.1 = rowVertex fd path i at h
-    by_cases hi0 : i = 0
-    · apply Or.inl
-      apply Subtype.ext
-      change branch.1 = rowVertex fd path 0
-      exact hi0 ▸ h
-    · have hPred : i - 1 + 1 = i := by omega
-      have hValency := rowVertex_valency fd path (j := i - 1) (by omega)
-      rw [hPred, ← h] at hValency
-      have := branch.2
-      omega
-  · have hNext : branch.1 = rowVertex fd path (i + 1) :=
-      h.trans (walkVertex_succ _ _ hi).symm
-    by_cases hLen : i + 1 = (orderedRow fd.pathEnds path).length
-    · apply Or.inr
-      apply Subtype.ext
-      change branch.1 = rowVertex fd path (orderedRow fd.pathEnds path).length
-      exact hLen ▸ hNext
-    · have hValency := rowVertex_valency fd path (j := i) (by omega)
-      rw [← hNext] at hValency
-      have := branch.2
-      omega
+    branch = startBranch fd path ∨ branch = finishBranch fd path :=
+  fd.toStablePresentation.branch_incident_eq_endpoint path branch hEdge hIncident
 
 /-- The actual row's branch labels are exactly the two request-slot labels,
 in one order. This derives orientation from the given incidence matching;

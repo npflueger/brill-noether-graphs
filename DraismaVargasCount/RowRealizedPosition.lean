@@ -23,6 +23,71 @@ open Utilities.Certificate.SubdivisionGraph
 variable {target : CFGraph.{0}} {degree : ℕ} {data : GluingDatum target degree}
   {coordinate : Type*} [Fintype coordinate] [DecidableEq coordinate]
 
+end DraismaVargas.Count.RowRealizedPosition
+
+namespace DraismaVargas.LocalCases.FullDimensionalSource.StablePresentation
+
+/-! ### The row-local layer on `StablePresentation`
+
+These are the statements of this module that use only the fields of
+`FullDimensionalSource.StablePresentation`; the full-dimensional forms below
+are their specialisations through `toStablePresentation`. -/
+
+open DraismaVargas.Count RowRealizedPosition
+
+open DraismaVargas.Infrastructure GluingDatum
+open DraismaVargas.LocalCases W4StableSource FullDimensionalSource
+open RowWalk RowPosition PendantRetraction SlotMoment
+open Utilities.Certificate.SubdivisionGraph
+
+variable {target : CFGraph.{0}} {degree : ℕ} {data : GluingDatum target degree}
+  {coordinate : Type*} [Fintype coordinate] [DecidableEq coordinate]
+
+/-- Position obtained by literally traversing the integral source occurrences. -/
+noncomputable def integralPrefix
+    (sp : StablePresentation data coordinate)
+    (realization : data.NonnegativeIntegralRealization) (path : StablePath data)
+    (j : ℕ) : ℕ :=
+  ((orderedRow sp.pathEnds path).take j |>.map realization.sourceLength).sum
+
+/-- Denominator clearing commutes with each actual ordered-row prefix,
+including prefixes containing zero-length occurrences. -/
+theorem integralPrefix_cast
+    (sp : StablePresentation data coordinate) (z : coordinate → ℚ)
+    (hNonnegative : ∀ c, 0 ≤ z c) (path : StablePath data) (j : ℕ) :
+    (integralPrefix sp
+      (NonnegativeIntegralRealization.ofNonnegativeRational data
+        (fun edge ↦ z (sp.labelling.targetEdge.symm edge))
+        (fun _ ↦ hNonnegative _)) path j : ℚ) =
+      (data.rationalRealizationScale (fun edge ↦ z (sp.labelling.targetEdge.symm edge)) : ℚ) *
+        prefixPosition sp z path j := by
+  simp only [integralPrefix, Nat.cast_list_sum, List.map_map, Function.comp_def,
+    NonnegativeIntegralRealization.ofNonnegativeRational_sourceLength_cast,
+    sourceEdgeLength, prefixPosition, ← List.sum_map_mul_left]
+
+/-- Literal row-interior chip mass at one integral position. The finite sum
+retains every preimage, including collisions of zero-length occurrences. -/
+noncomputable def collisionCoefficient
+    (sp : StablePresentation data coordinate)
+    (realization : data.NonnegativeIntegralRealization) (root : target.V)
+    (path : StablePath data) (offset : ℕ) : ℤ := by
+  classical
+  exact ∑ i : Fin ((orderedRow sp.pathEnds path).length - 1),
+    if integralPrefix sp realization path (i.val + 1) = offset then
+      retractedFibre root (retractVertex (rowVertex sp path (i.val + 1))) else 0
+
+end DraismaVargas.LocalCases.FullDimensionalSource.StablePresentation
+
+namespace DraismaVargas.Count.RowRealizedPosition
+
+open DraismaVargas.Infrastructure GluingDatum
+open DraismaVargas.LocalCases W4StableSource FullDimensionalSource
+open RowWalk RowPosition PendantRetraction SlotMoment
+open Utilities.Certificate.SubdivisionGraph
+
+variable {target : CFGraph.{0}} {degree : ℕ} {data : GluingDatum target degree}
+  {coordinate : Type*} [Fintype coordinate] [DecidableEq coordinate]
+
 /-- Position obtained by literally traversing the integral source occurrences. -/
 noncomputable def integralPrefix
     (fd : FullDimensionalSourcePresentation data coordinate)
@@ -40,10 +105,8 @@ theorem integralPrefix_cast
         (fun edge ↦ z (fd.labelling.targetEdge.symm edge))
         (fun _ ↦ hNonnegative _)) path j : ℚ) =
       (data.rationalRealizationScale (fun edge ↦ z (fd.labelling.targetEdge.symm edge)) : ℚ) *
-        prefixPosition fd z path j := by
-  simp only [integralPrefix, Nat.cast_list_sum, List.map_map, Function.comp_def,
-    NonnegativeIntegralRealization.ofNonnegativeRational_sourceLength_cast,
-    sourceEdgeLength, prefixPosition, ← List.sum_map_mul_left]
+        prefixPosition fd z path j :=
+  fd.toStablePresentation.integralPrefix_cast z hNonnegative path j
 
 /-- The canonical closed-cone realization of a counted member. -/
 noncomputable def memberRealization {n p : ℕ}

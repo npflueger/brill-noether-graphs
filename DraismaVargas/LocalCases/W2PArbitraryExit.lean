@@ -274,7 +274,9 @@ theorem outgoingLabelling_self (input : W2SourceInput data star) (shape : Shape 
       (W2PCommonBalance.members profile shape incoming).datum coordinate) :
     outgoingLabelling input shape incoming incomingFD incoming = incomingFD.labelling := by
   cases incomingFD with
-  | mk valid targetConnected targetGenus saturated labelling det_ne_zero trivalent pathEnds =>
+  | mk toStablePresentation saturated det_ne_zero =>
+    obtain ⟨valid, targetConnected, targetGenus, labelling, trivalent, pathEnds⟩ :=
+      toStablePresentation
     cases labelling with
     | mk targetEdge row =>
       simp only [outgoingLabelling, initialLabelling, W2PCommonBalance.LimitColumns.labelling,

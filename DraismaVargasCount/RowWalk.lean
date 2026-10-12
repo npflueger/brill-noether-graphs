@@ -100,7 +100,9 @@ a leaf-avoiding row never leaves a vertex by the occurrence it entered by.
 * `incomingRowDenominator_eq_of_rowUnramified_of_rowTargetInjective` -- the
   sharp `d₀ = k` from the two halves this file supplies.
 * `rowIndexConstant_of_rowUnramified`, `rowDenominator_dvd_of_rowUnramified` --
-  the same on a square full-dimensional presentation.
+  the same on a square full-dimensional presentation.  Their
+  `FullDimensionalSource.StablePresentation` forms need neither the dimension
+  count nor nonsingularity, only dangling-no-glue as a hypothesis.
 * `forall_index_dvd_secondRow`, `forall_index_dvd_thirdRow`,
   `incomingRowDenominator_secondRow_dvd`, `incomingRowDenominator_thirdRow_dvd`,
   and the `_eq` forms -- the two rows `h₂`, `h₃` of the `{w2-r2-nd3-M-1k}`
@@ -1135,17 +1137,75 @@ theorem incomingRowDenominator_eq_of_rowUnramified_of_rowTargetInjective
   Nat.dvd_antisymm (incomingRowDenominator_dvd_of_rowUnramified hNoGlue hEnds hEdge hUnram)
     (dvd_incomingRowDenominator_of_rowTargetInjective hInjective hEdge)
 
+end DraismaVargas.Count.RowWalk
+
+namespace DraismaVargas.LocalCases.FullDimensionalSource.StablePresentation
+
+/-! ### The row-local layer on `StablePresentation`
+
+These are the statements of this module that use only the fields of
+`FullDimensionalSource.StablePresentation`; the full-dimensional forms below
+are their specialisations through `toStablePresentation`. -/
+
+open DraismaVargas.Count RowWalk
+
+open DraismaVargas.Infrastructure
+open DraismaVargas.Infrastructure.GluingDatum
+open DraismaVargas.LocalCases
+open DraismaVargas.LocalCases.W4StableSource
+open DraismaVargas.LocalCases.StableLocalProperties
+open DraismaVargas.LocalCases.FullDimensionalSource
+open DraismaVargas.Count.IndexPattern
+
+variable {target : CFGraph} {degree : ℕ} {data : GluingDatum target degree}
+  {coordinate : Type*} [Fintype coordinate] [DecidableEq coordinate]
+
+/-- **`lemma-edge-deno` (b) on a row of a square stable presentation**: given
+dangling-no-glue, an unramified row has constant index. -/
+theorem rowIndexConstant_of_rowUnramified
+    (sp : StablePresentation data coordinate) (hNoGlue : DanglingEdgeNoGlue data)
+    {sourceRow : coordinate}
+    {edge : data.SourceEdge} (hEdge : edge ∈ EdgeDenominator.rowEdges sp.labelling sourceRow)
+    (hUnram : RowUnramified data (sp.labelling.row.symm sourceRow)) :
+    EdgeDenominator.RowIndexConstant sp.labelling sourceRow (data.sourceEdgeIndex edge) := by
+  intro other hOther
+  exact sourceEdgeIndex_eq_of_rowUnramified hNoGlue sp.pathEnds hUnram
+    ((mem_rowEdges_iff_onRow sp.labelling sourceRow other).mp hOther)
+    ((mem_rowEdges_iff_onRow sp.labelling sourceRow edge).mp hEdge)
+
+/-- `d_i ∣ k` on a row of a square stable presentation, given dangling-no-glue. -/
+theorem rowDenominator_dvd_of_rowUnramified
+    (sp : StablePresentation data coordinate) (hNoGlue : DanglingEdgeNoGlue data)
+    {sourceRow : coordinate}
+    {edge : data.SourceEdge} (hEdge : edge ∈ EdgeDenominator.rowEdges sp.labelling sourceRow)
+    (hUnram : RowUnramified data (sp.labelling.row.symm sourceRow)) :
+    rowDenominator sp.labelling.presentation sourceRow ∣ data.sourceEdgeIndex edge :=
+  EdgeDenominator.rowDenominator_dvd_of_rowIndexConstant sp.labelling sourceRow
+    (rowIndexConstant_of_rowUnramified sp hNoGlue hEdge hUnram)
+
+end DraismaVargas.LocalCases.FullDimensionalSource.StablePresentation
+
+namespace DraismaVargas.Count.RowWalk
+
+open DraismaVargas.Infrastructure
+open DraismaVargas.Infrastructure.GluingDatum
+open DraismaVargas.LocalCases
+open DraismaVargas.LocalCases.W4StableSource
+open DraismaVargas.LocalCases.StableLocalProperties
+open DraismaVargas.LocalCases.FullDimensionalSource
+open DraismaVargas.Count.IndexPattern
+
+variable {target : CFGraph} {degree : ℕ} {data : GluingDatum target degree}
+  {coordinate : Type*} [Fintype coordinate] [DecidableEq coordinate]
+
 /-- **`lemma-edge-deno` (b) on a square full-dimensional row**: the row has
 constant index. -/
 theorem rowIndexConstant_of_rowUnramified
     (fd : FullDimensionalSourcePresentation data coordinate) {sourceRow : coordinate}
     {edge : data.SourceEdge} (hEdge : edge ∈ EdgeDenominator.rowEdges fd.labelling sourceRow)
     (hUnram : RowUnramified data (fd.labelling.row.symm sourceRow)) :
-    EdgeDenominator.RowIndexConstant fd.labelling sourceRow (data.sourceEdgeIndex edge) := by
-  intro other hOther
-  exact sourceEdgeIndex_eq_of_rowUnramified fd.danglingEdgeNoGlue fd.pathEnds hUnram
-    ((mem_rowEdges_iff_onRow fd.labelling sourceRow other).mp hOther)
-    ((mem_rowEdges_iff_onRow fd.labelling sourceRow edge).mp hEdge)
+    EdgeDenominator.RowIndexConstant fd.labelling sourceRow (data.sourceEdgeIndex edge) :=
+  fd.toStablePresentation.rowIndexConstant_of_rowUnramified fd.danglingEdgeNoGlue hEdge hUnram
 
 /-- `d_i ∣ k` on a square full-dimensional row. -/
 theorem rowDenominator_dvd_of_rowUnramified
@@ -1153,8 +1213,7 @@ theorem rowDenominator_dvd_of_rowUnramified
     {edge : data.SourceEdge} (hEdge : edge ∈ EdgeDenominator.rowEdges fd.labelling sourceRow)
     (hUnram : RowUnramified data (fd.labelling.row.symm sourceRow)) :
     rowDenominator fd.labelling.presentation sourceRow ∣ data.sourceEdgeIndex edge :=
-  EdgeDenominator.rowDenominator_dvd_of_rowIndexConstant fd.labelling sourceRow
-    (rowIndexConstant_of_rowUnramified fd hEdge hUnram)
+  fd.toStablePresentation.rowDenominator_dvd_of_rowUnramified fd.danglingEdgeNoGlue hEdge hUnram
 
 /-- **`Count.EdgeDenominator`'s trichotomy hypothesis, discharged.**  Every row
 of a full-dimensional morphism over a simple target has consecutive indices, so

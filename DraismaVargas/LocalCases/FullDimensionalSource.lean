@@ -28,6 +28,18 @@ a precise record of the inputs that do not.
   `nd(v) ≤ 3` and the absence of cyclic stable paths
   (`W4StableSource.HasPathEnds`).
 
+It is built in two layers.  `StablePresentation data coordinate` carries every
+field except the two that express full-dimensionality: validity, the target
+hypotheses, the stable labelling, trivalence and path ends.  The row-local
+facts -- the vertices and prefix positions along the ordered walk of a stable
+row, the branch vertices at its two ends, and the enumeration of its interior
+vertices -- use only these, never the dimension count or the nonsingularity of
+the matrix, so they are stated on `StablePresentation` and apply to a
+presentation whose matrix may be singular or whose dimension formula need not
+be saturated.  `FullDimensionalSourcePresentation` extends it
+by `saturated` and `det_ne_zero`, so every field and every
+`StablePresentation` lemma is reached from it by dot notation.
+
 Everything else that the local cases need is derived here:
 change-minimality, the combinatorial-type conditions, dangling-no-glue, the
 `nd(v) ∈ {0, 2, 3}` trichotomy at every source vertex and at every wall block,
@@ -157,7 +169,42 @@ theorem nontrivial_target_of_saturated {data : GluingDatum target degree}
     omega
   · exact hNontrivial
 
-/-! ## The structure -/
+/-! ## The structures -/
+
+/-- **A stable-source presentation, without the dimension count.**
+
+The fields of `FullDimensionalSourcePresentation` that do not express
+full-dimensionality: the datum is valid, the target is connected of genus zero,
+the stable paths carry an honest square labelling, the stable graph is
+trivalent, and no stable path is a cycle.  Neither the dimension formula nor
+nonsingularity of the length matrix is assumed.
+
+This is the input of the row-local layer: the vertices and prefix positions
+along the ordered walk of a stable row (`Count.RowWalk.orderedRow`), the
+branch vertices at its two ends, and the enumeration of its interior vertices.
+Those statements are therefore available for every presentation satisfying
+these fields, and a full-dimensional presentation reaches them through
+`FullDimensionalSourcePresentation.toStablePresentation`.  The labelling is
+still square; what is dropped is only the dimension count and nonsingularity.  A
+statement that also needs dangling-no-glue takes it as a hypothesis here;
+`FullDimensionalSourcePresentation.danglingEdgeNoGlue` derives it from the two
+full-dimensional fields. -/
+structure StablePresentation
+    (data : GluingDatum target degree) (coordinate : Type*)
+    [Fintype coordinate] [DecidableEq coordinate] where
+  /-- The incoming datum is a valid gluing datum. -/
+  valid : data.Valid
+  /-- Part-I standing hypothesis on the target. -/
+  targetConnected : graph_connected target
+  /-- Part-I standing hypothesis on the target. -/
+  targetGenus : genus target = 0
+  /-- The honest stable length-matrix labelling of the pruned source. -/
+  labelling : StableLengthMatrixLabelling data coordinate
+  /-- The stable graph is trivalent: no source vertex has four or more
+  surviving incident occurrences. -/
+  trivalent : ∀ vertex : data.SourceVertex, nonDanglingValency data vertex ≤ 3
+  /-- The stable graph has minimal valency three: no stable path is a cycle. -/
+  pathEnds : HasPathEnds data
 
 /-- **The global consequences of full-dimensionality, in one object.**
 
@@ -190,31 +237,108 @@ The fields, and the consumer that forces each:
   surviving valency two is a disjoint union of cycles, satisfies `trivalent`,
   and has no path end anywhere.
 
+The fields other than `saturated` and `det_ne_zero` form the parent structure
+`StablePresentation`; `fd.valid`, `fd.labelling`, `fd.pathEnds` and the rest
+are its fields, reached through `toStablePresentation`.
+
 Deliberately *not* fields, because they are theorems below: change-minimality,
 the combinatorial-type conditions, dangling-no-glue, the decomposition of the
 pruned source by the stable rows, and the stable-path count. -/
 structure FullDimensionalSourcePresentation
     (data : GluingDatum target degree) (coordinate : Type*)
-    [Fintype coordinate] [DecidableEq coordinate] where
-  /-- The incoming datum is a valid gluing datum. -/
-  valid : data.Valid
-  /-- Part-I standing hypothesis on the target. -/
-  targetConnected : graph_connected target
-  /-- Part-I standing hypothesis on the target. -/
-  targetGenus : genus target = 0
+    [Fintype coordinate] [DecidableEq coordinate]
+    extends StablePresentation data coordinate where
   /-- Full-dimensionality: the dimension formula is saturated. -/
   saturated : (target.edges.card : ℤ) =
     2 * genus data.sourceGraph + 2 * degree - 5
-  /-- The honest stable length-matrix labelling of the pruned source. -/
-  labelling : StableLengthMatrixLabelling data coordinate
   /-- Its length matrix is nonsingular. -/
   det_ne_zero : (GluingDatum.LengthMatrixPresentation.matrix
     labelling.presentation).det ≠ 0
-  /-- The stable graph is trivalent: no source vertex has four or more
-  surviving incident occurrences. -/
-  trivalent : ∀ vertex : data.SourceVertex, nonDanglingValency data vertex ≤ 3
-  /-- The stable graph has minimal valency three: no stable path is a cycle. -/
-  pathEnds : HasPathEnds data
+
+namespace StablePresentation
+
+variable {coordinate : Type*} [Fintype coordinate] [DecidableEq coordinate]
+  {data : GluingDatum target degree}
+  (sp : StablePresentation data coordinate)
+
+include sp
+
+/-! ### Derived without full-dimensionality -/
+
+/-- Connectedness of the quotient source. -/
+theorem connected : data.Connected := sp.valid.1
+
+/-- One stable path per target edge occurrence: the labelling is square. -/
+theorem stablePath_card : Fintype.card (StablePath data) = target.edges.card :=
+  stablePath_card_of_labelling sp.labelling
+
+/-- The rows of the honest stable presentation partition the surviving source
+occurrences. -/
+theorem decomposes : Decomposes sp.labelling.presentation :=
+  stableLengthMatrixLabelling_decomposes sp.labelling
+
+/-- **The valency trichotomy at every source vertex.**  `nd ≠ 1` is
+`NonDanglingValency.nonDanglingValency_ne_one`, which needs only
+connectedness; `nd ≤ 3` is the trivalence field. -/
+theorem nonDanglingValency_trichotomy (vertex : data.SourceVertex) :
+    nonDanglingValency data vertex = 0 ∨ nonDanglingValency data vertex = 2 ∨
+      nonDanglingValency data vertex = 3 :=
+  nonDanglingValency_eq_zero_or_two_or_three data sp.connected vertex
+    (sp.trivalent vertex)
+
+/-- The wall-block form of `nonDanglingValency_trichotomy`. -/
+theorem wallBlock_nonDanglingValency_trichotomy (wall : target.V)
+    (sourceBlock : WallBlock data wall) :
+    nonDanglingValency data
+        (WallBlock.sourceVertex data wall sourceBlock) = 0 ∨
+      nonDanglingValency data
+          (WallBlock.sourceVertex data wall sourceBlock) = 2 ∨
+        nonDanglingValency data
+          (WallBlock.sourceVertex data wall sourceBlock) = 3 :=
+  sp.nonDanglingValency_trichotomy _
+
+/-- The honest stable presentation rebuilt on traversal-ordered rows. -/
+noncomputable def orderedPresentation : data.LengthMatrixPresentation coordinate :=
+  sp.labelling.orderedPresentation sp.pathEnds
+
+/-- Reordering the rows does not change the length matrix. -/
+theorem matrix_orderedPresentation :
+    GluingDatum.LengthMatrixPresentation.matrix sp.orderedPresentation =
+      GluingDatum.LengthMatrixPresentation.matrix sp.labelling.presentation :=
+  sp.labelling.matrix_orderedPresentation sp.pathEnds
+
+/-- Consecutive entries of an ordered row meet at a surviving valency-two
+source vertex. -/
+theorem orderedPresentation_chain (row : coordinate) :
+    (sp.orderedPresentation.path row).IsChain fun first second ↦
+      ∃ vertex : data.SourceVertex, Incident data first vertex ∧
+        Incident data second vertex ∧ nonDanglingValency data vertex = 2 :=
+  sp.labelling.orderedPath_chain sp.pathEnds row
+
+/-- The traversal-ordered presentation both decomposes the pruned source and
+has rows that are genuine walks. -/
+theorem orderedDecomposes : Decomposes sp.orderedPresentation := by
+  refine ⟨fun row ↦ sp.labelling.orderedPath_nodup sp.pathEnds row,
+    fun row row' hNe edge hMem hMem' ↦ ?_, fun edge hSurvives ↦ ?_,
+    fun edge hDangling row hMem ↦ ?_⟩
+  · obtain ⟨_, hRow⟩ :=
+      (sp.labelling.mem_orderedPath_iff sp.pathEnds row edge).mp hMem
+    obtain ⟨_, hRow'⟩ :=
+      (sp.labelling.mem_orderedPath_iff sp.pathEnds row' edge).mp hMem'
+    exact hNe (hRow.symm.trans hRow')
+  · exact ⟨sp.labelling.row (NonDanglingEdge.stablePath ⟨edge, hSurvives⟩),
+      (sp.labelling.mem_orderedPath_iff sp.pathEnds _ edge).mpr
+        ⟨hSurvives, rfl⟩⟩
+  · exact ((sp.labelling.mem_orderedPath_iff sp.pathEnds row edge).mp
+      hMem).choose hDangling
+
+/-- A datum with a square stable labelling is never a W4 wall datum. -/
+theorem false_of_auxR0SourceInput {wall : target.V}
+    {star : W4TargetPairings.FourStar target wall}
+    (input : AuxR0SourceInput data star) : False :=
+  false_of_labelling_auxR0SourceInput sp.labelling input
+
+end StablePresentation
 
 namespace FullDimensionalSourcePresentation
 
@@ -227,7 +351,7 @@ include fd
 /-! ### Derived: the combinatorial type and change-minimality -/
 
 /-- Connectedness of the quotient source. -/
-theorem connected : data.Connected := fd.valid.1
+theorem connected : data.Connected := fd.toStablePresentation.connected
 
 /-- A full-dimensional target has at least two vertices. -/
 theorem nontrivial_target : Nontrivial target.V :=
@@ -271,12 +395,12 @@ theorem danglingEdgeNoGlue : DanglingEdgeNoGlue data :=
 /-- **The stable-path count is derived, not assumed**: one stable path per
 target edge occurrence. -/
 theorem stablePath_card : Fintype.card (StablePath data) = target.edges.card :=
-  stablePath_card_of_labelling fd.labelling
+  fd.toStablePresentation.stablePath_card
 
 /-- **The decomposition is derived, not assumed**: the rows of the honest
 stable presentation partition the surviving source occurrences. -/
 theorem decomposes : Decomposes fd.labelling.presentation :=
-  stableLengthMatrixLabelling_decomposes fd.labelling
+  fd.toStablePresentation.decomposes
 
 /-! ### Derived: the valency trichotomy -/
 
@@ -288,8 +412,7 @@ once globally instead of per wall. -/
 theorem nonDanglingValency_trichotomy (vertex : data.SourceVertex) :
     nonDanglingValency data vertex = 0 ∨ nonDanglingValency data vertex = 2 ∨
       nonDanglingValency data vertex = 3 :=
-  nonDanglingValency_eq_zero_or_two_or_three data fd.connected vertex
-    (fd.trivalent vertex)
+  fd.toStablePresentation.nonDanglingValency_trichotomy vertex
 
 /-- The wall-block form, matching the `nonDangling_valency` field of
 `W4StableSource.AuxR0SourceInput` verbatim, at every target vertex at once. -/
@@ -313,7 +436,7 @@ noncomputable def orderedPresentation : data.LengthMatrixPresentation coordinate
 theorem matrix_orderedPresentation :
     GluingDatum.LengthMatrixPresentation.matrix fd.orderedPresentation =
       GluingDatum.LengthMatrixPresentation.matrix fd.labelling.presentation :=
-  fd.labelling.matrix_orderedPresentation fd.pathEnds
+  fd.toStablePresentation.matrix_orderedPresentation
 
 /-- The ordered presentation is still nonsingular. -/
 theorem det_orderedPresentation_ne_zero :
@@ -327,25 +450,13 @@ theorem orderedPresentation_chain (row : coordinate) :
     (fd.orderedPresentation.path row).IsChain fun first second ↦
       ∃ vertex : data.SourceVertex, Incident data first vertex ∧
         Incident data second vertex ∧ nonDanglingValency data vertex = 2 :=
-  fd.labelling.orderedPath_chain fd.pathEnds row
+  fd.toStablePresentation.orderedPresentation_chain row
 
 /-- **The combination the refinement receipt needs**: the traversal-ordered
 presentation both decomposes the pruned source and has rows that are genuine
 walks. -/
-theorem orderedDecomposes : Decomposes fd.orderedPresentation := by
-  refine ⟨fun row ↦ fd.labelling.orderedPath_nodup fd.pathEnds row,
-    fun row row' hNe edge hMem hMem' ↦ ?_, fun edge hSurvives ↦ ?_,
-    fun edge hDangling row hMem ↦ ?_⟩
-  · obtain ⟨_, hRow⟩ :=
-      (fd.labelling.mem_orderedPath_iff fd.pathEnds row edge).mp hMem
-    obtain ⟨_, hRow'⟩ :=
-      (fd.labelling.mem_orderedPath_iff fd.pathEnds row' edge).mp hMem'
-    exact hNe (hRow.symm.trans hRow')
-  · exact ⟨fd.labelling.row (NonDanglingEdge.stablePath ⟨edge, hSurvives⟩),
-      (fd.labelling.mem_orderedPath_iff fd.pathEnds _ edge).mpr
-        ⟨hSurvives, rfl⟩⟩
-  · exact ((fd.labelling.mem_orderedPath_iff fd.pathEnds row edge).mp
-      hMem).choose hDangling
+theorem orderedDecomposes : Decomposes fd.orderedPresentation :=
+  fd.toStablePresentation.orderedDecomposes
 
 /-! ### The wall interface is unreachable from here -/
 
@@ -355,7 +466,7 @@ theorem orderedDecomposes : Decomposes fd.orderedPresentation := by
 theorem false_of_auxR0SourceInput {wall : target.V}
     {star : W4TargetPairings.FourStar target wall}
     (input : AuxR0SourceInput data star) : False :=
-  false_of_labelling_auxR0SourceInput fd.labelling input
+  fd.toStablePresentation.false_of_auxR0SourceInput input
 
 end FullDimensionalSourcePresentation
 

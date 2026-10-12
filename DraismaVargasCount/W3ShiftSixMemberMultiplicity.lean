@@ -102,7 +102,8 @@ theorem pair_sum_signedMult_eq_zero (direction : Fin 3) :
     have hSharp := W3ShiftIncomingDenominator.incomingRowDenominator_of_shrink p.shrink fd
     have hSum := W3ShiftMultiplicityBalance.sum_signedMult_eq_zero_of_sharp
       p.shrink p.gaugeInput.valid initial hSharp
-    simpa only [initial, p, pair_labelling_eq, member] using hSum
+    simp only [initial, p, pair_labelling_eq] at hSum
+    exact hSum
 
 include hConnected hGenus in
 /-- **Equation (3): the sum of all six signed multiplicities is zero.**

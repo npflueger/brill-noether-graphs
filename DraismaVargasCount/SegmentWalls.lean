@@ -675,8 +675,8 @@ instance instFiniteFullDim {target : CFGraph.{0}} {degree : ℕ}
     (fun fd : FullDimensionalSource.FullDimensionalSourcePresentation data (Fin p) ↦
       fd.labelling) ?_
   intro a b h
-  cases a
-  cases b
+  obtain ⟨⟨_, _, _, _, _, _⟩, _, _⟩ := a
+  obtain ⟨⟨_, _, _, _, _, _⟩, _, _⟩ := b
   subst h
   rfl
 
