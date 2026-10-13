@@ -33,6 +33,7 @@ public import Utilities.Foundations.RankInvariance
 public import Utilities.Foundations.RankOne
 public import Utilities.Foundations.RiemannRochWinnable
 public import Utilities.Foundations.ScriptClamping
+public import Utilities.Foundations.ChipChoice
 public import Utilities.Foundations.BlockSlopeRounding
 public import Utilities.Foundations.CommonOffsetRounding
 public import Utilities.Foundations.ConvexIntegerRounding
@@ -229,6 +230,7 @@ public import Utilities.Transmission.MarkedRankProfile
 public import Utilities.Transmission.Transmission
 public import Utilities.Transmission.TransmissionBN
 public import Utilities.Transmission.TransmissionCorner
+public import Utilities.Transmission.TransmissionCornerShift
 public import Utilities.Transmission.TransmissionDuality
 public import Utilities.Transmission.TransmissionExistence
 public import Utilities.Transmission.TransmissionIso
@@ -240,5 +242,7 @@ public import Utilities.Transmission.TransmissionWedgeDemazure
 public import Utilities.Transmission.TransmissionWedgePresentation
 public import Utilities.Transmission.TransmissionWedgeSameSide
 public import Utilities.Transmission.TransmissionWedgeSameSidePresentation
+public import Utilities.Transmission.WindowPerm
+public import Utilities.Transmission.WindowSlipface
 
 @[expose] public section
