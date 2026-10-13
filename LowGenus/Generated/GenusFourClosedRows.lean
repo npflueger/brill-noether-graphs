@@ -11,19 +11,12 @@ public import LowGenus.GenusFiveConfigurations
 # Generated closed-face checks for genus-four cubic rows
 
 These are the public, kernel-checked fallbacks for the three cubic rows whose
-closed-face proofs are represented by `.rpf` certificate trees.  They are not
-intended to displace human-readable positive-length arguments:
-
-* row 096 has the symbolic cone-march proof in
-  `LowGenus.GenusFourRow096Pencil`;
-* row 099 has the hand-written `K₃,₃` pencil retained in the private source
-  tree;
-* row 100 has its hand-written positive-length construction retained there as
-  well.
-
-The generated certificates add the fact needed by the public pseudocore
-reduction: the same pencils survive every genus-preserving nonloopy forest
-face.  Their Farkas receipts and firing scripts are rechecked by Lean's kernel;
+closed-face proofs are represented by `.rpf` certificate trees.  They are
+independent checks, not consumed: the public pseudocore reduction
+(`LowGenus.GenusFourRowsClosed`) uses the readable closed-orthant proofs
+`LowGenus.GenusFourRow096Closed`, `LowGenus.GenusFourRow099Closed` and
+`LowGenus.GenusFourRow100Closed`, which prove the same three statements, and
+the `LowGenus` root does not import this module.  Their Farkas receipts and firing scripts are rechecked by Lean's kernel;
 no external checker is trusted.
 -/
 

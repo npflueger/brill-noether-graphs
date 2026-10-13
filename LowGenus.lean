@@ -17,10 +17,13 @@ public import LowGenus.ConfigurationSeven
 public import LowGenus.ConfigurationThree
 public import LowGenus.ConfigurationThreeChain
 public import LowGenus.ConfigurationTwo
+public import LowGenus.GenusFourRow096Closed
 public import LowGenus.GenusFourRow096Pencil
 public import LowGenus.GenusFourRow097Closed
 public import LowGenus.GenusFourRow097Contractions
 public import LowGenus.GenusFourRow098Closed
+public import LowGenus.GenusFourRow099Closed
+public import LowGenus.GenusFourRow100Closed
 public import LowGenus.GenusFiveClosedOrbit
 public import LowGenus.GenusFiveConfigurations
 public import LowGenus.GenusFiveConstructions
@@ -80,6 +83,12 @@ generated checks alongside the readable proofs used by the main library.
 `GenusFiveClosedCover` supplies the affine-cover semantics for those generated
 certificates and is outside the dependency closure of
 `brillNoetherExistenceThroughFive`.
+
+Likewise `Generated.GenusFourClosedRows` and the three certificates it wraps,
+`Generated.G4Row096`, `Generated.G4Row099` and `Generated.G4Row100`, are not
+imported: the genus-four rows 096, 099 and 100 are consumed through the
+readable `GenusFourRow096Closed`, `GenusFourRow099Closed` and
+`GenusFourRow100Closed`.
 
 Add an import line above whenever a module is added under `LowGenus/`, or
 `lake build LowGenus` will silently skip it. -/

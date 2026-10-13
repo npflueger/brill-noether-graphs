@@ -1,10 +1,12 @@
 module
 
-public import LowGenus.Generated.GenusFourClosedRows
 public import LowGenus.GenusFourCubicCoverage
 public import LowGenus.GenusFourRow095Closed
+public import LowGenus.GenusFourRow096Closed
 public import LowGenus.GenusFourRow097Closed
 public import LowGenus.GenusFourRow098Closed
+public import LowGenus.GenusFourRow099Closed
+public import LowGenus.GenusFourRow100Closed
 
 @[expose] public section
 
@@ -12,10 +14,10 @@ public import LowGenus.GenusFourRow098Closed
 # The six closed cubic genus-four rows
 
 This is the small concrete ledger consumed by the public genus-four
-pseudocore reduction.  Rows 095, 097, and 098 have readable structural
-closed-face proofs.  Rows 096, 099, and 100 use kernel-checked generated
-certificates for the boundary faces; row 096 additionally has a readable
-symbolic proof on the positive orthant.
+pseudocore reduction.  All six rows have readable closed-face proofs.  The
+kernel-checked generated certificates for rows 096, 099 and 100
+(`LowGenus.Generated.GenusFourClosedRows`) prove the same three statements
+independently; they are kept as checks and are not imported here.
 -/
 
 set_option autoImplicit false
@@ -36,13 +38,13 @@ theorem rowClosedCoverage : RowClosedCoverage := by
   simp only [atlas, List.mem_cons, List.not_mem_nil, or_false] at hRow
   rcases hRow with rfl | rfl | rfl | rfl | rfl | rfl
   · exact GenusFourRow095Closed.row095_closed length hForest hNotLoopy
-  · exact GenusFourGeneratedRows.row096_closed length hForest hNotLoopy
+  · exact GenusFourRow096Closed.row096_closed length hForest hNotLoopy
   · rw [faceSpec_eq_censusSpec]
     exact LowGenus.GenusFourRow097Closed.bnExists_closed
       length hForest hNotLoopy
   · exact GenusFourRow098Closed.bnExists_closed length hForest hNotLoopy
-  · exact GenusFourGeneratedRows.row099_closed length hForest hNotLoopy
-  · exact GenusFourGeneratedRows.row100_closed length hForest hNotLoopy
+  · exact GenusFourRow099Closed.row099_closed length hForest hNotLoopy
+  · exact GenusFourRow100Closed.row100_closed length hForest hNotLoopy
 
 /-- The public classifier and the six-row ledger cover every connected
 loopless cubic genus-four core. -/

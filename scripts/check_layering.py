@@ -116,6 +116,14 @@ DELIBERATELY_UNREACHABLE = {
     'LowGenus.GenusFiveRow06FixedCover',
     'LowGenus.GenusFiveRow06Symmetry',
     'LowGenus.GenusFiveRow14FixedCover',
+    # The three generated closed-face certificates for genus-four rows 096,
+    # 099 and 100 and their wrapper, kept as independent checks since the
+    # readable `GenusFourRow0{96,99,100}Closed` replaced them (named in the
+    # `LowGenus.lean` docstring).
+    'LowGenus.Generated.GenusFourClosedRows',
+    'LowGenus.Generated.G4Row096',
+    'LowGenus.Generated.G4Row099',
+    'LowGenus.Generated.G4Row100',
 }
 
 
