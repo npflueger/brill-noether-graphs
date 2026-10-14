@@ -334,16 +334,16 @@ related_formalizations:
       Supplies the divisor theory of finite graphs used throughout: divisors,
       linear equivalence, the Baker--Norine rank and the Riemann--Roch
       theorem. The dependency uses the module system upstream and is pinned to
-      commit 7391bd379f5e0d11aae57c5a5bd61d61709bd200, which updates its
-      v1.1.2 release to Lean and Mathlib v4.35.0-rc4 and also builds against
-      the Mathlib v4.35.0-rc3 pinned here.
+      commit b24ecdb21344befdc4f6cb3430fef659eee20066, which updates its
+      v1.1.2 release to Lean and Mathlib v4.35.0.
   - id: "https://github.com/npflueger/demazure"
     relationship: "builds-on"
     note: >-
       Supplies Demazure products of integer permutations, used by the
       repository's transmission-permutation machinery. The dependency uses
-      the module system upstream and is pinned to its v1.1.2 release
-      (commit 99f69e15fa82cc9bb81695a78c35b80da1ea3a5e).
+      the module system upstream and is pinned to commit
+      21522a502e3c07c09d5efd62c8dff19f95039662, which updates its v1.1.2
+      release to Lean and Mathlib v4.35.0.
 
 status:
   scope: >-

@@ -105,20 +105,19 @@ name = "TwiceMarkedBananas"
 name = "TwiceMarkedBananasStatements"
 
 [[require]]
-# Module-compatible release, updated to Lean and Mathlib v4.35.0-rc4; it also
-# builds against the Mathlib v4.35.0-rc3 required below.
+# Module-compatible release, updated to Lean and Mathlib v4.35.0.
 name = "chip-firing-with-lean"
 git = "https://github.com/DhyeyMavani2003/chip-firing-with-lean.git"
-rev = "7391bd379f5e0d11aae57c5a5bd61d61709bd200"
+rev = "b24ecdb21344befdc4f6cb3430fef659eee20066"
 
 [[require]]
 name = "demazure"
 git = "https://github.com/npflueger/demazure.git"
-rev = "99f69e15fa82cc9bb81695a78c35b80da1ea3a5e" # v1.1.2
+rev = "21522a502e3c07c09d5efd62c8dff19f95039662" # after v1.1.2, updated to Lean and Mathlib v4.35.0
 
 # Required last, so that Mathlib's pins of shared transitive dependencies take
 # precedence over those in the other dependencies' manifests.
 [[require]]
 name = "mathlib"
 scope = "leanprover-community"
-rev = "v4.35.0-rc3"
+rev = "v4.35.0"
