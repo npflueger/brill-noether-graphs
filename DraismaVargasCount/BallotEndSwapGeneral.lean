@@ -530,7 +530,7 @@ theorem identity_branch_realized (hm : 1 ≤ m) (s : Slopes (2 * (m + 1 + 1)))
           (fun a ha ↦ BallotFarEndSwap.innerIndex_farSwap m a ha)
           (fun e he ↦ by
             rw [hL.2.1 e he, BallotFarEndSwap.farSwap_slot_val]
-            split_ifs <;> first | contradiction | omega)
+            split_ifs <;> omega)
           (fun e he ↦ by
             rw [hR.2.2.1 e he, BallotFarEndSwap.farSwap_slot_val]
             split_ifs <;> first | contradiction | omega)

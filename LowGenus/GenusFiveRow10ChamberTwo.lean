@@ -453,7 +453,7 @@ theorem fCoeff_eq {d : DegSpec 8 12} (hCore : d.core = row10Core)
   fin_cases v
   all_goals simp [fCoeff, contribForm, heightFlat, chipWeight, zeroChip,
     positiveChip, transferWeight, indicatorWeight, markA, hT10, hH10]
-  all_goals (try (first | ring1 | ring_nf))
+  all_goals (try ring_nf)
   all_goals (try split_ifs)
   all_goals (try simp_all)
   all_goals (try omega)
@@ -554,7 +554,7 @@ theorem bCoeff_eq {d : DegSpec 8 12} (hCore : d.core = row10Core)
   fin_cases v
   all_goals simp [bCoeff, contribForm, heightB, chipWeight, zeroChip,
     positiveChip, transferWeight, indicatorWeight, markA, hT10, hH10]
-  all_goals (try (first | ring1 | ring_nf))
+  all_goals (try ring_nf)
   all_goals (try split_ifs)
   all_goals (try simp_all)
   all_goals (try omega)
@@ -900,7 +900,7 @@ theorem tCoeff_eq {d : DegSpec 8 12} (hCore : d.core = row10Core)
   fin_cases v
   all_goals simp [tCoeff, contribForm, heightT, chipWeight, zeroChip,
     positiveChip, transferWeight, indicatorWeight, markA, hT10, hH10]
-  all_goals (try (first | ring1 | ring_nf))
+  all_goals (try ring_nf)
   all_goals (try split_ifs)
   all_goals (try simp_all)
   all_goals (try split_ifs)

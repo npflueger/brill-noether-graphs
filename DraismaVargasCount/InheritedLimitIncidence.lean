@@ -168,7 +168,8 @@ theorem row_fibre_handshake (v : w.limit.SourceVertex) (row : StablePath w.frame
       vertexMap w (w.frame.data.sourceEnds edge.1).2 at hm
     by_cases hf : vertexMap w (w.frame.data.sourceEnds edge.1).1 = v <;>
       by_cases hs : vertexMap w (w.frame.data.sourceEnds edge.1).2 = v
-    all_goals simp_all <;> first | exact ⟨hf,hs⟩ | exact hf | exact hs
+    all_goals simp_all
+    all_goals first | exact ⟨hf,hs⟩ | exact hf | exact hs
 
 include hy in
 theorem divalent_of_fibre_ne_branch (v : BranchVertex w.frame.data)

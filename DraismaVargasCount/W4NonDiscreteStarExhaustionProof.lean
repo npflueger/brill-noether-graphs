@@ -679,10 +679,7 @@ theorem nd2_side_rel (W : SheetPartition d) {a x : Fin d} (hx : W.Rel a x) (y : 
       sidePartition, dite_true, dite_false, ite_true, ite_false, Bool.false_eq_true,
       reduceCtorEq, Option.some.injEq, Bool.not_false, Bool.not_true, and_true, true_implies,
       IsEmpty.forall_iff] <;>
-    first
-    | exact hSplit
-    | exact ⟨fun h ↦ h, fun h ↦ h⟩
-    | exact ⟨fun h ↦ ⟨(hSplit.mp h).1, (hE rfl (hSplit.mp h).1).mpr (hSplit.mp h).2⟩,
+    exact ⟨fun h ↦ ⟨(hSplit.mp h).1, (hE rfl (hSplit.mp h).1).mpr (hSplit.mp h).2⟩,
         fun h ↦ hSplit.mpr ⟨h.1, (hE rfl h.1).mp h.2⟩⟩
 
 /-- The new edge of an nd2 resolution, as a relation on the anchor's block. -/
@@ -696,9 +693,7 @@ theorem nd2_new_rel (W : SheetPartition d) {a x : Fin d} (hx : W.Rel a x) (y : F
     simp only [nd2Resolution, splitResolutionAt, joinedResolutionAt, LocalResolution.reverse,
       dite_true, dite_false, ite_true, ite_false, Bool.false_eq_true, reduceCtorEq, ne_eq,
       not_false_eq_true, not_true_eq_false, true_implies, IsEmpty.forall_iff, and_true] <;>
-    first
-    | exact ⟨fun h ↦ h, fun h ↦ h⟩
-    | exact ⟨fun h ↦ ⟨(hSplit.mp h).1, (hE rfl (hSplit.mp h).1).mpr (hSplit.mp h).2⟩,
+    exact ⟨fun h ↦ ⟨(hSplit.mp h).1, (hE rfl (hSplit.mp h).1).mpr (hSplit.mp h).2⟩,
         fun h ↦ hSplit.mpr ⟨h.1, (hE rfl h.1).mp h.2⟩⟩
 
 /-- The side partitions of an nd3 resolution. -/
@@ -710,9 +705,7 @@ theorem nd3_side_rel (W fine : SheetPartition d) (hFine : fine.Refines W) (x y :
     simp only [nd3Resolution, fineResolution, LocalResolution.reverse, sidePartition, ite_true,
       ite_false, Bool.false_eq_true, reduceCtorEq, Option.some.injEq, true_implies,
       IsEmpty.forall_iff, and_true] <;>
-    first
-    | exact ⟨fun h ↦ h, fun h ↦ h⟩
-    | exact ⟨fun h ↦ ⟨hFine.rel h, h⟩, fun h ↦ h.2⟩
+    exact ⟨fun h ↦ ⟨hFine.rel h, h⟩, fun h ↦ h.2⟩
 
 /-- The new edge of an nd3 resolution. -/
 theorem nd3_new_rel (W fine : SheetPartition d) (hFine : fine.Refines W) (x y : Fin d)

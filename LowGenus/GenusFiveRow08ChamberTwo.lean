@@ -483,7 +483,7 @@ theorem lbCoeff_eq {d : DegSpec 8 12} (hCore : d.core = row08Core)
   fin_cases v
   all_goals simp [lbCoeff, contribForm, heightLB, chipWeight, zeroChip, markY,
     hT4, hH4, hT7, hH7]
-  all_goals (try (first | ring1 | ring_nf))
+  all_goals (try ring_nf)
   all_goals (try split_ifs)
   all_goals (try simp_all)
   all_goals (try split_ifs)
@@ -592,7 +592,7 @@ theorem rbCoeff_eq {d : DegSpec 8 12} (hCore : d.core = row08Core)
   fin_cases v
   all_goals simp [rbCoeff, contribForm, heightRB, chipWeight, zeroChip, markY,
     hT4, hH4, hT7, hH7]
-  all_goals (try (first | ring1 | ring_nf))
+  all_goals (try ring_nf)
   all_goals (try split_ifs)
   all_goals (try simp_all)
   all_goals (try split_ifs)
@@ -755,7 +755,7 @@ theorem t4Coeff_eq {d : DegSpec 8 12} (hCore : d.core = row08Core)
   all_goals simp [t4Coeff, contribForm, heightT4, chipWeight, zeroChip,
     positiveChip, lend, transferWeight, indicatorWeight, armAl, markY,
     hT4, hH4, hT7, hH7]
-  all_goals (try (first | ring1 | ring_nf))
+  all_goals (try ring_nf)
   all_goals (try split_ifs)
   all_goals (try simp_all)
   all_goals (try omega)
@@ -977,7 +977,7 @@ theorem t5Coeff_eq {d : DegSpec 8 12} (hCore : d.core = row08Core)
   all_goals simp [t5Coeff, contribForm, heightT5, chipWeight, zeroChip,
     positiveChip, lend, transferWeight, indicatorWeight, armAl, markY,
     hT4, hH4, hT7, hH7]
-  all_goals (try (first | ring1 | ring_nf))
+  all_goals (try ring_nf)
   all_goals (try split_ifs)
   all_goals (try simp_all)
   all_goals (try split_ifs)

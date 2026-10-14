@@ -647,7 +647,7 @@ theorem farSwapVtx_branchIdx (m v : ℕ) (h1 : v % 3 ≠ 1) (h2 : v ≠ 6 * m + 
         else if v = 6 * m + 8 then 6 * m + 6 else if v = 6 * m + 9 then 6 * m + 7 else v))
       = branchIdx v := by
   unfold branchIdx
-  split_ifs <;> first | contradiction | omega
+  split_ifs <;> omega
 
 section FarRealizes
 
@@ -821,10 +821,10 @@ theorem hFar_genusSix (d : Relabel (catCore 2) (catCore 2))
         (fun a ha ↦ innerIndex_farSwap 1 a ha)
         (fun e he ↦ by
           rw [hL.2.1 e he, farSwap_slot_val]
-          split_ifs <;> first | contradiction | omega)
+          split_ifs <;> omega)
         (fun e he ↦ by
           rw [hR e he, farSwap_slot_val]
-          split_ifs <;> first | contradiction | omega)
+          split_ifs <;> omega)
     rw [hd]
     exact ballotRealizes_farSwap s request
   · have hd : d = nearFarSwap 1 :=
