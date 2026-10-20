@@ -55,17 +55,19 @@ target potential whose rises are integral multiples of the realized lengths
 (`RiseCompatible`).  For a loop double the two ends of the row carry labels in one
 `D.fib`-fibre, so every such potential takes equal values at them (`corePotential_eq_of_fib_eq`).
 If no interior row vertex lay strictly inside the chain, one occurrence would carry the
-whole length and all others length zero; the potential rising only along that occurrence's
-target edge (`TreeMetricPotential.integrate`) would then differ at the two ends.
+whole length and all others length zero (`RowAlgebra.exists_single_long`); the potential
+rising only along that occurrence's target edge (`TreeMetricPotential.integrate`) would then
+differ at the two ends.
 
 ## What is proved
 
 §1 `ramp`, `ramp_succ_sub`, `ramp_of_le`, `ramp_of_ge`, `sum_window` (stated in `RowAlgebra`,
-under this namespace); §2 `RiseCompatible`,
-`chipSlope`, `chipPotential`, `chip_riseCompatible`, `sourcePotential`, `edgeSlope`,
-`sourcePotential_rise`, `fibre_sub_eq`; §3 `sum_fibre_sub`, `sum_edges_eq_sum_rows`; §4 row
-data (`rowStart`, `rowLen`, `rowSlope`, `rowValue` and their lemmas); §5 the realization
-(`pushDivisor_sub_eq`, `realization_dangling`, `kindVertex_zero_eq`, `kindVertex_length_eq`,
+under this namespace); §2 `RiseCompatible`, `chipSlope`, `chipPotential`,
+`chip_riseCompatible`, `sourcePotential`, `edgeSlope`, `sourcePotential_rise`, `fibre_sub_eq`;
+§3 `sum_fibre_sub`, `sum_edges_eq_sum_rows`; §4 row data (`rowStart`, `rowLen`, `rowSlope`,
+`rowValue` and their lemmas; `rowValue` is `RowAlgebra.value` of the row, `rowValue_eq`, and
+its arithmetic is `RowAlgebra`'s); §5 the realization (`pushDivisor_sub_eq`,
+`realization_dangling`, `kindVertex_zero_eq`, `kindVertex_length_eq`,
 `realization_branch_end`, `offsetVal_eq`, `realization_rowVertex`); §6 the script
 (`slotPos`, `slotValue`, `corePotential`, `script`, `compat`, `corePotential_contracted`,
 `corePotential_eq_of_fib_eq`, `script_eq_of_vertexMap_eq`, `smallScript`,
@@ -466,19 +468,9 @@ theorem sum_rowSlope_mul_rowLen (hRise : RiseCompatible member hClosed s P) (e :
 theorem sum_rowLen (e : Fin p) :
     (∑ i : Fin (orderedRow member.fullDim.pathEnds (member.ident.row.symm e)).length,
       (rowLen member hClosed e i : ℤ)) =
-      rowStart member hClosed e (orderedRow member.fullDim.pathEnds (member.ident.row.symm e)).length := by
-  have h : ∀ i : Fin (orderedRow member.fullDim.pathEnds (member.ident.row.symm e)).length,
-      (rowLen member hClosed e i : ℤ) =
-        (rowStart member hClosed e (i.val + 1) : ℤ) - (rowStart member hClosed e i : ℤ) := by
-    intro i
-    rw [rowStart_succ]
-    push_cast
-    ring
-  rw [Finset.sum_congr rfl fun i _ ↦ h i]
-  rw [Fin.sum_univ_eq_sum_range (fun j ↦ (rowStart member hClosed e (j + 1) : ℤ) -
-    (rowStart member hClosed e j : ℤ)),
-    Finset.sum_range_sub (fun j ↦ (rowStart member hClosed e j : ℤ)), rowStart_zero]
-  simp
+      rowStart member hClosed e
+        (orderedRow member.fullDim.pathEnds (member.ident.row.symm e)).length :=
+  RowAlgebra.sum_len (rowStart_succ member hClosed e) (rowStart_zero member hClosed e)
 
 /-- **The row potential** at an integral position `pos` from the row's start. -/
 noncomputable def rowValue (e : Fin p) (pos : ℤ) : ℤ :=
@@ -487,14 +479,18 @@ noncomputable def rowValue (e : Fin p) (pos : ℤ) : ℤ :=
       rowSlope member s e i *
         ramp pos (rowStart member hClosed e i) (rowLen member hClosed e i)
 
+/-- The row potential is `RowAlgebra.value` of the row's own data. -/
+theorem rowValue_eq (e : Fin p) :
+    rowValue member hClosed s P e =
+      RowAlgebra.value
+        (sourcePotential member P (rowVertex member.fullDim (member.ident.row.symm e) 0))
+        (rowSlope member s e) (rowStart member hClosed e) (rowLen member hClosed e) := rfl
+
 theorem rowValue_of_nonpos (e : Fin p) {pos : ℤ} (hpos : pos ≤ 0) :
     rowValue member hClosed s P e pos =
       sourcePotential member P (rowVertex member.fullDim (member.ident.row.symm e) 0) := by
-  unfold rowValue
-  rw [Finset.sum_eq_zero, add_zero]
-  intro i _
-  have h0 : (0 : ℤ) ≤ rowStart member hClosed e i := by positivity
-  rw [ramp_of_le _ _ _ (by positivity) (by omega), mul_zero]
+  rw [rowValue_eq]
+  exact RowAlgebra.value_of_nonpos _ _ _ _ hpos
 
 theorem rowValue_of_ge (hRise : RiseCompatible member hClosed s P) (e : Fin p) {pos : ℤ}
     (hpos : (rowStart member hClosed e
@@ -503,16 +499,9 @@ theorem rowValue_of_ge (hRise : RiseCompatible member hClosed s P) (e : Fin p) {
       sourcePotential member P
         (rowVertex member.fullDim (member.ident.row.symm e)
           (orderedRow member.fullDim.pathEnds (member.ident.row.symm e)).length) := by
-  unfold rowValue
-  rw [Finset.sum_congr rfl fun i _ ↦ by
-    rw [ramp_of_ge _ _ _ (by positivity) (by
-      have := rowStart_add_rowLen_le member hClosed e i
-      have : ((rowStart member hClosed e i + rowLen member hClosed e i : ℕ) : ℤ) ≤ pos :=
-        le_trans (by exact_mod_cast this) hpos
-      push_cast at this
-      omega)]]
-  rw [sum_rowSlope_mul_rowLen member hClosed s P hRise]
-  ring
+  rw [rowValue_eq]
+  exact RowAlgebra.value_of_ge _ _ (rowStart_succ member hClosed e)
+    (sum_rowSlope_mul_rowLen member hClosed s P hRise e) hpos
 
 end RowData
 
@@ -784,18 +773,14 @@ theorem rowValue_contracted (e : Fin Q) (hc : D.kind e = SlotKind.contracted) (p
     rowValue member hClosed s P e pos =
       sourcePotential member P
         (rowVertex member.fullDim (member.ident.row.symm e) 0) := by
-  unfold rowValue
-  rw [Finset.sum_eq_zero, add_zero]
-  intro i _
-  have h := rowStart_add_rowLen_le member hClosed e i
   have h0 := integralPrefix_full_of_contracted D small member hClosed e hc
-  have hLen : rowLen member hClosed e i = 0 := by
+  have hLen : ∀ i, rowLen member hClosed e i = 0 := fun i ↦ by
+    have h := rowStart_add_rowLen_le member hClosed e i
     unfold rowStart at h
     rw [h0] at h
     omega
-  rw [hLen, Nat.cast_zero]
-  unfold ramp
-  rw [min_eq_right (le_max_right _ _), mul_zero]
+  rw [rowValue_eq]
+  exact RowAlgebra.value_of_len_zero _ _ _ _ hLen pos
 
 include hN hL hk hScale in
 /-- The two ends of a contracted slot carry the same core potential. -/
@@ -1009,119 +994,11 @@ theorem slot_sum (e : Fin Q) (δ : ℕ → ℤ) :
             δ (DegeneratePlacement.offsetVal (D.bigSpec (small.scale k hk) hN hL)
               (degenerateLength D small) member hClosed e (i.val + 1))) := by
   have hFull := rowStart_full_le_length D small hN hL k hk member hClosed hScale e
-  have hWin : ∀ i : Fin (orderedRow member.fullDim.pathEnds (member.ident.row.symm e)).length,
-      rowStart member hClosed e i + rowLen member hClosed e i ≤
-        (D.bigSpec (small.scale k hk) hN hL).length e :=
-    fun i ↦ (rowStart_add_rowLen_le member hClosed e i).trans hFull
-  simp only [offsetVal_eq]
-  unfold slotValue slotPos
-  cases hr : DegeneratePlacement.reverse member e
-  · simp only [Bool.false_eq_true, ite_false]
-    have hDiff : ∀ o : ℕ,
-        rowValue member hClosed (chipSlope member root anchor) (chipPotential member hClosed root anchor) e ((o + 1 : ℕ) : ℤ) -
-            rowValue member hClosed (chipSlope member root anchor) (chipPotential member hClosed root anchor) e (o : ℤ) =
-          ∑ i : Fin (orderedRow member.fullDim.pathEnds (member.ident.row.symm e)).length,
-            rowSlope member (chipSlope member root anchor) e i *
-              (if rowStart member hClosed e i ≤ o ∧
-                  o < rowStart member hClosed e i + rowLen member hClosed e i
-                then (1 : ℤ) else 0) := by
-      intro o
-      unfold rowValue
-      rw [add_sub_add_left_eq_sub, ← Finset.sum_sub_distrib]
-      refine Finset.sum_congr rfl fun i _ ↦ ?_
-      rw [← mul_sub, show ((o + 1 : ℕ) : ℤ) = (o : ℤ) + 1 by push_cast; ring,
-        ramp_succ_sub _ _ _ (by positivity)]
-      split_ifs <;> omega
-    rw [Finset.sum_congr rfl fun o _ ↦ by rw [hDiff o.val]]
-    rw [Fin.sum_univ_eq_sum_range (fun o ↦ (∑ i : Fin (orderedRow member.fullDim.pathEnds
-        (member.ident.row.symm e)).length, rowSlope member (chipSlope member root anchor) e i *
-          (if rowStart member hClosed e i ≤ o ∧
-              o < rowStart member hClosed e i + rowLen member hClosed e i
-            then (1 : ℤ) else 0)) * (δ o - δ (o + 1)))]
-    simp only [Finset.sum_mul]
-    rw [Finset.sum_comm]
-    refine Finset.sum_congr rfl fun i _ ↦ ?_
-    simp only [mul_assoc]
-    rw [← Finset.mul_sum, sum_window δ _ _ _ (hWin i)]
-    show _ = rowSlope member (chipSlope member root anchor) e i *
-      (δ (rowStart member hClosed e i) - δ (rowStart member hClosed e (i.val + 1)))
-    rw [rowStart_succ]
-  · simp only [ite_true]
-    have hDiff : ∀ o : ℕ, o < (D.bigSpec (small.scale k hk) hN hL).length e →
-        rowValue member hClosed (chipSlope member root anchor) (chipPotential member hClosed root anchor) e
-            (((D.bigSpec (small.scale k hk) hN hL).length e : ℤ) - ((o + 1 : ℕ) : ℤ)) -
-          rowValue member hClosed (chipSlope member root anchor) (chipPotential member hClosed root anchor) e
-            (((D.bigSpec (small.scale k hk) hN hL).length e : ℤ) - (o : ℤ)) =
-          ∑ i : Fin (orderedRow member.fullDim.pathEnds (member.ident.row.symm e)).length,
-            rowSlope member (chipSlope member root anchor) e i *
-              -(if (D.bigSpec (small.scale k hk) hN hL).length e -
-                    rowStart member hClosed e i - rowLen member hClosed e i ≤ o ∧
-                  o < (D.bigSpec (small.scale k hk) hN hL).length e - rowStart member hClosed e i
-                then (1 : ℤ) else 0) := by
-      intro o ho
-      unfold rowValue
-      rw [add_sub_add_left_eq_sub, ← Finset.sum_sub_distrib]
-      refine Finset.sum_congr rfl fun i _ ↦ ?_
-      have hStep := ramp_succ_sub
-        (((D.bigSpec (small.scale k hk) hN hL).length e : ℤ) - ((o + 1 : ℕ) : ℤ))
-        (rowStart member hClosed e i) (rowLen member hClosed e i) (by positivity)
-      rw [show ((D.bigSpec (small.scale k hk) hN hL).length e : ℤ) - ((o + 1 : ℕ) : ℤ) + 1 =
-        ((D.bigSpec (small.scale k hk) hN hL).length e : ℤ) - (o : ℤ) by push_cast; ring]
-        at hStep
-      rw [← mul_sub, ← neg_sub, hStep]
-      have := hWin i
-      split_ifs <;> omega
-    rw [Finset.sum_congr rfl fun o _ ↦ by rw [hDiff o.val o.isLt]]
-    rw [Fin.sum_univ_eq_sum_range (fun o ↦ (∑ i : Fin (orderedRow member.fullDim.pathEnds
-        (member.ident.row.symm e)).length, rowSlope member (chipSlope member root anchor) e i *
-          -(if (D.bigSpec (small.scale k hk) hN hL).length e -
-                rowStart member hClosed e i - rowLen member hClosed e i ≤ o ∧
-              o < (D.bigSpec (small.scale k hk) hN hL).length e - rowStart member hClosed e i
-            then (1 : ℤ) else 0)) * (δ o - δ (o + 1)))]
-    simp only [Finset.sum_mul]
-    rw [Finset.sum_comm]
-    refine Finset.sum_congr rfl fun i _ ↦ ?_
-    have hW := hWin i
-    have hEq : ∀ o ∈ Finset.range ((D.bigSpec (small.scale k hk) hN hL).length e),
-        rowSlope member (chipSlope member root anchor) e i *
-            -(if (D.bigSpec (small.scale k hk) hN hL).length e -
-                  rowStart member hClosed e i - rowLen member hClosed e i ≤ o ∧
-                o < (D.bigSpec (small.scale k hk) hN hL).length e - rowStart member hClosed e i
-              then (1 : ℤ) else 0) * (δ o - δ (o + 1)) =
-          -rowSlope member (chipSlope member root anchor) e i *
-            ((if (D.bigSpec (small.scale k hk) hN hL).length e -
-                  rowStart member hClosed e i - rowLen member hClosed e i ≤ o ∧
-                o < (D.bigSpec (small.scale k hk) hN hL).length e -
-                  rowStart member hClosed e i - rowLen member hClosed e i +
-                    rowLen member hClosed e i
-              then (1 : ℤ) else 0) * (δ o - δ (o + 1))) := by
-      intro o _
-      have hIff : (o < (D.bigSpec (small.scale k hk) hN hL).length e -
-          rowStart member hClosed e i) ↔
-          (o < (D.bigSpec (small.scale k hk) hN hL).length e -
-            rowStart member hClosed e i - rowLen member hClosed e i +
-              rowLen member hClosed e i) := by omega
-      simp only [hIff]
-      ring
-    rw [Finset.sum_congr rfl hEq, ← Finset.mul_sum]
-    have hSum' := sum_window δ ((D.bigSpec (small.scale k hk) hN hL).length e)
-      ((D.bigSpec (small.scale k hk) hN hL).length e -
-        rowStart member hClosed e i - rowLen member hClosed e i)
-      (rowLen member hClosed e i) (by omega)
-    rw [hSum']
-    show _ = rowSlope member (chipSlope member root anchor) e i *
-      (δ ((D.bigSpec (small.scale k hk) hN hL).length e - rowStart member hClosed e i) -
-        δ ((D.bigSpec (small.scale k hk) hN hL).length e -
-          rowStart member hClosed e (i.val + 1)))
-    rw [rowStart_succ,
-      show (D.bigSpec (small.scale k hk) hN hL).length e -
-        rowStart member hClosed e i - rowLen member hClosed e i + rowLen member hClosed e i =
-        (D.bigSpec (small.scale k hk) hN hL).length e - rowStart member hClosed e i by omega,
-      show (D.bigSpec (small.scale k hk) hN hL).length e -
-        (rowStart member hClosed e i + rowLen member hClosed e i) =
-        (D.bigSpec (small.scale k hk) hN hL).length e -
-          rowStart member hClosed e i - rowLen member hClosed e i by omega]
-    ring
+  exact RowAlgebra.slot_sum (sourcePotential member (chipPotential member hClosed root anchor)
+      (rowVertex member.fullDim (member.ident.row.symm e) 0))
+    (rowSlope member (chipSlope member root anchor) e) (rowStart_succ member hClosed e)
+    (DegeneratePlacement.reverse member e) _
+    (fun i ↦ (rowStart_add_rowLen_le member hClosed e i).trans hFull) δ
 
 include hScale in
 /-- **(T), proved.**  Any two pushed pencil members are linearly equivalent on the
@@ -1215,43 +1092,8 @@ theorem doubleRowInterior_of_loopDoubles (hCond : D.Conditions small.core)
       rw [show j - 1 + 1 = j by omega, offsetVal_eq, ← hLenB]
       cases DegeneratePlacement.reverse member e <;> simp <;> omega
   -- the first prefix to leave `0` jumps to the full length
-  have hEx : ∃ j, 1 ≤ rowStart member hClosed e j :=
-    ⟨(orderedRow member.fullDim.pathEnds (member.ident.row.symm e)).length, by omega⟩
-  have hJ : 1 ≤ rowStart member hClosed e (Nat.find hEx) := Nat.find_spec hEx
-  have hJpos : 0 < Nat.find hEx := by
-    by_contra h
-    rw [show Nat.find hEx = 0 by omega, rowStart_zero] at hJ
-    omega
-  have hJle : Nat.find hEx ≤ (orderedRow member.fullDim.pathEnds (member.ident.row.symm e)).length :=
-    Nat.find_min' hEx (by omega)
-  have hJm : rowStart member hClosed e (Nat.find hEx - 1) = 0 := by
-    have := Nat.find_min hEx (show Nat.find hEx - 1 < Nat.find hEx by omega)
-    omega
-  have hJv : rowStart member hClosed e (Nat.find hEx) =
-      (D.bigSpec (small.scale k hk) hN hL).length e := by
-    rcases Nat.lt_or_ge (Nat.find hEx)
-        (orderedRow member.fullDim.pathEnds (member.ident.row.symm e)).length with h | h
-    · rcases hInt _ hJpos h with h' | h' <;> omega
-    · rw [show Nat.find hEx =
-        (orderedRow member.fullDim.pathEnds (member.ident.row.symm e)).length by omega, hFull]
-  set i0 : Fin (orderedRow member.fullDim.pathEnds (member.ident.row.symm e)).length :=
-    ⟨Nat.find hEx - 1, by omega⟩ with hi0
-  have hL0 : rowLen member hClosed e i0 = (D.bigSpec (small.scale k hk) hN hL).length e := by
-    have h := rowStart_succ member hClosed e i0
-    have h' : rowStart member hClosed e (Nat.find hEx - 1 + 1) =
-        rowStart member hClosed e (Nat.find hEx - 1) + rowLen member hClosed e i0 := h
-    rw [show Nat.find hEx - 1 + 1 = Nat.find hEx by omega] at h'
-    omega
-  have hOthers : ∀ i, i ≠ i0 → rowLen member hClosed e i = 0 := by
-    intro i hi
-    have hSum := sum_rowLen member hClosed e
-    rw [← Finset.add_sum_erase _ _ (Finset.mem_univ i0), hL0, hFull] at hSum
-    have hz : (∑ x ∈ Finset.univ.erase i0, (rowLen member hClosed e x : ℤ)) = 0 := by linarith
-    have hnn : ∀ x ∈ Finset.univ.erase i0, (0 : ℤ) ≤ rowLen member hClosed e x :=
-      fun _ _ ↦ by positivity
-    have := (Finset.sum_eq_zero_iff_of_nonneg hnn).mp hz i
-      (Finset.mem_erase.mpr ⟨hi, Finset.mem_univ i⟩)
-    exact_mod_cast this
+  obtain ⟨i0, hL0, hOthers⟩ := RowAlgebra.exists_single_long (rowStart_succ member hClosed e)
+    (rowStart_zero member hClosed e) hFull hLenPos hInt
   -- the separating potential
   set t := ((orderedRow member.fullDim.pathEnds (member.ident.row.symm e))[i0]).1.1 with ht
   let s : member.target.edges → ℤ := fun t' ↦ if t' = t then 1 else 0
