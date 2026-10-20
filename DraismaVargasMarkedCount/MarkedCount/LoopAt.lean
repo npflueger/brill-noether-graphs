@@ -1,22 +1,40 @@
 module
 
-public import DraismaVargasMarkedCount.MarkedCount.RestrictBridge
-public import DraismaVargasMarkedCount.MarkedCount.RestrictBranch
+public import DraismaVargasCount.PassOnceLollipopWitness
+public import DraismaVargasCount.PendantFibre
 
 @[expose] public section
 
 /-!
-# The lollipop at any core loop
+# The lollipop at a core loop
 
-The lollipop package of the ramification-one marked count (modules
-`MarkedCount.RestrictLollipop`, `MarkedCount.RestrictBridge`, `MarkedCount.RestrictBranch`) is
-stated at `attachLollipops`. Its facts hold at **any** loop slot `ℓ`
-(`H.tail ℓ = H.head ℓ`) of any core `H`: the public lollipop package (`LollipopLeafRow`,
-`LollipopDivalent`, `LollipopBridgeFibreWitness`, `PassOnceLollipopWitness`) takes any core loop.
-This module restates them generically, at a member `M` over `H`, for use at every loop of a
-caterpillar tail (rigidity (1), module `Rigidity`).
+A **lollipop** of a core `H` is a loop slot `ℓ` (`H.tail ℓ = H.head ℓ`) together with the slot
+through which it hangs off the rest of `H`. The public lollipop package (`LollipopLeafRow`,
+`LollipopDivalent`, `LollipopBridgeFibreWitness`, `PassOnceLollipopWitness`) describes a member
+`M` over `H` near any core loop; this module assembles it into the shape the marked counts use,
+at the lollipops of `attachLollipops` (module `RestrictLollipop`) and at the bulbs of a
+caterpillar tail (module `MarkedCountGeneral.Rigidity`).
 
-For a loop slot `ℓ` at the core vertex `A := H.tail ℓ`:
+**Generic facts** (namespace `Lollipops`): three columns with a vanishing combination kill the
+determinant (`det_eq_zero_of_columns`); the column of a target edge with a single survivor
+(`matrix_column_of_unique`); and Part I's column-dependence argument (Draisma--Vargas Part I,
+arXiv:1909.12924, `lemma-loop-bridge`), **an end of a lone survivor is not interior to a stable
+row** (`nonDanglingValency_ne_two_of_unique`). Let `Y` be an end of the lone survivor `E`, over
+`x`, and suppose `Y` has surviving valency two, with second survivor `E₂` over `s ≠ φ(E)`. The
+column of `φ(E)` is supported on the row of `E`.
+
+* `x` is not a leaf: `E₂` lies over an edge at `x` other than `φ(E)`.
+* If `x` is divalent, every survivor over `s` is `E₂`: a block over `x` other than `Y` has no
+  survivor over `φ(E)`, so all its survivors lie over `s`, and then its local ramification is at
+  least its local degree `≥ 2`, above the change budget `1`. So the column of `s` is supported on
+  the same row.
+* If `x` is trivalent, `PassOnceLollipop.partner_of_block` matches the survivors over the two
+  other edges `s, t` in every row but that one, so `col s - col t` is supported on it too.
+
+Either way three columns are dependent, against `det A_φ ≠ 0`. Also: block counts of partitions
+with one pair or no pair (`card_blocks_of_pair`, `card_blocks_of_discrete`).
+
+**The lollipop at a loop slot `ℓ`** (namespace `LoopAt`), at the core vertex `A := H.tail ℓ`:
 
 * `loopV M hℓ` (`w`, the branch vertex of `A`), `bridgeE M hℓ` (the bridge occurrence, index `2`),
   `farEnd M hℓ` (its other end, a branch vertex: `nonDanglingValency_farEnd`);
@@ -29,7 +47,360 @@ For a loop slot `ℓ` at the core vertex `A := H.tail ℓ`:
   of `H` at `A` other than `ℓ` (`ident_row_bridgePath_ne`, `coreIncidence_bridgePath_loopVertex`).
 -/
 
-namespace DraismaVargas.Count.MarkedCountGeneral.LoopAt
+namespace DraismaVargas.Count.MarkedCount.Lollipops
+
+open DraismaVargas.Infrastructure
+open DraismaVargas.LocalCases
+open DraismaVargas.LocalCases.W4StableSource
+open DraismaVargas.LocalCases.FullDimensionalSource
+
+noncomputable section
+
+/-! ## Generic facts: columns -/
+
+section Generic
+
+variable {ι : Type*} [Fintype ι] [DecidableEq ι]
+
+/-- Three columns with a nontrivial vanishing combination kill the determinant. -/
+theorem det_eq_zero_of_columns (A : Matrix ι ι ℚ) {p q l : ι} (hpq : p ≠ q) (hpl : p ≠ l)
+    {a b c : ℚ} (ha : a ≠ 0) (h : ∀ r, a * A r p + b * A r q + c * A r l = 0) : A.det = 0 := by
+  rw [← Matrix.exists_mulVec_eq_zero_iff]
+  refine ⟨a • Pi.single p 1 + b • Pi.single q 1 + c • Pi.single l 1, ?_, ?_⟩
+  · intro hv
+    have := congrFun hv p
+    simp [hpq.symm, hpl.symm] at this
+    exact ha this
+  · ext r
+    simp only [Matrix.mulVec_add, Matrix.mulVec_smul, Matrix.mulVec_single, Pi.add_apply,
+      Pi.smul_apply, smul_eq_mul, Pi.zero_apply, Matrix.col_apply, MulOpposite.op_one, one_smul]
+    linarith [h r]
+
+variable {target : CFGraph} {degree : ℕ} {data : GluingDatum target degree}
+
+/-- **The indices of incident occurrences over one target edge add up to at most the local
+degree**: their sheet blocks are disjoint inside the vertex block. -/
+theorem sum_index_le_blockCard {Z : data.SourceVertex} {t : target.edges}
+    (S : Finset (IncidentSourceEdge data Z)) (hS : ∀ F ∈ S, F.1.1.1 = t) :
+    (∑ F ∈ S, (data.sourceEdgeIndex F.1 : ℤ)) ≤
+      ((data.vertexPartition Z.1.1).blockCard Z.1.2 : ℤ) := by
+  classical
+  have hBlocks : ∀ F ∈ S, (data.edgePartition t).block F.1.1.2 ⊆
+      (data.vertexPartition Z.1.1).block Z.1.2 := by
+    intro F hF σ hσ
+    obtain ⟨hMem, hRel⟩ := (incident_iff_target_mem_and_rel data F.1 Z).mp F.2
+    have hRef := StableLocalProperties.refines_of_mem_incidentEdges data hMem
+    rw [SheetPartition.mem_block_iff] at hσ ⊢
+    rw [← hS F hF] at hσ
+    exact hRel.trans (hRef.rel hσ)
+  have hIndex : ∀ F ∈ S, (data.sourceEdgeIndex F.1 : ℤ) =
+      ((data.edgePartition t).block F.1.1.2).card := by
+    intro F hF
+    unfold GluingDatum.sourceEdgeIndex SheetPartition.blockCard
+    rw [hS F hF]
+  have hDisj : (S : Set (IncidentSourceEdge data Z)).PairwiseDisjoint
+      (fun F ↦ (data.edgePartition t).block F.1.1.2) := by
+    intro F hF G hG hFG
+    rw [Function.onFun, Finset.disjoint_left]
+    intro σ h1 h2
+    apply hFG
+    rw [SheetPartition.mem_block_iff] at h1 h2
+    have hF2 := F.1.2
+    have hG2 := G.1.2
+    rw [hS F hF] at hF2
+    rw [hS G hG] at hG2
+    have : F.1.1.2 = G.1.1.2 := by
+      have e1 : (data.edgePartition t).repr F.1.1.2 = (data.edgePartition t).repr σ := h1
+      have e2 : (data.edgePartition t).repr G.1.1.2 = (data.edgePartition t).repr σ := h2
+      rw [← hF2, ← hG2, e1, e2]
+    exact Subtype.ext (Subtype.ext (Prod.ext ((hS F hF).trans (hS G hG).symm) this))
+  rw [Finset.sum_congr rfl hIndex]
+  have hCard := Finset.card_biUnion hDisj
+  have hSub : S.biUnion (fun F ↦ (data.edgePartition t).block F.1.1.2) ⊆
+      (data.vertexPartition Z.1.1).block Z.1.2 :=
+    Finset.biUnion_subset.mpr hBlocks
+  have := Finset.card_le_card hSub
+  unfold SheetPartition.blockCard
+  exact_mod_cast (show (∑ F ∈ S, ((data.edgePartition t).block F.1.1.2).card) ≤ _ by omega)
+
+end Generic
+
+/-! ## Generic facts: the far end of a lone survivor -/
+
+section FarEnd
+
+variable {target : CFGraph.{0}} {degree : ℕ} {data : GluingDatum target degree}
+  {coordinate : Type*} [Fintype coordinate] [DecidableEq coordinate]
+  (fd : FullDimensionalSourcePresentation data coordinate)
+
+/-- The column of a target edge over which a single occurrence survives. -/
+theorem matrix_column_of_unique {E : data.SourceEdge} (hE : ¬ IsDangling data E)
+    (hUnique : ∀ F, ¬ IsDangling data F → F.1.1 = E.1.1 → F = E) (r : coordinate) :
+    GluingDatum.LengthMatrixPresentation.matrix fd.labelling.presentation r
+        (fd.labelling.targetEdge.symm E.1.1) =
+      if r = fd.labelling.row (NonDanglingEdge.stablePath (⟨E, hE⟩ : NonDanglingEdge data))
+      then 1 / (data.sourceEdgeIndex E : ℚ) else 0 := by
+  classical
+  rw [LeafFibre.matrix_eq_sum_fibre]
+  split_ifs with hr
+  · rw [Finset.sum_eq_single E]
+    · intro F hF hFE
+      obtain ⟨⟨hFS, -⟩, hFT⟩ := (LeafFibre.mem_rowFibre _ _ _ _).mp hF
+      exact absurd (hUnique F hFS hFT) hFE
+    · intro hNot
+      exact absurd ((LeafFibre.mem_rowFibre _ _ _ _).mpr ⟨⟨hE, hr.symm⟩, rfl⟩) hNot
+  · refine Finset.sum_eq_zero fun F hF ↦ ?_
+    obtain ⟨⟨hFS, hFR⟩, hFT⟩ := (LeafFibre.mem_rowFibre _ _ _ _).mp hF
+    have := hUnique F hFS hFT
+    subst this
+    exact absurd hFR.symm hr
+
+include fd in
+/-- **The far end of a lone survivor is not interior to a stable row.**  If `E` is the only
+survivor over its target edge, neither of its ends has surviving valency two.  This is the
+column-dependence argument of Part I. -/
+theorem nonDanglingValency_ne_two_of_unique {E : data.SourceEdge} (hE : ¬ IsDangling data E)
+    (hUnique : ∀ F, ¬ IsDangling data F → F.1.1 = E.1.1 → F = E) {Y : data.SourceVertex}
+    (hY : Incident data E Y) : nonDanglingValency data Y ≠ 2 := by
+  classical
+  intro h2
+  set L := fd.labelling
+  set x := Y.1.1 with hx
+  obtain ⟨E2, ⟨hNe, hE2, hInc2⟩, -⟩ :=
+    exists_unique_other_of_nonDanglingValency_eq_two data h2 hE hY
+  set t := E.1.1 with ht
+  set s := E2.1.1 with hs
+  have hst : s ≠ t := fun h ↦ hNe (hUnique E2 hE2 h)
+  have hsMem : s ∈ GluingDatum.incidentEdges x :=
+    ((incident_iff_target_mem_and_rel data E2 Y).mp hInc2).1
+  have htMem : t ∈ GluingDatum.incidentEdges x :=
+    ((incident_iff_target_mem_and_rel data E Y).mp hY).1
+  set rowE := L.row (NonDanglingEdge.stablePath (⟨E, hE⟩ : NonDanglingEdge data)) with hRowE
+  have hRow2 : L.row (NonDanglingEdge.stablePath (⟨E2, hE2⟩ : NonDanglingEdge data)) = rowE := by
+    rw [hRowE, stablePath_eq_of_consecutive
+      (⟨fun h ↦ hNe (congrArg Subtype.val h), Y, hInc2, hY, h2⟩ :
+        Consecutive data ⟨E2, hE2⟩ ⟨E, hE⟩)]
+  -- survivors at the other blocks over `x` avoid `t`
+  have hOther : ∀ Z : data.SourceVertex, Z.1.1 = x → Z ≠ Y → ∀ F, ¬ IsDangling data F →
+      Incident data F Z → F.1.1 ≠ t := by
+    intro Z hZ hZY F hF hFZ hFt
+    have hFE := hUnique F hF hFt
+    subst hFE
+    exact hZY (LollipopBridgeFibre.eq_of_incident_of_target_eq hZ hFZ hY)
+  -- a survivor over an edge at `x`, seen from the block of its sheet
+  have hBlockInc : ∀ (u : target.edges), u ∈ GluingDatum.incidentEdges x →
+      ∀ g : data.SourceEdge, g.1.1 = u → Incident data g (data.sourceEndpoint x g.1.2) := by
+    intro u hu g hgT
+    have h := incident_sourceEdge_sourceEndpoint data x u hu g.1.2
+    rwa [show data.sourceEdge u g.1.2 = g by rw [← hgT]; exact GluingDatum.sourceEdge_self data g]
+      at h
+  -- the valency of `x`
+  have hRamY := IndexPattern.localRamification_le_targetChange fd (wall := x) ⟨Y.1.2, Y.2⟩
+  rw [IndexPattern.targetChange_eq_three_sub_valency fd x] at hRamY
+  have hNonnegY := data.localRamification_nonneg x (fd.valid.2 x) ⟨Y.1.2, Y.2⟩
+  have hTwoLe : 2 ≤ (GluingDatum.incidentEdges x).card := by
+    have : ({s, t} : Finset target.edges) ⊆ GluingDatum.incidentEdges x := by
+      intro e he
+      simp only [Finset.mem_insert, Finset.mem_singleton] at he
+      rcases he with rfl | rfl
+      · exact hsMem
+      · exact htMem
+    have h' := Finset.card_le_card this
+    rwa [Finset.card_pair hst] at h'
+  have hColT := matrix_column_of_unique fd hE hUnique
+  have hIdxE : (data.sourceEdgeIndex E : ℚ) ≠ 0 := by
+    exact_mod_cast (StableLocalProperties.sourceEdgeIndex_pos data E).ne'
+  have hIdxE2 : (data.sourceEdgeIndex E2 : ℚ) ≠ 0 := by
+    exact_mod_cast (StableLocalProperties.sourceEdgeIndex_pos data E2).ne'
+  have hCard3 : (GluingDatum.incidentEdges x).card ≤ 3 := by omega
+  rcases (show (GluingDatum.incidentEdges x).card = 2 ∨ (GluingDatum.incidentEdges x).card = 3 by
+    omega) with hVal | hVal
+  · -- divalent: the column of `s` is supported on `h_b` too
+    have hEdges : GluingDatum.incidentEdges x = {s, t} := by
+      symm
+      apply Finset.eq_of_subset_of_card_le
+      · intro e he
+        simp only [Finset.mem_insert, Finset.mem_singleton] at he
+        rcases he with rfl | rfl
+        · exact hsMem
+        · exact htMem
+      · rw [hVal, Finset.card_pair hst]
+    have hOnlyE2 : ∀ F, ¬ IsDangling data F → F.1.1 = s → F = E2 := by
+      intro F hF hFs
+      set Z := data.sourceEndpoint x F.1.2
+      have hFZ : Incident data F Z := hBlockInc s hsMem F hFs
+      by_cases hZY : Z = Y
+      · rcases IndexPattern.eq_or_eq_of_nonDanglingValency_two h2 hE hY hE2 hInc2 hNe.symm hF
+          (hZY ▸ hFZ) with h | h
+        · subst h; exact absurd hFs hst.symm
+        · exact h
+      · exfalso
+        have hZx : Z.1.1 = x := rfl
+        -- every survivor at `Z` lies over `s`
+        have hAllS : ∀ G : IncidentSourceEdge data Z, ¬ IsDangling data G.1 → G.1.1.1 = s := by
+          intro G hG
+          have hMem := ((incident_iff_target_mem_and_rel data G.1 Z).mp G.2).1
+          rw [hZx, hEdges] at hMem
+          simp only [Finset.mem_insert, Finset.mem_singleton] at hMem
+          rcases hMem with h | h
+          · exact h
+          · exact absurd h (hOther Z hZx hZY G.1 hG G.2)
+        have hPos : 0 < nonDanglingValency data Z :=
+          LollipopBridgeFibre.nonDanglingValency_pos_of_survivor hF hFZ
+        have hNeOne := NonDanglingValency.nonDanglingValency_ne_one data fd.connected Z
+        have hForm := StableLocalProperties.localRamification_eq_nonDangling_form data
+          fd.danglingEdgeNoGlue Z
+        have hSum := sum_index_le_blockCard
+          ((Finset.univ : Finset (IncidentSourceEdge data Z)).filter
+            (fun G ↦ ¬ IsDangling data G.1)) (t := s)
+          (fun G hG ↦ hAllS G (Finset.mem_filter.mp hG).2)
+        have hSumGe : ((nonDanglingValency data Z : ℕ) : ℤ) ≤
+            ∑ G ∈ (Finset.univ : Finset (IncidentSourceEdge data Z)).filter
+              (fun G ↦ ¬ IsDangling data G.1), (data.sourceEdgeIndex G.1 : ℤ) := by
+          rw [← StableLocalProperties.card_filter_not_isDangling_eq_nonDanglingValency]
+          rw [Finset.card_eq_sum_ones, Nat.cast_sum]
+          exact Finset.sum_le_sum fun G _ ↦ by
+            exact_mod_cast StableLocalProperties.sourceEdgeIndex_pos data G.1
+        have hRamZ := IndexPattern.localRamification_le_targetChange fd (wall := x) ⟨Z.1.2, Z.2⟩
+        rw [IndexPattern.targetChange_eq_three_sub_valency fd x, hVal] at hRamZ
+        change data.localRamification Z.1.1 ⟨Z.1.2, Z.2⟩ ≤ _ at hRamZ
+        omega
+    have hColS : ∀ r, GluingDatum.LengthMatrixPresentation.matrix L.presentation r
+        (L.targetEdge.symm s) = if r = rowE then 1 / (data.sourceEdgeIndex E2 : ℚ) else 0 := by
+      intro r
+      rw [hRow2.symm]
+      exact matrix_column_of_unique fd hE2 (fun F hF hFs ↦ hOnlyE2 F hF hFs) r
+    refine fd.det_ne_zero (det_eq_zero_of_columns _ (p := L.targetEdge.symm s)
+      (q := L.targetEdge.symm t) (l := L.targetEdge.symm t)
+      (fun h ↦ hst (L.targetEdge.symm.injective h)) (fun h ↦ hst (L.targetEdge.symm.injective h))
+      (a := data.sourceEdgeIndex E2) (b := -(data.sourceEdgeIndex E : ℚ)) (c := 0) hIdxE2 ?_)
+    intro r
+    rw [hColS r, hColT r]
+    split_ifs <;> field_simp <;> ring
+  · -- trivalent: the columns of the two other edges agree off `h_b`
+    obtain ⟨u, huMem, hus, hut⟩ : ∃ u ∈ GluingDatum.incidentEdges x, u ≠ s ∧ u ≠ t := by
+      by_contra hNo
+      push Not at hNo
+      have hSub : GluingDatum.incidentEdges x ⊆ {s, t} := by
+        intro e he
+        by_cases hes : e = s
+        · simp [hes]
+        · simp [hNo e he hes]
+      have := Finset.card_le_card hSub
+      rw [Finset.card_pair hst] at this
+      omega
+    have hNoSurvAt : ∀ (v : target.edges), v ∈ GluingDatum.incidentEdges x →
+        ∀ (g : data.SourceEdge) (hgS : ¬ IsDangling data g), g.1.1 = v → v ≠ t →
+        L.row (NonDanglingEdge.stablePath (⟨g, hgS⟩ : NonDanglingEdge data)) ≠ rowE →
+        ∀ F : data.SourceEdge, ¬ IsDangling data F →
+          Incident data F (data.sourceEndpoint x g.1.2) → F.1.1 ≠ t := by
+      intro v hv g hgS hgT hvt hgRow F hF hFI
+      have hgI := hBlockInc v hv g hgT
+      refine hOther (data.sourceEndpoint x g.1.2) rfl ?_ F hF hFI
+      intro hBY
+      rw [hBY] at hgI
+      rcases IndexPattern.eq_or_eq_of_nonDanglingValency_two h2 hE hY hE2 hInc2 hNe.symm hgS hgI
+        with h | h
+      · subst h; exact hvt hgT.symm
+      · subst h; exact hgRow hRow2
+    have hColumn : ∀ (v w : target.edges), v ∈ GluingDatum.incidentEdges x →
+        w ∈ GluingDatum.incidentEdges x → v ≠ t → w ≠ t → v ≠ w → ∀ r, r ≠ rowE →
+        GluingDatum.LengthMatrixPresentation.matrix L.presentation r (L.targetEdge.symm v) =
+          GluingDatum.LengthMatrixPresentation.matrix L.presentation r (L.targetEdge.symm w) := by
+      intro v w hv hw hvt hwt hvw r hr
+      rw [LeafFibre.matrix_eq_sum_fibre, LeafFibre.matrix_eq_sum_fibre]
+      refine Finset.sum_nbij' (fun g ↦ data.sourceEdge w g.1.2) (fun g ↦ data.sourceEdge v g.1.2)
+        ?_ ?_ ?_ ?_ ?_
+      · intro g hg
+        obtain ⟨⟨hgS, hgRow⟩, hgT⟩ := (LeafFibre.mem_rowFibre _ _ _ _).mp hg
+        obtain ⟨hS, hPath, -, -⟩ := PassOnceLollipop.partner_of_block fd
+          (B := data.sourceEndpoint x g.1.2) hVal htMem hv hw hvt hwt hvw
+          (hNoSurvAt v hv g hgS hgT hvt (by rw [hgRow]; exact hr))
+          hgS (hBlockInc v hv g hgT) hgT
+        exact (LeafFibre.mem_rowFibre _ _ _ _).mpr ⟨⟨hS, by rw [hPath]; exact hgRow⟩, rfl⟩
+      · intro g hg
+        obtain ⟨⟨hgS, hgRow⟩, hgT⟩ := (LeafFibre.mem_rowFibre _ _ _ _).mp hg
+        obtain ⟨hS, hPath, -, -⟩ := PassOnceLollipop.partner_of_block fd
+          (B := data.sourceEndpoint x g.1.2) hVal htMem hw hv hwt hvt (Ne.symm hvw)
+          (hNoSurvAt w hw g hgS hgT hwt (by rw [hgRow]; exact hr))
+          hgS (hBlockInc w hw g hgT) hgT
+        exact (LeafFibre.mem_rowFibre _ _ _ _).mpr ⟨⟨hS, by rw [hPath]; exact hgRow⟩, rfl⟩
+      · intro g hg
+        obtain ⟨⟨hgS, hgRow⟩, hgT⟩ := (LeafFibre.mem_rowFibre _ _ _ _).mp hg
+        exact (PassOnceLollipop.partner_of_block fd
+          (B := data.sourceEndpoint x g.1.2) hVal htMem hv hw hvt hwt hvw
+          (hNoSurvAt v hv g hgS hgT hvt (by rw [hgRow]; exact hr))
+          hgS (hBlockInc v hv g hgT) hgT).2.2.2
+      · intro g hg
+        obtain ⟨⟨hgS, hgRow⟩, hgT⟩ := (LeafFibre.mem_rowFibre _ _ _ _).mp hg
+        exact (PassOnceLollipop.partner_of_block fd
+          (B := data.sourceEndpoint x g.1.2) hVal htMem hw hv hwt hvt (Ne.symm hvw)
+          (hNoSurvAt w hw g hgS hgT hwt (by rw [hgRow]; exact hr))
+          hgS (hBlockInc w hw g hgT) hgT).2.2.2
+      · intro g hg
+        obtain ⟨⟨hgS, hgRow⟩, hgT⟩ := (LeafFibre.mem_rowFibre _ _ _ _).mp hg
+        rw [(PassOnceLollipop.partner_of_block fd
+          (B := data.sourceEndpoint x g.1.2) hVal htMem hv hw hvt hwt hvw
+          (hNoSurvAt v hv g hgS hgT hvt (by rw [hgRow]; exact hr))
+          hgS (hBlockInc v hv g hgT) hgT).2.2.1]
+    set c := GluingDatum.LengthMatrixPresentation.matrix L.presentation rowE (L.targetEdge.symm s) -
+      GluingDatum.LengthMatrixPresentation.matrix L.presentation rowE (L.targetEdge.symm u)
+    refine fd.det_ne_zero (det_eq_zero_of_columns _ (p := L.targetEdge.symm s)
+      (q := L.targetEdge.symm u) (l := L.targetEdge.symm t)
+      (fun h ↦ hus (L.targetEdge.symm.injective h).symm)
+      (fun h ↦ hst (L.targetEdge.symm.injective h))
+      (a := 1) (b := -1) (c := -(c * data.sourceEdgeIndex E)) one_ne_zero ?_)
+    intro r
+    rw [hColT r]
+    split_ifs with hr
+    · rw [hr]
+      field_simp
+      ring
+    · rw [hColumn s u hsMem huMem hst hut (Ne.symm hus) r hr]
+      ring
+
+end FarEnd
+
+/-! ## Generic facts: sheet partitions -/
+
+theorem eq_of_blockCard_eq_one {d : ℕ} {P : SheetPartition d} {i a b : Fin d}
+    (h : P.blockCard i = 1) (ha : P.Rel i a) (hb : P.Rel i b) : a = b := by
+  have hBlock := P.block_eq_singleton_of_blockCard_eq_one i h
+  have ha' : a ∈ P.block i := (P.mem_block_iff i a).mpr ha
+  have hb' : b ∈ P.block i := (P.mem_block_iff i b).mpr hb
+  rw [hBlock, Finset.mem_singleton] at ha' hb'
+  rw [ha', hb']
+
+theorem rel_sourceEndpoint {d : ℕ} {T : CFGraph} (D : GluingDatum T d) (v : T.V) (a : Fin d) :
+    (D.vertexPartition v).Rel (D.sourceEndpoint v a).1.2 a :=
+  (D.vertexPartition v).rel_repr_left a
+
+theorem card_blocks_of_pair {d : ℕ} (P : SheetPartition d) (hd : 0 < d) (b₀ : P.Blocks)
+    (h2 : P.blockCard b₀.1 = 2) (h1 : ∀ b : P.Blocks, b ≠ b₀ → P.blockCard b.1 = 1) :
+    Fintype.card P.Blocks + 1 = d := by
+  classical
+  have hSum := SheetPartition.sum_blockCard_blocks_eq_degree P hd
+  rw [← Finset.add_sum_erase _ _ (Finset.mem_univ b₀), h2,
+    Finset.sum_congr rfl fun b hb ↦ by rw [h1 b (Finset.mem_erase.mp hb).1]] at hSum
+  simp only [Nat.cast_one, Finset.sum_const, nsmul_eq_mul, mul_one,
+    Finset.card_erase_of_mem (Finset.mem_univ b₀), Finset.card_univ] at hSum
+  have hPos : 0 < Fintype.card P.Blocks := Fintype.card_pos_iff.mpr ⟨b₀⟩
+  push_cast [Nat.cast_sub hPos] at hSum
+  omega
+
+theorem card_blocks_of_discrete {d : ℕ} (P : SheetPartition d) (hd : 0 < d)
+    (h1 : ∀ b : P.Blocks, P.blockCard b.1 = 1) : Fintype.card P.Blocks = d := by
+  classical
+  have hSum := SheetPartition.sum_blockCard_blocks_eq_degree P hd
+  simp only [h1, Nat.cast_one, Finset.sum_const, nsmul_eq_mul, mul_one, Finset.card_univ]
+    at hSum
+  exact_mod_cast hSum
+
+end
+
+end DraismaVargas.Count.MarkedCount.Lollipops
+
+namespace DraismaVargas.Count.MarkedCount.LoopAt
 
 open DraismaVargas.Infrastructure
 open DraismaVargas.LocalCases
@@ -194,7 +565,7 @@ theorem farEnd_ne_loopV : farEnd M hℓ ≠ loopV M hℓ := by
   · exact h
 
 /-- **The far end of the bridge is a branch vertex** (the column-dependence argument of
-`RestrictBridge.nonDanglingValency_ne_two_of_unique`). -/
+`Lollipops.nonDanglingValency_ne_two_of_unique`). -/
 theorem nonDanglingValency_farEnd : nonDanglingValency M.data (farEnd M hℓ) = 3 := by
   have hne2 := nonDanglingValency_ne_two_of_unique M.fullDim (bridgeE_survives M hℓ)
     (fun F hF hFt ↦ eq_bridgeE M hℓ hF hFt) (farEnd_incident M hℓ)
@@ -261,8 +632,8 @@ theorem bridgeE_ends_ne_two (X : M.data.SourceVertex) (hX : Incident M.data (bri
   · rw [nonDanglingValency_farEnd]; omega
 
 /-- **The bridge row is the single edge `e_b`.** -/
-theorem eq_bridgeE_of_stablePath_eq (F : NonDanglingEdge M.data) (h : F.stablePath = bridgePath M hℓ) :
-    F = ⟨bridgeE M hℓ, bridgeE_survives M hℓ⟩ :=
+theorem eq_bridgeE_of_stablePath_eq (F : NonDanglingEdge M.data)
+    (h : F.stablePath = bridgePath M hℓ) : F = ⟨bridgeE M hℓ, bridgeE_survives M hℓ⟩ :=
   eq_of_stablePath_eq_of_ends (bridgeE_ends_ne_two M hℓ) h
 
 theorem incidenceCount_pos_of_incident {X : M.data.SourceVertex} {E : M.data.SourceEdge}
@@ -531,4 +902,4 @@ theorem card_blocks_tl :
 
 end
 
-end DraismaVargas.Count.MarkedCountGeneral.LoopAt
+end DraismaVargas.Count.MarkedCount.LoopAt

@@ -275,15 +275,6 @@ theorem sum_targetExcess_eq_typeExcess :
   have hSat := κ.fullDim.saturated
   linarith
 
-/-- The marks are distinct source vertices. -/
-theorem markSource_injective (hc : IsMarkedCubic core mark) :
-    Function.Injective κ.markSource := by
-  intro i j h
-  apply hc.injective
-  rw [← κ.ident.vertex_mark i, ← κ.ident.vertex_mark j]
-  congr 1
-  exact Subtype.ext h
-
 /-- A typed frame over a marked cubic core with a mark has a nontrivial target. -/
 theorem nontrivial_target (hc : IsMarkedCubic core mark) (j : Fin k) :
     Nontrivial κ.target.V := by
@@ -345,7 +336,7 @@ theorem targetExcess_ge_positive (hc : IsMarkedCubic core mark) (j : Fin k) (x :
   set P := Finset.univ.filter fun i ↦ (κ.markSource i).1.1 = x ∧ 0 < types i with hPdef
   have := κ.nontrivial_target hc j
   have hValPos := incidentEdges_card_pos_of_connected κ.fullDim.targetConnected x
-  have hInj := κ.markSource_injective hc
+  have hInj := κ.ident.markSource_injective hc
   have hMemP : ∀ i ∈ P, (κ.markSource i).1.1 = x ∧ 0 < types i := fun i hi ↦
     (Finset.mem_filter.mp hi).2
   -- the change is at least the sum of `r` over the positive-type marks over `x`

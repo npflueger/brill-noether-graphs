@@ -335,10 +335,6 @@ theorem card_incidentEdges_restrict (v : (restrictTarget Keep hKeep).V) :
 
 /-! ### Riemann--Hurwitz -/
 
-theorem blockCountWithin_le_blockCard (fine coarse : SheetPartition d) (i : Fin d) :
-    fine.blockCountWithin coarse i ≤ coarse.blockCard i :=
-  Finset.card_image_le
-
 /-- **The local ramification after restriction**: each deleted target edge at the vertex adds
 `m - k_e`, the block size minus the number of edge blocks inside it. -/
 theorem localRamification_restrictDatum (v : (restrictTarget Keep hKeep).V)
@@ -378,8 +374,8 @@ theorem riemannHurwitz_restrictDatum (hRH : D.RiemannHurwitz) :
         ((D.edgePartition e).blockCountWithin (D.vertexPartition (vIncl v))
           ((D.vertexPartition (vIncl v)).toBlock sheet).1 : ℤ)) :=
     Finset.sum_nonneg fun e _ ↦ by
-      have := blockCountWithin_le_blockCard (D.edgePartition e) (D.vertexPartition (vIncl v))
-        ((D.vertexPartition (vIncl v)).toBlock sheet).1
+      have := LocalCases.W3FourSelectedCensus.blockCountWithin_le_blockCard (D.edgePartition e)
+        (D.vertexPartition (vIncl v)) ((D.vertexPartition (vIncl v)).toBlock sheet).1
       omega
   have hRepr := SheetPartition.rel_repr_left (D.vertexPartition (vIncl v)) sheet
   have hBC : ∀ fine : SheetPartition d, fine.blockCountWithin (D.vertexPartition (vIncl v))

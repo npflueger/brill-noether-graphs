@@ -376,7 +376,7 @@ theorem isLone_shedSheet (j : Fin k) (i : Fin (c j)) (h : IsAscent T hc M j i) :
   have hMem := mem_side_of_reachP_target M.data cut (shedSheet T hc M j i h) cut.left_mem
     (reachP_shed_kept T hc M j i v)
   have h1 := blockCard_of_mem_side T M cut hMem
-  exact eq_of_blockCard_eq_one' h1 hτ
+  exact Lollipops.eq_of_blockCard_eq_one h1 hτ rfl
 
 /-! ## 6.  (ii) Distinct ascents shed distinct sheets -/
 
@@ -498,7 +498,7 @@ theorem sing_xSpine {τ : Fin degree} (hτ : Sheets.IsLone (rData T hc M) τ)
       · -- the lower core vertex is the mark
         have hLu : L = uSource T M j := by
           rw [hL, h0, (cat T j).tail_path_zero]; rfl
-        have hτL : τ = L.1.2 := eq_of_blockCard_eq_one' hL1 hLτ
+        have hτL : τ = L.1.2 := Lollipops.eq_of_blockCard_eq_one hL1 hLτ rfl
         apply not_isLone_of_survivor T hc M (xMark_mem_Keep T hc M j)
           (X := uSource T M j) (by rw [nonDanglingValency_uSource]; omega)
         rw [← hLu, ← hτL]; exact hτ

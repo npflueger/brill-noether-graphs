@@ -32,8 +32,8 @@ a mark is a marked branch vertex); §6 the script `script` on `D.bigSpec (small.
 compatibility `compat` at both ends of every slot, constancy on contracted slots
 (`corePotential_contracted`) and hence on every fibre of the contraction
 (`script_eq_of_vertexMap_eq`, through the last clause of `ExpansionData.Conditions`), and
-`script_eq_pullScript`; §7 `pushDiv_prin_script`, `slot_sum`, `linear_equiv_pushed`; §8
-`pencilTransport`.
+`script_eq_pullScript`; §7 `pushDiv_prin_script`, `slot_sum`, `linear_equiv_pushed`. This
+module states the result as `pencilTransport`.
 
 ## The boundary term that is not there
 
@@ -61,54 +61,15 @@ variable {n p N Q m degree : ℕ} {mark : Fin m → Fin N} {types : Fin m → �
   (hClosed : Closed (degenerateLength D small) κ)
   (hScale : scale (degenerateLength D small) κ = k)
 
-/-! ## 1.  Rise-compatible target potentials -/
-
-/-- A target potential `P` with integral slopes `s`, rising along every target edge by its
-slope times the **realized integral length** of that edge (`PencilTransportProducer.RiseCompatible`,
-on the typed realization). -/
-def RiseCompatible (s : κ.target.edges → ℤ) (P : κ.target.V → ℤ) : Prop :=
-  ∀ edge : κ.target.edges,
-    P (edge : κ.target.V × κ.target.V).2 - P (edge : κ.target.V × κ.target.V).1 =
-      s edge * ((realization (degenerateLength D small) κ hClosed).targetLength edge : ℤ)
-
-/-- The integral tree slope with incidence `anchor − root` (`TreeMetricPotential.chipSlope`). -/
-noncomputable def chipSlope (root anchor : κ.target.V) : κ.target.edges → ℤ :=
-  TreeMetricPotential.chipSlope κ.data κ.fullDim.targetConnected κ.fullDim.targetGenus root anchor
-
-/-- The tree potential integrating `chipSlope` against the realized target lengths (zeros
-allowed). -/
-noncomputable def chipPotential (root anchor : κ.target.V) : κ.target.V → ℤ :=
-  TreeMetricPotential.chipPotential κ.data κ.fullDim.targetConnected κ.fullDim.targetGenus
-    (realization (degenerateLength D small) κ hClosed).targetLength root anchor
-
-/-- The chip potential is rise-compatible (`TreeMetricPotential.chipPotential_rise`). -/
-theorem chip_riseCompatible (root anchor : κ.target.V) :
-    RiseCompatible D small κ hClosed (chipSlope D κ root anchor)
-      (chipPotential D small κ hClosed root anchor) := fun t ↦
-  TreeMetricPotential.chipPotential_rise κ.data κ.fullDim.targetConnected κ.fullDim.targetGenus
-    (realization (degenerateLength D small) κ hClosed).targetLength root anchor t
-
-/-! ## 2.  The transport -/
-
-/-- **The pushed fibres over any two target vertices are linearly equivalent**
-(`PencilTransportProducer.linear_equiv_pushDivisor`): `pushed anchor − pushed root` is the
-Laplacian of the small script descended from the big-side script whose value at the offset `o`
-of a big slot is the row potential (the pull-back of `chipPotential root anchor`) at the oriented
-position. -/
-theorem linear_equiv_pushed (hCond : D.Conditions small.core) (root anchor : κ.target.V) :
-    linear_equiv (small.scale k hk).graph
-      (pushed D small hN hL k hk κ hClosed hScale root)
-      (pushed D small hN hL k hk κ hClosed hScale anchor) :=
-  -- The public §2–§7 with marked rows, proved in `CTTransport` (small side
-  -- `pushed_sub_eq_rows`, big side `pushDiv_prin_script`, matched slot by slot by `slot_sum`).
-  CTTransport.linear_equiv_pushed D small hN hL k hk κ hClosed hScale root anchor hCond
-
 /-- **(T), typed.** The pushed fibres over any two target vertices are linearly equivalent on
-`small.scale k`, from `D.Conditions small.core` alone. -/
+`small.scale k`, from `D.Conditions small.core`: `pushed anchor − pushed root` is the Laplacian of
+the small script descended from the big-side script whose value at the offset `o` of a big slot
+is the row potential (the pull-back of `chipPotential root anchor`) at the oriented position
+(`CTTransport.linear_equiv_pushed`). -/
 theorem pencilTransport (hCond : D.Conditions small.core) (root anchor : κ.target.V) :
     linear_equiv (small.scale k hk).graph
       (pushed D small hN hL k hk κ hClosed hScale root)
       (pushed D small hN hL k hk κ hClosed hScale anchor) :=
-  linear_equiv_pushed D small hN hL k hk κ hClosed hScale hCond root anchor
+  CTTransport.linear_equiv_pushed D small hN hL k hk κ hClosed hScale root anchor hCond
 
 end DiagonalSecant.TypedTransport

@@ -58,7 +58,7 @@ theorem loopV_regrow (j : Fin k) :
   have h3 : (⟨Lollipops.loopV (mem hc κ) j, Lollipops.three_le_loopV (mem hc κ) j⟩ :
       BranchVertex (mem hc κ).data) =
       branchVertexEquiv (branching κ) (connected κ) (markValency_ne_zero κ)
-        (markSource_injective κ hc) (.inr j) := by
+        (κ.ident.markSource_injective hc) (.inr j) := by
     apply (ident κ hc).vertex.injective
     rw [h2]
     exact h1
@@ -72,7 +72,8 @@ theorem markV_regrow (j : Fin k) :
   have h3 : (⟨Lollipops.markV (mem hc κ) j, Lollipops.three_le_markV (mem hc κ) j⟩ :
       BranchVertex (mem hc κ).data) =
       branchVertexEquiv (branching κ) (connected κ) (markValency_ne_zero κ)
-        (markSource_injective κ hc) (.inl ⟨κ.markSource j, Or.inr (mem_markSet κ.markSource j)⟩) := by
+        (κ.ident.markSource_injective hc)
+        (.inl ⟨κ.markSource j, Or.inr (mem_markSet κ.markSource j)⟩) := by
     apply (ident κ hc).vertex.injective
     rw [h2]
     refine h1.trans ?_
@@ -83,7 +84,7 @@ theorem markV_regrow (j : Fin k) :
 
 theorem uP_regrow (j : Fin k) :
     Lollipops.uP (mem hc κ) j = midV (branching κ).x j := by
-  unfold Lollipops.uP
+  change (Lollipops.loopV (mem hc κ) j).1.1 = _
   rw [loopV_regrow]
   rfl
 
@@ -243,7 +244,7 @@ def restrictRegrowIso : MarkedFrameIso (restrictFrame hc (regrowFrame hc κ)) κ
     refine Eq.trans ?_ (Lollipops.oldVertex_vertexEquiv (mem hc κ) hc vertex).symm
     have h := ident_vertex_apply κ hc (.inl ⟨_, hImage⟩)
     have hB : branchVertexEquiv (branching κ) (connected κ) (markValency_ne_zero κ)
-        (markSource_injective κ hc) (.inl ⟨_, hImage⟩) =
+        (κ.ident.markSource_injective hc) (.inl ⟨_, hImage⟩) =
         ⟨svIncl vertex.1, (Lollipops.branch_iff (mem hc κ) hc vertex.1).mp vertex.2⟩ :=
       Subtype.ext (oldSV_sourceVertexEquiv hc κ vertex.1)
     rw [hB] at h

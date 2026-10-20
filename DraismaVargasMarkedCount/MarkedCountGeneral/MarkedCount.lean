@@ -19,7 +19,8 @@ Over a general twice-marked metric graph `(Γ, u, v)` of genus `g`, with `a, b �
 **in the range `g ≥ 5`, or `g = 4` with `a` and `b` both odd** (every level `g + a' + b'` of
 the induction is then at least `6`, where the integer count holds).
 
-* `typedCount_onceMarked`: the once-marked form `(a, 0)` with `v` absent, `g ≥ 5`;
+* `typedCount_onceMarked`: the once-marked form `(a, 0)` with `v` absent, `g ≥ 5`
+  (`typedCount_onceMarked_chain` under weaker genericity);
 * `typedCount_twiceMarked`: `(a, b)` on the twice-marked core, `v` and `u` kept even when of
   type `0`.
 
@@ -35,7 +36,10 @@ once-marked count and the integer count on `Γ`. **With `a` and `b` both odd no 
 **Genericity** is a conjunction over the lower types (`OnceGeneral`,
 `TwiceGeneral`): no typed frame of any type `≤ (a, b)` has a zero coordinate at `y`, and the same
 for the once-marked cores and `Γ` at the merged requests, where a type-`0` mark is dropped. Every
-clause excludes a finite union of hyperplanes in `y`.
+clause excludes a finite union of hyperplanes in `y`. The once-marked count holds under the
+weaker `OnceChainGeneral` and `OnceDropGeneral` (`typedCount_onceMarked_chain`), which name only
+the typed frames of the types `a − 2m` in the degrees `d − m` and the frames of `Γ` in the degree
+`d − a/2`, the ones the induction reads.
 
 The four headlines depend only on `propext`, `Classical.choice` and `Quot.sound`.
 -/
@@ -90,6 +94,33 @@ theorem OnceGeneral.mono {core : Core n p} {s : Fin p} {a a' : ℕ} {y : Fin (p 
     (h : OnceGeneral core s a y) (ha : a' ≤ a) : OnceGeneral core s a' y :=
   ⟨h.1.mono ha, h.2⟩
 
+/-- **Genericity of a once-marked core along the chain** of type `a` in degree `d`: no typed
+frame of type `a − 2m` in degree `d − m`, `2m ≤ a`, has a zero coordinate at `y`. These are the
+only typed frames the proof of the once-marked count reads (`catalan_eq_once` at every level of
+the induction). The type vector and the degree are quantified with equations, so that a typed
+frame of a lower type `lowerType c J` in degree `d − shed J` is covered without a cast. -/
+def OnceChainGeneral (core : Core n p) (s : Fin p) (a d : ℕ) (y : Fin (p + 1) → ℚ) : Prop :=
+  ∀ m d', 2 * m ≤ a → d' = d - m → ∀ types : Fin 1 → ℕ, types 0 = a - 2 * m →
+    ∀ (κ : TypedFrame (subdivide core s) (onceMark n) types d') (col : Fin (p + 1)),
+      κ.coordsAt y col ≠ 0
+
+/-- Chain genericity passes to a lower level of the induction. -/
+theorem OnceChainGeneral.lower {core : Core n p} {s : Fin p} {a d : ℕ} {y : Fin (p + 1) → ℚ}
+    (h : OnceChainGeneral core s a d y) {j : ℕ} (hj : 2 * j ≤ a) :
+    OnceChainGeneral core s (a - 2 * j) (d - j) y :=
+  fun m d' hm hd' types ht ↦ h (j + m) d' (by omega) (by omega) types (by omega)
+
+/-- Typed genericity gives chain genericity in every degree. -/
+theorem OnceTypedGeneral.chain {core : Core n p} {s : Fin p} {a : ℕ} {y : Fin (p + 1) → ℚ}
+    (h : OnceTypedGeneral core s a y) (d : ℕ) : OnceChainGeneral core s a d y :=
+  fun _ d' _ _ types ht ↦ h types (by omega) d'
+
+/-- **The drop clause at one degree**: no frame of `Γ` in degree `d₀` has a zero coordinate at
+the merged request. The once-marked count of type `a` in degree `d` uses it only at
+`d₀ = d − a/2`, the degree of its type-`0` level. -/
+def OnceDropGeneral (core : Core n p) (s : Fin p) (d₀ : ℕ) (y : Fin (p + 1) → ℚ) : Prop :=
+  ∀ (f : Frame core d₀) (col : Fin p), f.coordsAt (mergeRequest s y) col ≠ 0
+
 /-- **Genericity of a twice-marked core** `(Γ, u, v)` for type `(a, b)`, typed part:
 no typed frame of type `≤ (a, b)` has a zero coordinate at `y`. -/
 def TwiceTypedGeneral (core : Core n p) (s₁ : Fin p) (s₂ : Fin (p + 1)) (a b : ℕ)
@@ -125,7 +156,7 @@ genus `a` at `u`, expanded by the decomposition:
 theorem catalan_eq_once {core : Core n p} (hCubic : core.Cubic) (hConnected : core.Connected)
     {g : ℕ} (hg : p + 1 - n = g) (hg4 : 4 ≤ g) (s : Fin p) {a d : ℕ} (ha : 1 ≤ a)
     (hd : g + a + 2 = 2 * d) (h6 : 6 ≤ g + a) {y : Fin (p + 1) → ℚ} (hy : ∀ i, 0 < y i)
-    (hGen : OnceTypedGeneral core s a y) :
+    (hGen : OnceChainGeneral core s a d y) :
     (catalan (d - 1) : ℚ) = ∑ j ∈ range (a / 2 + 1), (ballot a j : ℚ) *
       typedCount (subdivide core s) (onceMark n) ![a - 2 * j] y (d - j) := by
   set c₀ := a - 1 with hc₀
@@ -147,7 +178,8 @@ theorem catalan_eq_once {core : Core n p} (hCubic : core.Cubic) (hConnected : co
     (T.connected (subdivide_connected _ _ hConnected)) hGenus (T.request y) (T.request_pos hy)
     (general_tailed_of_general T hc (fun i ↦ T.request_coreSlot y i)
       (fun j s ↦ by rw [T.request_tailSlot]; exact one_ne_zero)
-      fun J κ col ↦ hGen _ (by simp only [lowerType, hcc]; omega) _ κ col)
+      fun J κ col ↦ hGen (J 0) _ (by have := (J 0).isLt; simp only [hcc] at this; omega)
+        (by simp [shed]) _ (by simp only [lowerType, hcc]; omega) κ col)
   rw [hG1] at hEng
   rw [show K + 2 - 1 = K + 1 by omega, hEng]
   rw [Fintype.sum_equiv (Equiv.funUnique (Fin 1) (Fin ((c₀ + 1) / 2 + 1)) : LowerIndex cc ≃ _) _
@@ -264,7 +296,7 @@ induction hypothesis at every `a - 2j`, `j ≥ 1`, and the identity `chainTail_i
 theorem onceMarked_step {core : Core n p} (hCubic : core.Cubic) (hConnected : core.Connected)
     {g : ℕ} (hg : p + 1 - n = g) (hg4 : 4 ≤ g) (s : Fin p) {a d : ℕ} (ha : 1 ≤ a)
     (hd : g + a + 2 = 2 * d) (hL : d ≤ g) (h6 : 6 ≤ g + a) {y : Fin (p + 1) → ℚ}
-    (hy : ∀ i, 0 < y i) (hGen : OnceTypedGeneral core s a y)
+    (hy : ∀ i, 0 < y i) (hGen : OnceChainGeneral core s a d y)
     (hIH : ∀ j ∈ range (a / 2 + 1), j ≠ 0 →
       typedCount (subdivide core s) (onceMark n) ![a - 2 * j] y (d - j) =
         (markedFormula g (d - j) (a - 2 * j) : ℚ)) :
@@ -305,31 +337,41 @@ theorem onceMarked_step {core : Core n p} (hCubic : core.Cubic) (hConnected : co
   congr 3
   omega
 
-/-- **The once-marked count `(a, 0)`** (over `(Γ, u)`, `v` absent), `g ≥ 5`. -/
-theorem typedCount_onceMarked {core : Core n p} (hCubic : core.Cubic)
-    (hConnected : core.Connected) {g : ℕ} (hg : p + 1 - n = g) (hg5 : 5 ≤ g) (s : Fin p) :
-    ∀ (a d : ℕ), g + a + 2 = 2 * d → d ≤ g → ∀ y : Fin (p + 1) → ℚ, (∀ i, 0 < y i) →
-      OnceGeneral core s a y →
-        typedCount (subdivide core s) (onceMark n) ![a] y d = (markedFormula g d a : ℚ) := by
-  intro a
-  induction a using Nat.strong_induction_on with
+/-- **The once-marked count `(a, 0)` under chain genericity** (over `(Γ, u)`, `v` absent),
+`g ≥ 5`: the genericity it reads is `OnceChainGeneral` and the drop clause in the one degree
+`d − a/2`. -/
+theorem typedCount_onceMarked_chain {core : Core n p} (hCubic : core.Cubic)
+    (hConnected : core.Connected) {g : ℕ} (hg : p + 1 - n = g) (hg5 : 5 ≤ g) (s : Fin p)
+    (a d : ℕ) (hd : g + a + 2 = 2 * d) (hL : d ≤ g) (y : Fin (p + 1) → ℚ) (hy : ∀ i, 0 < y i)
+    (hGen : OnceChainGeneral core s a d y) (hDrop : OnceDropGeneral core s (d - a / 2) y) :
+    typedCount (subdivide core s) (onceMark n) ![a] y d = (markedFormula g d a : ℚ) := by
+  induction a using Nat.strong_induction_on generalizing d with
   | _ a ih =>
-  intro d hd hL y hy hGen
   rcases Nat.eq_zero_or_pos a with rfl | ha
   · -- type 0: drop `u`, then the integer count on `Γ`
     obtain ⟨K, rfl⟩ : ∃ K, d = K + 2 := ⟨d - 2, by omega⟩
-    rw [typedCount_dropOnce hCubic s hy (hGen.1 ![0] (by simp) _),
+    rw [typedCount_dropOnce hCubic s hy (hGen 0 _ (by omega) (by omega) ![0] (by simp)),
       IntegerCount.openMultCount_eq_catalan (k := K) (by omega) core hCubic hConnected
-        (by omega) _ (mergeRequest_pos hy) (hGen.2 _)]
+        (by omega) _ (mergeRequest_pos hy) (by simpa [OnceDropGeneral] using hDrop)]
     have hC := catalan_eq_choose_sub (m := K + 1) (by omega)
     unfold markedFormula
     rw [show g + 1 - (K + 2) + 0 = K + 1 by omega, show g - (K + 2) = K + 1 - 1 by omega,
       show g = 2 * (K + 1) by omega]
     exact_mod_cast hC
-  · refine onceMarked_step hCubic hConnected hg (by omega) s ha hd hL (by omega) hy hGen.1
+  · refine onceMarked_step hCubic hConnected hg (by omega) s ha hd hL (by omega) hy hGen
       fun j hj hj0 ↦ ?_
     have hj' := Finset.mem_range.mp hj
-    exact ih (a - 2 * j) (by omega) (d - j) (by omega) (by omega) y hy (hGen.mono (by omega))
+    refine ih (a - 2 * j) (by omega) (d - j) (by omega) (by omega) (hGen.lower (by omega)) ?_
+    rwa [show d - j - (a - 2 * j) / 2 = d - a / 2 by omega]
+
+/-- **The once-marked count `(a, 0)`** (over `(Γ, u)`, `v` absent), `g ≥ 5`. -/
+theorem typedCount_onceMarked {core : Core n p} (hCubic : core.Cubic)
+    (hConnected : core.Connected) {g : ℕ} (hg : p + 1 - n = g) (hg5 : 5 ≤ g) (s : Fin p) :
+    ∀ (a d : ℕ), g + a + 2 = 2 * d → d ≤ g → ∀ y : Fin (p + 1) → ℚ, (∀ i, 0 < y i) →
+      OnceGeneral core s a y →
+        typedCount (subdivide core s) (onceMark n) ![a] y d = (markedFormula g d a : ℚ) :=
+  fun a d hd hL y hy hGen ↦ typedCount_onceMarked_chain hCubic hConnected hg hg5 s a d hd hL y hy
+    (hGen.1.chain d) (hGen.2 _)
 
 /-- **The once-marked count for odd `a`**, with no drop: every lower type `a - 2j` is odd,
 so the proof uses neither the drop lemma nor the `k = 0` comparison with the integer count
@@ -345,7 +387,7 @@ theorem typedCount_onceMarked_odd {core : Core n p} (hCubic : core.Cubic)
   | _ a ih =>
   intro d hOdd hd hL y hy hGen
   have ha : 1 ≤ a := hOdd.pos
-  refine onceMarked_step hCubic hConnected hg (by omega) s ha hd hL (by omega) hy hGen
+  refine onceMarked_step hCubic hConnected hg (by omega) s ha hd hL (by omega) hy (hGen.chain d)
     fun j hj hj0 ↦ ?_
   have hj' := Finset.mem_range.mp hj
   exact ih (a - 2 * j) (by omega) (d - j) (Nat.Odd.sub_even (by omega) hOdd (even_two_mul j))

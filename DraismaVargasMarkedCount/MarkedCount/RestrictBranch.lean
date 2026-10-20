@@ -76,14 +76,8 @@ theorem tl_ends (j : Fin k) :
     ((tl M j : M.target.V × M.target.V).1 = uP M j ∧
         (tl M j : M.target.V × M.target.V).2 = vC M j) ∨
       ((tl M j : M.target.V × M.target.V).1 = vC M j ∧
-        (tl M j : M.target.V × M.target.V).2 = uP M j) := by
-  have hx := Count.fst_eq_or_snd_eq_of_mem_incidentEdges (tl_mem_uP M j)
-  have hu := Count.fst_eq_or_snd_eq_of_mem_incidentEdges (tl_mem_vC M j)
-  rcases hx with hx | hx <;> rcases hu with hu | hu
-  · exact absurd (hx.symm.trans hu) (uP_ne_vC M j j)
-  · exact Or.inl ⟨hx, hu⟩
-  · exact Or.inr ⟨hu, hx⟩
-  · exact absurd (hx.symm.trans hu) (uP_ne_vC M j j)
+        (tl M j : M.target.V × M.target.V).2 = uP M j) :=
+  LoopAt.tl_ends M (hLoop j)
 
 theorem tb_injective : Function.Injective (tb M) := by
   intro i j h
@@ -179,145 +173,13 @@ theorem not_keptEdge_iff (e : M.target.edges) :
 
 /-! ## 3.  The partitions over a branch refine the one at the mark -/
 
-theorem eq_of_blockCard_eq_one {d : ℕ} {P : SheetPartition d} {i a b : Fin d}
-    (h : P.blockCard i = 1) (ha : P.Rel i a) (hb : P.Rel i b) : a = b := by
-  have hBlock := P.block_eq_singleton_of_blockCard_eq_one i h
-  have ha' : a ∈ P.block i := (P.mem_block_iff i a).mpr ha
-  have hb' : b ∈ P.block i := (P.mem_block_iff i b).mpr hb
-  rw [hBlock, Finset.mem_singleton] at ha' hb'
-  rw [ha', hb']
-
-/-- A source vertex with no survivor is a single sheet. -/
-theorem blockCard_eq_one_of_nonDanglingValency_zero {X : M.data.SourceVertex}
-    (h0 : nonDanglingValency M.data X = 0) :
-    (M.data.vertexPartition X.1.1).blockCard X.1.2 = 1 :=
-  (PendantFibre.degree_one_of_nonDanglingValency_zero M.fullDim X h0).1
-
-theorem rel_sourceEndpoint {d : ℕ} {T : CFGraph} (D : GluingDatum T d) (v : T.V) (a : Fin d) :
-    (D.vertexPartition v).Rel (D.sourceEndpoint v a).1.2 a :=
-  (D.vertexPartition v).rel_repr_left a
-
-/-- **The block of `w` over `φ(w)` is the block of `e_b`.** -/
-theorem block_tb_eq_block_uP (j : Fin k) :
-    (M.data.edgePartition (tb M j)).block (bridgeE M j).1.2 =
-      (M.data.vertexPartition (uP M j)).block (bridgeE M j).1.2 := by
-  have hRef := StableLocalProperties.refines_of_mem_incidentEdges M.data (tb_mem_uP M j)
-  have hRelW : (M.data.vertexPartition (uP M j)).Rel (loopV M j).1.2 (bridgeE M j).1.2 :=
-    ((incident_iff_target_mem_and_rel M.data _ _).mp (bridgeE_incident_loopV M j)).2
-  apply Finset.eq_of_subset_of_card_le
-  · intro σ hσ
-    rw [SheetPartition.mem_block_iff] at hσ ⊢
-    exact hRef.rel hσ
-  · have h1 : ((M.data.edgePartition (tb M j)).block (bridgeE M j).1.2).card = 2 :=
-      bridgeE_index M j
-    have h2 : ((M.data.vertexPartition (uP M j)).block (bridgeE M j).1.2).card = 2 := by
-      rw [← SheetPartition.block_eq_of_rel _ hRelW]
-      exact LollipopBridgeFibreWitness.blockCard_loopBranch M (hLoop j)
-    omega
-
 theorem refines_uP_xV (j : Fin k) :
-    (M.data.vertexPartition (uP M j)).Refines (M.data.vertexPartition (xV M j)) := by
-  intro a b hab
-  set X := M.data.sourceEndpoint (uP M j) a
-  by_cases hX : X = loopV M j
-  · have hRelW : (M.data.vertexPartition (uP M j)).Rel (loopV M j).1.2 (bridgeE M j).1.2 :=
-      ((incident_iff_target_mem_and_rel M.data _ _).mp (bridgeE_incident_loopV M j)).2
-    have hXa : (M.data.vertexPartition (uP M j)).Rel X.1.2 a := rel_sourceEndpoint M.data (uP M j) a
-    rw [hX] at hXa
-    have hσa : (M.data.vertexPartition (uP M j)).Rel (bridgeE M j).1.2 a :=
-      (SheetPartition.rel_iff _ _ _).mpr (hRelW.symm.trans hXa)
-    have hσb : (M.data.vertexPartition (uP M j)).Rel (bridgeE M j).1.2 b :=
-      (SheetPartition.rel_iff _ _ _).mpr (hσa.trans hab)
-    have ha := (SheetPartition.mem_block_iff _ _ _).mpr hσa
-    have hb := (SheetPartition.mem_block_iff _ _ _).mpr hσb
-    rw [← block_tb_eq_block_uP, SheetPartition.mem_block_iff] at ha hb
-    have hRefX := StableLocalProperties.refines_of_mem_incidentEdges M.data (tb_mem_xV M j)
-    exact hRefX.rel ((SheetPartition.rel_iff _ _ _).mpr (ha.symm.trans hb))
-  · have h0 := nonDanglingValency_over_uP M (j := j) (X := X) rfl hX
-    have h1 := blockCard_eq_one_of_nonDanglingValency_zero M h0
-    have hXa := rel_sourceEndpoint M.data (uP M j) a
-    have hXb : (M.data.vertexPartition (uP M j)).Rel X.1.2 b :=
-      (SheetPartition.rel_iff _ _ _).mpr (hXa.trans hab)
-    have := eq_of_blockCard_eq_one h1 hXa hXb
-    subst this
-    exact (SheetPartition.rel_iff _ _ _).mpr rfl
+    (M.data.vertexPartition (uP M j)).Refines (M.data.vertexPartition (xV M j)) :=
+  xV_eq M j ▸ LoopAt.refines_uP_xV M (hLoop j)
 
 theorem refines_vC_uP (j : Fin k) :
-    (M.data.vertexPartition (vC M j)).Refines (M.data.vertexPartition (uP M j)) := by
-  classical
-  intro a b hab
-  set X := M.data.sourceEndpoint (vC M j) a
-  have hXa := rel_sourceEndpoint M.data (vC M j) a
-  have hXb : (M.data.vertexPartition (vC M j)).Rel X.1.2 b :=
-    (SheetPartition.rel_iff _ _ _).mpr (hXa.trans hab)
-  rcases nonDanglingValency_over_vC M (j := j) (X := X) rfl with h0 | h2
-  · have h1 := blockCard_eq_one_of_nonDanglingValency_zero M h0
-    have := eq_of_blockCard_eq_one h1 hXa hXb
-    subst this
-    exact (SheetPartition.rel_iff _ _ _).mpr rfl
-  · have hLeaf := vC_isLeaf M j
-    have hC : X = LeafFibre.coreVertex M.fullDim hLeaf :=
-      LollipopDivalentWitness.eq_coreVertex_of_surviving M.fullDim (by omega) hLeaf
-    obtain ⟨e₁, e₂, hne, hpair⟩ := Finset.card_eq_two.mp
-      (LeafFibre.leafSurvivors_card M.fullDim hLeaf)
-    have hmem₁ : e₁ ∈ LeafFibre.leafSurvivors (data := M.data) hLeaf := by rw [hpair]; simp
-    have hmem₂ : e₂ ∈ LeafFibre.leafSurvivors (data := M.data) hLeaf := by rw [hpair]; simp
-    -- each leaf survivor meets `w`
-    have hW : ∀ e ∈ LeafFibre.leafSurvivors (data := M.data) hLeaf,
-        (M.data.vertexPartition (uP M j)).Rel (loopV M j).1.2 e.1.2 := by
-      intro e he
-      obtain ⟨heS, heT⟩ := (LeafFibre.mem_leafSurvivors hLeaf).mp he
-      have hInc : Incident M.data e (M.data.sourceEndpoint (uP M j) e.1.2) := by
-        have h := incident_sourceEdge_sourceEndpoint M.data (uP M j) (tl M j) (tl_mem_uP M j)
-          e.1.2
-        rwa [show M.data.sourceEdge (tl M j) e.1.2 = e by
-          rw [← show e.1.1 = tl M j from heT]; exact GluingDatum.sourceEdge_self M.data e] at h
-      have hEq : M.data.sourceEndpoint (uP M j) e.1.2 = loopV M j := by
-        by_contra hne'
-        have := nonDanglingValency_over_uP M (j := j)
-          (X := M.data.sourceEndpoint (uP M j) e.1.2) rfl hne'
-        have := LollipopBridgeFibre.nonDanglingValency_pos_of_survivor heS hInc
-        omega
-      rw [← hEq]
-      exact ((incident_iff_target_mem_and_rel M.data _ _).mp hInc).2
-    -- the block of `C` is `{σ₁, σ₂}`
-    have hC₁ := LeafFibre.incident_coreVertex_of_mem_leafSurvivors M.fullDim hLeaf hmem₁
-    have hC₂ := LeafFibre.incident_coreVertex_of_mem_leafSurvivors M.fullDim hLeaf hmem₂
-    rw [← hC] at hC₁ hC₂
-    have hR₁ := ((incident_iff_target_mem_and_rel M.data _ _).mp hC₁).2
-    have hR₂ := ((incident_iff_target_mem_and_rel M.data _ _).mp hC₂).2
-    have hσ : e₁.1.2 ≠ e₂.1.2 := by
-      intro h
-      apply hne
-      have hT₁ := ((LeafFibre.mem_leafSurvivors hLeaf).mp hmem₁).2
-      have hT₂ := ((LeafFibre.mem_leafSurvivors hLeaf).mp hmem₂).2
-      exact Subtype.ext (Prod.ext (hT₁.trans hT₂.symm) h)
-    have hCard : (M.data.vertexPartition (vC M j)).blockCard X.1.2 = 2 := by
-      rw [hC]
-      exact LeafFibre.blockCard_coreBlock M.fullDim hLeaf
-    have hBlock : (M.data.vertexPartition (vC M j)).block X.1.2 = {e₁.1.2, e₂.1.2} := by
-      symm
-      apply Finset.eq_of_subset_of_card_le
-      · intro σ hσ'
-        simp only [Finset.mem_insert, Finset.mem_singleton] at hσ'
-        rw [SheetPartition.mem_block_iff]
-        rcases hσ' with rfl | rfl
-        · exact hR₁
-        · exact hR₂
-      · rw [Finset.card_pair hσ]
-        exact hCard.le
-    have ha : a ∈ ({e₁.1.2, e₂.1.2} : Finset _) := by
-      rw [← hBlock, SheetPartition.mem_block_iff]; exact hXa
-    have hb : b ∈ ({e₁.1.2, e₂.1.2} : Finset _) := by
-      rw [← hBlock, SheetPartition.mem_block_iff]; exact hXb
-    have hW₁ := hW e₁ hmem₁
-    have hW₂ := hW e₂ hmem₂
-    simp only [Finset.mem_insert, Finset.mem_singleton] at ha hb
-    rcases ha with rfl | rfl <;> rcases hb with rfl | rfl <;>
-      first
-      | exact (SheetPartition.rel_iff _ _ _).mpr rfl
-      | exact (SheetPartition.rel_iff _ _ _).mpr (hW₁.symm.trans hW₂)
-      | exact (SheetPartition.rel_iff _ _ _).mpr (hW₂.symm.trans hW₁)
+    (M.data.vertexPartition (vC M j)).Refines (M.data.vertexPartition (uP M j)) :=
+  LoopAt.refines_vC_uP M (hLoop j)
 
 /-! ## 4.  The retraction of the target -/
 
@@ -571,56 +433,21 @@ theorem xV_injective (hc : IsMarkedCubic core mark) : Function.Injective (xV M) 
 
 /-! ## 7.  Block counts over the branch -/
 
-theorem card_blocks_of_pair {d : ℕ} (P : SheetPartition d) (hd : 0 < d) (b₀ : P.Blocks)
-    (h2 : P.blockCard b₀.1 = 2) (h1 : ∀ b : P.Blocks, b ≠ b₀ → P.blockCard b.1 = 1) :
-    Fintype.card P.Blocks + 1 = d := by
-  classical
-  have hSum := SheetPartition.sum_blockCard_blocks_eq_degree P hd
-  rw [← Finset.add_sum_erase _ _ (Finset.mem_univ b₀), h2,
-    Finset.sum_congr rfl fun b hb ↦ by rw [h1 b (Finset.mem_erase.mp hb).1]] at hSum
-  simp only [Nat.cast_one, Finset.sum_const, nsmul_eq_mul, mul_one,
-    Finset.card_erase_of_mem (Finset.mem_univ b₀), Finset.card_univ] at hSum
-  have hPos : 0 < Fintype.card P.Blocks := Fintype.card_pos_iff.mpr ⟨b₀⟩
-  push_cast [Nat.cast_sub hPos] at hSum
-  omega
-
-theorem card_blocks_of_discrete {d : ℕ} (P : SheetPartition d) (hd : 0 < d)
-    (h1 : ∀ b : P.Blocks, P.blockCard b.1 = 1) : Fintype.card P.Blocks = d := by
-  classical
-  have hSum := SheetPartition.sum_blockCard_blocks_eq_degree P hd
-  simp only [h1, Nat.cast_one, Finset.sum_const, nsmul_eq_mul, mul_one, Finset.card_univ]
-    at hSum
-  exact_mod_cast hSum
-
 theorem card_blocks_uP (j : Fin k) :
-    Fintype.card (M.data.vertexPartition (uP M j)).Blocks + 1 = degree := by
-  refine card_blocks_of_pair _ M.data.degree_pos ⟨(loopV M j).1.2, (loopV M j).2⟩
-    (LollipopBridgeFibreWitness.blockCard_loopBranch M (hLoop j)) fun b hb ↦ ?_
-  refine blockCard_eq_one_of_nonDanglingValency_zero M (X := ⟨(uP M j, b.1), b.2⟩) ?_
-  refine nonDanglingValency_over_uP M rfl fun h ↦ hb ?_
-  exact Subtype.ext (congrArg (fun X : M.data.SourceVertex ↦ X.1.2) h)
+    Fintype.card (M.data.vertexPartition (uP M j)).Blocks + 1 = degree :=
+  LoopAt.card_blocks_uP M (hLoop j)
 
 theorem card_blocks_vC (j : Fin k) :
     Fintype.card (M.data.vertexPartition (vC M j)).Blocks + 1 = degree :=
-  LeafFibre.card_blocks_leaf M.fullDim (vC_isLeaf M j)
+  LoopAt.card_blocks_vC M (hLoop j)
 
 theorem card_blocks_tb (j : Fin k) :
-    Fintype.card (M.data.edgePartition (tb M j)).Blocks + 1 = degree := by
-  refine card_blocks_of_pair _ M.data.degree_pos ⟨(bridgeE M j).1.2, (bridgeE M j).2⟩
-    (bridgeE_index M j) fun b hb ↦ ?_
-  set E : M.data.SourceEdge := ⟨(tb M j, b.1), b.2⟩
-  have hD : IsDangling M.data E := by
-    by_contra hS
-    apply hb
-    have := eq_bridgeE M hS rfl
-    exact Subtype.ext (congrArg (fun F : M.data.SourceEdge ↦ F.1.2) this)
-  exact M.fullDim.danglingEdgeNoGlue E hD
+    Fintype.card (M.data.edgePartition (tb M j)).Blocks + 1 = degree :=
+  LoopAt.card_blocks_tb M (hLoop j)
 
 theorem card_blocks_tl (j : Fin k) :
     Fintype.card (M.data.edgePartition (tl M j)).Blocks = degree :=
-  card_blocks_of_discrete _ M.data.degree_pos fun b ↦
-    LeafFibre.sourceEdgeIndex_eq_one_above_leaf M.fullDim (vC_isLeaf M j)
-      (edge := ⟨(tl M j, b.1), b.2⟩) rfl
+  LoopAt.card_blocks_tl M (hLoop j)
 
 /-! ## 8.  Sums over the branches -/
 

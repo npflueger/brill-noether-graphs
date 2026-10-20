@@ -28,18 +28,7 @@ open GenusSixExistence.Tripod.Gadget (subdivide)
 
 variable {n p : ℕ}
 
-/-! ## 1.  The zero lower index -/
-
-/-- The lower type of the zero index is the full type `a` (for `a ≥ 1`). -/
-theorem lowerType_tailType_zero {a : ℕ} (ha : 1 ≤ a) :
-    lowerType (tailType a) (fun _ ↦ 0) = ![a] := by
-  funext j
-  fin_cases j
-  show a - 1 + 1 - 2 * ((0 : Fin ((a - 1 + 1) / 2 + 1)) : ℕ) = a
-  rw [Fin.val_zero]
-  omega
-
-/-! ## 2.  The restriction of a full-type member -/
+/-! ## The restriction of a full-type member -/
 
 /-- **A closed full-type member of odd multiplicity restricts to a closed typed member of type
 `a` and odd typed multiplicity** at the core part of the request. -/

@@ -54,10 +54,6 @@ theorem reach_of_incident {E : D.SourceEdge} {X Y : D.SourceVertex} (hX : Incide
     · exact Or.inr (Prod.ext hY hX)
     · exact absurd (hX.symm.trans hY) hXY
 
-theorem rel_sourceEndpoint' (v : target.V) (a : Fin d) :
-    (D.vertexPartition v).Rel (D.sourceEndpoint v a).1.2 a :=
-  (D.vertexPartition v).rel_repr_left a
-
 /-- The ends of a source edge joining `a` and `b`. -/
 theorem incident_of_sourceEnds {E : D.SourceEdge} {a b : D.SourceVertex}
     (h : D.sourceEnds E = (a, b) ∨ D.sourceEnds E = (b, a)) :
@@ -314,13 +310,6 @@ theorem blockCard_rData_of_zero {Z : (rData T hc M).SourceVertex}
     ((rData T hc M).vertexPartition Z.1.1).blockCard Z.1.2 = 1 :=
   (PendantFibre.degree_one_of_nonDanglingValency_zero M.fullDim (svIncl Z) h0).1
 
-theorem eq_of_blockCard_eq_one' {d : ℕ} {P : SheetPartition d} {i j : Fin d}
-    (h : P.blockCard i = 1) (hij : P.Rel i j) : j = i := by
-  have hBlock := P.block_eq_singleton_of_blockCard_eq_one i h
-  have hj : j ∈ P.block i := (P.mem_block_iff i j).mpr hij
-  rw [hBlock, Finset.mem_singleton] at hj
-  exact hj
-
 /-- **(b): a component of `D₀` without survivors is a lone sheet.** -/
 theorem isLone_of_component (Z : (rData T hc M).SourceVertex)
     (hZ : ∀ W, Reach (rData T hc M).sourceGraph Z W → nonDanglingValency M.data (svIncl W) = 0) :
@@ -332,9 +321,9 @@ theorem isLone_of_component (Z : (rData T hc M).SourceVertex)
   have h1 := blockCard_rData_of_zero T hc M (hZ _ hR)
   -- the trace vertex's block is the block of `Z.1.2`
   have hRel : ((rData T hc M).vertexPartition v).Rel (trace T hc M Z.1.2 v).1.2 Z.1.2 :=
-    rel_sourceEndpoint' (rData T hc M) v Z.1.2
-  have hb := eq_of_blockCard_eq_one' h1 hRel
-  have hb' := eq_of_blockCard_eq_one' h1 (hRel.trans hj)
+    Lollipops.rel_sourceEndpoint (rData T hc M) v Z.1.2
+  have hb := Lollipops.eq_of_blockCard_eq_one h1 hRel rfl
+  have hb' := Lollipops.eq_of_blockCard_eq_one h1 (hRel.trans hj) rfl
   exact hb'.trans hb.symm
 
 /-! ## 5.  (c): no survivor over `T'` lies in a lone sheet -/
@@ -375,7 +364,7 @@ theorem all_lone_of_lone_survivor {X : M.data.SourceVertex} (hX : X.1.1 ∈ Keep
     have hZ := sheet_eq_of_reach_lone T hc M hL rfl hXZ
     -- `τ` is in the block of the lone sheet over `X'.1.1`
     have hRel : ((rData T hc M).vertexPartition X'.1.1).Rel X'.1.2 τ := by
-      have h := rel_sourceEndpoint' (rData T hc M) X'.1.1 τ
+      have h := Lollipops.rel_sourceEndpoint (rData T hc M) X'.1.1 τ
       change ((rData T hc M).vertexPartition X'.1.1).Rel Z.1.2 τ at h
       rw [hZ] at h
       exact h
@@ -383,7 +372,8 @@ theorem all_lone_of_lone_survivor {X : M.data.SourceVertex} (hX : X.1.1 ∈ Keep
     rw [this]; exact hL
   · push Not at hW
     have hZL := isLone_of_component T hc M Z fun W hW' ↦ Nat.le_zero.mp (hW W hW')
-    have hRel : ((rData T hc M).vertexPartition Z.1.1).Rel Z.1.2 τ := rel_sourceEndpoint' _ _ τ
+    have hRel : ((rData T hc M).vertexPartition Z.1.1).Rel Z.1.2 τ :=
+      Lollipops.rel_sourceEndpoint _ _ τ
     have := hZL _ _ hRel
     rw [this]; exact hZL
 

@@ -201,14 +201,6 @@ theorem markedTraverse_nodup_notMem (visited : Finset data.SourceEdge) (edge : d
         exact hVisited
       · exact fun hMem ↦ ihNotMem emitted hTail (Finset.mem_insert_of_mem hMem)
 
-private theorem isChain_cons_of_head? {α : Type*} {R : α → α → Prop} {head : α}
-    {tail : List α} (hHead : ∀ second ∈ tail.head?, R head second)
-    (hChain : tail.IsChain R) : (head :: tail).IsChain R := by
-  cases tail with
-  | nil => exact List.IsChain.singleton head
-  | cons second rest =>
-    exact List.isChain_cons_cons.mpr ⟨hHead second (by simp), hChain⟩
-
 /-- Consecutive entries of the marked walk meet at a surviving valency-two non-mark vertex. -/
 theorem markedTraverse_chain (visited : Finset data.SourceEdge) (edge : data.SourceEdge)
     (vertex : data.SourceVertex) :
@@ -224,7 +216,7 @@ theorem markedTraverse_chain (visited : Finset data.SourceEdge) (edge : data.Sou
     exact List.IsChain.singleton _
   · intro visited edge vertex hVisited hCont ih
     rw [markedTraverse_of_step data marks hVisited hCont]
-    refine isChain_cons_of_head? ?_ ih
+    refine ih.cons ?_
     intro second hSecond
     have hEq := markedTraverse_head?' data marks (insert edge visited)
       (stepEdge data hCont.1 edge) (otherEnd data edge vertex) second hSecond

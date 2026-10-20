@@ -132,22 +132,13 @@ theorem markValency_ne_zero (j : Fin k) :
   change nonDanglingValency κ.data (κ.markSource j) ≠ 0
   rw [markValency κ j]; omega
 
-/-- The marks of a marked frame are distinct source vertices. -/
-theorem markSource_injective (hc : IsMarkedCubic core mark) :
-    Function.Injective κ.markSource := by
-  intro i j h
-  apply hc.injective
-  rw [← κ.ident.vertex_mark i, ← κ.ident.vertex_mark j]
-  congr 1
-  exact Subtype.ext h
-
 /-- The regrown datum of a marked frame. -/
 noncomputable abbrev datum : GluingDatum (regrowTarget κ.target (branching κ).x) degree :=
   regrowDatum (branching κ)
 
 theorem valid (hc : IsMarkedCubic core mark) : (datum κ).Valid :=
   ⟨connected_regrowDatum _ (connected κ),
-    riemannHurwitz_regrowDatum _ κ.fullDim.valid.2 (markSource_injective κ hc) κ.ramified⟩
+    riemannHurwitz_regrowDatum _ κ.fullDim.valid.2 (κ.ident.markSource_injective hc) κ.ramified⟩
 
 /-- The column dictionary: core columns, bridge columns, loop columns. -/
 noncomputable def colEquiv :
@@ -273,7 +264,7 @@ noncomputable def fullDim (hc : IsMarkedCubic core mark) :
   labelling := labelling κ
   det_ne_zero := by rw [det_labelling]; exact κ.det_ne_zero
   trivalent := nonDanglingValency_le_three (branching κ) (connected κ) (markValency_ne_zero κ)
-    κ.fullDim.trivalent (markValency κ) (markSource_injective κ hc)
+    κ.fullDim.trivalent (markValency κ) (κ.ident.markSource_injective hc)
   pathEnds := hasPathEnds_regrowDatum (branching κ) (connected κ) (markValency_ne_zero κ)
     κ.fullDim.pathEnds
 
@@ -313,14 +304,14 @@ bridges and loops. -/
 noncomputable def ident (hc : IsMarkedCubic core mark) :
     Count.CoreIdentification (attachLollipops core mark) (datum κ) where
   vertex := (branchVertexEquiv (branching κ) (connected κ) (markValency_ne_zero κ)
-      (markSource_injective κ hc)).symm.trans
+      (κ.ident.markSource_injective hc)).symm.trans
     ((Equiv.sumCongr κ.ident.vertex (Equiv.refl _)).trans vertexSum)
   row := (stablePathEquiv (branching κ) (connected κ) (markValency_ne_zero κ)).trans
     ((identRow κ).trans slotEquiv)
   incidence := by
     intro branch slot
     obtain ⟨z, rfl⟩ := (branchVertexEquiv (branching κ) (connected κ) (markValency_ne_zero κ)
-      (markSource_injective κ hc)).surjective branch
+      (κ.ident.markSource_injective hc)).surjective branch
     obtain ⟨t, rfl⟩ := ((identRow κ).trans slotEquiv).surjective slot
     have hRow : ((stablePathEquiv (branching κ) (connected κ) (markValency_ne_zero κ)).trans
         ((identRow κ).trans slotEquiv)).symm (((identRow κ).trans slotEquiv) t) =
@@ -365,7 +356,7 @@ noncomputable def ident (hc : IsMarkedCubic core mark) :
 theorem ident_vertex_apply (hc : IsMarkedCubic core mark)
     (z : MarkedBranchVertex κ.data (marks (branching κ)) ⊕ Fin k) :
     (ident κ hc).vertex (branchVertexEquiv (branching κ) (connected κ) (markValency_ne_zero κ)
-      (markSource_injective κ hc) z) = vertexSum (Sum.map κ.ident.vertex id z) := by
+      (κ.ident.markSource_injective hc) z) = vertexSum (Sum.map κ.ident.vertex id z) := by
   simp only [ident, Equiv.trans_apply, Equiv.symm_apply_apply]
   rfl
 
@@ -442,8 +433,8 @@ theorem regrowFrame_respects (hc : IsMarkedCubic core mark)
   have hD' := connected κ'
   have hM := markValency_ne_zero κ
   have hM' := markValency_ne_zero κ'
-  have hI := markSource_injective κ hc
-  have hI' := markSource_injective κ' hc
+  have hI := κ.ident.markSource_injective hc
+  have hI' := κ'.ident.markSource_injective hc
   have hV : (regrowFrame hc κ).fullDim.valid.1 = (valid κ hc).1 := rfl
   refine ⟨⟨datumIso iso, fun branch ↦ ?_, fun path ↦ ?_⟩⟩
   · -- vertices

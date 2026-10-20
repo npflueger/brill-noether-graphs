@@ -23,7 +23,7 @@ restriction (`Restrict.lean`). This is the tripod's `ClosureFrame.exists_closed_
 * the base-request walls of `G̃` in degree four replaced by the walls of `Γ` in degree
   `d − a/2` at the merged request, pulled back along the linear map
   `yH ↦ mergeRequest s (core part of yH)` (`ClosureFrame.pullWall`, with a section as
-  `ClosureFrame.liftRequest`), which is the drop clause `DropGeneral`;
+  `ClosureFrame.liftRequest`), which is the drop clause `OnceDropGeneral`;
 * no functionals `B` and no long legs;
 * the parity input `ParityPackage` replaced by `CountAtActual.exists_open_oddFullType`.
 
@@ -194,7 +194,7 @@ theorem exists_closed_oddFullType_of_nonneg {core : Core n p} (hCubic : core.Cub
   -- Step 4: an open full-type member of odd multiplicity at `t₀`.
   have hHgen : ∀ (f : Frame (tailed core s a).H d) (col : Fin (tailed core s a).P),
       f.coordsAt y₀ col ≠ 0 := fun f col hzero ↦ hnotBad (Or.inl ⟨f, col, hzero⟩)
-  have hDrop : DropGeneral core s (d - a / 2) (corePart y₀) := by
+  have hDrop : OnceDropGeneral core s (d - a / 2) (corePart y₀) := by
     intro f col hzero
     have h : f.coordsAt (dropMap core s a y₀) col = 0 := hzero
     rw [hy₀, dropMap_segment] at h

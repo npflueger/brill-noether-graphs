@@ -5,6 +5,7 @@ public import DraismaVargasMarkedCount.MarkedCount.CorrRegrowRestrict
 public import DraismaVargasMarkedCount.MarkedCount.CorrRestrictRegrow
 public import DraismaVargasMarkedCount.MarkedCount.Correspondence
 public import DraismaVargasMarkedCount.MarkedCount.Lollipop
+public import DraismaVargasMarkedCount.MarkedCount.LoopAt
 public import DraismaVargasMarkedCount.MarkedCount.MarkedCount
 public import DraismaVargasMarkedCount.MarkedCount.MarkedFrame
 public import DraismaVargasMarkedCount.MarkedCount.MarkedPath
@@ -90,7 +91,6 @@ public import DraismaVargasMarkedCount.MarkedCountGeneral.RestrictTailShape
 public import DraismaVargasMarkedCount.MarkedCountGeneral.RestrictTailShed
 public import DraismaVargasMarkedCount.MarkedCountGeneral.RestrictTailTyped
 public import DraismaVargasMarkedCount.MarkedCountGeneral.Restriction
-public import DraismaVargasMarkedCount.MarkedCountGeneral.RigidLoop
 public import DraismaVargasMarkedCount.MarkedCountGeneral.RigidSpine
 public import DraismaVargasMarkedCount.MarkedCountGeneral.RigidStep
 public import DraismaVargasMarkedCount.MarkedCountGeneral.RigidTail

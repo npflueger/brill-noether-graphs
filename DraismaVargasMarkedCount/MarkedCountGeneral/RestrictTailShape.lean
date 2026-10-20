@@ -2,6 +2,7 @@ module
 
 public import DraismaVargasMarkedCount.MarkedCountGeneral.RigidTail
 public import DraismaVargasMarkedCount.MarkedCountGeneral.TypedFrame
+public import DraismaVargasMarkedCount.MarkedCount.RestrictDatum
 
 @[expose] public section
 

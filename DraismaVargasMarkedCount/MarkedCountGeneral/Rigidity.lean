@@ -17,7 +17,7 @@ the object of the integer count) and `C` a caterpillar tail of genus `c + 1` in 
 
 1. (`exists_loneRow_bridge`, `index_bridgeEdge`) every lollipop bridge `b_i` is a single surviving
    edge of index `2`, the only survivor over its target edge, as in the lollipop lemma of the
-   ramification-one count (module `MarkedCount.RestrictLollipop`); so is the
+   ramification-one count (module `MarkedCount.LoopAt`); so is the
    terminal path edge `h_{c+1}` (the bridge of the terminal lollipop, `slope_last`, `s_a = 2`);
 2. (`exists_loneRow_path`) every path edge `h_{i+1}` is a single surviving edge `e_{i+1}` of index
    `s_{i+1}`, the only survivor over its target edge `t_{i+1}`;
@@ -38,11 +38,11 @@ reaches these facts through `restrictTailed` and its property lemmas.
 ## Structure
 
 All eight statements rest on the standard axioms. The work is in the helper modules
-`RigidLoop` (the ramification-one lollipop package at any core loop), `RigidStep` (the step of the
+`MarkedCount.LoopAt` (the lollipop package at any core loop), `RigidStep` (the step of the
 downward induction at a spine vertex, generic), `RigidSpine` (the caterpillar's incidences in a
 cubic core, and the downward induction `TailAt.lonePath`) and `RigidTail` (the tail columns). The
 four cases (r2-nd2), (r1-nd2), (r0-nd2) of the step are all excluded by one generic lemma of the
-ramification-one count, `RestrictBridge.nonDanglingValency_ne_two_of_unique` (an end of the only
+ramification-one count, `Lollipops.nonDanglingValency_ne_two_of_unique` (an end of the only
 survivor over a target edge is never interior to a stable row); its trivalent case is the
 three-column relation, which is how `three_column_false` is proved.
 -/
@@ -74,7 +74,7 @@ surviving valency two, with one survivor over `t'` and one over `t''` of equal i
 `X ≠ C` the two survivors lie in one row (they are consecutive) with equal entries, so they cancel
 in `col(t') - col(t'')`; at `C` only `E'` remains, in the row of `E` (consecutive at `C`), with
 entry `1/s`, which is `col(t)` (`E` alone over `t`). Then `det_eq_zero_of_columns`
-(module `MarkedCount.RestrictBridge`), with `LeafFibre.matrix_eq_sum_fibre`. -/
+(module `MarkedCount.LoopAt`), with `LeafFibre.matrix_eq_sum_fibre`. -/
 theorem three_column_false (fd : FullDimensionalSourcePresentation data coordinate)
     {y : target.V} {t t' t'' : target.edges}
     (hy : (GluingDatum.incidentEdges y).card = 3) (ht : t ∈ GluingDatum.incidentEdges y)
@@ -125,17 +125,17 @@ noncomputable def spineSource (C : CaterpillarAt H w c) (f : Frame H degree) (i 
 
 /-- **Rigidity (2), and (1) for `h_{c+1}`**: every path row is a single lone edge. *Proof.*
 Downward induction on `i` (base `i = c`: the ramification-one lollipop lemma at the terminal
-lollipop, through the public lollipop package and `RestrictBridge.farEnd_eq_markV`'s argument; step:
+lollipop, `LoopAt.nonDanglingValency_farEnd`; step:
 the far end `C` of `e_i` has surviving valency `≥ 3` (then `C = B_{i-1}`) or `2`, and the four cases
 (r2-nd2), (r1-nd2), (r0-nd2) divalent, (r0-nd2) trivalent are excluded by uniqueness over `t_i`, by
-`RestrictBridge.nonDanglingValency_ne_two_of_unique`, by the equality of the two columns at a
+`Lollipops.nonDanglingValency_ne_two_of_unique`, by the equality of the two columns at a
 divalent target vertex of change `0`, and by `three_column_false`). -/
 theorem exists_loneRow_path (hH : H.Cubic) (C : CaterpillarAt H w c) (f : Frame H degree)
     (i : Fin (c + 1)) : ∃ E : NonDanglingEdge f.data, IsLoneRow f.data E (tailRow C f (.inl i)) :=
   ⟨TailAt.pathE C (f.member 0) hH i, TailAt.lone_pathE C (f.member 0) hH i⟩
 
 /-- **Rigidity (1)**: every lollipop bridge row is a single lone edge (the ramification-one
-lollipop lemma at each lollipop, `RestrictBridge.farEnd_eq_markV`). -/
+lollipop lemma at each lollipop, `LoopAt.eq_bridgeE_of_stablePath_eq`). -/
 theorem exists_loneRow_bridge (hH : H.Cubic) (C : CaterpillarAt H w c) (f : Frame H degree)
     (i : Fin c) :
     ∃ E : NonDanglingEdge f.data, IsLoneRow f.data E (tailRow C f (.inr (.inl i))) := by
@@ -302,7 +302,7 @@ theorem tail_block (hH : H.Cubic) (C : CaterpillarAt H w c) (f : Frame H degree)
         rw [slope_eq]
     · have h := MarkedCount.Lollipops.matrix_column_of_unique M.fullDim
         (TailAt.bridgeAt C M i.castSucc).2
-        (fun F hF hT ↦ LoopAt.eq_bridgeE M (C.isLoop i.castSucc) hF hT) row
+        (fun F hF hT ↦ MarkedCount.LoopAt.eq_bridgeE M (C.isLoop i.castSucc) hF hT) row
       have hR := TailAt.bridgeAt_stablePath C M hH i.castSucc
       rw [CatSlot.bulbBridge_castSucc] at hR
       refine h.trans (if_congr ?_ ?_ rfl)
@@ -310,7 +310,8 @@ theorem tail_block (hH : H.Cubic) (C : CaterpillarAt H w c) (f : Frame H degree)
       · show _ = (1 / 2 : ℚ)
         rw [TailAt.bridgeAt_index]
         norm_num
-    · have h := LeafFibre.matrix_leafEdge_column M.fullDim (LoopAt.vC_isLeaf M (C.isLoop i)) row
+    · have h := LeafFibre.matrix_leafEdge_column M.fullDim
+        (MarkedCount.LoopAt.vC_isLeaf M (C.isLoop i)) row
       refine h.trans (if_congr ?_ rfl rfl)
       exact Iff.of_eq (congrArg (fun r ↦ row = r)
         (LollipopLeafRow.leafRow_loopLeaf M (C.isLoop i)))

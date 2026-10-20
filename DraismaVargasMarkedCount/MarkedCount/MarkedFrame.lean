@@ -141,6 +141,18 @@ structure MarkedCoreIdentification (core : Core n p) (mark : Fin k → Fin n)
   /-- `ι(u_G) = u`. -/
   vertex_mark : ∀ j, vertex ⟨markSource j, Or.inr (mem_markSet markSource j)⟩ = mark j
 
+/-- Over a marked cubic core, the marks of a marked label are distinct source vertices. -/
+theorem MarkedCoreIdentification.markSource_injective {core : Core n p} {mark : Fin k → Fin n}
+    {target : CFGraph.{0}} {degree : ℕ} {data : GluingDatum target degree}
+    {markSource : Fin k → data.SourceVertex}
+    (ident : MarkedCoreIdentification core mark data markSource) (hc : IsMarkedCubic core mark) :
+    Function.Injective markSource := by
+  intro i j h
+  apply hc.injective
+  rw [← ident.vertex_mark i, ← ident.vertex_mark j]
+  congr 1
+  exact Subtype.ext h
+
 /-! ## 3.  Marked frames -/
 
 /-- **A marked frame** over the marked core: a target

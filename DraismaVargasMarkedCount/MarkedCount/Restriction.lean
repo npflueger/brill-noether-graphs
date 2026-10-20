@@ -15,8 +15,9 @@ restriction to the kept target vertices, all branches at once (`Restrict.restric
 with the same partitions. Two `contractDatum` steps per lollipop would give the same datum
 (contracting a leaf edge deletes its leaf, and the joins are the old partitions); one step for all
 `k` lollipops avoids an induction over intermediate targets. The helper modules are `RestrictDatum`
-(generic), `RestrictLollipop`, `RestrictBridge`, `RestrictBranch` (the lollipop package at a
-member), `RestrictFrame` (the fields of the marked frame) and `RestrictIso` (functoriality).
+(generic), `LoopAt`, `RestrictLollipop`, `RestrictBridge`, `RestrictBranch` (the lollipop
+package at a member), `RestrictFrame` (the fields of the marked frame) and `RestrictIso`
+(functoriality).
 
 **The bridge-and-loop lemma** (Draisma--Vargas Part I, arXiv:1909.12924, `lemma-loop-bridge`;
 Vargas, Part II, arXiv:2609.09109, `lm:bridge-and-loop`) is what makes the branches visible: at a
@@ -43,7 +44,7 @@ the lollipop lemma).
 
 Everything here holds for any number `k` of marks. One clause of the bridge-and-loop lemma that the
 public lollipop package lacks, `h_b = ⟨w, e_b, u⟩` (the bridge is a single source edge), is proved
-in `RestrictBridge` by Part I's column-dependence argument.
+in `LoopAt` and `RestrictBridge` by Part I's column-dependence argument.
 -/
 
 namespace DraismaVargas.Count.MarkedCount

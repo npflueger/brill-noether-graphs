@@ -94,6 +94,16 @@ theorem TypedFrame.typedAbsMult_cast {k : ℕ} {core : Core n p} {mark : Fin k �
   subst ht hd
   rfl
 
+/-- The lower type of the zero index is the full type `a` (for `a ≥ 1`): the type of the casts
+`TypedFrame.cast` makes from the restriction of a full-type frame. -/
+theorem lowerType_tailType_zero {a : ℕ} (ha : 1 ≤ a) :
+    lowerType (tailType a) (fun _ ↦ 0) = ![a] := by
+  funext j
+  fin_cases j
+  show a - 1 + 1 - 2 * ((0 : Fin ((a - 1 + 1) / 2 + 1)) : ℕ) = a
+  rw [Fin.val_zero]
+  omega
+
 /-! ## 2.  Full-type frames of `H` -/
 
 /-- **A full-type frame of `H`**: its restriction to `(Γ, u)` (`restrictTailed`) sheds no

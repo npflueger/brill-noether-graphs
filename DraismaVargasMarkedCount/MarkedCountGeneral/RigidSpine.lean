@@ -13,9 +13,9 @@ For a caterpillar tail `C : CaterpillarAt H w c` in a cubic core `H` and a membe
 * §1 the incidences of the tail inside `H` (`CaterpillarAt.exists_slot_of_incident`: a slot of `H`
   at a new vertex of the tail is a slot of the tail; `coreIncidence_bulb_pos`,
   `coreIncidence_spine_pos`);
-* §2 the lollipop at every bulb (module `RigidLoop`): its bridge row is the slot `bulbBridge i`
-  (the bridge `b_{i+1}`, or the last path edge for the last bulb), and its far end is the branch
-  vertex of the other end of that slot;
+* §2 the lollipop at every bulb (module `MarkedCount.LoopAt`): its bridge row is the slot
+  `bulbBridge i` (the bridge `b_{i+1}`, or the last path edge for the last bulb), and its far end
+  is the branch vertex of the other end of that slot;
 * §3 **the downward induction** (`lone_path`): every path row `h_{i+1}` is a single survivor which
   is the only survivor over its target edge, joining the branch vertices of the two ends of the
   slot. The step is `SpineStep` at the spine vertex, with the lollipop bridge and the upper path
@@ -454,14 +454,14 @@ theorem Lone.stablePath {E : NonDanglingEdge M.data} {r : StablePath M.data} (h 
 
 /-- The bridge occurrence of the lollipop at bulb `i`. -/
 def bridgeAt (i : Fin (c + 1)) : NonDanglingEdge M.data :=
-  ⟨LoopAt.bridgeE M (C.isLoop i), LoopAt.bridgeE_survives M (C.isLoop i)⟩
+  ⟨MarkedCount.LoopAt.bridgeE M (C.isLoop i), MarkedCount.LoopAt.bridgeE_survives M (C.isLoop i)⟩
 
 theorem ident_row_bridgePath (hH : H.Cubic) (i : Fin (c + 1)) :
-    M.ident.row (LoopAt.bridgePath M (C.isLoop i)) = C.slot (bulbBridge i) := by
-  have h := LoopAt.coreIncidence_bridgePath_loopVertex M (C.isLoop i)
+    M.ident.row (MarkedCount.LoopAt.bridgePath M (C.isLoop i)) = C.slot (bulbBridge i) := by
+  have h := MarkedCount.LoopAt.coreIncidence_bridgePath_loopVertex M (C.isLoop i)
   rw [C.tail_loop] at h
   rcases C.coreIncidence_bulb_pos hH i h with h' | h'
-  · exact absurd h' (LoopAt.ident_row_bridgePath_ne M (C.isLoop i))
+  · exact absurd h' (MarkedCount.LoopAt.ident_row_bridgePath_ne M (C.isLoop i))
   · exact h'
 
 theorem bridgeAt_stablePath (hH : H.Cubic) (i : Fin (c + 1)) :
@@ -473,36 +473,36 @@ theorem bridgeAt_stablePath (hH : H.Cubic) (i : Fin (c + 1)) :
 theorem lone_bridgeAt (hH : H.Cubic) (i : Fin (c + 1)) :
     Lone M (bridgeAt C M i) (row C M (bulbBridge i)) := by
   refine ⟨fun F ↦ ⟨fun hF ↦ ?_, fun hF ↦ hF ▸ bridgeAt_stablePath C M hH i⟩, fun F hF hT ↦
-    LoopAt.eq_bridgeE M (C.isLoop i) hF hT⟩
+    MarkedCount.LoopAt.eq_bridgeE M (C.isLoop i) hF hT⟩
   rw [← bridgeAt_stablePath C M hH i] at hF
-  exact LoopAt.eq_bridgeE_of_stablePath_eq M (C.isLoop i) F hF
+  exact MarkedCount.LoopAt.eq_bridgeE_of_stablePath_eq M (C.isLoop i) F hF
 
 theorem loopV_eq (i : Fin (c + 1)) :
-    LoopAt.loopV M (C.isLoop i) = vSource M (C.vertex (Sum.inr i)) := by
-  unfold LoopAt.loopV LollipopDivalent.loopBranch vSource
+    MarkedCount.LoopAt.loopV M (C.isLoop i) = vSource M (C.vertex (Sum.inr i)) := by
+  unfold MarkedCount.LoopAt.loopV LollipopDivalent.loopBranch vSource
   rw [C.tail_loop]
 
 theorem farEnd_eq (hH : H.Cubic) (i : Fin (c + 1)) :
-    LoopAt.farEnd M (C.isLoop i) = vSource M (H.tail (C.slot (bulbBridge i))) := by
-  refine eq_vSource_of_ident M (X := ⟨_, LoopAt.three_le_farEnd M (C.isLoop i)⟩) ?_
-  have h := LoopAt.coreIncidence_bridgePath_farEnd M (C.isLoop i)
+    MarkedCount.LoopAt.farEnd M (C.isLoop i) = vSource M (H.tail (C.slot (bulbBridge i))) := by
+  refine eq_vSource_of_ident M (X := ⟨_, MarkedCount.LoopAt.three_le_farEnd M (C.isLoop i)⟩) ?_
+  have h := MarkedCount.LoopAt.coreIncidence_bridgePath_farEnd M (C.isLoop i)
   rw [ident_row_bridgePath C M hH i] at h
   rcases CaterpillarAt.eq_end_of_coreIncidence_pos h with h' | h'
   · exact h'
   · exfalso
-    apply LoopAt.ident_farEnd_ne_loopVertex M (C.isLoop i)
+    apply MarkedCount.LoopAt.ident_farEnd_ne_loopVertex M (C.isLoop i)
     rw [h', C.head_bulbBridge, C.tail_loop]
 
 theorem bridgeAt_incident_head (i : Fin (c + 1)) :
     Incident M.data (bridgeAt C M i).1 (vSource M (C.vertex (Sum.inr i))) := by
-  rw [← loopV_eq]; exact LoopAt.bridgeE_incident_loopV M (C.isLoop i)
+  rw [← loopV_eq]; exact MarkedCount.LoopAt.bridgeE_incident_loopV M (C.isLoop i)
 
 theorem bridgeAt_incident_tail (hH : H.Cubic) (i : Fin (c + 1)) :
     Incident M.data (bridgeAt C M i).1 (vSource M (H.tail (C.slot (bulbBridge i)))) := by
-  rw [← farEnd_eq C M hH]; exact LoopAt.farEnd_incident M (C.isLoop i)
+  rw [← farEnd_eq C M hH]; exact MarkedCount.LoopAt.farEnd_incident M (C.isLoop i)
 
 theorem bridgeAt_index (i : Fin (c + 1)) : M.data.sourceEdgeIndex (bridgeAt C M i).1 = 2 :=
-  LoopAt.bridgeE_index M (C.isLoop i)
+  MarkedCount.LoopAt.bridgeE_index M (C.isLoop i)
 
 /-! ### The downward induction -/
 
@@ -534,7 +534,7 @@ theorem spineHyp_of (hH : H.Cubic) (i : Fin c) {Eup : NonDanglingEdge M.data}
     have := bridgeAt_incident_tail C M hH i.castSucc
     rwa [bulbBridge_castSucc, C.tail_bridge] at this
   inc₂ := hUpInc
-  unique₁ F hF hT := LoopAt.eq_bridgeE M (C.isLoop i.castSucc) hF hT
+  unique₁ F hF hT := MarkedCount.LoopAt.eq_bridgeE M (C.isLoop i.castSucc) hF hT
   unique₂ F hF hT := hUp.2 F hF hT
 
 /-- **The step**: the third survivor at `B_{i+1}` is the lone survivor of the lower path edge,
@@ -552,8 +552,8 @@ theorem step (hH : H.Cubic) (i : Fin c) {Eup : NonDanglingEdge M.data}
   have hI : Incident M.data E₃.1 (spineV C M i) := SpineStep.third_incident h
   -- the row of `E₃`
   have hRow : E₃.stablePath = row C M (Sum.inl i.castSucc) := by
-    have hc := LoopAt.coreIncidence_pos_of_incident M ⟨spineV C M i, three_le_vSource M _⟩
-      E₃.2 hI
+    have hc := MarkedCount.LoopAt.coreIncidence_pos_of_incident M
+      ⟨spineV C M i, three_le_vSource M _⟩ E₃.2 hI
     rw [ident_vSource] at hc
     rcases C.coreIncidence_spine_pos hH i hc with h' | h' | h'
     · unfold row; rw [← h', Equiv.symm_apply_apply]
@@ -573,7 +573,7 @@ theorem step (hH : H.Cubic) (i : Fin c) {Eup : NonDanglingEdge M.data}
   have hY3 : nonDanglingValency M.data Y = 3 := SpineStep.third_farEnd_valency M.fullDim h hY
   have hYeq : Y = vSource M (H.tail (C.slot (Sum.inl i.castSucc))) := by
     apply eq_vSource_of_ident (X := ⟨Y, hY3.ge⟩)
-    have hc := LoopAt.coreIncidence_pos_of_incident M ⟨Y, hY3.ge⟩ E₃.2 hY
+    have hc := MarkedCount.LoopAt.coreIncidence_pos_of_incident M ⟨Y, hY3.ge⟩ E₃.2 hY
     rw [hRow, ident_row] at hc
     rcases CaterpillarAt.eq_end_of_coreIncidence_pos hc with h' | h'
     · exact h'
@@ -584,7 +584,7 @@ theorem step (hH : H.Cubic) (i : Fin c) {Eup : NonDanglingEdge M.data}
   refine ⟨⟨fun F ↦ ⟨fun hF ↦ ?_, fun hF ↦ hF ▸ hRow⟩, fun F hF hT ↦
     SpineStep.spineStep_unique_edge M.fullDim h hF hT⟩, hYeq ▸ hY⟩
   rw [← hRow] at hF
-  refine LoopAt.eq_of_stablePath_eq_of_ends (fun X hX ↦ ?_) hF
+  refine MarkedCount.LoopAt.eq_of_stablePath_eq_of_ends (fun X hX ↦ ?_) hF
   rcases eq_or_eq_otherEnd hI hX with rfl | rfl
   · rw [nonDanglingValency_vSource]; omega
   · rw [hY3]; omega

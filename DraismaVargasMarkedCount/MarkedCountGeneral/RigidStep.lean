@@ -1,6 +1,6 @@
 module
 
-public import DraismaVargasMarkedCount.MarkedCountGeneral.RigidLoop
+public import DraismaVargasMarkedCount.MarkedCount.LoopAt
 
 @[expose] public section
 
@@ -21,9 +21,9 @@ target edge. Then (the case "(r0-nd3)" of the proof of `(I_i)`):
 * `E₃` is the only survivor over its target edge (`spineStep_unique_edge`);
 * `m(E₁) + m(E₂) + m(E₃) = 2 m(B) + 1` (`spineStep_index`).
 
-The far end of `E₃` is then a branch vertex by `RestrictBridge.nonDanglingValency_ne_two_of_unique`
-(Part I's column dependence), which covers all four cases (r2-nd2), (r1-nd2), (r0-nd2) of the
-step at once, including the trivalent case excluded by the three-column relation.
+The far end of `E₃` is then a branch vertex by `Lollipops.nonDanglingValency_ne_two_of_unique`
+(module `MarkedCount.LoopAt`, Part I's column dependence), which covers all four cases (r2-nd2),
+(r1-nd2), (r0-nd2) of the step at once, including the trivalent case excluded by the three-column relation.
 -/
 
 namespace DraismaVargas.Count.MarkedCountGeneral.SpineStep

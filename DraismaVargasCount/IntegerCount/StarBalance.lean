@@ -3,6 +3,7 @@ module
 public import DraismaVargasCount.IntegerCount.Transport
 public import DraismaVargasCount.RegrowthWallInput
 public import DraismaVargasCount.StarCensusEngine
+public import DraismaVargasCount.FacetMachine
 
 @[expose] public section
 
@@ -104,15 +105,6 @@ theorem coordsAt_add_smul (k : Frame core degree) (y d : Fin p → ℚ) (s : ℚ
     ← Finset.sum_add_distrib]
   exact Finset.sum_congr rfl fun r _ ↦ by ring
 
-/-- A finite family of positive rationals has a positive lower bound (the same as
-`FacetMachine.exists_pos_le_of_finite`, which this module does not import). -/
-theorem exists_pos_le_of_finite {ι : Type*} [Finite ι] (f : ι → ℚ) (hf : ∀ i, 0 < f i) :
-    ∃ δ : ℚ, 0 < δ ∧ ∀ i, δ ≤ f i := by
-  rcases isEmpty_or_nonempty ι with h | h
-  · exact ⟨1, one_pos, fun i ↦ (h.false i).elim⟩
-  · obtain ⟨i₀, hi₀⟩ := Finite.exists_min f
-    exact ⟨f i₀, hf i₀, hi₀⟩
-
 /-- **A frame degenerate at `y` in the column `col` opens toward `d` exactly when its `col`
 coordinate of `d` is positive**: the other coordinates are positive at `y` and stay so for small
 `s`, and the `col` coordinate of `y + s • d` is `s` times that of `d`. -/
@@ -130,7 +122,7 @@ theorem opensToward_cls_iff {k : Frame core degree} {col : Fin p} (h : k.Degener
     rw [coordsAt_add_smul, h.1, zero_add] at h1
     exact pos_of_mul_pos_right h1 hε.le
   · intro hd
-    obtain ⟨δ, hδ, hle⟩ := exists_pos_le_of_finite
+    obtain ⟨δ, hδ, hle⟩ := FacetMachine.exists_pos_le_of_finite
       (fun c ↦ if c = col then 1 else k.coordsAt y c / (|k.coordsAt d c| + 1))
       (fun c ↦ by
         by_cases hc : c = col

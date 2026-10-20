@@ -35,10 +35,11 @@ variable {N P degree : ℕ} {H : Core N P} {w : Fin N} {c : ℕ} {y : Fin P → 
 def tcol : CatSlot c → M.target.edges
   | Sum.inl i => (pathE C M hH i).1.1.1
   | Sum.inr (Sum.inl i) => (bridgeAt C M i.castSucc).1.1.1
-  | Sum.inr (Sum.inr i) => LoopAt.tl M (C.isLoop i)
+  | Sum.inr (Sum.inr i) => MarkedCount.LoopAt.tl M (C.isLoop i)
 
 theorem loopRow_eq (i : Fin (c + 1)) :
-    LoopAt.loopRow M (C.slot (Sum.inr (Sum.inr i))) = row C M (Sum.inr (Sum.inr i)) := rfl
+    MarkedCount.LoopAt.loopRow M (C.slot (Sum.inr (Sum.inr i))) =
+      row C M (Sum.inr (Sum.inr i)) := rfl
 
 /-- **Every survivor over a tail column lies on its row.** -/
 theorem onRow_of_over_tcol (s : CatSlot c) {F : M.data.SourceEdge} (hF : ¬ IsDangling M.data F)
@@ -51,7 +52,7 @@ theorem onRow_of_over_tcol (s : CatSlot c) {F : M.data.SourceEdge} (hF : ¬ IsDa
   · have h := (lone_bridgeAt C M hH i.castSucc).2 F hF hT
     have : (⟨F, hF⟩ : NonDanglingEdge M.data) = bridgeAt C M i.castSucc := Subtype.ext h
     rw [this, (lone_bridgeAt C M hH i.castSucc).stablePath, bulbBridge_castSucc]
-  · exact LoopAt.onRow_of_over_tl M (C.isLoop i) hF hT
+  · exact MarkedCount.LoopAt.onRow_of_over_tl M (C.isLoop i) hF hT
 
 /-- **Every survivor on a tail row lies over its tail column.** -/
 theorem over_tcol_of_onRow (s : CatSlot c) {F : NonDanglingEdge M.data}
@@ -62,8 +63,8 @@ theorem over_tcol_of_onRow (s : CatSlot c) {F : NonDanglingEdge M.data}
     rw [((lone_bridgeAt C M hH i.castSucc).1 F).mp h]; rfl
   · obtain ⟨col, hcol⟩ := PassOnceLollipopWitness.exists_rowSingleColumn_core_loop M
       (C.isLoop i)
-    obtain ⟨e, he, hS⟩ := M.fullDim.noDanglingTargetFibres (LoopAt.tl M (C.isLoop i))
-    have heRow := LoopAt.onRow_of_over_tl M (C.isLoop i) hS he
+    obtain ⟨e, he, hS⟩ := M.fullDim.noDanglingTargetFibres (MarkedCount.LoopAt.tl M (C.isLoop i))
+    have heRow := MarkedCount.LoopAt.onRow_of_over_tl M (C.isLoop i) hS he
     have he' : e ∈ EdgeDenominator.rowEdges M.fullDim.labelling
         (M.fullDim.labelling.row (M.ident.row.symm (C.slot (Sum.inr (Sum.inr i))))) :=
       (EdgeDenominator.mem_rowEdges _ _ _).mpr ⟨hS, by rw [heRow]; rfl⟩

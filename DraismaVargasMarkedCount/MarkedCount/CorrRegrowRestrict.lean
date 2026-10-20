@@ -624,7 +624,7 @@ def regrowRestrictIso : FrameIso (regrowFrame hc (κ hc f)) f where
   overCore_vertex branch := by
     have hD := connected (κ hc f)
     have hM := markValency_ne_zero (κ hc f)
-    have hI := markSource_injective (κ hc f) hc
+    have hI := (κ hc f).ident.markSource_injective hc
     obtain ⟨z, rfl⟩ := (branchVertexEquiv (β hc f) hD hM hI).surjective branch
     change f.ident.vertex ((datumIso hc f).branchVertexEquiv _
         (branchVertexEquiv (β hc f) hD hM hI z)) =
