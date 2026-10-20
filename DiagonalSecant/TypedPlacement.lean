@@ -79,16 +79,16 @@ theorem integralPrefix_cast (e : Fin Q) (j : ℕ) :
   TypedRows.integralPrefix_cast κ.fullDim (coords y κ) hClosed _ _
 
 /-- **The full prefix of the actual row of `e` is the scaled request `y e`**: the matrix row is
-`(A z) (row path) = y (slot …)` (`TypedFrame.mulVec_coordsAt`), and `κ.slot` reads the matrix row
-of `κ.ident.row.symm e` as `e`. -/
+`(A z) (row path) = y (slot …)` (`MarkedFrameBase.mulVec_coordsAt`), and `κ.slot` reads the
+matrix row of `κ.ident.row.symm e` as `e`. -/
 theorem integralPrefix_full (e : Fin Q) :
     integralPrefix κ.fullDim (realization y κ hClosed) (rowOf κ e)
       (orderedRow κ.fullDim.pathEnds (rowOf κ e)).length = scale y κ * y e := by
   have h := integralPrefix_cast y κ hClosed e (orderedRow κ.fullDim.pathEnds (rowOf κ e)).length
   rw [prefixPosition_full] at h
   have hrow : κ.matrix.mulVec (coords y κ) (κ.fullDim.labelling.row (rowOf κ e)) = (y e : ℚ) := by
-    rw [coords, TypedFrame.mulVec_coordsAt]
-    simp only [TypedFrame.slot, rowOf, Equiv.trans_apply, Equiv.symm_apply_apply,
+    rw [coords, MarkedFrameBase.mulVec_coordsAt]
+    simp only [MarkedFrameBase.slot, rowOf, Equiv.trans_apply, Equiv.symm_apply_apply,
       Equiv.apply_symm_apply]
   have h' : (integralPrefix κ.fullDim (realization y κ hClosed) (rowOf κ e)
       (orderedRow κ.fullDim.pathEnds (rowOf κ e)).length : ℚ) = (scale y κ : ℚ) * (y e : ℚ) := by

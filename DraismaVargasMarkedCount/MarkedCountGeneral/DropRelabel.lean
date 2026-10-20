@@ -14,7 +14,7 @@ A relabelling `r : Relabel c c'` of the core, a permutation `σ` of the marks wi
 `r.vtx (mark j) = mark' (σ j)`, and types with `types' (σ j) = types j` carry a typed frame over
 `(c, mark, types)` to one over `(c', mark', types')` (`relabelFrame`): the target and the datum are
 kept, the marks are reindexed by `σ` (`markSource ∘ σ.symm`, whose mark set has the same members,
-so the receipts move by `NilFrame`'s `TypedFullDim.congrMarks`), and the identification is
+so the receipts move by `NilFrame`'s `MarkedFullDim.congrMarks`), and the identification is
 composed with `r`. The marked matrix is unchanged, the slots are permuted by `r.slot`
 (`relabelFrame_slot`), so the coordinates at `y' = y ∘ r.slot⁻¹` are the old ones at `y`
 (`coordsAt_relabelFrame`), and the ramified leaf images do not move. It is the typed twin of
@@ -96,12 +96,12 @@ theorem relabelFrame_matrix : (relabelFrame r σ hMark hTypes κ).matrix = κ.ma
 
 theorem relabelFrame_slot (row : Fin p) :
     (relabelFrame r σ hMark hTypes κ).slot row = r.slot (κ.slot row) := by
-  simp [TypedFrame.slot, relabelFrame, TypedFullDim.congrMarks, labellingCongrMarks]
+  simp [MarkedFrameBase.slot, relabelFrame, MarkedFullDim.congrMarks, labellingCongrMarks]
 
 /-- **The coordinates of the relabelled frame at the relabelled request are the old ones.** -/
 theorem coordsAt_relabelFrame {y y' : Fin p → ℚ} (hy : ∀ e, y' (r.slot e) = y e) :
     (relabelFrame r σ hMark hTypes κ).coordsAt y' = κ.coordsAt y := by
-  unfold TypedFrame.coordsAt
+  unfold MarkedFrameBase.coordsAt
   simp only [relabelFrame_matrix, relabelFrame_slot, hy]
 
 theorem ramifiedLeafImages_relabelFrame :
@@ -207,7 +207,7 @@ theorem typedCount_relabel' {y y' : Fin p → ℚ} (hy : ∀ e, y' (r.slot e) = 
         induction x using Quot.ind with
         | mk κ =>
           change κ.OpenAt y ↔ (relabelFrame r σ hMark hTypes κ).OpenAt y'
-          unfold TypedFrame.OpenAt
+          unfold MarkedFrameBase.OpenAt
           rw [coordsAt_relabelFrame r σ hMark hTypes κ hy]
     unfold typedCount
     rw [← finsum_comp_equiv e]

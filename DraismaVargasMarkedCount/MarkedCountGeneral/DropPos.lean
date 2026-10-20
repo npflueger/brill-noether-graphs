@@ -315,8 +315,8 @@ theorem mulVec_eq_sum {n' p' k' : ℕ} {core' : Core n' p'} {mark' : Fin k' → 
           (⟨f, hNd⟩ : NonDanglingEdge τ.data) = τ.fullDim.labelling.row.symm r) then
         z (τ.fullDim.labelling.targetEdge.symm f.1.1) / τ.data.sourceEdgeIndex f else 0 := by
   unfold Matrix.mulVec dotProduct
-  simp only [TypedFrame.matrix, MarkedLabelling.matrix_eq, DivalentContraction.Site.markedMatrix_eq_sum,
-    Finset.sum_mul]
+  simp only [MarkedFrameBase.matrix, MarkedLabelling.matrix_eq,
+    DivalentContraction.Site.markedMatrix_eq_sum, Finset.sum_mul]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun f _ ↦ ?_
   rw [Finset.sum_eq_single (τ.fullDim.labelling.targetEdge.symm f.1.1)]

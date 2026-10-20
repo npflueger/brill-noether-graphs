@@ -564,7 +564,7 @@ theorem saturated :
   have hPos : 1 ≤ Multiset.card κ.target.edges :=
     Multiset.card_pos_iff_exists_mem.mpr ⟨_, Multiset.coe_mem (x := t' κ)⟩
   rw [(site κ hc).genus_sourceGraph]
-  rw [typeExcess_snoc] at hSat
+  simp only [typeExcess_snoc] at hSat
   change ((Multiset.card (GraphContraction.contract κ.target (fst_ne_snd (t' κ)) (hOne κ)).edges :
     ℕ) : ℤ) + _ = _
   rw [hCard, Nat.cast_sub hPos]

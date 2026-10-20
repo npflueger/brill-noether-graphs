@@ -217,7 +217,7 @@ theorem matrix_labelling :
   rw [hRow, hCol]
   rcases z with i | j | j <;> rcases w with i' | j' | j'
   · rw [labRow_symm_inl, colEquiv_inl, matrix_inl_oldE, markedEntry_eq, blockMatrix,
-      Matrix.fromBlocks_apply₁₁, MarkedFrame.matrix, MarkedLabelling.matrix_eq]
+      Matrix.fromBlocks_apply₁₁, MarkedFrameBase.matrix, MarkedLabelling.matrix_eq]
   · rw [labRow_symm_inl, colEquiv_bridge, matrix_inl_bridgeE, blockMatrix,
       Matrix.fromBlocks_apply₁₂, Matrix.zero_apply]
   · rw [labRow_symm_inl, colEquiv_loop, matrix_inl_leafE, blockMatrix,

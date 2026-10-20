@@ -11,7 +11,7 @@ public import DraismaVargasCount.RowRealizedPosition
 
 This is the marked twin of the row layer of the public placement chain:
 
-| public (unmarked, on `FullDimensionalSourcePresentation`) | here (marked, on `TypedFullDim`) |
+| public (unmarked, on `FullDimensionalSourcePresentation`) | here (marked, on `MarkedFullDim`) |
 |---|---|
 | `W4StableSource.traverse` | `markedTraverse` |
 | `RowWalk.orderedRow`, `startEdge`, `startVertex`, `OnRow` | `orderedRow`, `startEdge`, `startVertex`, `OnRow` |
@@ -30,7 +30,7 @@ marked branch vertices (`MarkedBranchVertex`: surviving valency `≥ 3`, or a ma
 else is the public development with `nonDanglingValency = 2` replaced by
 `nonDanglingValency = 2 ∧ ∉ marks` and `IsPathEnd` by `IsMarkedPathEnd`.
 
-The row layer is stated on `fd : TypedFullDim data marks coordinate excess` with `excess` **free**
+The row layer is stated on `fd : MarkedFullDim data marks coordinate excess` with `excess` **free**
 (the typed dimension count is never used here), so it serves every typed frame of the two-point
 ramified count and, through `Agreement`, every marked frame of the count at ramification one;
 the walk itself (§1–§2) needs only `HasMarkedPathEnds`.
@@ -767,7 +767,7 @@ end Ordered
 section Ends
 
 variable {marks : Finset data.SourceVertex} {coordinate : Type*} [Fintype coordinate]
-  [DecidableEq coordinate] {excess : ℤ} (fd : TypedFullDim data marks coordinate excess)
+  [DecidableEq coordinate] {excess : ℤ} (fd : MarkedFullDim data marks coordinate excess)
 
 /-- A marked path end of a surviving occurrence is a marked branch vertex (valency `≥ 3`, or a
 mark): valency zero is excluded by the incident survivor, valency one by connectedness
@@ -835,7 +835,7 @@ end Ends
 section Interior
 
 variable {marks : Finset data.SourceVertex} {coordinate : Type*} [Fintype coordinate]
-  [DecidableEq coordinate] {excess : ℤ} (fd : TypedFullDim data marks coordinate excess)
+  [DecidableEq coordinate] {excess : ℤ} (fd : MarkedFullDim data marks coordinate excess)
 
 /-- A literal occurrence of an interior vertex in a marked row. -/
 def InteriorAddress :=
@@ -940,7 +940,7 @@ end Interior
 section Position
 
 variable {marks : Finset data.SourceVertex} {coordinate : Type*} [Fintype coordinate]
-  [DecidableEq coordinate] {excess : ℤ} (fd : TypedFullDim data marks coordinate excess)
+  [DecidableEq coordinate] {excess : ℤ} (fd : MarkedFullDim data marks coordinate excess)
 
 /-- The rational position of the `j`-th walk vertex: the sum of the source lengths along the
 prefix, each occurrence of index `m` over a target edge of length `z` having length `z / m`. -/

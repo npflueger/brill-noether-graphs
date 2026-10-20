@@ -86,7 +86,7 @@ noncomputable def restrictFrame (hc : IsMarkedCubic core mark)
       { valid := Lollipops.rData_valid M
         targetConnected := Lollipops.rTarget_connected M
         targetGenus := Lollipops.rTarget_genus M
-        saturated := Lollipops.rData_saturated M
+        saturated := (add_zero _).trans (Lollipops.rData_saturated M)
         labelling := Lollipops.labelling M hc
         det_ne_zero := Lollipops.det_labelling_ne_zero M hc
         trivalent := fun X ↦ (Lollipops.nonDanglingValency_rData_le M hc X).trans
@@ -162,7 +162,7 @@ theorem coordsAt_restrictFrame (hc : IsMarkedCubic core mark)
           funext row
           change y ((Lollipops.rowEquiv M hc) ((Lollipops.rowEquiv M hc).symm row)) = y row
           rw [Equiv.apply_symm_apply]
-        rw [MarkedFrame.coordsAt, hSlot]
+        rw [MarkedFrameBase.coordsAt, hSlot]
         have h1' : (restrictFrame hc f).matrix.mulVec
             (fun i ↦ f.coordsAt (lollipopRequest y bridge loop) (Lollipops.colIncl M i)) = y := by
           rw [show (restrictFrame hc f).matrix =

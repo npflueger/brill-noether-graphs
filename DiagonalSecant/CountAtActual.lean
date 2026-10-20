@@ -59,7 +59,7 @@ theorem isSlopeSeq_chainSlope {a m : ℕ} (ha : 1 ≤ a) (hm : 2 * m ≤ a) :
     split_ifs <;> omega
 
 /-- A typed class **has a zero coordinate at `y`**: a class invariant, since an isomorphism
-permutes the coordinates (`TypedFrameIso.exists_column`). -/
+permutes the coordinates (`MarkedFrameBase.Iso.exists_column`). -/
 def TypedFrameClass.HasZeroAt {k : ℕ} {core : Core n p} {mark : Fin k → Fin n}
     {types : Fin k → ℕ} {d : ℕ} (x : TypedFrameClass core mark types d) (y : Fin p → ℚ) :
     Prop :=

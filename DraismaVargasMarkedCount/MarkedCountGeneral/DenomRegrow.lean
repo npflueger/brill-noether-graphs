@@ -323,7 +323,7 @@ theorem matrix_labelling :
   · rw [colEquiv_inl]
     refine ((β).matrix_inl_oldE (hψ φ) (hT φ) (hT0 φ) (hMark φ)
       (φ.fullDim.labelling.row.symm i) (φ.fullDim.labelling.targetEdge i')).trans ?_
-    rw [blockMatrix, Matrix.fromBlocks_apply₁₁, TypedFrame.matrix, MarkedLabelling.matrix_eq]
+    rw [blockMatrix, Matrix.fromBlocks_apply₁₁, MarkedFrameBase.matrix, MarkedLabelling.matrix_eq]
     exact markedEntry_eq φ _ _
   · rw [colEquiv_inr]
     refine ((β).matrix_inl_tailE (hψ φ) (hT φ) (hT0 φ) (hMark φ)
@@ -356,7 +356,8 @@ theorem saturated :
     push_cast; ring
   have hsum : 2 * ∑ j, ((β).chain j).genusContribution =
       ∑ j, ((3 * cc types j + 2 : ℕ) : ℤ) - typeExcess types := by
-    rw [Finset.mul_sum, typeExcess]
+    rw [Finset.mul_sum]
+    simp only [typeExcess]
     push_cast
     rw [← Finset.sum_sub_distrib]
     refine Finset.sum_congr rfl fun j _ ↦ ?_

@@ -72,7 +72,7 @@ theorem markedFormula_symm {g d a b : ℕ} (hd : g + a + b + 2 = 2 * d) (hL : d 
 
 /-- **Genericity of a once-marked core** `(Γ, u)` for type `a`, typed part: no typed
 frame of type `≤ a` has a zero coordinate at `y`. The degree is free and so is the parity: typed
-frames of type `a'` exist only in degree `(g + a' + 2)/2` (`TypedFullDim.saturated`), so the extra
+frames of type `a'` exist only in degree `(g + a' + 2)/2` (`MarkedFullDim.saturated`), so the extra
 quantifiers are vacuous. -/
 def OnceTypedGeneral (core : Core n p) (s : Fin p) (a : ℕ) (y : Fin (p + 1) → ℚ) : Prop :=
   ∀ types : Fin 1 → ℕ, types 0 ≤ a → ∀ (d : ℕ)

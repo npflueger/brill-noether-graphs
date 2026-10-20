@@ -62,7 +62,7 @@ lies over it; a mark of type `aⱼ ≥ 1` contributes at least `aⱼ - 1` at its
 type-`0` mark sits over its own summand `-1`. Hence every source vertex over `x_v` has `r = 0`
 (and surviving valency two). Used only by the drop lemma.
 
-*Proof.* The dimension formula for a marked frame, from `TypedFullDim.saturated` and Part I's
+*Proof.* The dimension formula for a marked frame, from `MarkedFullDim.saturated` and Part I's
 dimension count, with the marked rows in place of the stable paths; then a case analysis of the
 summands, vertex by vertex: module `DropTypeZero`, `typeZero_image'` (which also shows that no other
 mark lies over the image). -/

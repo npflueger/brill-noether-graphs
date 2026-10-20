@@ -14,19 +14,18 @@ its multiplicity is `D det A / 2^{l*(T)}`, where `l*(T)` counts the leaves of `T
 images of the ramified marks.
 
 **Type 1 is the ramification-one count** (namespace `DraismaVargas.Count.MarkedCount`, written
-`MarkedCount` below). With every type equal to `1`, a typed frame **is** a
-`MarkedCount.MarkedFrame` (`typedFrameEquiv`): (D4′) at type `1` is `MarkedCount`'s `ramified`
-plus `m(u) ≥ 2`, which `MarkedCount` proves from
-Riemann--Hurwitz (`MarkedFrame.two_le_markIndex`), and the type excess is `0`, so `saturated` is
-`MarkedCount`'s verbatim. The isomorphisms are the same (`TypedFrameIso.toMarked`, `.ofMarked`), so
-are the classes (`typedFrameClassEquiv`), the coordinates and openness (definitionally), and **so is
-the multiplicity** (`typedSignedMult_ofMarkedFrame`): `MarkedCount`'s
-`∏ⱼ r(uⱼ) · D det A / 2^{l(T)}` equals the typed `D det A / 2^{l*(T)}`. This is the one place where
-the two conventions meet, and it is a theorem here, not a remark: at a marked frame of ramification
-one `r(u) ∈ {1, 2}`, and `r(u) = 2` exactly when `φ(u)` is a leaf (a ramified mark either folds over
-a leaf or lies over a divalent vertex, the local structure at a ramified mark for `a = 1`), which is
-read off the lollipop regrowth (`ramificationFactor_eq_two_pow`). Hence
-`typedCount_one_eq_markedCount`.
+`MarkedCount` below). With every type equal to `1`, a typed frame **is** a `MarkedCount.MarkedFrame`
+(`typedFrameEquiv`): (D4′) at type `1` is `MarkedCount`'s `ramified` plus `m(u) ≥ 2`, which
+`MarkedCount` proves from Riemann--Hurwitz (`MarkedFrame.two_le_markIndex`), and the type excess is
+`0` (`typeExcess_one`), so the full-dimensionality is `MarkedCount`'s (`MarkedFullDim.castExcess`).
+The isomorphisms are the same (`TypedFrameIso.toMarked`, `.ofMarked`), so are the classes
+(`typedFrameClassEquiv`), the coordinates and openness (definitionally), and **so is the
+multiplicity** (`typedSignedMult_ofMarkedFrame`): `MarkedCount`'s `∏ⱼ r(uⱼ) · D det A / 2^{l(T)}`
+equals the typed `D det A / 2^{l*(T)}`. This is the one place where the two conventions meet, and it
+is a theorem here, not a remark: at a marked frame of ramification one `r(u) ∈ {1, 2}`, and
+`r(u) = 2` exactly when `φ(u)` is a leaf (a ramified mark either folds over a leaf or lies over a
+divalent vertex, the local structure at a ramified mark for `a = 1`), which is read off the lollipop
+regrowth (`ramificationFactor_eq_two_pow`). Hence `typedCount_one_eq_markedCount`.
 
 **Type 0 and no marks.** A type-`0` mark is an unramified mark kept in the core.
 Its count is related to the count without it by the drop lemma (module `Drop`).
@@ -56,16 +55,7 @@ def ofMarkedFrame (κ : MarkedFrame core mark degree) :
   target := κ.target
   data := κ.data
   markSource := κ.markSource
-  fullDim :=
-    { valid := κ.fullDim.valid
-      targetConnected := κ.fullDim.targetConnected
-      targetGenus := κ.fullDim.targetGenus
-      saturated := by rw [typeExcess_one, add_zero]; exact κ.fullDim.saturated
-      labelling := κ.fullDim.labelling
-      det_ne_zero := κ.fullDim.det_ne_zero
-      trivalent := κ.fullDim.trivalent
-      markValency := κ.fullDim.markValency
-      pathEnds := κ.fullDim.pathEnds }
+  fullDim := κ.fullDim.castExcess typeExcess_one.symm
   ident := κ.ident
   typed j := ⟨by exact_mod_cast κ.ramified j, κ.two_le_markIndex j⟩
 
@@ -75,19 +65,7 @@ def toMarkedFrame (κ : TypedFrame core mark (fun _ ↦ 1) degree) :
   target := κ.target
   data := κ.data
   markSource := κ.markSource
-  fullDim :=
-    { valid := κ.fullDim.valid
-      targetConnected := κ.fullDim.targetConnected
-      targetGenus := κ.fullDim.targetGenus
-      saturated := by
-        have h := κ.fullDim.saturated
-        rw [typeExcess_one, add_zero] at h
-        exact h
-      labelling := κ.fullDim.labelling
-      det_ne_zero := κ.fullDim.det_ne_zero
-      trivalent := κ.fullDim.trivalent
-      markValency := κ.fullDim.markValency
-      pathEnds := κ.fullDim.pathEnds }
+  fullDim := κ.fullDim.castExcess typeExcess_one
   ident := κ.ident
   ramified j := by exact_mod_cast (κ.typed j).1
 
@@ -230,7 +208,7 @@ theorem typedCount_one_eq_markedCount (hc : IsMarkedCubic core mark) (y : Fin p 
 
 /-- **With no marks, the typed count is the weighted count of the integer count**. With `k = 0` the
 mark set is empty, so the marked notions are the unmarked ones (`MarkedCount`'s
-`markedStablePathEmptyEquiv`, `markedBranchVertexEmptyEquiv`), `TypedFullDim` with excess `0` is
+`markedStablePathEmptyEquiv`, `markedBranchVertexEmptyEquiv`), `MarkedFullDim` with excess `0` is
 `FullDimensionalSourcePresentation` field for field (`markValency` is vacuous, `pathEnds` is
 `HasPathEnds`), `MarkedCoreIdentification` is `CoreIdentification`, `TypedFrameIso` is
 `FrameIso` (through `branchVertexEquiv` and `stablePathEquiv`), no leaf is a ramified image, so

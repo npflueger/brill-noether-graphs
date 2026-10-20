@@ -130,7 +130,7 @@ theorem coordsAt_map (y : Fin p → ℚ) (t : τ₁.target.edges) :
     simp only [Matrix.mulVec, dotProduct, Matrix.submatrix_apply]
     exact Fintype.sum_equiv φ.columnPerm _ _ fun _ ↦ rfl
   rw [hSolve]
-  simp [TypedFrameIso.columnPerm]
+  simp [MarkedFrameBase.Iso.columnPerm]
 
 /-- **An isomorphism preserves lengths.** -/
 theorem rowLen_map (y : Fin p → ℚ) (e : τ₁.data.SourceEdge) :

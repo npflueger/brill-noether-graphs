@@ -28,40 +28,46 @@ A *marked member* at the request `y` satisfies (D1)--(D4) and has coordinates
 
 * `markRamification data A = r_φ(A)`, the local ramification (`GluingDatum.localRamification`)
   at the block of a source vertex.
-* `MarkedFullDim data marks coordinate`: the marked twin of
+* `MarkedFullDim data marks coordinate excess`: the marked twin of
   `FullDimensionalSourcePresentation`, with the marked labelling (module `MarkedPath`), the marks
-  of surviving valency two ((D1)) and the marked path ends.  The field `saturated` keeps the
-  unmarked form `|E(T)| = 2 g(G) + 2d - 5`: with every mark ramified it holds verbatim, because
-  `|E(T)| = p = 3g - 3 + k` and `d = (g + k)/2 + 1`.
+  of surviving valency two ((D1)), the marked path ends, and the dimension count
+  `|E(T)| + excess = 2 g(G) + 2d - 5`.  With every mark ramified the excess is `0`, the unmarked
+  form, because `|E(T)| = p = 3g - 3 + k` and `d = (g + k)/2 + 1`; marks of other types correct
+  it (module `MarkedCountGeneral.TypedFrame`).
 * `MarkedCoreIdentification core mark data markSource`: the marked twin of
   `CoreIdentification`, sending the marks to the marks ((D2)).
-* `MarkedFrame core mark degree`: a marked frame, with the field `ramified : 1 ≤ r_φ(u_G)` at
-  every mark ((D4) with `a = 1`; unramified marks are never in the core).
+* `MarkedFrameBase core mark excess degree`: a target tree, a gluing datum, the marks, marked
+  full-dimensionality and the marked label, with no condition at the marks yet. It carries the
+  coordinates `coordsAt` and openness `OpenAt`, and its isomorphisms `MarkedFrameBase.Iso` over
+  the identity of the marked core, phrased pointwise on the source so that no induced dictionary
+  is needed to state them.
+* `MarkedFrame core mark degree`: a marked frame, extending `MarkedFrameBase` at excess `0` by
+  the field `ramified : 1 ≤ r_φ(u_G)` at every mark ((D4) with `a = 1`; unramified marks are
+  never in the core).
 * `markedSignedMult = (∏ⱼ r_φ(markⱼ)) · D_φ det A_{φ;u,v} / 2^{l(T)}` and `markedAbsMult`, its
   absolute value (equivalently, `absMult` times `∏ⱼ r_φ(markⱼ)`).
-* `MarkedFrameIso`: isomorphism over the identity of the marked core, phrased pointwise on the
-  source so that no induced dictionary is needed to state it.
+* `MarkedFrameIso`: the isomorphisms of the underlying `MarkedFrameBase`.
 * `MarkedFrameClass`, `MarkedFibre core mark y degree` (the classes open at `y`: the marked fibre
   `M(Γ, u, v; a, b)` consists of the members, which have `z > 0`) and **`markedCount`**, the sum of
   `markedAbsMult` over the marked fibre.
 
 ## Isomorphisms
 
-* `MarkedFrameIso.exists_column`: an isomorphism permutes the coordinate vector;
+* `MarkedFrameBase.Iso.exists_column`: an isomorphism permutes the coordinate vector;
 * `MarkedFrameIso.markedAbsMult_eq`: an isomorphism preserves the marked multiplicity.
 
 Both are the marked twins of facts proved for `GeometricMemberIso` (`coords_column`,
 `absMult_eq`, in `DraismaVargasCount.GeometricMultiplicity`), and are proved the same way: the
-induced dictionary of marked rows `MarkedFrameIso.rowEquiv` preserves the natural marked matrix
-(`markedMatrix_map`, module `MarkedTransport`), so the matrix of `second` is that of `first`
-reindexed (`MarkedFrameIso.matrix_eq_submatrix`); and `r_φ` is a relabelling invariant
-(`localRamification_map`).
+induced dictionary of marked rows `MarkedFrameBase.Iso.rowEquiv` preserves the natural marked
+matrix (`markedMatrix_map`, module `MarkedTransport`), so the matrix of `second` is that of
+`first` reindexed (`MarkedFrameBase.Iso.matrix_eq_submatrix`, hence `Iso.absMult_eq`); and `r_φ`
+is a relabelling invariant (`localRamification_map`).
 
 ## Proved here
 
 `markRamification_nonneg` (Riemann--Hurwitz), `ramificationFactor_pos`,
 `markedSignedMult_ne_zero`, `mulVec_coordsAt`, `coordsAt_eq_of_mulVec`, the two statements
-on isomorphisms, and `MarkedFrameIso.openAt_iff` from `exists_column`.
+on isomorphisms, and `MarkedFrameBase.Iso.openAt_iff` from `exists_column`.
 -/
 
 namespace DraismaVargas.Count.MarkedCount
@@ -98,20 +104,21 @@ theorem mem_markSet {data : GluingDatum target degree} {k : ℕ}
     (markSource : Fin k → data.SourceVertex) (j : Fin k) : markSource j ∈ markSet markSource :=
   Finset.mem_image_of_mem _ (Finset.mem_univ j)
 
-/-- **Marked full-dimensionality** ((D1), (D3)): the marked
+/-- **Marked full-dimensionality** ((D1), (D3)) with dimension excess `excess`: the marked
 twin of `FullDimensionalSourcePresentation`. The rows of the length matrix are the marked rows,
-the marks have surviving valency two, and no marked row is a cycle. `saturated` is the unmarked
-dimension count, which holds verbatim when every mark is ramified. -/
+the marks have surviving valency two, no marked row is a cycle, and the dimension count is
+`|E(T)| + excess = 2 g(G) + 2d - 5`. At excess `0` it is the unmarked dimension count, which
+holds verbatim when every mark is ramified. -/
 structure MarkedFullDim (data : GluingDatum target degree) (marks : Finset data.SourceVertex)
-    (coordinate : Type*) [Fintype coordinate] [DecidableEq coordinate] where
+    (coordinate : Type*) [Fintype coordinate] [DecidableEq coordinate] (excess : ℤ) where
   /-- The datum is a valid gluing datum (connected source, Riemann--Hurwitz). -/
   valid : data.Valid
   /-- Part I's standing hypothesis on the target. -/
   targetConnected : graph_connected target
   /-- Part I's standing hypothesis on the target. -/
   targetGenus : genus target = 0
-  /-- The dimension count, a normalization of the degree. -/
-  saturated : (target.edges.card : ℤ) = 2 * genus data.sourceGraph + 2 * degree - 5
+  /-- The dimension count, corrected by the excess (a normalization of the degree). -/
+  saturated : (target.edges.card : ℤ) + excess = 2 * genus data.sourceGraph + 2 * degree - 5
   /-- The marked labelling. -/
   labelling : MarkedLabelling data marks coordinate
   /-- (D3): the marked edge-length matrix is nonsingular. -/
@@ -122,6 +129,14 @@ structure MarkedFullDim (data : GluingDatum target degree) (marks : Finset data.
   markValency : ∀ vertex ∈ marks, nonDanglingValency data vertex = 2
   /-- No marked row is a cycle. -/
   pathEnds : HasMarkedPathEnds data marks
+
+/-- Marked full-dimensionality at an equal excess. -/
+def MarkedFullDim.castExcess {data : GluingDatum target degree}
+    {marks : Finset data.SourceVertex} {coordinate : Type*} [Fintype coordinate]
+    [DecidableEq coordinate] {excess excess' : ℤ} (h : excess = excess')
+    (fd : MarkedFullDim data marks coordinate excess) :
+    MarkedFullDim data marks coordinate excess' :=
+  { fd with saturated := h ▸ fd.saturated }
 
 variable {n p k : ℕ}
 
@@ -155,10 +170,11 @@ theorem MarkedCoreIdentification.markSource_injective {core : Core n p} {mark : 
 
 /-! ## 3.  Marked frames -/
 
-/-- **A marked frame** over the marked core: a target
-tree, a gluing datum, the source vertices of the marks, marked full-dimensionality, the marked
-label, and ramification at every mark, `r_φ(u_G) ≥ 1` ((D4) with `a = 1`). -/
-structure MarkedFrame (core : Core n p) (mark : Fin k → Fin n) (degree : ℕ) where
+/-- **The frame of a marked member, without a condition at the marks**, over the marked core and
+with dimension excess `excess`: a target tree, a gluing datum, the source vertices of the marks,
+marked full-dimensionality and the marked label. -/
+structure MarkedFrameBase (core : Core n p) (mark : Fin k → Fin n) (excess : ℤ)
+    (degree : ℕ) where
   /-- The target tree. -/
   target : CFGraph.{0}
   /-- The gluing datum. -/
@@ -166,45 +182,59 @@ structure MarkedFrame (core : Core n p) (mark : Fin k → Fin n) (degree : ℕ) 
   /-- The source vertices `u_G, v_G` of the marks. -/
   markSource : Fin k → data.SourceVertex
   /-- Marked full-dimensionality. -/
-  fullDim : MarkedFullDim data (markSet markSource) (Fin p)
+  fullDim : MarkedFullDim data (markSet markSource) (Fin p) excess
   /-- The marked label. -/
   ident : MarkedCoreIdentification core mark data markSource
+
+namespace MarkedFrameBase
+
+variable {core : Core n p} {mark : Fin k → Fin n} {excess : ℤ}
+
+/-- The marked edge-length matrix `A_{φ;u,v}`. -/
+noncomputable def matrix (κ : MarkedFrameBase core mark excess degree) :
+    Matrix (Fin p) (Fin p) ℚ :=
+  GluingDatum.LengthMatrixPresentation.matrix κ.fullDim.labelling.presentation
+
+theorem det_ne_zero (κ : MarkedFrameBase core mark excess degree) : κ.matrix.det ≠ 0 :=
+  κ.fullDim.det_ne_zero
+
+/-- The permutation reading a matrix row as a core slot. -/
+def slot (κ : MarkedFrameBase core mark excess degree) : Fin p ≃ Fin p :=
+  κ.fullDim.labelling.row.symm.trans κ.ident.row
+
+/-- **The coordinates of a marked frame at the request `y`**: `z = A⁻¹ y`. -/
+noncomputable def coordsAt (κ : MarkedFrameBase core mark excess degree) (y : Fin p → ℚ) :
+    Fin p → ℚ :=
+  κ.matrix⁻¹.mulVec fun row ↦ y (κ.slot row)
+
+theorem mulVec_coordsAt (κ : MarkedFrameBase core mark excess degree) (y : Fin p → ℚ) :
+    κ.matrix.mulVec (κ.coordsAt y) = fun row ↦ y (κ.slot row) := by
+  rw [coordsAt, Matrix.mulVec_mulVec,
+    Matrix.mul_nonsing_inv _ (isUnit_iff_ne_zero.mpr κ.det_ne_zero), Matrix.one_mulVec]
+
+/-- **The coordinates are the unique solution** of `A z = y ∘ slot`. -/
+theorem coordsAt_eq_of_mulVec (κ : MarkedFrameBase core mark excess degree) (y : Fin p → ℚ)
+    (z : Fin p → ℚ) (h : κ.matrix.mulVec z = fun row ↦ y (κ.slot row)) : κ.coordsAt y = z := by
+  rw [coordsAt, ← h, Matrix.mulVec_mulVec,
+    Matrix.nonsing_inv_mul _ (isUnit_iff_ne_zero.mpr κ.det_ne_zero), Matrix.one_mulVec]
+
+/-- **A marked member at `y`** is a marked frame open at `y` (`z > 0`). -/
+def OpenAt (κ : MarkedFrameBase core mark excess degree) (y : Fin p → ℚ) : Prop :=
+  ∀ col, 0 < κ.coordsAt y col
+
+end MarkedFrameBase
+
+/-- **A marked frame** over the marked core: a target
+tree, a gluing datum, the source vertices of the marks, marked full-dimensionality, the marked
+label, and ramification at every mark, `r_φ(u_G) ≥ 1` ((D4) with `a = 1`). -/
+structure MarkedFrame (core : Core n p) (mark : Fin k → Fin n) (degree : ℕ) extends
+    MarkedFrameBase core mark 0 degree where
   /-- (D4): every mark is ramified. -/
   ramified : ∀ j, 1 ≤ markRamification data (markSource j)
 
 namespace MarkedFrame
 
 variable {core : Core n p} {mark : Fin k → Fin n}
-
-/-- The marked edge-length matrix `A_{φ;u,v}`. -/
-noncomputable def matrix (κ : MarkedFrame core mark degree) : Matrix (Fin p) (Fin p) ℚ :=
-  GluingDatum.LengthMatrixPresentation.matrix κ.fullDim.labelling.presentation
-
-theorem det_ne_zero (κ : MarkedFrame core mark degree) : κ.matrix.det ≠ 0 :=
-  κ.fullDim.det_ne_zero
-
-/-- The permutation reading a matrix row as a core slot. -/
-def slot (κ : MarkedFrame core mark degree) : Fin p ≃ Fin p :=
-  κ.fullDim.labelling.row.symm.trans κ.ident.row
-
-/-- **The coordinates of a marked frame at the request `y`**: `z = A⁻¹ y`. -/
-noncomputable def coordsAt (κ : MarkedFrame core mark degree) (y : Fin p → ℚ) : Fin p → ℚ :=
-  κ.matrix⁻¹.mulVec fun row ↦ y (κ.slot row)
-
-theorem mulVec_coordsAt (κ : MarkedFrame core mark degree) (y : Fin p → ℚ) :
-    κ.matrix.mulVec (κ.coordsAt y) = fun row ↦ y (κ.slot row) := by
-  rw [coordsAt, Matrix.mulVec_mulVec,
-    Matrix.mul_nonsing_inv _ (isUnit_iff_ne_zero.mpr κ.det_ne_zero), Matrix.one_mulVec]
-
-/-- **The coordinates are the unique solution** of `A z = y ∘ slot`. -/
-theorem coordsAt_eq_of_mulVec (κ : MarkedFrame core mark degree) (y : Fin p → ℚ)
-    (z : Fin p → ℚ) (h : κ.matrix.mulVec z = fun row ↦ y (κ.slot row)) : κ.coordsAt y = z := by
-  rw [coordsAt, ← h, Matrix.mulVec_mulVec,
-    Matrix.nonsing_inv_mul _ (isUnit_iff_ne_zero.mpr κ.det_ne_zero), Matrix.one_mulVec]
-
-/-- **A marked member at `y`** is a marked frame open at `y` (`z > 0`). -/
-def OpenAt (κ : MarkedFrame core mark degree) (y : Fin p → ℚ) : Prop :=
-  ∀ col, 0 < κ.coordsAt y col
 
 /-- `∏ⱼ r_φ(markⱼ)`. -/
 def ramificationFactor (κ : MarkedFrame core mark degree) : ℤ :=
@@ -238,8 +268,8 @@ an isomorphism of gluing data (`GeometricDatumIso`, per-vertex and per-edge shee
 compatible along incidences) carrying marks to marks and inducing the identity on the marked
 core, on vertices and on rows. The conditions are stated pointwise on the source, so that
 stating them needs no induced dictionary of marked rows. -/
-structure MarkedFrameIso {core : Core n p} {mark : Fin k → Fin n}
-    (first second : MarkedFrame core mark degree) where
+structure MarkedFrameBase.Iso {core : Core n p} {mark : Fin k → Fin n} {excess : ℤ}
+    (first second : MarkedFrameBase core mark excess degree) where
   /-- The isomorphism of data. -/
   datum : GeometricDatumIso first.data second.data
   /-- Marks go to marks. -/
@@ -255,12 +285,13 @@ structure MarkedFrameIso {core : Core n p} {mark : Fin k → Fin n}
         (datum.nonDanglingEdgeEquiv first.fullDim.valid.1 edge)) =
       first.ident.row (markedRow (markSet first.markSource) edge)
 
-namespace MarkedFrameIso
+namespace MarkedFrameBase.Iso
 
-variable {core : Core n p} {mark : Fin k → Fin n} {first second : MarkedFrame core mark degree}
+variable {core : Core n p} {mark : Fin k → Fin n} {excess : ℤ}
+  {first second : MarkedFrameBase core mark excess degree}
 
 /-- **Marks correspond**: `iso` carries the mark set of `first` onto that of `second`. -/
-theorem mem_markSet_map (iso : MarkedFrameIso first second) (vertex : first.data.SourceVertex) :
+theorem mem_markSet_map (iso : Iso first second) (vertex : first.data.SourceVertex) :
     iso.datum.sourceVertexEquiv vertex ∈ markSet second.markSource ↔
       vertex ∈ markSet first.markSource := by
   simp only [markSet, Finset.mem_image, Finset.mem_univ, true_and]
@@ -271,30 +302,30 @@ theorem mem_markSet_map (iso : MarkedFrameIso first second) (vertex : first.data
     exact ⟨j, (iso.mark j).symm⟩
 
 /-- **The induced dictionary of marked rows** (`markedStablePathEquiv`). -/
-noncomputable def rowEquiv (iso : MarkedFrameIso first second) :
+noncomputable def rowEquiv (iso : Iso first second) :
     MarkedStablePath first.data (markSet first.markSource) ≃
       MarkedStablePath second.data (markSet second.markSource) :=
   markedStablePathEquiv iso.datum first.fullDim.valid.1 iso.mem_markSet_map
 
 /-- The dictionary of marked rows is over the identity of the core: `overCore_row`, descended
 to marked rows. -/
-theorem ident_row_rowEquiv (iso : MarkedFrameIso first second)
+theorem ident_row_rowEquiv (iso : Iso first second)
     (path : MarkedStablePath first.data (markSet first.markSource)) :
     second.ident.row (iso.rowEquiv path) = first.ident.row path := by
   induction path using Quot.ind with
   | mk edge => exact iso.overCore_row edge
 
 /-- The matrix row of `first` matched with matrix row `r` of `second`. -/
-noncomputable def rowPerm (iso : MarkedFrameIso first second) : Fin p ≃ Fin p :=
+noncomputable def rowPerm (iso : Iso first second) : Fin p ≃ Fin p :=
   second.fullDim.labelling.row.symm.trans (iso.rowEquiv.symm.trans first.fullDim.labelling.row)
 
 /-- The column of `first` matched with column `c` of `second`, through the target relabelling. -/
-noncomputable def columnPerm (iso : MarkedFrameIso first second) : Fin p ≃ Fin p :=
+noncomputable def columnPerm (iso : Iso first second) : Fin p ≃ Fin p :=
   second.fullDim.labelling.targetEdge.trans
     (iso.datum.targetEdge.symm.trans first.fullDim.labelling.targetEdge.symm)
 
 /-- **The marked matrix of `second` is that of `first`, reindexed** (`markedMatrix_map`). -/
-theorem matrix_eq_submatrix (iso : MarkedFrameIso first second) :
+theorem matrix_eq_submatrix (iso : Iso first second) :
     second.matrix = first.matrix.submatrix iso.rowPerm iso.columnPerm := by
   funext row column
   have h : markedMatrix second.data (markSet second.markSource)
@@ -306,14 +337,22 @@ theorem matrix_eq_submatrix (iso : MarkedFrameIso first second) :
         (iso.datum.targetEdge.symm (second.fullDim.labelling.targetEdge column)) :=
     markedMatrix_map iso.datum first.fullDim.valid.1 iso.mem_markSet_map _ _
   rw [Equiv.apply_symm_apply, Equiv.apply_symm_apply] at h
-  rw [Matrix.submatrix_apply, MarkedFrame.matrix, MarkedFrame.matrix, MarkedLabelling.matrix_eq,
-    MarkedLabelling.matrix_eq, h]
+  rw [Matrix.submatrix_apply, MarkedFrameBase.matrix, MarkedFrameBase.matrix,
+    MarkedLabelling.matrix_eq, MarkedLabelling.matrix_eq, h]
   simp [rowPerm, columnPerm]
 
+/-- An isomorphism preserves Part II's `D_φ |det A_{φ;u,v}| / 2^{l(T)}`, by the reindexing
+`matrix_eq_submatrix` and `leafCount_map` (`absMult_eq_of_submatrix`). -/
+theorem absMult_eq (iso : Iso first second) :
+    Count.absMult second.fullDim.labelling.presentation =
+      Count.absMult first.fullDim.labelling.presentation :=
+  absMult_eq_of_submatrix _ _ iso.rowPerm iso.columnPerm iso.matrix_eq_submatrix
+    iso.datum.leafCount_map
+
 /-- The request is read through matched slots. -/
-theorem slot_rowPerm (iso : MarkedFrameIso first second) (row : Fin p) :
+theorem slot_rowPerm (iso : Iso first second) (row : Fin p) :
     first.slot (iso.rowPerm row) = second.slot row := by
-  simp only [MarkedFrame.slot, rowPerm, Equiv.trans_apply, Equiv.symm_apply_apply]
+  simp only [MarkedFrameBase.slot, rowPerm, Equiv.trans_apply, Equiv.symm_apply_apply]
   rw [← iso.ident_row_rowEquiv, Equiv.apply_symm_apply]
 
 /-- **An isomorphism permutes the coordinates**: the marked twin of
@@ -321,7 +360,7 @@ theorem slot_rowPerm (iso : MarkedFrameIso first second) (row : Fin p) :
 `rowPerm` and `columnPerm` (`matrix_eq_submatrix`), and the slots are matched by `rowPerm`
 (`slot_rowPerm`), so `z ∘ columnPerm` solves the equations of `second`
 (`coordsAt_eq_of_mulVec`). -/
-theorem exists_column (iso : MarkedFrameIso first second) :
+theorem exists_column (iso : Iso first second) :
     ∃ σ : Fin p ≃ Fin p, ∀ (y : Fin p → ℚ) (col : Fin p),
       second.coordsAt y (σ col) = first.coordsAt y col := by
   refine ⟨iso.columnPerm.symm, fun y col ↦ ?_⟩
@@ -335,33 +374,8 @@ theorem exists_column (iso : MarkedFrameIso first second) :
   rw [hSolve]
   simp
 
-/-- `r_φ` at corresponding source vertices agrees (`localRamification_map`). -/
-theorem markRamification_map (iso : MarkedFrameIso first second)
-    (vertex : first.data.SourceVertex) :
-    markRamification second.data (iso.datum.sourceVertexEquiv vertex) =
-      markRamification first.data vertex :=
-  localRamification_map iso.datum vertex.1.1 ⟨vertex.1.2, vertex.2⟩
-    (iso.datum.sourceVertexEquiv vertex).2
-
-/-- **An isomorphism preserves the marked multiplicity.** The ramification factor agrees mark by
-mark (`markRamification_map` and `mark`); `D_φ |det A_{φ;u,v}| / 2^{l(T)}` agrees by the
-reindexing `matrix_eq_submatrix` and `leafCount_map` (`absMult_eq_of_submatrix`). -/
-theorem markedAbsMult_eq (iso : MarkedFrameIso first second) :
-    first.markedAbsMult = second.markedAbsMult := by
-  have hFactor : second.ramificationFactor = first.ramificationFactor := by
-    unfold MarkedFrame.ramificationFactor
-    refine Finset.prod_congr rfl fun j _ ↦ ?_
-    rw [← iso.mark j, iso.markRamification_map]
-  have hAbs : Count.absMult second.fullDim.labelling.presentation =
-      Count.absMult first.fullDim.labelling.presentation :=
-    absMult_eq_of_submatrix _ _ iso.rowPerm iso.columnPerm iso.matrix_eq_submatrix
-      iso.datum.leafCount_map
-  unfold MarkedFrame.markedAbsMult MarkedFrame.markedSignedMult
-  rw [abs_mul, abs_mul, hFactor]
-  exact congrArg _ hAbs.symm
-
 /-- An isomorphism preserves openness, from `exists_column`. -/
-theorem openAt_iff (iso : MarkedFrameIso first second) (y : Fin p → ℚ) :
+theorem openAt_iff (iso : Iso first second) (y : Fin p → ℚ) :
     first.OpenAt y ↔ second.OpenAt y := by
   obtain ⟨σ, hσ⟩ := iso.exists_column
   constructor
@@ -371,6 +385,39 @@ theorem openAt_iff (iso : MarkedFrameIso first second) (y : Fin p → ℚ) :
   · intro h col
     rw [← hσ]
     exact h _
+
+end MarkedFrameBase.Iso
+
+/-- **An isomorphism of marked frames over the identity of the marked core**: an isomorphism of
+the underlying `MarkedFrameBase`. -/
+abbrev MarkedFrameIso {core : Core n p} {mark : Fin k → Fin n}
+    (first second : MarkedFrame core mark degree) :=
+  MarkedFrameBase.Iso first.toMarkedFrameBase second.toMarkedFrameBase
+
+namespace MarkedFrameIso
+
+variable {core : Core n p} {mark : Fin k → Fin n} {first second : MarkedFrame core mark degree}
+
+/-- `r_φ` at corresponding source vertices agrees (`localRamification_map`). -/
+theorem markRamification_map (iso : MarkedFrameIso first second)
+    (vertex : first.data.SourceVertex) :
+    markRamification second.data (iso.datum.sourceVertexEquiv vertex) =
+      markRamification first.data vertex :=
+  localRamification_map iso.datum vertex.1.1 ⟨vertex.1.2, vertex.2⟩
+    (iso.datum.sourceVertexEquiv vertex).2
+
+/-- **An isomorphism preserves the marked multiplicity.** The ramification factor agrees mark by
+mark (`markRamification_map` and `mark`); `D_φ |det A_{φ;u,v}| / 2^{l(T)}` agrees by
+`MarkedFrameBase.Iso.absMult_eq`. -/
+theorem markedAbsMult_eq (iso : MarkedFrameIso first second) :
+    first.markedAbsMult = second.markedAbsMult := by
+  have hFactor : second.ramificationFactor = first.ramificationFactor := by
+    unfold MarkedFrame.ramificationFactor
+    refine Finset.prod_congr rfl fun j _ ↦ ?_
+    rw [← iso.mark j, iso.markRamification_map]
+  unfold MarkedFrame.markedAbsMult MarkedFrame.markedSignedMult
+  rw [abs_mul, abs_mul, hFactor]
+  exact congrArg _ iso.absMult_eq.symm
 
 end MarkedFrameIso
 

@@ -19,7 +19,7 @@ Three layers, from the inside out:
    marked row, coefficient times rational position, has odd denominator. This is the conclusion
    of `RowHairpinPosition.weighted_prefix_mem`, read on a typed presentation, and it is carried
    through the chain below **as a hypothesis**. A generic typed twin of the public lemma
-   (stated for every `TypedFullDim … excess`, with the leaf-adjusted denominators odd and an
+   (stated for every `MarkedFullDim … excess`, with the leaf-adjusted denominators odd and an
    `AdmissibleRoot`) is not available from the typed fields, because the public proof rests on
    dangling-no-glue and the leaf dichotomy, which the public side derives from
    change-minimality, and a typed frame is not change-minimal at the images of its marks (the
@@ -64,7 +64,7 @@ section Hairpin
 
 variable {target : CFGraph.{0}} {degree : ℕ} {data : GluingDatum target degree}
   {marks : Finset data.SourceVertex} {coordinate : Type*} [Fintype coordinate]
-  [DecidableEq coordinate] {excess : ℤ} (fd : TypedFullDim data marks coordinate excess)
+  [DecidableEq coordinate] {excess : ℤ} (fd : MarkedFullDim data marks coordinate excess)
 
 /-- **An admissible root**: an internal target vertex, or a leaf of the target over which every
 surviving source vertex is a mark. The public hairpin lemma takes an internal root; the fibre

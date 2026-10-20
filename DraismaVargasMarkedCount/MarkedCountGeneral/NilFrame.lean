@@ -94,11 +94,12 @@ theorem presentation_labellingCongrMarks {coordinate : Type*} (h : ∀ v, v ∈ 
     (labelling : MarkedLabelling data M coordinate) :
     (labellingCongrMarks h labelling).presentation = labelling.presentation := rfl
 
-/-- Typed full-dimensionality, moved to a mark set with the same members (and an equal
+/-- Marked full-dimensionality, moved to a mark set with the same members (and an equal
 excess). -/
-def TypedFullDim.congrMarks {coordinate : Type*} [Fintype coordinate] [DecidableEq coordinate]
+def _root_.DraismaVargas.Count.MarkedCount.MarkedFullDim.congrMarks {coordinate : Type*}
+    [Fintype coordinate] [DecidableEq coordinate]
     {excess excess' : ℤ} (h : ∀ v, v ∈ M ↔ v ∈ M') (hExcess : excess = excess')
-    (fd : TypedFullDim data M coordinate excess) : TypedFullDim data M' coordinate excess' where
+    (fd : MarkedFullDim data M coordinate excess) : MarkedFullDim data M' coordinate excess' where
   valid := fd.valid
   targetConnected := fd.targetConnected
   targetGenus := fd.targetGenus
@@ -222,7 +223,8 @@ def toFrame (κ : TypedFrame core mark types degree) : Frame core degree where
       targetGenus := κ.fullDim.targetGenus
       saturated := by
         have h := κ.fullDim.saturated
-        rwa [typeExcess_nil, add_zero] at h
+        have h0 := typeExcess_nil types
+        omega
       labelling := labellingToStable (not_mem_markSet_nil κ.markSource) κ.fullDim.labelling
       det_ne_zero := by rw [presentation_labellingToStable]; exact κ.fullDim.det_ne_zero
       trivalent := κ.fullDim.trivalent
@@ -239,7 +241,7 @@ def toFrame (κ : TypedFrame core mark types degree) : Frame core degree where
 
 theorem toFrame_slot (κ : TypedFrame core mark types degree) (row : Fin p) :
     κ.toFrame.slot row = κ.slot row := by
-  simp [Frame.slot, TypedFrame.slot, toFrame, labellingToStable]
+  simp [Frame.slot, MarkedFrameBase.slot, toFrame, labellingToStable]
 
 theorem toFrame_matrix (κ : TypedFrame core mark types degree) :
     κ.toFrame.matrix = κ.matrix :=
@@ -247,12 +249,12 @@ theorem toFrame_matrix (κ : TypedFrame core mark types degree) :
 
 theorem coordsAt_toFrame (κ : TypedFrame core mark types degree) (y : Fin p → ℚ) :
     κ.toFrame.coordsAt y = κ.coordsAt y := by
-  unfold Frame.coordsAt TypedFrame.coordsAt
+  unfold Frame.coordsAt MarkedFrameBase.coordsAt
   simp only [toFrame_slot, toFrame_matrix]
 
 theorem openAt_toFrame_iff (κ : TypedFrame core mark types degree) (y : Fin p → ℚ) :
     κ.toFrame.OpenAt y ↔ κ.OpenAt y := by
-  unfold Frame.OpenAt TypedFrame.OpenAt
+  unfold Frame.OpenAt MarkedFrameBase.OpenAt
   rw [coordsAt_toFrame]
 
 theorem ramifiedLeafImages_nil (κ : TypedFrame core mark types degree) :

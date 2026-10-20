@@ -13,7 +13,7 @@ public import DraismaVargasCount.RowHairpinPosition
 The statement is the hairpin receipt (`TypedMoments.HairpinReceipt`, the typed form of
 `RowHairpinPosition.weighted_prefix_mem`) for the typed frames that regrow: a typed frame
 `κ` of lower index `0` over a marked-cubic core `(core, mark)` with a tailed core `T` at the
-headline degree. (For a general `TypedFullDim … excess`, which has no regrowth, the receipt is
+headline degree. (For a general `MarkedFullDim … excess`, which has no regrowth, the receipt is
 not available; see the module docstring of `TypedMoments`.)
 
 The generic form `weighted_prefix_mem_generic` is stated on a caterpillar branching `β` without
@@ -60,7 +60,7 @@ variable {T : CFGraph.{0}} {d' d k : ℕ} {N : Type} {c : Fin k → ℕ} {ψ : G
   (hψ : ψ.Connected) (hT : graph_connected T) (hT0 : genus T = 0)
   (hMark : ∀ j, nonDanglingValency ψ (β.mark j) ≠ 0)
   {coordinate : Type*} [Fintype coordinate] [DecidableEq coordinate] {excess : ℤ}
-  (fd : TypedFullDim ψ β.marks coordinate excess)
+  (fd : MarkedFullDim ψ β.marks coordinate excess)
   {coordD : Type*} [Fintype coordD] [DecidableEq coordD]
   (fdD : FullDimensionalSource.FullDimensionalSourcePresentation β.regrowDatum coordD)
 
