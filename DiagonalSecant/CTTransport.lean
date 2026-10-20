@@ -8,14 +8,14 @@ public import DraismaVargasCount.PencilTransportProducer
 /-!
 # The transport of a typed frame, twinned on marked rows
 
-This is `PencilTransportProducer` §2–§7, statement for statement, with the `FibreMember`
-replaced by a typed frame `κ` and the unmarked rows by the marked rows of `TypedRows`. Everything
-datum-level or datum-free is reused: `TreeMetricPotential`, the refinement equation
+This is the argument of `PencilTransportProducer` §2–§7, with the `FibreMember` replaced by a
+typed frame `κ` and the unmarked rows by the marked rows of `TypedRows`. Everything datum-level
+or datum-free is reused: `TreeMetricPotential`, the refinement equation
 `sourceEdgeIncidence_eq_localDegree_mul_targetEdgeIncidence`, the row arithmetic of
 `RowAlgebra` (the row potential `RowAlgebra.value`, its ends, and the window computation
-`RowAlgebra.slot_sum`), `kindVertex_zero_eq`, `kindVertex_length_eq`, `hit`, and the scripts of
-`Utilities.Subdivision.CoreExpansion` (`slotValueScript`, `prin_eq_sum_slopes`,
-`pushDiv_prin_pullScript`).
+`RowAlgebra.slot_sum`), `kindVertex_zero_eq`, `kindVertex_length_eq`, and the slot-value
+scripts of `SlotScriptKernel` (compatibility from the row ends, descent through the contraction,
+the pushed Laplacian slot by slot against `hit`, and `SlotScriptKernel.linear_equiv_of_slots`).
 
 §1–§4 are generic in the core and the natural request `y` (as `TypedPlacement` is); §5–§7
 work at the degenerate request on `D.bigSpec (small.scale k hk)`, as `TypedImage` does. The
@@ -529,12 +529,6 @@ vertex carrying that label (a mark, or a trivalent vertex). -/
 noncomputable def corePotential (v : Fin N) : ℤ :=
   sourcePotential κ P (κ.ident.vertex.symm v).1
 
-/-- **The big-side script**: the pulled-back tree potential, read along every big slot through
-the frame's own marked row. -/
-noncomputable def script : firing_script (D.bigSpec (small.scale k hk) hN hL).graph :=
-  (D.bigSpec (small.scale k hk) hN hL).slotValueScript (corePotential D κ P)
-    (slotValue D small hN hL k hk κ hClosed s P)
-
 theorem corePotential_ident (branch : MarkedBranchVertex κ.data (markSet κ.markSource)) :
     corePotential D κ P (κ.ident.vertex branch) = sourcePotential κ P branch.1 := by
   simp [corePotential]
@@ -555,32 +549,18 @@ theorem compat (hRise : RiseCompatible (degenerateLength D small) κ hClosed s P
     (D.bigSpec (small.scale k hk) hN hL).SlotValueCompatible (corePotential D κ P)
       (slotValue D small hN hL k hk κ hClosed s P) := by
   have hFull := rowStart_full_le_length D small hN hL k hk κ hClosed hScale
-  have hGe := fun e ↦ @RowAlgebra.value_of_ge _ _ _ _ _
-    (rowStart_succ (degenerateLength D small) κ hClosed e) _
-    (sum_rowSlope_mul_rowLen (degenerateLength D small) κ hClosed s P hRise e)
-  constructor
-  · intro e
-    change _ = corePotential D κ P (D.bigCore.tail e)
-    have hEnds := reverse_endpoints κ hL e
-    unfold slotValue RowAlgebra.orient
-    cases hr : reverse κ e
-    · simp only [hr, Bool.false_eq_true, ite_false] at hEnds ⊢
-      rw [RowAlgebra.value_of_nonpos _ _ _ _ (by simp), ← hEnds.1, corePotential_ident]
-      rfl
-    · simp only [hr, ite_true] at hEnds ⊢
-      rw [hGe e (by have := hFull e; omega), ← hEnds.2, corePotential_ident]
-      rfl
-  · intro e
-    change _ = corePotential D κ P (D.bigCore.head e)
-    have hEnds := reverse_endpoints κ hL e
-    unfold slotValue RowAlgebra.orient
-    cases hr : reverse κ e
-    · simp only [hr, Bool.false_eq_true, ite_false] at hEnds ⊢
-      rw [hGe e (by have := hFull e; omega), ← hEnds.2, corePotential_ident]
-      rfl
-    · simp only [hr, ite_true] at hEnds ⊢
-      rw [RowAlgebra.value_of_nonpos _ _ _ _ (by simp), ← hEnds.1, corePotential_ident]
-      rfl
+  refine SlotScriptKernel.compat_of_ends D small hN hL k hk _
+    (fun e ↦ RowAlgebra.value (sourcePotential κ P (rowVertex κ.fullDim.pathEnds (rowOf κ e) 0))
+      (rowSlope κ s e) (rowStart (degenerateLength D small) κ hClosed e)
+      (rowLen (degenerateLength D small) κ hClosed e)) (reverse κ)
+    (fun e pos hpos ↦ ?_) (fun e pos hpos ↦ ?_)
+  · rw [RowAlgebra.value_of_nonpos _ _ _ _ hpos, ← (reverse_endpoints κ hL e).1,
+      corePotential_ident]
+    rfl
+  · rw [RowAlgebra.value_of_ge _ _ (rowStart_succ (degenerateLength D small) κ hClosed e)
+      (sum_rowSlope_mul_rowLen (degenerateLength D small) κ hClosed s P hRise e)
+      (by have := hFull e; omega), ← (reverse_endpoints κ hL e).2, corePotential_ident]
+    rfl
 
 include hN hL hk hScale in
 /-- The two ends of a contracted slot carry the same core potential. -/
@@ -602,65 +582,6 @@ theorem corePotential_contracted (hRise : RiseCompatible (degenerateLength D sma
   unfold slotValue
   rw [RowAlgebra.value_of_len_zero _ _ _ _ hLen, RowAlgebra.value_of_len_zero _ _ _ _ hLen]
 
-include hN hL hk hScale in
-/-- The core potential is constant on every fibre of `D.fib`: the fibre is connected through
-contracted slots (the last clause of `ExpansionData.Conditions`). -/
-theorem corePotential_eq_of_fib_eq
-    (hRise : RiseCompatible (degenerateLength D small) κ hClosed s P)
-    (hCond : D.Conditions small.core) {v w : Fin N} (h : D.fib v = D.fib w) :
-    corePotential D κ P v = corePotential D κ P w := by
-  classical
-  by_contra hne
-  obtain ⟨e, hc, -, hcross⟩ := ExpansionData.fibre_of_conditions hCond (D.fib v)
-    (Finset.univ.filter fun u ↦ corePotential D κ P u = corePotential D κ P v)
-    ⟨v, by simp, rfl⟩ ⟨w, by simpa using fun h' ↦ hne h'.symm, h.symm⟩
-  have hEq := corePotential_contracted D small hN hL k hk κ hClosed hScale s P hRise e hc
-  rcases hcross with ⟨h1, h2⟩ | ⟨h1, h2⟩
-  · simp only [Finset.mem_filter, Finset.mem_univ, true_and] at h1 h2
-    exact h2 (hEq.symm.trans h1)
-  · simp only [Finset.mem_filter, Finset.mem_univ, true_and] at h1 h2
-    exact h2 (hEq.trans h1)
-
-include hScale in
-/-- **The script descends**: it is constant on the fibres of the contraction. -/
-theorem script_eq_of_vertexMap_eq
-    (hRise : RiseCompatible (degenerateLength D small) κ hClosed s P)
-    (hCond : D.Conditions small.core) {x x' : (D.bigSpec (small.scale k hk) hN hL).Vertex}
-    (h : ExpansionData.vertexMap D (small.scale k hk) hN hL x =
-      ExpansionData.vertexMap D (small.scale k hk) hN hL x') :
-    script D small hN hL k hk κ hClosed s P x = script D small hN hL k hk κ hClosed s P x' := by
-  have hCond' : D.Conditions (small.scale k hk).core := hCond
-  rcases x with v | ⟨e, o⟩
-  · rcases x' with w | ⟨e', o'⟩
-    · have hfib : D.fib v = D.fib w := by
-        have h' : (small.scale k hk).coreVertex (D.fib v) =
-            (small.scale k hk).coreVertex (D.fib w) := h
-        exact Sum.inl.inj h'
-      exact corePotential_eq_of_fib_eq D small hN hL k hk κ hClosed hScale s P hRise hCond hfib
-    · rw [ExpansionData.interior_fibre hCond' e' o' _ h]
-      rfl
-  · rw [ExpansionData.interior_fibre hCond' e o x' h.symm]
-    rfl
-
-/-- The descended script on the small subdivision. -/
-noncomputable def smallScript (hCond : D.Conditions small.core) :
-    firing_script (small.scale k hk).graph := fun b ↦
-  script D small hN hL k hk κ hClosed s P
-    (Classical.choose (ExpansionData.vertexMap_surjective
-      (D := D) (small := small.scale k hk) (hN := hN) (hL := hL) hCond b))
-
-include hScale in
-theorem script_eq_pullScript (hRise : RiseCompatible (degenerateLength D small) κ hClosed s P)
-    (hCond : D.Conditions small.core) :
-    script D small hN hL k hk κ hClosed s P =
-      (ExpansionData.certificate D (small.scale k hk) hN hL).pullScript
-        (smallScript D small hN hL k hk κ hClosed s P hCond) := by
-  funext x
-  exact script_eq_of_vertexMap_eq D small hN hL k hk κ hClosed hScale s P hRise hCond
-    (Classical.choose_spec (ExpansionData.vertexMap_surjective
-      (D := D) (small := small.scale k hk) (hN := hN) (hL := hL) hCond
-      (ExpansionData.vertexMap D (small.scale k hk) hN hL x))).symm
-
 end Script
 
 /-! ## 7.  Both sides, slot by slot -/
@@ -676,11 +597,6 @@ variable {n p : ℕ} (D : ExpansionData n p N Q) (small : Spec n p) (hN : 0 < N)
 
 /-! Local abbreviations for the slot-by-slot computation (unhygienic, so that they refer to the
 section variables at the point of use). -/
-set_option hygiene false in
-local notation "BB" => D.bigSpec (small.scale k hk) hN hL
-set_option hygiene false in
-local notation "SV" => slotValue D small hN hL k hk κ hClosed (chipSlope κ root anchor)
-  (chipPotential (degenerateLength D small) κ hClosed root anchor)
 set_option hygiene false in
 local notation "RSl" => rowSlope κ (chipSlope κ root anchor)
 set_option hygiene false in
@@ -718,95 +634,23 @@ theorem pushed_sub_eq_rows (hCond : D.Conditions small.core) (b : (small.scale k
     realize_rowVertex D small hN hL k hk κ hClosed hScale hCond e (i.val + 1) i.isLt]
 
 include hScale in
-/-- **The big side of the identity**: the pushed Laplacian of the script, as a sum over the unit
-steps of every big slot (`PencilTransportProducer.pushDiv_prin_script`). -/
-theorem pushDiv_prin_script (hCond : D.Conditions small.core) (b : (small.scale k hk).Vertex) :
-    (ExpansionData.certificate D (small.scale k hk) hN hL).pushDiv
-        (prin (BB).graph
-          (script D small hN hL k hk κ hClosed (chipSlope κ root anchor)
-            (chipPotential (degenerateLength D small) κ hClosed root anchor))) b =
-      ∑ e : Fin Q, ∑ o : Fin ((BB).length e),
-        (SV e (o.val + 1) -
-          SV e o.val) *
-        (HIT e b o.val -
-          HIT e b (o.val + 1)) := by
-  classical
-  have hCond' : D.Conditions (small.scale k hk).core := hCond
-  set B := BB
-  have hSlope := B.isStepSlope_slotValueScript
-    (compat D small hN hL k hk κ hClosed hScale (chipSlope κ root anchor)
-      (chipPotential (degenerateLength D small) κ hClosed root anchor)
-      (chip_riseCompatible (degenerateLength D small) κ hClosed root anchor))
-  unfold GraphContractionCertificate.pushDiv
-  simp only [script]
-  rw [Finset.sum_congr rfl fun x _ ↦ by rw [B.prin_eq_sum_slopes hSlope x]]
-  have hSwap : ∀ x : B.Vertex,
-      (if (ExpansionData.certificate D (small.scale k hk) hN hL).vertexMap x = b then
-        ∑ step : B.Step,
-          ((if B.stepLeft step.1 step.2 = x then
-              SV step.1 (step.2.val + 1) -
-                SV step.1 step.2.val
-            else 0) +
-            (if B.stepRight step.1 step.2 = x then
-              -(SV step.1 (step.2.val + 1) -
-                SV step.1 step.2.val)
-            else 0))
-      else 0) =
-        ∑ step : B.Step,
-          ((if B.stepLeft step.1 step.2 = x then
-              (if ExpansionData.vertexMap D (small.scale k hk) hN hL x = b then
-                SV step.1 (step.2.val + 1) -
-                  SV step.1 step.2.val
-                else 0)
-            else 0) +
-            (if B.stepRight step.1 step.2 = x then
-              (if ExpansionData.vertexMap D (small.scale k hk) hN hL x = b then
-                -(SV step.1 (step.2.val + 1) -
-                  SV step.1 step.2.val)
-                else 0)
-            else 0)) := by
-    intro x
-    by_cases hx : (ExpansionData.certificate D (small.scale k hk) hN hL).vertexMap x = b
-    · rw [ite_eq_left hx]
-      refine Finset.sum_congr rfl fun step _ ↦ ?_
-      have hx' : ExpansionData.vertexMap D (small.scale k hk) hN hL x = b := hx
-      simp only [hx', ite_true]
-    · rw [ite_eq_right hx]
-      have hx' : ¬ ExpansionData.vertexMap D (small.scale k hk) hN hL x = b := hx
-      simp only [hx', ite_false, ite_self, add_zero, Finset.sum_const_zero]
-  rw [Finset.sum_congr rfl fun x _ ↦ hSwap x, Finset.sum_comm]
-  simp only [Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
-  rw [← Finset.sum_add_distrib, Fintype.sum_sigma]
-  refine Finset.sum_congr rfl fun e _ ↦ Finset.sum_congr rfl fun o _ ↦ ?_
-  rw [ExpansionData.vertexMap_stepLeft hCond' e o, ExpansionData.vertexMap_stepRight hCond' e o]
-  unfold PencilTransportProducer.hit
-  split_ifs <;> ring
-
-include hScale in
 /-- **(T), typed.** Any two pushed fibres of a closed typed frame are linearly equivalent on the
 small subdivision: their difference is the Laplacian of the descended script
 (`PencilTransportProducer.linear_equiv_pushDivisor`). -/
 theorem linear_equiv_pushed (hCond : D.Conditions small.core) :
     linear_equiv (small.scale k hk).graph
       (pushed D small hN hL k hk κ hClosed hScale root)
-      (pushed D small hN hL k hk κ hClosed hScale anchor) := by
-  have hCond' : D.Conditions (small.scale k hk).core := hCond
-  unfold linear_equiv
-  rw [principal_iff_eq_prin]
-  refine ⟨smallScript D small hN hL k hk κ hClosed (chipSlope κ root anchor)
-    (chipPotential (degenerateLength D small) κ hClosed root anchor) hCond, ?_⟩
-  rw [← (ExpansionData.certificate D (small.scale k hk) hN hL).pushDiv_prin_pullScript
-      (ExpansionData.certificate_valid hCond'),
-    ← script_eq_pullScript D small hN hL k hk κ hClosed hScale (chipSlope κ root anchor)
-      (chipPotential (degenerateLength D small) κ hClosed root anchor)
-      (chip_riseCompatible (degenerateLength D small) κ hClosed root anchor) hCond]
-  funext b
-  rw [Pi.sub_apply, pushed_sub_eq_rows D small hN hL k hk κ hClosed hScale root anchor hCond b,
-    pushDiv_prin_script D small hN hL k hk κ hClosed hScale root anchor hCond b]
-  exact Finset.sum_congr rfl fun e _ ↦ (RowAlgebra.slot_sum _ _
-    (rowStart_succ (degenerateLength D small) κ hClosed e) (reverse κ e) _
-    (fun i ↦ (rowStart_add_rowLen_le (degenerateLength D small) κ hClosed e i).trans
-      (rowStart_full_le_length D small hN hL k hk κ hClosed hScale e)) (HIT e b)).symm
+      (pushed D small hN hL k hk κ hClosed hScale anchor) :=
+  have hRise := chip_riseCompatible (degenerateLength D small) κ hClosed root anchor
+  SlotScriptKernel.linear_equiv_of_slots D small hN hL k hk _ _ hCond
+    (fun _ _ ↦ SlotScriptKernel.eq_of_fib_eq D small _ hCond
+      (corePotential_contracted D small hN hL k hk κ hClosed hScale _ _ hRise))
+    (compat D small hN hL k hk κ hClosed hScale _ _ hRise) _ _ fun b ↦ by
+      rw [pushed_sub_eq_rows D small hN hL k hk κ hClosed hScale root anchor hCond b]
+      exact Finset.sum_congr rfl fun e _ ↦ (RowAlgebra.slot_sum _ _
+        (rowStart_succ (degenerateLength D small) κ hClosed e) (reverse κ e) _
+        (fun i ↦ (rowStart_add_rowLen_le (degenerateLength D small) κ hClosed e i).trans
+          (rowStart_full_le_length D small hN hL k hk κ hClosed hScale e)) (HIT e b)).symm
 
 end Compare
 

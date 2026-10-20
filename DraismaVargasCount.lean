@@ -181,6 +181,7 @@ public import DraismaVargasCount.SimpleWallSupply
 public import DraismaVargasCount.SlopeRigidity
 public import DraismaVargasCount.SlopeStack
 public import DraismaVargasCount.SlopesGeometric
+public import DraismaVargasCount.SlotScriptKernel
 public import DraismaVargasCount.SpineOffDiagonal
 public import DraismaVargasCount.SpinePath
 public import DraismaVargasCount.SpineReversal

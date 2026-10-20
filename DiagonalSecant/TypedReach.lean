@@ -143,8 +143,8 @@ theorem loopDouble_interior (hCond : D.Conditions small.core) {e : Fin Q} {j₁ 
     have hFib : D.fib (D.bigCore.tail e) = D.fib (D.bigCore.head e) := by
       rw [hTail, hHead]
       exact hloop
-    have hCP := CTTransport.corePotential_eq_of_fib_eq D small hN hL k hk κ hClosed hScale s P
-      hRise hCond hFib
+    have hCP := SlotScriptKernel.eq_of_fib_eq D small _ hCond
+      (CTTransport.corePotential_contracted D small hN hL k hk κ hClosed hScale s P hRise) hFib
     have hC := CTTransport.compat D small hN hL k hk κ hClosed hScale s P hRise
     have hEq : CTTransport.slotValue D small hN hL k hk κ hClosed s P e 0 =
         CTTransport.slotValue D small hN hL k hk κ hClosed s P e (BL e) :=

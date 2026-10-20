@@ -2,6 +2,7 @@ module
 
 public import DraismaVargasCount.CorePencilCoverProducer
 public import DraismaVargasCount.RowAlgebra
+public import DraismaVargasCount.SlotScriptKernel
 public import DraismaVargasCount.TreeMetricPotential
 
 @[expose] public section
@@ -71,8 +72,10 @@ its arithmetic is `RowAlgebra`'s); §5 the realization (`pushDivisor_sub_eq`,
 `realization_branch_end`, `offsetVal_eq`, `realization_rowVertex`); §6 the script
 (`slotPos`, `slotValue`, `corePotential`, `script`, `compat`, `corePotential_contracted`,
 `corePotential_eq_of_fib_eq`, `script_eq_of_vertexMap_eq`, `smallScript`,
-`script_eq_pullScript`); §7 `hit`, `pushDivisor_sub_eq_rows`, `pushDiv_prin_script`,
-`slot_sum`, **`linear_equiv_pushDivisor`**; §8 **`pencilTransport`**,
+`script_eq_pullScript`); §7 `hit` (stated in `SlotScriptKernel`, under this namespace),
+`pushDivisor_sub_eq_rows`, `pushDiv_prin_script`, `slot_sum`, **`linear_equiv_pushDivisor`**;
+the facts of §6–§7 about the script itself are those of `SlotScriptKernel`, for this core
+potential and these slot values; §8 **`pencilTransport`**,
 **`doubleRowInterior_of_loopDoubles`**, `forestContractionRank_of_loopDoubles`; §9
 **`markerFreePencilCoverSupply`**, the descent of step 5 of the genus-six assembly
 (`DraismaVargas.Count.genusSix_witness`).
@@ -741,31 +744,14 @@ theorem compat (hRise : RiseCompatible member hClosed s P) :
       (corePotential D small member P)
       (slotValue D small hN hL k hk member hClosed s P) := by
   have hFull := rowStart_full_le_length D small hN hL k hk member hClosed hScale
-  constructor
-  · intro e
-    change _ = corePotential D small member P (D.bigCore.tail e)
-    have hEnds := DegeneratePlacement.reverse_endpoints hL member e
-    unfold slotValue slotPos
-    cases hr : DegeneratePlacement.reverse member e
-    · simp only [hr, Bool.false_eq_true, ite_false] at hEnds ⊢
-      rw [rowValue_of_nonpos _ _ _ _ _ (by simp), ← hEnds.1, corePotential_ident]
-      rfl
-    · simp only [hr, ite_true] at hEnds ⊢
-      rw [rowValue_of_ge _ _ _ _ hRise _ (by have := hFull e; omega), ← hEnds.2,
-        corePotential_ident]
-      rfl
-  · intro e
-    change _ = corePotential D small member P (D.bigCore.head e)
-    have hEnds := DegeneratePlacement.reverse_endpoints hL member e
-    unfold slotValue slotPos
-    cases hr : DegeneratePlacement.reverse member e
-    · simp only [hr, Bool.false_eq_true, ite_false] at hEnds ⊢
-      rw [rowValue_of_ge _ _ _ _ hRise _ (by have := hFull e; omega), ← hEnds.2,
-        corePotential_ident]
-      rfl
-    · simp only [hr, ite_true] at hEnds ⊢
-      rw [rowValue_of_nonpos _ _ _ _ _ (by simp), ← hEnds.1, corePotential_ident]
-      rfl
+  have hEnds := fun e ↦ DegeneratePlacement.reverse_endpoints hL member e
+  refine SlotScriptKernel.compat_of_ends D small hN hL k hk _ (rowValue member hClosed s P)
+    (DegeneratePlacement.reverse member) (fun e pos hpos ↦ ?_) (fun e pos hpos ↦ ?_)
+  · rw [rowValue_of_nonpos _ _ _ _ _ hpos, ← (hEnds e).1, corePotential_ident]
+    rfl
+  · rw [rowValue_of_ge _ _ _ _ hRise _ (by have := hFull e; omega), ← (hEnds e).2,
+      corePotential_ident]
+    rfl
 
 /-- On a contracted slot every occurrence has length zero, so the row potential
 is constant. -/
@@ -803,19 +789,9 @@ include hN hL hk hScale in
 connected through contracted slots (the last clause of `ExpansionData.Conditions`). -/
 theorem corePotential_eq_of_fib_eq (hRise : RiseCompatible member hClosed s P) (hCond : D.Conditions small.core) {v w : Fin N}
     (h : D.fib v = D.fib w) :
-    corePotential D small member P v = corePotential D small member P w := by
-  classical
-  by_contra hne
-  obtain ⟨e, hc, -, hcross⟩ := ExpansionData.fibre_of_conditions hCond (D.fib v)
-    (Finset.univ.filter fun u ↦ corePotential D small member P u =
-      corePotential D small member P v)
-    ⟨v, by simp, rfl⟩ ⟨w, by simpa using fun h' ↦ hne h'.symm, h.symm⟩
-  have hEq := corePotential_contracted D small hN hL k hk member hClosed hScale s P hRise e hc
-  rcases hcross with ⟨h1, h2⟩ | ⟨h1, h2⟩
-  · simp only [Finset.mem_filter, Finset.mem_univ, true_and] at h1 h2
-    exact h2 (hEq.symm.trans h1)
-  · simp only [Finset.mem_filter, Finset.mem_univ, true_and] at h1 h2
-    exact h2 (hEq.trans h1)
+    corePotential D small member P v = corePotential D small member P w :=
+  SlotScriptKernel.eq_of_fib_eq D small _ hCond
+    (corePotential_contracted D small hN hL k hk member hClosed hScale s P hRise) h
 
 include hScale in
 /-- **The script descends**: it is constant on the fibres of the contraction. -/
@@ -824,20 +800,10 @@ theorem script_eq_of_vertexMap_eq (hRise : RiseCompatible member hClosed s P) (h
     (h : ExpansionData.vertexMap D (small.scale k hk) hN hL x =
       ExpansionData.vertexMap D (small.scale k hk) hN hL x') :
     script D small hN hL k hk member hClosed s P x =
-      script D small hN hL k hk member hClosed s P x' := by
-  have hCond' : D.Conditions (small.scale k hk).core := hCond
-  rcases x with v | ⟨e, o⟩
-  · rcases x' with w | ⟨e', o'⟩
-    · have hfib : D.fib v = D.fib w := by
-        have h' : (small.scale k hk).coreVertex (D.fib v) =
-            (small.scale k hk).coreVertex (D.fib w) := h
-        exact Sum.inl.inj h'
-      exact corePotential_eq_of_fib_eq D small hN hL k hk member hClosed hScale s P hRise
-        hCond hfib
-    · rw [ExpansionData.interior_fibre hCond' e' o' _ h]
-      rfl
-  · rw [ExpansionData.interior_fibre hCond' e o x' h.symm]
-    rfl
+      script D small hN hL k hk member hClosed s P x' :=
+  SlotScriptKernel.slotValueScript_eq_of_vertexMap_eq D small hN hL k hk _ _ hCond
+    (fun _ _ ↦ corePotential_eq_of_fib_eq D small hN hL k hk member hClosed hScale s P hRise
+      hCond) h
 
 /-- The descended script on the small subdivision. -/
 noncomputable def smallScript (hCond : D.Conditions small.core) :
@@ -850,12 +816,9 @@ include hScale in
 theorem script_eq_pullScript (hRise : RiseCompatible member hClosed s P) (hCond : D.Conditions small.core) :
     script D small hN hL k hk member hClosed s P =
       (ExpansionData.certificate D (small.scale k hk) hN hL).pullScript
-        (smallScript D small hN hL k hk member hClosed s P hCond) := by
-  funext x
-  exact script_eq_of_vertexMap_eq D small hN hL k hk member hClosed hScale s P hRise hCond
-    (Classical.choose_spec (ExpansionData.vertexMap_surjective
-      (D := D) (small := small.scale k hk) (hN := hN) (hL := hL) hCond
-      (ExpansionData.vertexMap D (small.scale k hk) hN hL x))).symm
+        (smallScript D small hN hL k hk member hClosed s P hCond) :=
+  SlotScriptKernel.eq_pullScript_descend D small hN hL k hk hCond _ fun _ _ ↦
+    script_eq_of_vertexMap_eq D small hN hL k hk member hClosed hScale s P hRise hCond
 
 end Script
 
@@ -869,10 +832,6 @@ variable {n p N Q degree : ℕ}
   (member : FibreMember D.bigCore (fun e ↦ (degenerateLength D small e : ℚ)) degree)
   (hClosed : member.Closed) (hScale : memberScale member = k)
   (root anchor : member.target.V)
-
-/-- The indicator of the small vertex `b` along the `kindVertex` path of `e`. -/
-noncomputable def hit (e : Fin Q) (b : (small.scale k hk).Vertex) (q : ℕ) : ℤ :=
-  if kindVertex (small.scale k hk) (D.fib (D.bigCore.tail e)) (D.kind e) q = b then 1 else 0
 
 include hScale in
 /-- **The small side of the identity**: the pushed pencil difference, as a sum
@@ -923,57 +882,10 @@ theorem pushDiv_prin_script (hCond : D.Conditions small.core)
       ∑ e : Fin Q, ∑ o : Fin ((D.bigSpec (small.scale k hk) hN hL).length e),
         (slotValue D small hN hL k hk member hClosed (chipSlope member root anchor) (chipPotential member hClosed root anchor) e (o.val + 1) -
           slotValue D small hN hL k hk member hClosed (chipSlope member root anchor) (chipPotential member hClosed root anchor) e o.val) *
-        (hit D small k hk e b o.val - hit D small k hk e b (o.val + 1)) := by
-  classical
-  have hCond' : D.Conditions (small.scale k hk).core := hCond
-  set B := D.bigSpec (small.scale k hk) hN hL
-  have hSlope := B.isStepSlope_slotValueScript
-    (compat D small hN hL k hk member hClosed hScale (chipSlope member root anchor) (chipPotential member hClosed root anchor) (chip_riseCompatible member hClosed root anchor))
-  unfold GraphContractionCertificate.pushDiv
-  simp only [script]
-  rw [Finset.sum_congr rfl fun x _ ↦ by rw [B.prin_eq_sum_slopes hSlope x]]
-  have hSwap : ∀ x : B.Vertex,
-      (if (ExpansionData.certificate D (small.scale k hk) hN hL).vertexMap x = b then
-        ∑ step : B.Step,
-          ((if B.stepLeft step.1 step.2 = x then
-              slotValue D small hN hL k hk member hClosed (chipSlope member root anchor) (chipPotential member hClosed root anchor) step.1 (step.2.val + 1) -
-                slotValue D small hN hL k hk member hClosed (chipSlope member root anchor) (chipPotential member hClosed root anchor) step.1 step.2.val
-            else 0) +
-            (if B.stepRight step.1 step.2 = x then
-              -(slotValue D small hN hL k hk member hClosed (chipSlope member root anchor) (chipPotential member hClosed root anchor) step.1 (step.2.val + 1) -
-                slotValue D small hN hL k hk member hClosed (chipSlope member root anchor) (chipPotential member hClosed root anchor) step.1 step.2.val)
-            else 0))
-      else 0) =
-        ∑ step : B.Step,
-          ((if B.stepLeft step.1 step.2 = x then
-              (if ExpansionData.vertexMap D (small.scale k hk) hN hL x = b then
-                slotValue D small hN hL k hk member hClosed (chipSlope member root anchor) (chipPotential member hClosed root anchor) step.1 (step.2.val + 1) -
-                  slotValue D small hN hL k hk member hClosed (chipSlope member root anchor) (chipPotential member hClosed root anchor) step.1 step.2.val
-                else 0)
-            else 0) +
-            (if B.stepRight step.1 step.2 = x then
-              (if ExpansionData.vertexMap D (small.scale k hk) hN hL x = b then
-                -(slotValue D small hN hL k hk member hClosed (chipSlope member root anchor) (chipPotential member hClosed root anchor) step.1
-                    (step.2.val + 1) -
-                  slotValue D small hN hL k hk member hClosed (chipSlope member root anchor) (chipPotential member hClosed root anchor) step.1 step.2.val)
-                else 0)
-            else 0)) := by
-    intro x
-    by_cases hx : (ExpansionData.certificate D (small.scale k hk) hN hL).vertexMap x = b
-    · rw [ite_eq_left hx]
-      refine Finset.sum_congr rfl fun step _ ↦ ?_
-      have hx' : ExpansionData.vertexMap D (small.scale k hk) hN hL x = b := hx
-      simp only [hx', ite_true]
-    · rw [ite_eq_right hx]
-      have hx' : ¬ ExpansionData.vertexMap D (small.scale k hk) hN hL x = b := hx
-      simp only [hx', ite_false, ite_self, add_zero, Finset.sum_const_zero]
-  rw [Finset.sum_congr rfl fun x _ ↦ hSwap x, Finset.sum_comm]
-  simp only [Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
-  rw [← Finset.sum_add_distrib, Fintype.sum_sigma]
-  refine Finset.sum_congr rfl fun e _ ↦ Finset.sum_congr rfl fun o _ ↦ ?_
-  rw [ExpansionData.vertexMap_stepLeft hCond' e o, ExpansionData.vertexMap_stepRight hCond' e o]
-  unfold hit
-  split_ifs <;> ring
+        (hit D small k hk e b o.val - hit D small k hk e b (o.val + 1)) :=
+  SlotScriptKernel.pushDiv_prin_slotValueScript D small hN hL k hk _ _ hCond
+    (compat D small hN hL k hk member hClosed hScale _ _
+      (chip_riseCompatible member hClosed root anchor)) b
 
 include hScale in
 /-- **The window computation, one slot at a time.**  The unit-step sum of the
@@ -1008,20 +920,14 @@ theorem linear_equiv_pushDivisor (hCond : D.Conditions small.core) :
       (ExpansionSeriesMoment.pushDivisor D (small.scale k hk) hN hL
         (bigDivisor D small hN hL k hk member hClosed hScale root))
       (ExpansionSeriesMoment.pushDivisor D (small.scale k hk) hN hL
-        (bigDivisor D small hN hL k hk member hClosed hScale anchor)) := by
-  have hCond' : D.Conditions (small.scale k hk).core := hCond
-  unfold linear_equiv
-  rw [principal_iff_eq_prin]
-  refine ⟨smallScript D small hN hL k hk member hClosed (chipSlope member root anchor) (chipPotential member hClosed root anchor) hCond, ?_⟩
-  rw [← (ExpansionData.certificate D (small.scale k hk) hN hL).pushDiv_prin_pullScript
-      (ExpansionData.certificate_valid hCond'),
-    ← script_eq_pullScript D small hN hL k hk member hClosed hScale (chipSlope member root anchor) (chipPotential member hClosed root anchor) (chip_riseCompatible member hClosed root anchor) hCond]
-  funext b
-  rw [Pi.sub_apply, pushDivisor_sub_eq_rows D small hN hL k hk member hClosed hScale root
-    anchor hCond b, pushDiv_prin_script D small hN hL k hk member hClosed hScale root anchor
-    hCond b]
-  exact Finset.sum_congr rfl fun e _ ↦
-    (slot_sum D small hN hL k hk member hClosed hScale root anchor e (hit D small k hk e b)).symm
+        (bigDivisor D small hN hL k hk member hClosed hScale anchor)) :=
+  have hRise := chip_riseCompatible member hClosed root anchor
+  SlotScriptKernel.linear_equiv_of_slots D small hN hL k hk _ _ hCond
+    (fun _ _ ↦ corePotential_eq_of_fib_eq D small hN hL k hk member hClosed hScale _ _ hRise hCond)
+    (compat D small hN hL k hk member hClosed hScale _ _ hRise) _ _ fun b ↦ by
+      rw [pushDivisor_sub_eq_rows D small hN hL k hk member hClosed hScale root anchor hCond b]
+      exact Finset.sum_congr rfl fun e _ ↦ (slot_sum D small hN hL k hk member hClosed hScale
+        root anchor e (hit D small k hk e b)).symm
 
 end Compare
 

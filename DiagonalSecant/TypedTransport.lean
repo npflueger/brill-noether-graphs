@@ -18,6 +18,9 @@ Reused verbatim (datum-free or datum-level):
 
 * the row arithmetic of `RowAlgebra`: the row potential `RowAlgebra.value`, its values at the
   two ends, and the window computation `RowAlgebra.slot_sum`;
+* the slot-value scripts of `SlotScriptKernel`: compatibility from the row ends
+  (`compat_of_ends`), constancy on the fibres of `D.fib` (`eq_of_fib_eq`), and the linear
+  equivalence by the descended script (`linear_equiv_of_slots`);
 * `TreeMetricPotential.chipSlope`/`chipPotential` (the integral tree slope of incidence
   `anchor − root` and its potential, integrated against the realized target lengths);
 * `GluingDatum.sourceEdgeIncidence_eq_localDegree_mul_targetEdgeIncidence` (the sheet-partition
@@ -29,12 +32,11 @@ Twinned in the helper module `CTTransport` (they index by rows): §2 `sourcePote
 by **marked** rows, `mem_orderedRow_iff`); §4 the row data `rowStart`, `rowLen`, `rowSlope`;
 §5 the realization of the row vertices (`realize_rowVertex`, from
 `TypedImage.realize_address` and `realize_branch` at the two ends — the mark end included, since
-a mark is a marked branch vertex); §6 the script `script` on `D.bigSpec (small.scale k)`, its
-compatibility `compat` at both ends of every slot, constancy on contracted slots
-(`corePotential_contracted`) and hence on every fibre of the contraction
-(`script_eq_of_vertexMap_eq`, through the last clause of `ExpansionData.Conditions`), and
-`script_eq_pullScript`; §7 `pushDiv_prin_script`, `linear_equiv_pushed`. This
-module states the result as `pencilTransport`.
+a mark is a marked branch vertex); §6 the slot values `slotValue` on
+`D.bigSpec (small.scale k)`, their compatibility `compat` at both ends of every slot, and
+constancy of the core potential on contracted slots (`corePotential_contracted`); §7
+`pushed_sub_eq_rows`, `linear_equiv_pushed`. This module states the result as
+`pencilTransport`.
 
 ## The boundary term that is not there
 

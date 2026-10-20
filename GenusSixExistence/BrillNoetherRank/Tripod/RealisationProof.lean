@@ -66,8 +66,9 @@ the two agree (`placedG_interior`).
   * `slidFibre_transport` — **any two slid fibres are linearly equivalent**, by the descended
     G-row script of the tree potential with incidence `anchor − root`. The small side
     (`slidBase_sub_eq_rows`, `gRealize_gRow`, `gRealize_legRow`), the big side (`gScript`,
-    `gCompat`, `gScript_eq_pullScript`, `gPushDiv_prin_script`, and `gSlot_sum`, the window
-    computation `RowAlgebra.slot_sum` on a G-row) and the leg edges
+    `gCompat`, `gScript_eq_pullScript`, `gPushDiv_prin_script`, the facts of `SlotScriptKernel`
+    for the label potential and the G-row values, and `gSlot_sum`, the window computation
+    `RowAlgebra.slot_sum` on a G-row) and the leg edges
     at the marks (`legRow_sum`, `germ_unique`, `markCoeff_eq_germ`, `tree_flow_eq`,
     `germ_balance`) combine to this: it is the argument of `PencilTransportProducer` §5–§7 on
     the G-rows, plus the boundary term of Lemma 7.3.
@@ -919,18 +920,9 @@ the fibre is connected through contracted slots (the last clause of `ExpansionDa
 theorem labelPot_eq_of_fib_eq (hScale : memberScale mem = k) (s : mem.target.edges → ℤ)
     (P : mem.target.V → ℤ) (hRise : PencilTransportProducer.RiseCompatible mem hClosed s P)
     {v w : Fin (10 + 1 + 1 + 1)} (h : M.expansion.fib v = M.expansion.fib w) :
-    labelPot mem P v = labelPot mem P w := by
-  classical
-  by_contra hne
-  obtain ⟨e, hc, -, hcross⟩ := ExpansionData.fibre_of_conditions M.conditions (M.expansion.fib v)
-    (Finset.univ.filter fun u ↦ labelPot mem P u = labelPot mem P v)
-    ⟨v, by simp, rfl⟩ ⟨w, by simpa using fun h' ↦ hne h'.symm, h.symm⟩
-  have hEq := labelPot_contracted mem hClosed hScale s P hRise e hc
-  rcases hcross with ⟨h1, h2⟩ | ⟨h1, h2⟩
-  · simp only [Finset.mem_filter, Finset.mem_univ, true_and] at h1 h2
-    exact h2 (hEq.symm.trans h1)
-  · simp only [Finset.mem_filter, Finset.mem_univ, true_and] at h1 h2
-    exact h2 (hEq.trans h1)
+    labelPot mem P v = labelPot mem P w :=
+  SlotScriptKernel.eq_of_fib_eq M.expansion M.small _ M.conditions
+    (labelPot_contracted mem hClosed hScale s P hRise) h
 
 /-- `offsetVal`, in terms of `rowStart`. -/
 theorem offsetVal_eq' (E : Fin (15 + 1 + 1 + 1 + 3)) (j : ℕ) :
@@ -1692,27 +1684,13 @@ theorem gCompat (hScale : memberScale mem = k) (s : mem.target.edges → ℤ) (P
     (hRise : PencilTransportProducer.RiseCompatible mem hClosed s P) :
     (bigSpecAt M k hk).SlotValueCompatible (labelPot mem P) (gSlotValue k hk mem hClosed s P) := by
   have hFull := rowStart_full_le hk mem hClosed hScale
-  constructor
-  · intro e
-    change _ = labelPot mem P (M.expansion.bigCore.tail e)
-    have hS := labelPot_start mem P e
-    have hF := labelPot_finish mem P e
-    unfold gSlotValue gSlotPos
-    cases hr : DegeneratePlacement.reverse mem (Fin.castAdd 3 e)
-    · simp only [hr, Bool.false_eq_true, ite_false] at hS ⊢
-      rw [PencilTransportProducer.rowValue_of_nonpos _ _ _ _ _ (by simp), hS]
-    · simp only [hr, ite_true] at hF ⊢
-      rw [PencilTransportProducer.rowValue_of_ge _ _ _ _ hRise _ (by have := hFull e; omega), hF]
-  · intro e
-    change _ = labelPot mem P (M.expansion.bigCore.head e)
-    have hS := labelPot_start mem P e
-    have hF := labelPot_finish mem P e
-    unfold gSlotValue gSlotPos
-    cases hr : DegeneratePlacement.reverse mem (Fin.castAdd 3 e)
-    · simp only [hr, Bool.false_eq_true, ite_false] at hF ⊢
-      rw [PencilTransportProducer.rowValue_of_ge _ _ _ _ hRise _ (by have := hFull e; omega), hF]
-    · simp only [hr, ite_true] at hS ⊢
-      rw [PencilTransportProducer.rowValue_of_nonpos _ _ _ _ _ (by simp), hS]
+  refine SlotScriptKernel.compat_of_ends M.expansion M.small (by norm_num) (expansion_loopless M)
+    k hk _ (fun e ↦ PencilTransportProducer.rowValue mem hClosed s P (Fin.castAdd 3 e))
+    (fun e ↦ DegeneratePlacement.reverse mem (Fin.castAdd 3 e)) (fun e pos hpos ↦ ?_)
+    (fun e pos hpos ↦ ?_)
+  · rw [PencilTransportProducer.rowValue_of_nonpos _ _ _ _ _ hpos, labelPot_start]
+  · rw [PencilTransportProducer.rowValue_of_ge _ _ _ _ hRise _
+      ((Nat.cast_le.mpr (hFull e)).trans hpos), labelPot_finish]
 
 /-- **The G-row script descends**: it is constant on the fibres of the contraction. -/
 theorem gScript_eq_of_vertexMap_eq (hScale : memberScale mem = k) (s : mem.target.edges → ℤ)
@@ -1722,19 +1700,10 @@ theorem gScript_eq_of_vertexMap_eq (hScale : memberScale mem = k) (s : mem.targe
         (expansion_loopless M) x =
       ExpansionData.vertexMap M.expansion (M.small.scale k hk) (by norm_num)
         (expansion_loopless M) x') :
-    gScript k hk mem hClosed s P x = gScript k hk mem hClosed s P x' := by
-  have hCond' : M.expansion.Conditions (M.small.scale k hk).core := M.conditions
-  rcases x with v | ⟨e, o⟩
-  · rcases x' with w | ⟨e', o'⟩
-    · have hfib : M.expansion.fib v = M.expansion.fib w := by
-        have h' : (M.small.scale k hk).coreVertex (M.expansion.fib v) =
-            (M.small.scale k hk).coreVertex (M.expansion.fib w) := h
-        exact Sum.inl.inj h'
-      exact labelPot_eq_of_fib_eq mem hClosed hScale s P hRise hfib
-    · rw [ExpansionData.interior_fibre hCond' e' o' _ h]
-      rfl
-  · rw [ExpansionData.interior_fibre hCond' e o x' h.symm]
-    rfl
+    gScript k hk mem hClosed s P x = gScript k hk mem hClosed s P x' :=
+  SlotScriptKernel.slotValueScript_eq_of_vertexMap_eq M.expansion M.small (by norm_num)
+    (expansion_loopless M) k hk _ _ M.conditions
+    (fun _ _ ↦ labelPot_eq_of_fib_eq mem hClosed hScale s P hRise) h
 
 /-- The descended G-row script on `M.small.scale k`. -/
 noncomputable def gSmallScript (s : mem.target.edges → ℤ) (P : mem.target.V → ℤ) :
@@ -1748,13 +1717,9 @@ theorem gScript_eq_pullScript (hScale : memberScale mem = k) (s : mem.target.edg
     (P : mem.target.V → ℤ) (hRise : PencilTransportProducer.RiseCompatible mem hClosed s P) :
     gScript k hk mem hClosed s P =
       (ExpansionData.certificate M.expansion (M.small.scale k hk) (by norm_num)
-        (expansion_loopless M)).pullScript (gSmallScript k hk mem hClosed s P) := by
-  funext x
-  exact gScript_eq_of_vertexMap_eq k hk mem hClosed hScale s P hRise
-    (Classical.choose_spec (ExpansionData.vertexMap_surjective (D := M.expansion)
-      (small := M.small.scale k hk) (hN := by norm_num) (hL := expansion_loopless M)
-      M.conditions (ExpansionData.vertexMap M.expansion (M.small.scale k hk) (by norm_num)
-        (expansion_loopless M) x))).symm
+        (expansion_loopless M)).pullScript (gSmallScript k hk mem hClosed s P) :=
+  SlotScriptKernel.eq_pullScript_descend M.expansion M.small (by norm_num) (expansion_loopless M)
+    k hk M.conditions _ fun _ _ ↦ gScript_eq_of_vertexMap_eq k hk mem hClosed hScale s P hRise
 
 /-- **The pushed Laplacian of the G-row script**, as a sum over the unit steps of every slot of
 the expanded core (as `PencilTransportProducer.pushDiv_prin_script`). -/
@@ -1767,61 +1732,9 @@ theorem gPushDiv_prin_script (hScale : memberScale mem = k) (s : mem.target.edge
       ∑ e : Fin (15 + 1 + 1 + 1), ∑ o : Fin ((bigSpecAt M k hk).length e),
         (gSlotValue k hk mem hClosed s P e (o.val + 1) - gSlotValue k hk mem hClosed s P e o.val) *
         (PencilTransportProducer.hit M.expansion M.small k hk e b o.val -
-          PencilTransportProducer.hit M.expansion M.small k hk e b (o.val + 1)) := by
-  classical
-  have hCond' : M.expansion.Conditions (M.small.scale k hk).core := M.conditions
-  set B := bigSpecAt M k hk
-  have hSlope := B.isStepSlope_slotValueScript (gCompat k hk mem hClosed hScale s P hRise)
-  unfold GraphContractionCertificate.pushDiv
-  simp only [gScript]
-  rw [Finset.sum_congr rfl fun x _ ↦ by rw [B.prin_eq_sum_slopes hSlope x]]
-  have hSwap : ∀ x : B.Vertex,
-      (if (ExpansionData.certificate M.expansion (M.small.scale k hk) (by norm_num)
-          (expansion_loopless M)).vertexMap x = b then
-        ∑ step : B.Step,
-          ((if B.stepLeft step.1 step.2 = x then
-              gSlotValue k hk mem hClosed s P step.1 (step.2.val + 1) -
-                gSlotValue k hk mem hClosed s P step.1 step.2.val
-            else 0) +
-            (if B.stepRight step.1 step.2 = x then
-              -(gSlotValue k hk mem hClosed s P step.1 (step.2.val + 1) -
-                gSlotValue k hk mem hClosed s P step.1 step.2.val)
-            else 0))
-      else 0) =
-        ∑ step : B.Step,
-          ((if B.stepLeft step.1 step.2 = x then
-              (if ExpansionData.vertexMap M.expansion (M.small.scale k hk) (by norm_num)
-                  (expansion_loopless M) x = b then
-                gSlotValue k hk mem hClosed s P step.1 (step.2.val + 1) -
-                  gSlotValue k hk mem hClosed s P step.1 step.2.val
-                else 0)
-            else 0) +
-            (if B.stepRight step.1 step.2 = x then
-              (if ExpansionData.vertexMap M.expansion (M.small.scale k hk) (by norm_num)
-                  (expansion_loopless M) x = b then
-                -(gSlotValue k hk mem hClosed s P step.1 (step.2.val + 1) -
-                  gSlotValue k hk mem hClosed s P step.1 step.2.val)
-                else 0)
-            else 0)) := by
-    intro x
-    by_cases hx : (ExpansionData.certificate M.expansion (M.small.scale k hk) (by norm_num)
-        (expansion_loopless M)).vertexMap x = b
-    · rw [ite_eq_left hx]
-      refine Finset.sum_congr rfl fun step _ ↦ ?_
-      have hx' : ExpansionData.vertexMap M.expansion (M.small.scale k hk) (by norm_num)
-          (expansion_loopless M) x = b := hx
-      simp only [hx', ite_true]
-    · rw [ite_eq_right hx]
-      have hx' : ¬ ExpansionData.vertexMap M.expansion (M.small.scale k hk) (by norm_num)
-          (expansion_loopless M) x = b := hx
-      simp only [hx', ite_false, ite_self, add_zero, Finset.sum_const_zero]
-  rw [Finset.sum_congr rfl fun x _ ↦ hSwap x, Finset.sum_comm]
-  simp only [Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
-  rw [← Finset.sum_add_distrib, Fintype.sum_sigma]
-  refine Finset.sum_congr rfl fun e _ ↦ Finset.sum_congr rfl fun o _ ↦ ?_
-  rw [ExpansionData.vertexMap_stepLeft hCond' e o, ExpansionData.vertexMap_stepRight hCond' e o]
-  unfold PencilTransportProducer.hit
-  split_ifs <;> ring
+          PencilTransportProducer.hit M.expansion M.small k hk e b (o.val + 1)) :=
+  SlotScriptKernel.pushDiv_prin_slotValueScript M.expansion M.small (by norm_num)
+    (expansion_loopless M) k hk _ _ M.conditions (gCompat k hk mem hClosed hScale s P hRise) b
 
 /-- **The window computation, one G-slot at a time** (as `PencilTransportProducer.slot_sum`). -/
 theorem gSlot_sum (hScale : memberScale mem = k) (s : mem.target.edges → ℤ)
