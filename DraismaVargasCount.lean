@@ -103,6 +103,15 @@ public import DraismaVargasCount.IndexPattern
 public import DraismaVargasCount.InheritedLimitBranches
 public import DraismaVargasCount.InheritedLimitIncidence
 public import DraismaVargasCount.InheritedLimitRows
+public import DraismaVargasCount.IntegerCount.EvenGenusCount
+public import DraismaVargasCount.IntegerCount.StarBalance
+public import DraismaVargasCount.IntegerCount.StarBalanceW2
+public import DraismaVargasCount.IntegerCount.StarBalanceW3
+public import DraismaVargasCount.IntegerCount.StarBalanceW4
+public import DraismaVargasCount.IntegerCount.Transport
+public import DraismaVargasCount.IntegerCount.TypeChange
+public import DraismaVargasCount.IntegerCount.WallCrossing
+public import DraismaVargasCount.IntegerCount.WeightedCount
 public import DraismaVargasCount.Integrality
 public import DraismaVargasCount.LeafFibre
 public import DraismaVargasCount.LinkReceiptExport
