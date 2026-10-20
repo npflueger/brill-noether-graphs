@@ -1,6 +1,7 @@
 module
 
 public import DraismaVargasCount.CorePencilCoverProducer
+public import DraismaVargasCount.RowAlgebra
 public import DraismaVargasCount.TreeMetricPotential
 
 @[expose] public section
@@ -59,7 +60,8 @@ target edge (`TreeMetricPotential.integrate`) would then differ at the two ends.
 
 ## What is proved
 
-§1 `ramp`, `ramp_succ_sub`, `ramp_of_le`, `ramp_of_ge`, `sum_window`; §2 `RiseCompatible`,
+§1 `ramp`, `ramp_succ_sub`, `ramp_of_le`, `ramp_of_ge`, `sum_window` (stated in `RowAlgebra`,
+under this namespace); §2 `RiseCompatible`,
 `chipSlope`, `chipPotential`, `chip_riseCompatible`, `sourcePotential`, `edgeSlope`,
 `sourcePotential_rise`, `fibre_sub_eq`; §3 `sum_fibre_sub`, `sum_edges_eq_sum_rows`; §4 row
 data (`rowStart`, `rowLen`, `rowSlope`, `rowValue` and their lemmas); §5 the realization
@@ -106,74 +108,6 @@ open CanonicalSurvivor PendantRetraction RowRealizedPosition
 open RowWalk RowPosition SurvivingSlotMap SlotMoment
 open Utilities Utilities.Certificate Utilities.Certificate.SubdivisionGraph
 open Utilities.Subdivision.CoreExpansion
-
-/-! ## 1.  Ramps and their telescoping -/
-
-section Ramp
-
-/-- The clamped ramp `min (max (q - start) 0) len`. -/
-def ramp (q start len : ℤ) : ℤ := min (max (q - start) 0) len
-
-theorem ramp_succ_sub (o start len : ℤ) (hLen : 0 ≤ len) :
-    ramp (o + 1) start len - ramp o start len =
-      if start ≤ o ∧ o < start + len then 1 else 0 := by
-  unfold ramp
-  split_ifs with h
-  · obtain ⟨h1, h2⟩ := h
-    rw [max_eq_left (by omega), max_eq_left (by omega), min_eq_left (by omega),
-      min_eq_left (by omega)]
-    ring
-  · rcases not_and_or.mp h with h1 | h2
-    · push Not at h1
-      rw [max_eq_right (by omega), max_eq_right (by omega)]
-      simp
-    · push Not at h2
-      rw [min_eq_right (by omega), min_eq_right (by omega)]
-      ring
-
-theorem ramp_of_le (q start len : ℤ) (hLen : 0 ≤ len) (hq : q ≤ start) :
-    ramp q start len = 0 := by
-  unfold ramp
-  rw [max_eq_right (by omega), min_eq_left hLen]
-
-theorem ramp_of_ge (q start len : ℤ) (hLen : 0 ≤ len) (hq : start + len ≤ q) :
-    ramp q start len = len := by
-  unfold ramp
-  rw [max_eq_left (by omega), min_eq_right (by omega)]
-
-/-- **Telescoping along a window.**  Summing the step differences of `δ` over the
-unit steps of the window `[start, start + len)` leaves its two ends. -/
-theorem sum_window (δ : ℕ → ℤ) (total start len : ℕ) (h : start + len ≤ total) :
-    (∑ o ∈ Finset.range total,
-      (if start ≤ o ∧ o < start + len then (1 : ℤ) else 0) * (δ o - δ (o + 1))) =
-      δ start - δ (start + len) := by
-  induction len with
-  | zero =>
-      rw [Finset.sum_eq_zero]
-      · simp
-      · intro o _
-        rw [ite_eq_right (by omega), zero_mul]
-  | succ len ih =>
-      have hSplit : ∀ o ∈ Finset.range total,
-          (if start ≤ o ∧ o < start + (len + 1) then (1 : ℤ) else 0) * (δ o - δ (o + 1)) =
-            (if start ≤ o ∧ o < start + len then (1 : ℤ) else 0) * (δ o - δ (o + 1)) +
-              (if o = start + len then δ o - δ (o + 1) else 0) := by
-        intro o _
-        by_cases h1 : start ≤ o ∧ o < start + len
-        · rw [ite_eq_left ⟨h1.1, by omega⟩, ite_eq_left h1, ite_eq_right (by omega)]
-          ring
-        · by_cases h2 : o = start + len
-          · rw [ite_eq_left (by omega), ite_eq_right h1, ite_eq_left h2]
-            ring
-          · rw [ite_eq_right (by omega), ite_eq_right h1, ite_eq_right h2]
-            ring
-      rw [Finset.sum_congr rfl hSplit, Finset.sum_add_distrib, ih (by omega),
-        Finset.sum_ite_eq' (Finset.range total) (start + len)]
-      rw [ite_eq_left (Finset.mem_range.mpr (by omega))]
-      rw [show start + (len + 1) = start + len + 1 by omega]
-      ring
-
-end Ramp
 
 /-! ## 2.  The source side: the fibre difference is a pulled-back incidence -/
 

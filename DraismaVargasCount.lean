@@ -158,6 +158,7 @@ public import DraismaVargasCount.RegrowthWallInput
 public import DraismaVargasCount.ResolutionExpansion
 public import DraismaVargasCount.ResolutionExpansionFree
 public import DraismaVargasCount.RigidityBasepoint
+public import DraismaVargasCount.RowAlgebra
 public import DraismaVargasCount.RowChipCoefficient
 public import DraismaVargasCount.RowGeodesic
 public import DraismaVargasCount.RowHairpinPosition
