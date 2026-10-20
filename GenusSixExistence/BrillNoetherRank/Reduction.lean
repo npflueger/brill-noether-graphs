@@ -106,44 +106,6 @@ def OddCompletionWitness (G : CFGraph) (r k : ℤ) : Prop :=
         rank ((UnitSubdivisionPresentation.spec G).scale N hN).graph
           ((UnitSubdivisionPresentation.spec G).embed N hN E + F) ≥ r
 
-/-- Abstract two-chip completion, keeping divisor algebra away from the
-concrete unit-subdivision vertex type. -/
-private theorem coarse_completion {n p : ℕ} (spec : Spec n p)
-    (N : ℕ) (hN : 0 < N) (hodd : Odd N) {r : ℤ}
-    (E : CFDiv spec.graph) (F : CFDiv (spec.scale N hN).graph)
-    (hFeff : effective F) (hFdeg : deg F = 2)
-    (hrank : rank (spec.scale N hN).graph (spec.embed N hN E + F) ≥ r) :
-    ∃ B : CFDiv spec.graph, effective B ∧ deg B = 2 ∧ rank spec.graph (E + B) ≥ r := by
-  obtain ⟨y₁, y₂, hF⟩ := exists_chip_pair_of_effective_deg_two _ F hFeff hFdeg
-  subst hF
-  have hsum2 : (∑ i : Fin 2, one_chip (![y₁, y₂] i) : CFDiv (spec.scale N hN).graph)
-      = one_chip y₁ + one_chip y₂ := by
-    rw [Fin.sum_univ_two]
-    simp only [Matrix.cons_val_zero, Matrix.cons_val_one]
-  have hrank2 : rank (spec.scale N hN).graph
-      (spec.embed N hN E + ∑ i : Fin 2, one_chip (![y₁, y₂] i)) ≥ r := by
-    rw [hsum2]
-    exact hrank
-  have hbudget : (∑ i : Fin 2, (spec.roundDist N hN (![y₁, y₂] i) : ℤ)) < N := by
-    have h1 := spec.two_mul_roundDist_lt N hN hodd y₁
-    have h2 := spec.two_mul_roundDist_lt N hN hodd y₂
-    rw [Fin.sum_univ_two]
-    simp only [Matrix.cons_val_zero, Matrix.cons_val_one]
-    omega
-  have hcoarse := spec.rank_ge_of_rank_scale_ge_nearest N hN ![y₁, y₂] E r hbudget hrank2
-  rw [Fin.sum_univ_two] at hcoarse
-  simp only [Matrix.cons_val_zero, Matrix.cons_val_one] at hcoarse
-  have heff : effective (one_chip (spec.nearest N hN y₁) + one_chip (spec.nearest N hN y₂)
-      : CFDiv spec.graph) := by
-    intro v
-    exact add_nonneg (eff_one_chip (spec.nearest N hN y₁) v)
-      (eff_one_chip (spec.nearest N hN y₂) v)
-  have hdegB : deg (one_chip (spec.nearest N hN y₁) + one_chip (spec.nearest N hN y₂)
-      : CFDiv spec.graph) = 2 := by
-    rw [deg.map_add, deg_one_chip, deg_one_chip]
-    norm_num
-  exact ⟨_, heff, hdegB, hcoarse⟩
-
 /-- **Descent with two residual chips.** Nearest rounding at an odd scale preserves every
 prescribed chip, and moves the two residual chips to vertices of `G`. -/
 theorem of_oddCompletionWitness {G : CFGraph} {r k : ℤ}
@@ -153,7 +115,8 @@ theorem of_oddCompletionWitness {G : CFGraph} {r k : ℤ}
   intro E hE hdeg
   obtain ⟨N, hN, hodd, F, hF, hFdeg, hFrank⟩ := h E hE hdeg
   obtain ⟨B, hB, hBdeg, hBrank⟩ :=
-    coarse_completion (UnitSubdivisionPresentation.spec G) N hN hodd (r := r) E F hF hFdeg hFrank
+    (UnitSubdivisionPresentation.spec G).exists_coarse_completion_two N hN hodd (r := r)
+      E F hF hFdeg hFrank
   refine ⟨E + B, ?_, hBrank, ?_⟩
   · rw [deg.map_add, hdeg, hBdeg]
   · rw [add_sub_cancel_left]

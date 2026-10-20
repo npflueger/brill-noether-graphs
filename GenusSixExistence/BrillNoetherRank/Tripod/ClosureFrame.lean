@@ -33,6 +33,12 @@ The start `w` (`exists_start`) avoids the walls of `Γ̃`, the pulled-back walls
 (`pullWall`, proper because `baseRequest` has a section, `baseRequest_liftRequest`) and the
 functionals of `B`, by `RationalAffineWall.exists_avoids_preserving_positive`.
 
+The segment argument is proved once, for any core `H`, any surjective linear map `L` to the
+requests of a core `G`, any finite family of nonzero functionals and any finite family of
+conditions that hold near the end of the segment (`exists_segmentStart`,
+`exists_closed_of_segment`); the closure on the gadget is its instance with `H = Γ̃`, `G = G̃`,
+`L = baseRequest s` and the long-leg conditions.
+
 ## The two frame facts
 
 * **`IsClaw` is a frame predicate.** `MemberIsClaw mem` is by definition
@@ -206,111 +212,117 @@ theorem legSlack_segment (s : MarkSlots p) (x z : Fin (p + 1 + 1 + 1 + 3) → �
   simp only [legLength, RationalAffineWall.segment]
   ring
 
-/-! ## 5.  The start of the segment -/
+/-! ## 5.  The start of a segment -/
 
-/-- The walls the start must avoid: the coordinates of the normal-form frames of `Γ̃`, those of
-`G̃` pulled back along `baseRequest s`, and the functionals of `B`. -/
-noncomputable def startWall (core : Core n p) (s : MarkSlots p)
-    (B : Finset (Fin (p + 1 + 1 + 1 + 3) → ℚ)) :
-    (NFFrame (tripodCore core s) (3 + 2) × Fin (p + 1 + 1 + 1 + 3)) ⊕
-        (NFFrame core (2 + 2) × Fin p) ⊕ B → RationalAffineWall (Fin (p + 1 + 1 + 1 + 3))
+section Segment
+
+variable {m P n₀ q : ℕ}
+
+theorem map_segment (L : (Fin P → ℚ) →ₗ[ℚ] (Fin q → ℚ)) (x z : Fin P → ℚ) (t : ℚ) :
+    L (RationalAffineWall.segment x z t) =
+      RationalAffineWall.segment (L x) (L z) t := by
+  rw [segment_eq, segment_eq, map_add, map_smul, map_sub]
+
+/-- The walls a start must avoid, for a segment over a core `H` in degree `dH` whose image under
+a linear map `L` must be general for a core `G` in degree `dG`: the coordinates of the
+normal-form frames of `H`, those of `G` pulled back along `L`, and the functionals of `B`. -/
+noncomputable def segmentStartWall (H : Core m P) (dH : ℕ) (G : Core n₀ q) (dG : ℕ)
+    (L : (Fin P → ℚ) →ₗ[ℚ] (Fin q → ℚ)) (B : Finset (Fin P → ℚ)) :
+    (NFFrame H dH × Fin P) ⊕ (NFFrame G dG × Fin q) ⊕ B → RationalAffineWall (Fin P)
   | Sum.inl x => (NFFrame.toFrame x.1).coordWall x.2
-  | Sum.inr (Sum.inl x) => pullWall (baseRequestLinear s) ((NFFrame.toFrame x.1).coordWall x.2)
+  | Sum.inr (Sum.inl x) => pullWall L ((NFFrame.toFrame x.1).coordWall x.2)
   | Sum.inr (Sum.inr b) => functionalWall b.1
 
-theorem startWall_proper (core : Core n p) (s : MarkSlots p)
-    (B : Finset (Fin (p + 1 + 1 + 1 + 3) → ℚ)) (hB : ∀ b ∈ B, b ≠ 0) (x) :
-    (startWall core s B x).Proper := by
+theorem segmentStartWall_proper (H : Core m P) (dH : ℕ) (G : Core n₀ q) (dG : ℕ)
+    (L : (Fin P → ℚ) →ₗ[ℚ] (Fin q → ℚ)) (hL : ∀ z, ∃ x, L x = z)
+    (B : Finset (Fin P → ℚ)) (hB : ∀ b ∈ B, b ≠ 0) (x) :
+    (segmentStartWall H dH G dG L B x).Proper := by
   rcases x with x | x | b
   · exact (NFFrame.toFrame x.1).coordWall_proper x.2
   · obtain ⟨z, hz⟩ := (NFFrame.toFrame x.1).coordWall_proper x.2
-    refine ⟨liftRequest z, ?_⟩
-    show (pullWall (baseRequestLinear s) ((NFFrame.toFrame x.1).coordWall x.2)).eval
-      (liftRequest z) ≠ 0
-    rw [eval_pullWall, baseRequestLinear_apply, baseRequest_liftRequest]
+    obtain ⟨v, hv⟩ := hL z
+    refine ⟨v, ?_⟩
+    show (pullWall L ((NFFrame.toFrame x.1).coordWall x.2)).eval v ≠ 0
+    rw [eval_pullWall, hv]
     exact hz
   · obtain ⟨i, hi⟩ := Function.ne_iff.mp (hB b.1 b.2)
     exact RationalAffineWall.proper_of_coefficient_ne_zero (functionalWall b.1) (i := i) hi
 
-/-- **The start** (Theorem 6.3, step 1): a positive request general for `Γ̃` in degree five,
-whose base request is general for `G̃` in degree four, off every functional of `B`. -/
-theorem exists_start (core : Core n p) (s : MarkSlots p)
-    (B : Finset (Fin (p + 1 + 1 + 1 + 3) → ℚ)) (hB : ∀ b ∈ B, b ≠ 0) :
-    ∃ w : Fin (p + 1 + 1 + 1 + 3) → ℚ, (∀ i, 0 < w i) ∧
-      (∀ (r : NFFrame (tripodCore core s) (3 + 2)) (col : Fin (p + 1 + 1 + 1 + 3)),
-        (NFFrame.toFrame r).coordsAt w col ≠ 0) ∧
-      (∀ (r : NFFrame core (2 + 2)) (col : Fin p),
-        (NFFrame.toFrame r).coordsAt (baseRequest s w) col ≠ 0) ∧
+/-- **The start of a segment**: a positive request general for `H` in degree `dH`, whose image
+under `L` is general for `G` in degree `dG`, off every functional of `B`. -/
+theorem exists_segmentStart (H : Core m P) (dH : ℕ) (G : Core n₀ q) (dG : ℕ)
+    (L : (Fin P → ℚ) →ₗ[ℚ] (Fin q → ℚ)) (hL : ∀ z, ∃ x, L x = z)
+    (B : Finset (Fin P → ℚ)) (hB : ∀ b ∈ B, b ≠ 0) :
+    ∃ w : Fin P → ℚ, (∀ i, 0 < w i) ∧
+      (∀ (r : NFFrame H dH) (col : Fin P), (NFFrame.toFrame r).coordsAt w col ≠ 0) ∧
+      (∀ (r : NFFrame G dG) (col : Fin q), (NFFrame.toFrame r).coordsAt (L w) col ≠ 0) ∧
       (∀ b ∈ B, ∑ i, b i * w i ≠ 0) := by
   classical
-  let _ : Fintype (NFFrame (tripodCore core s) (3 + 2)) := Fintype.ofFinite _
-  let _ : Fintype (NFFrame core (2 + 2)) := Fintype.ofFinite _
+  let _ : Fintype (NFFrame H dH) := Fintype.ofFinite _
+  let _ : Fintype (NFFrame G dG) := Fintype.ofFinite _
   obtain ⟨w, hpos, havoid⟩ :=
-    RationalAffineWall.exists_avoids_preserving_positive (startWall core s B)
-      SegmentWalls.coordinateWall (fun _ ↦ 1) (startWall_proper core s B hB)
+    RationalAffineWall.exists_avoids_preserving_positive (segmentStartWall H dH G dG L B)
+      SegmentWalls.coordinateWall (fun _ ↦ 1) (segmentStartWall_proper H dH G dG L hL B hB)
       (by intro l; rw [SegmentWalls.eval_coordinateWall]; exact one_pos)
   refine ⟨w, fun i ↦ by simpa using hpos i, fun r col ↦ ?_, fun r col ↦ ?_, fun b hb ↦ ?_⟩
   · have h := havoid (Sum.inl (r, col))
-    rwa [show startWall core s B (Sum.inl (r, col)) = (NFFrame.toFrame r).coordWall col from rfl,
-      Frame.eval_coordWall] at h
+    rwa [show segmentStartWall H dH G dG L B (Sum.inl (r, col)) =
+      (NFFrame.toFrame r).coordWall col from rfl, Frame.eval_coordWall] at h
   · have h := havoid (Sum.inr (Sum.inl (r, col)))
-    rwa [show startWall core s B (Sum.inr (Sum.inl (r, col))) =
-      pullWall (baseRequestLinear s) ((NFFrame.toFrame r).coordWall col) from rfl,
-      eval_pullWall, baseRequestLinear_apply, Frame.eval_coordWall] at h
+    rwa [show segmentStartWall H dH G dG L B (Sum.inr (Sum.inl (r, col))) =
+      pullWall L ((NFFrame.toFrame r).coordWall col) from rfl,
+      eval_pullWall, Frame.eval_coordWall] at h
   · have h := havoid (Sum.inr (Sum.inr ⟨b, hb⟩))
-    rwa [show startWall core s B (Sum.inr (Sum.inr ⟨b, hb⟩)) = functionalWall b from rfl,
-      eval_functionalWall] at h
+    rwa [show segmentStartWall H dH G dG L B (Sum.inr (Sum.inr ⟨b, hb⟩)) = functionalWall b
+      from rfl, eval_functionalWall] at h
 
-/-! ## 6.  The closure -/
+/-! ## 6.  The closure along a segment -/
 
-/-- **The closure** (Theorem 6.3). From the generic-point package, at every non-negative
-request on the gadget with long legs there is a member that is closed (`z ≥ 0`), has odd
-multiplicity, and is a claw member. -/
-theorem exists_closed_oddClaw_of_package {n p : ℕ} (core : Core n p) (s : MarkSlots p)
-    (hP : ParityPackage core s) (y : Fin (p + 1 + 1 + 1 + 3) → ℚ) (hy : ∀ i, 0 ≤ y i)
-    (hlong : LongLegs s y) :
-    ∃ mem : FibreMember (tripodCore core s) y (3 + 2),
-      mem.Closed ∧ mem.HasOddMult ∧ MemberIsClaw mem := by
+/-- **The closure along one segment.** Let `L` be a surjective linear map from the requests of
+a core `H` to those of a core `G`, `B` a finite set of nonzero functionals, and `Near k`
+finitely many conditions, each holding near the end of every segment ending at `Y`. Suppose
+every positive request `y₀` general for `H` in degree `dH`, with `L y₀` general for `G` in
+degree `dG`, off every functional of `B` and satisfying every `Near k`, carries an open member of
+odd multiplicity whose frame satisfies `Pred`. Then at the non-negative request `Y` some member
+is closed, has odd multiplicity, and has its frame in `Pred`. -/
+theorem exists_closed_of_segment (H : Core m P) (dH : ℕ) (G : Core n₀ q) (dG : ℕ)
+    (L : (Fin P → ℚ) →ₗ[ℚ] (Fin q → ℚ)) (hL : ∀ z, ∃ x, L x = z)
+    (B : Finset (Fin P → ℚ)) (hB : ∀ b ∈ B, b ≠ 0)
+    {ι : Type*} [Fintype ι] (Near : ι → (Fin P → ℚ) → Prop) (Pred : Frame H dH → Prop)
+    (Y : Fin P → ℚ) (hY : ∀ i, 0 ≤ Y i)
+    (hNear : ∀ (w : Fin P → ℚ) (k : ι), ∃ tL : ℚ, tL < 1 ∧
+      ∀ t, tL < t → t ≤ 1 → Near k (RationalAffineWall.segment w Y t))
+    (hmem : ∀ y₀ : Fin P → ℚ, (∀ i, 0 < y₀ i) →
+      StepSupplyReduction.GeneralRequest H dH y₀ →
+      StepSupplyReduction.GeneralRequest G dG (L y₀) → (∀ b ∈ B, ∑ i, b i * y₀ i ≠ 0) →
+      (∀ k, Near k y₀) →
+      ∃ mem : FibreMember H y₀ dH, mem.Open ∧ mem.HasOddMult ∧ Pred (Frame.of mem)) :
+    ∃ mem : FibreMember H Y dH, mem.Closed ∧ mem.HasOddMult ∧ Pred (Frame.of mem) := by
   classical
-  obtain ⟨B, hB, hpack⟩ := hP
   -- Step 1: the start.
-  obtain ⟨w, hwpos, hwΓ, hwG, hwB⟩ := exists_start core s B hB
+  obtain ⟨w, hwpos, hwH, hwG, hwB⟩ := exists_segmentStart H dH G dG L hL B hB
   -- Step 2: finitely many walls on the segment.
-  have hΓfin : {t : ℚ | ∃ (k : Frame (tripodCore core s) (3 + 2))
-      (col : Fin (p + 1 + 1 + 1 + 3)), k.IsWallParam w y col t}.Finite :=
-    SegmentWalls.finite_allWallParams _ _ w y hwΓ
-  have hGfin : {t : ℚ | ∃ (k : Frame core (2 + 2)) (col : Fin p),
-      k.IsWallParam (baseRequest s w) (baseRequest s y) col t}.Finite :=
+  have hHfin : {t : ℚ | ∃ (k : Frame H dH) (col : Fin P), k.IsWallParam w Y col t}.Finite :=
+    SegmentWalls.finite_allWallParams _ _ w Y hwH
+  have hGfin : {t : ℚ | ∃ (k : Frame G dG) (col : Fin q),
+      k.IsWallParam (L w) (L Y) col t}.Finite :=
     SegmentWalls.finite_allWallParams _ _ _ _ hwG
-  have hBfin : {t : ℚ | ∃ b ∈ B, ∑ i, b i * RationalAffineWall.segment w y t i = 0}.Finite := by
+  have hBfin : {t : ℚ | ∃ b ∈ B, ∑ i, b i * RationalAffineWall.segment w Y t i = 0}.Finite := by
     refine (B.finite_toSet.biUnion fun b hb ↦
-      (affine_zero_subsingleton (b := ∑ i, b i * y i) (hwB b hb)).finite).subset ?_
+      (affine_zero_subsingleton (b := ∑ i, b i * Y i) (hwB b hb)).finite).subset ?_
     rintro t ⟨b, hb, ht⟩
     refine Set.mem_biUnion hb ?_
     show _ = 0
     rw [← sum_mul_segment]
     exact ht
-  set Bad : Set ℚ := {t : ℚ | ∃ (k : Frame (tripodCore core s) (3 + 2))
-      (col : Fin (p + 1 + 1 + 1 + 3)), k.IsWallParam w y col t} ∪
-    {t : ℚ | ∃ (k : Frame core (2 + 2)) (col : Fin p),
-      k.IsWallParam (baseRequest s w) (baseRequest s y) col t} ∪
-    {t : ℚ | ∃ b ∈ B, ∑ i, b i * RationalAffineWall.segment w y t i = 0} with hBad
+  set Bad : Set ℚ := {t : ℚ | ∃ (k : Frame H dH) (col : Fin P), k.IsWallParam w Y col t} ∪
+    {t : ℚ | ∃ (k : Frame G dG) (col : Fin q), k.IsWallParam (L w) (L Y) col t} ∪
+    {t : ℚ | ∃ b ∈ B, ∑ i, b i * RationalAffineWall.segment w Y t i = 0} with hBad
   have hBadlt : (Bad ∩ Set.Iio (1 : ℚ)).Finite :=
-    ((hΓfin.union hGfin).union hBfin).inter_of_left _
-  -- Step 3: long legs near `t = 1`.
-  have hleg : ∀ k : Fin 3, ∃ tL : ℚ, tL < 1 ∧ ∀ t, tL < t → t ≤ 1 →
-      4 * ∑ i, baseRequest s (RationalAffineWall.segment w y t) i <
-        legLength (RationalAffineWall.segment w y t) k := by
-    intro k
-    obtain ⟨tL, htL, hpos⟩ := exists_threshold
-      (a := legLength w k - 4 * ∑ i, baseRequest s w i)
-      (b := legLength y k - 4 * ∑ i, baseRequest s y i) (by linarith [hlong k])
-    refine ⟨tL, htL, fun t ht ht1 ↦ ?_⟩
-    have h := hpos t ht ht1
-    rw [← legSlack_segment] at h
-    linarith
-  choose tL htL1 htL using hleg
-  -- Step 4: the interior point `t₀ < 1`, above every wall below `1` and every leg threshold.
+    ((hHfin.union hGfin).union hBfin).inter_of_left _
+  -- Step 3: the thresholds of the conditions `Near`.
+  choose tL htL1 htL using hNear w
+  -- Step 4: the interior point `t₀ < 1`, above every wall below `1` and every threshold.
   set T : Finset ℚ := insert (0 : ℚ) (hBadlt.toFinset ∪ Finset.univ.image tL) with hT
   have hTne : T.Nonempty := ⟨0, Finset.mem_insert_self _ _⟩
   have hM1 : T.max' hTne < 1 := by
@@ -331,52 +343,38 @@ theorem exists_closed_oddClaw_of_package {n p : ℕ} (core : Core n p) (s : Mark
     Finset.le_max' T t (Finset.mem_insert_of_mem (Finset.mem_union_left _
       ((Set.Finite.mem_toFinset _).mpr ⟨hbad, ht⟩)))
   have hnotBad : t₀ ∉ Bad := fun hbad ↦ absurd (hle t₀ hbad ht₀one) (not_le.mpr ht₀M)
-  have hlegt₀ : ∀ k, tL k < t₀ := fun k ↦ lt_of_le_of_lt
+  have hNeart₀ : ∀ k, tL k < t₀ := fun k ↦ lt_of_le_of_lt
     (Finset.le_max' T (tL k) (Finset.mem_insert_of_mem (Finset.mem_union_right _
       (Finset.mem_image_of_mem tL (Finset.mem_univ k))))) ht₀M
-  -- `y t₀` is admissible.
-  set y₀ := RationalAffineWall.segment w y t₀ with hy₀
+  set y₀ := RationalAffineWall.segment w Y t₀ with hy₀
   have hreqpos : ∀ i, 0 < y₀ i := by
     intro i
-    have hrw : y₀ i = (1 - t₀) * w i + t₀ * y i := by
+    have hrw : y₀ i = (1 - t₀) * w i + t₀ * Y i := by
       simp only [hy₀, RationalAffineWall.segment]; ring
     rw [hrw]
     have h1 : 0 < (1 - t₀) * w i := mul_pos (by linarith) (hwpos i)
-    have h2 : 0 ≤ t₀ * y i := mul_nonneg ht₀pos.le (hy i)
+    have h2 : 0 ≤ t₀ * Y i := mul_nonneg ht₀pos.le (hY i)
     linarith
-  have hadm : Admissible core s B y₀ := by
-    refine ⟨hreqpos, ?_, ?_, ?_, ?_⟩
-    · intro k col hzero
-      exact hnotBad (Or.inl (Or.inl ⟨k, col, hzero⟩))
-    · intro k col hzero
-      rw [hy₀, baseRequest_segment] at hzero
-      exact hnotBad (Or.inl (Or.inr ⟨k, col, hzero⟩))
-    · intro b hb hzero
-      exact hnotBad (Or.inr ⟨b, hb, hzero⟩)
-    · intro k
-      exact htL k t₀ (hlegt₀ k) ht₀one.le
-  -- Step 5: an open odd claw member at `t₀`.
-  have hodd := hpack y₀ hadm
-  have hne : openOddClawCount core s y₀ ≠ 0 := by
-    intro h
-    rw [h] at hodd
-    exact absurd hodd (by simp)
-  obtain ⟨⟨c, hcOpen, hcOdd, mem, rfl, hClaw⟩⟩ := (Nat.card_ne_zero.mp hne).1
-  have hmemOpen : mem.Open := (GeometricFibre.open_cls mem).mp hcOpen
-  have hmemOdd : mem.HasOddMult := (GeometricFibre.isOdd_cls_iff mem).mp hcOdd
+  -- Step 5: an open member of odd multiplicity at `t₀`.
+  obtain ⟨mem, hmemOpen, hmemOdd, hPred⟩ := hmem y₀ hreqpos
+    (fun k col hzero ↦ hnotBad (Or.inl (Or.inl ⟨k, col, hzero⟩)))
+    (fun k col hzero ↦ by
+      rw [hy₀, map_segment] at hzero
+      exact hnotBad (Or.inl (Or.inr ⟨k, col, hzero⟩)))
+    (fun b hb hzero ↦ hnotBad (Or.inr ⟨b, hb, hzero⟩))
+    (fun k ↦ htL k t₀ (hNeart₀ k) ht₀one.le)
   -- Step 6: read it through its frame, and carry the frame to `t = 1`.
-  set κ : Frame (tripodCore core s) (3 + 2) := Frame.of mem with hκ
+  set κ : Frame H dH := Frame.of mem with hκ
   have hκOpen : ∀ col, 0 < κ.coordsAt y₀ col := by
     intro col
     rw [hκ, Frame.coordsAt_of]
     exact hmemOpen col
-  refine ⟨κ.member y, ?_, (hasOddMult_frame_member mem y).mpr hmemOdd,
-    (memberIsClaw_frame_member mem y).mpr hClaw⟩
+  refine ⟨κ.member Y, ?_, (hasOddMult_frame_member mem Y).mpr hmemOdd, hPred⟩
   intro col
   by_contra hneg
   rw [not_le] at hneg
-  have hcoord : κ.coordsAt y col < 0 := hneg
-  have hno : ∀ t, min t₀ 1 ≤ t → t ≤ max t₀ 1 → ¬ κ.IsWallParam w y col t := by
+  have hcoord : κ.coordsAt Y col < 0 := hneg
+  have hno : ∀ t, min t₀ 1 ≤ t → t ≤ max t₀ 1 → ¬ κ.IsWallParam w Y col t := by
     intro t hmin hmax hwall
     rw [min_eq_left ht₀one.le] at hmin
     rw [max_eq_right ht₀one.le] at hmax
@@ -385,8 +383,75 @@ theorem exists_closed_oddClaw_of_package {n p : ℕ} (core : Core n p) (s : Mark
         (not_le.mpr (lt_of_lt_of_le ht₀M hmin))
     · rw [SegmentWalls.Frame.IsWallParam, heq, StepSupplyReduction.segment_one] at hwall
       exact absurd hwall (ne_of_lt hcoord)
-  have hcarry := κ.pos_of_pos_of_no_wall w y col t₀ 1 (hκOpen col) hno
+  have hcarry := κ.pos_of_pos_of_no_wall w Y col t₀ 1 (hκOpen col) hno
   rw [StepSupplyReduction.segment_one] at hcarry
   exact absurd hcarry (not_lt.mpr hcoord.le)
+
+end Segment
+
+/-! ## 7.  The closure on the gadget -/
+
+/-- The walls the start must avoid on the gadget: the coordinates of the normal-form frames of
+`Γ̃`, those of `G̃` pulled back along `baseRequest s`, and the functionals of `B`. -/
+noncomputable def startWall (core : Core n p) (s : MarkSlots p)
+    (B : Finset (Fin (p + 1 + 1 + 1 + 3) → ℚ)) :
+    (NFFrame (tripodCore core s) (3 + 2) × Fin (p + 1 + 1 + 1 + 3)) ⊕
+        (NFFrame core (2 + 2) × Fin p) ⊕ B → RationalAffineWall (Fin (p + 1 + 1 + 1 + 3)) :=
+  segmentStartWall (tripodCore core s) (3 + 2) core (2 + 2) (baseRequestLinear s) B
+
+/-- `baseRequest s` has a section, `liftRequest`. -/
+theorem baseRequestLinear_surjective (s : MarkSlots p) :
+    ∀ z, ∃ x, baseRequestLinear s x = z :=
+  fun z ↦ ⟨liftRequest z, baseRequest_liftRequest s z⟩
+
+theorem startWall_proper (core : Core n p) (s : MarkSlots p)
+    (B : Finset (Fin (p + 1 + 1 + 1 + 3) → ℚ)) (hB : ∀ b ∈ B, b ≠ 0) (x) :
+    (startWall core s B x).Proper :=
+  segmentStartWall_proper _ _ _ _ _ (baseRequestLinear_surjective s) B hB x
+
+/-- **The start** (Theorem 6.3, step 1): a positive request general for `Γ̃` in degree five,
+whose base request is general for `G̃` in degree four, off every functional of `B`. -/
+theorem exists_start (core : Core n p) (s : MarkSlots p)
+    (B : Finset (Fin (p + 1 + 1 + 1 + 3) → ℚ)) (hB : ∀ b ∈ B, b ≠ 0) :
+    ∃ w : Fin (p + 1 + 1 + 1 + 3) → ℚ, (∀ i, 0 < w i) ∧
+      (∀ (r : NFFrame (tripodCore core s) (3 + 2)) (col : Fin (p + 1 + 1 + 1 + 3)),
+        (NFFrame.toFrame r).coordsAt w col ≠ 0) ∧
+      (∀ (r : NFFrame core (2 + 2)) (col : Fin p),
+        (NFFrame.toFrame r).coordsAt (baseRequest s w) col ≠ 0) ∧
+      (∀ b ∈ B, ∑ i, b i * w i ≠ 0) :=
+  exists_segmentStart _ _ _ _ _ (baseRequestLinear_surjective s) B hB
+
+/-- **The closure** (Theorem 6.3). From the generic-point package, at every non-negative
+request on the gadget with long legs there is a member that is closed (`z ≥ 0`), has odd
+multiplicity, and is a claw member. -/
+theorem exists_closed_oddClaw_of_package {n p : ℕ} (core : Core n p) (s : MarkSlots p)
+    (hP : ParityPackage core s) (y : Fin (p + 1 + 1 + 1 + 3) → ℚ) (hy : ∀ i, 0 ≤ y i)
+    (hlong : LongLegs s y) :
+    ∃ mem : FibreMember (tripodCore core s) y (3 + 2),
+      mem.Closed ∧ mem.HasOddMult ∧ MemberIsClaw mem := by
+  classical
+  obtain ⟨B, hB, hpack⟩ := hP
+  refine exists_closed_of_segment (tripodCore core s) (3 + 2) core (2 + 2) (baseRequestLinear s)
+    (baseRequestLinear_surjective s) B hB
+    (fun k y' ↦ 4 * ∑ i, baseRequest s y' i < legLength y' k) TripodFrame.IsClaw y hy ?_ ?_
+  · -- Long legs near `t = 1`.
+    intro w k
+    obtain ⟨tL, htL, hpos⟩ := exists_threshold
+      (a := legLength w k - 4 * ∑ i, baseRequest s w i)
+      (b := legLength y k - 4 * ∑ i, baseRequest s y i) (by linarith [hlong k])
+    refine ⟨tL, htL, fun t ht ht1 ↦ ?_⟩
+    have h := hpos t ht ht1
+    rw [← legSlack_segment] at h
+    linarith
+  · -- An open odd claw member at every admissible request.
+    intro y₀ hpos hΓ hG hBy hlong₀
+    have hodd := hpack y₀ ⟨hpos, hΓ, hG, hBy, hlong₀⟩
+    have hne : openOddClawCount core s y₀ ≠ 0 := by
+      intro h
+      rw [h] at hodd
+      exact absurd hodd (by simp)
+    obtain ⟨⟨c, hcOpen, hcOdd, mem, rfl, hClaw⟩⟩ := (Nat.card_ne_zero.mp hne).1
+    exact ⟨mem, (GeometricFibre.open_cls mem).mp hcOpen,
+      (GeometricFibre.isOdd_cls_iff mem).mp hcOdd, hClaw⟩
 
 end GenusSixExistence.Tripod.ClosureFrame

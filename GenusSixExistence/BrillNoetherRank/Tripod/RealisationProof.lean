@@ -212,7 +212,7 @@ descends to an effective `F'` of degree two on `S.scale u` with the same propert
 
 Interior firing is applied to `F` alone (§7.5), so nothing is needed about the chips
 of `D₀` surviving it; the nearest rounding then has budget zero, every chip being on the
-`2^a`-grid (§7.5, as `BrillNoetherRank.coarse_completion` with the zero budget of
+`2^a`-grid (§7.5, as `Spec.exists_coarse_completion_two` with the zero budget of
 `ZeroBudgetRounding`). -/
 theorem round_completion (S : Spec n p) {ι : Type*} [Fintype ι] (v : ι → Fin n)
     (u a : ℕ) (hu : 0 < u) (hk : 0 < 2 ^ a * u)

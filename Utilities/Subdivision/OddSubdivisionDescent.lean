@@ -338,7 +338,7 @@ theorem rank_ge_of_rank_scale_ge_nearest {ι : Type*} [Fintype ι]
 divisor completing `embed E` to rank at least `r` rounds to an effective
 degree-two coarse divisor completing `E` to rank at least `r`, whenever `N` is
 odd. -/
-private theorem exists_coarse_completion_two (hodd : Odd N) {r : ℤ}
+theorem exists_coarse_completion_two (hodd : Odd N) {r : ℤ}
     (E : CFDiv spec.graph) (F : CFDiv (spec.scale N hN).graph)
     (hFeff : effective F) (hFdeg : deg F = 2)
     (hrank : rank (spec.scale N hN).graph (spec.embed N hN E + F) ≥ r) :

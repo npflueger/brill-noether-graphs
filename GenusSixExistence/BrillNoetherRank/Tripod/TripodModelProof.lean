@@ -20,8 +20,8 @@ calls `exists_tripodModel` below.
 
 ## The construction
 
-1. **The reduced model** (`exists_reducedModel`). The reduction to a marked specification is re-run so that its
-   Laplacian equivalence is kept:
+1. **The reduced model** (`exists_reducedModel_of_two_le`, at every genus `g ≥ 2`). The
+   reduction to a marked specification is re-run so that its Laplacian equivalence is kept:
    `DraismaVargas.LocalCases.StableModelPackaging.exists_markedSpec_of_bridgeless` gives the
    reduced specification `spec₀` of `G` (bivalent vertices suppressed except loop markers, the
    input being already bridgeless) and a Laplacian equivalence `spec₀.graph ≃ G`;
@@ -94,29 +94,43 @@ theorem mapDiv_sum_one_chip {G H : CFGraph} (Φ : LaplacianEquiv G H) (y : Fin 3
 
 /-! ## 2.  The reduced model -/
 
+/-- **The reduced model of a bridgeless graph of genus `g ≥ 2`, with its Laplacian
+equivalence**: `exists_expansionModel` re-run on a bridgeless input so that the equivalence of the
+reduced specification with `G` is kept. The cubic big core has `2 (g - 1)` vertices and
+`3 (g - 1)` slots. (Genus at least two is needed: `exists_markedSpec_of_bridgeless` asks for
+more edges than vertices.) -/
+theorem exists_reducedModel_of_two_le (G : CFGraph.{0}) (hG : graph_connected G) {g : ℕ}
+    (hg : genus G = g) (hg2 : 2 ≤ g)
+    (hb : (UnitSubdivisionPresentation.spec G).core.Bridgeless) :
+    ∃ (n₀ p₀ N Q : ℕ) (spec₀ : Spec n₀ p₀) (D₀ : ExpansionData n₀ p₀ N Q),
+      N = 2 * (g - 1) ∧ Q = 3 * (g - 1) ∧ D₀.Conditions spec₀.core ∧ D₀.bigCore.Cubic ∧
+        D₀.bigCore.Connected ∧
+        Nonempty (LaplacianEquiv spec₀.graph (UnitSubdivisionPresentation.spec G).graph) := by
+  have hE : (Multiset.card G.edges : ℤ) - Fintype.card G.V = (g : ℤ) - 1 := by
+    have hgen : (Multiset.card G.edges : ℤ) - Fintype.card G.V + 1 = g := hg
+    omega
+  have hconn := Utilities.Gonality.coreConnected_unitSpec G hG
+  obtain ⟨n₀, p₀, spec₀, mk, hbase, hc₀, hb₀, hlt₀, hg₀, hφ, -⟩ :=
+    DraismaVargas.LocalCases.StableModelPackaging.exists_markedSpec_of_bridgeless
+      (UnitSubdivisionPresentation.spec G) hconn (specBridgeless_of_bridgeless hconn hb)
+      (by omega)
+  have hstable : DraismaVargas.LocalCases.StableModelReduction.Stable mk :=
+    DraismaVargas.LocalCases.BridgeReduction.stable_of_bridgeless mk spec₀.core_loopless hbase hb₀
+  obtain ⟨D₀, hCond, hCubic, hConnBig⟩ :=
+    DraismaVargas.LocalCases.StableModelReduction.exists_markerExpansion mk hstable
+      spec₀.core_loopless hc₀
+  exact ⟨n₀, p₀, _, _, spec₀, D₀, by omega, by omega, hCond, hCubic, hConnBig, hφ⟩
+
 /-- **The reduced model of a bridgeless genus-six graph, with its Laplacian equivalence**:
-`exists_expansionModel` re-run on a bridgeless input so that the equivalence of the reduced
-specification with `G` is kept. -/
+`exists_reducedModel_of_two_le` at genus six, with `10` vertices and `15` slots. -/
 theorem exists_reducedModel (G : CFGraph.{0}) (hG : graph_connected G) (hg : genus G = 6)
     (hb : (UnitSubdivisionPresentation.spec G).core.Bridgeless) :
     ∃ (n₀ p₀ N Q : ℕ) (spec₀ : Spec n₀ p₀) (D₀ : ExpansionData n₀ p₀ N Q),
       N = 10 ∧ Q = 15 ∧ D₀.Conditions spec₀.core ∧ D₀.bigCore.Cubic ∧ D₀.bigCore.Connected ∧
         Nonempty (LaplacianEquiv spec₀.graph (UnitSubdivisionPresentation.spec G).graph) := by
-  have hE := card_edges_sub_card_vertices' G hg
-  have hconn := Utilities.Gonality.coreConnected_unitSpec G hG
-  obtain ⟨n₀, p₀, spec₀, mk, hbase, hc₀, hb₀, hlt₀, hg₀, hφ, -⟩ :=
-    DraismaVargas.LocalCases.StableModelPackaging.exists_markedSpec_of_bridgeless (UnitSubdivisionPresentation.spec G)
-      hconn (specBridgeless_of_bridgeless hconn hb) (by omega)
-  have hstable : DraismaVargas.LocalCases.StableModelReduction.Stable mk :=
-    DraismaVargas.LocalCases.BridgeReduction.stable_of_bridgeless mk spec₀.core_loopless hbase hb₀
-  obtain ⟨D₀, hCond, hCubic, hConnBig⟩ :=
-    DraismaVargas.LocalCases.StableModelReduction.exists_markerExpansion mk hstable spec₀.core_loopless hc₀
-  exact ⟨n₀, p₀, _, _, spec₀, D₀, by omega, by omega, hCond, hCubic, hConnBig, hφ⟩
-where
-  card_edges_sub_card_vertices' (H : CFGraph.{0}) (hgenus : genus H = 6) :
-      (Multiset.card H.edges : ℤ) - Fintype.card H.V = 5 := by
-    have hgen : (Multiset.card H.edges : ℤ) - Fintype.card H.V + 1 = 6 := hgenus
-    omega
+  obtain ⟨n₀, p₀, N, Q, spec₀, D₀, hN, hQ, hCond, hCubic, hConnBig, hφ⟩ :=
+    exists_reducedModel_of_two_le G hG hg (by norm_num) hb
+  exact ⟨n₀, p₀, N, Q, spec₀, D₀, hN, hQ, hCond, hCubic, hConnBig, hφ⟩
 
 /-! ## 3.  The marks, the transport and the legs -/
 
