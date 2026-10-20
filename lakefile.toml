@@ -1,7 +1,7 @@
 name = "brill-noether-graphs"
 version = "0.1.0"
 keywords = ["mathematics", "graph-theory", "brill-noether", "chip-firing"]
-defaultTargets = ["Utilities", "Bananas", "LowGenus", "TreewidthGonality", "Tricycle", "GenusSixOddDescent", "DraismaVargas", "DraismaVargasCount", "GenusSixExistence", "TwiceMarkedBananas", "Highlights", "PalomarSolutions"]
+defaultTargets = ["Utilities", "Bananas", "LowGenus", "TreewidthGonality", "Tricycle", "GenusSixOddDescent", "DraismaVargas", "DraismaVargasCount", "GenusSixExistence", "DraismaVargasMarkedCount", "DiagonalSecant", "TwiceMarkedBananas", "Highlights", "PalomarSolutions"]
 
 # Reusable chip-firing and transmission infrastructure.  It imports no
 # downstream library.
@@ -55,6 +55,19 @@ name = "DraismaVargasCount"
 # dependencies.
 [[lean_lib]]
 name = "GenusSixExistence"
+
+# The Draisma--Vargas count with ramification prescribed at one or two marked
+# points of the source.  It imports `GenusSixExistence` (the tripod gadget and
+# its gluing), the libraries below it, and external dependencies.
+[[lean_lib]]
+name = "DraismaVargasMarkedCount"
+
+# The diagonal secant theorem: a pencil of degree g - 1 on every connected graph
+# of genus g >= 5 with g = 1, 2 (mod 4), with g - 3 of its chips at a prescribed
+# vertex.  It imports `DraismaVargasMarkedCount`, the libraries below it, and
+# external dependencies.
+[[lean_lib]]
+name = "DiagonalSecant"
 
 # Reader-facing statements written over a self-contained local vocabulary,
 # with proof bodies that bridge explicitly to the repository's proved API.

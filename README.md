@@ -108,6 +108,11 @@ and its solution is still to be written.
   even genus `2k + 2` with `k ≥ 2`: over every connected cubic core, the number
   of open classes of odd multiplicity in degree `k + 2` has the parity of the
   Catalan number `catalan (k + 1)` (`DraismaVargasCount/EvenGenusParity.lean`).
+  Its `IntegerCount` modules prove the integer form of the same count: over every
+  connected cubic core of genus `2k + 2` with `k ≥ 2` and every positive general
+  request, the open classes in degree `k + 2`, counted with the absolute value of
+  their multiplicity, number exactly `catalan (k + 1)`
+  (`DraismaVargas.Count.IntegerCount.openMultCount_eq_catalan`).
 - `GenusSixExistence/` proves Brill–Noether existence for every connected graph
   of genus six, and hence through genus six, extending the Atanasov–Ranganathan
   theorem of `LowGenus`. It also deduces once-marked Brill–Noether existence at
@@ -115,6 +120,25 @@ and its solution is still to be written.
   `BrillNoetherRank` modules prove that every connected graph of genus at most
   six has the expected Brill–Noether rank, `w^r_d ≥ min(ρ, d − r)`, with a prose
   proof in `Research/genus-six-brill-noether-rank.md`.
+- `DraismaVargasMarkedCount/` proves the Draisma–Vargas count with ramification
+  prescribed at marked points of the source. Over a connected cubic core of genus
+  `g` with `k` marks, each of ramification one, and `g + k = 2K + 2` with `K ≥ 2`,
+  the marked count in degree `K + 2` is `catalan (K + 1)`
+  (`DraismaVargas.Count.MarkedCount.markedCount_eq_catalan`).
+  With ramification `a` and `b` at two marks, in degree `d ≤ g` with
+  `g + a + b + 2 = 2d`, it is `C(g, g + 1 − d + a) − C(g, g − d)`, for every
+  genus `g ≥ 5`, and in genus four when `a` and `b` are odd
+  (`DraismaVargas.Count.MarkedCountGeneral.typedCount_twiceMarked`).
+- `DiagonalSecant/` proves the diagonal secant theorem: on every connected graph
+  of genus `g ≥ 5` with `g ≡ 1, 2 (mod 4)` and every vertex `u`, some effective
+  divisor `F` of degree two makes `(g − 3)u + F` a divisor of rank at least one,
+  so the graph carries a pencil of degree `g − 1` with `g − 3` of its chips at `u`
+  (`DiagonalSecant.diagonalSecant`, `DiagonalSecant.bnExists_one_genus_sub_one`).
+  The parity input is the ramified count with ramification `g − 4` at `u` in
+  degree `g − 1`, which is `g(g − 3)/2`, odd exactly in these residues.
+  Attaching a cycle gives `DiagonalSecant.cycleSecant`: for `g ≥ 4` with
+  `g ≡ 0, 1 (mod 4)` and vertices `u, v`, a pencil of degree `g` with a
+  `(g − 2)`-fold point at `u` and a double point at `v`.
 - `Highlights.lean` and `HighlightsStatements.lean` collect ten headline
   results in proved and Mathlib-only statement forms. `TwiceMarkedBananas.lean`
   and `TwiceMarkedBananasStatements.lean` provide a paper-order proved index

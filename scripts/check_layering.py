@@ -31,7 +31,9 @@ What is checked.
      while they are absent): `DraismaVargas/`: `Utilities`, `LowGenus`;
      `DraismaVargasCount/`: those plus `DraismaVargas`; `GenusSixOddDescent/`:
      `Utilities`; `GenusSixExistence/`: `Utilities`, `LowGenus`,
-     `DraismaVargas`, `DraismaVargasCount`, `GenusSixOddDescent`.
+     `DraismaVargas`, `DraismaVargasCount`, `GenusSixOddDescent`;
+     `DraismaVargasMarkedCount/`: those plus `GenusSixExistence`;
+     `DiagonalSecant/`: those plus `DraismaVargasMarkedCount`.
    * Statement-only files -- `HighlightsStatements.lean`,
      `TwiceMarkedBananasStatements.lean`, and everything under `Palomar/`
      except `Palomar/Solutions/` (in particular every `Palomar/*/Challenge.lean`)
@@ -86,6 +88,12 @@ LIBRARY_RULES = {
     'GenusSixOddDescent': {'Utilities'},
     'GenusSixExistence': {'Utilities', 'LowGenus', 'DraismaVargas',
                           'DraismaVargasCount', 'GenusSixOddDescent'},
+    'DraismaVargasMarkedCount': {'Utilities', 'LowGenus', 'DraismaVargas',
+                                 'DraismaVargasCount', 'GenusSixOddDescent',
+                                 'GenusSixExistence'},
+    'DiagonalSecant': {'Utilities', 'LowGenus', 'DraismaVargas', 'DraismaVargasCount',
+                       'GenusSixOddDescent', 'GenusSixExistence',
+                       'DraismaVargasMarkedCount'},
 }
 
 STATEMENT_ONLY_FILES = {'HighlightsStatements.lean', 'TwiceMarkedBananasStatements.lean'}
