@@ -16,6 +16,10 @@ closed typed frame over any two target vertices are linearly equivalent on `smal
 
 Reused verbatim (datum-free or datum-level):
 
+* the datum-level facts of `RowWalkKernel`: the dilation equation, the fibre difference as a
+  pulled-back incidence (`sum_fibre_sub`), the row decomposition over any partition of the
+  surviving edges (`sum_edges_eq_sum_rows`, here the **marked** rows), and the telescoping
+  along a row;
 * the row arithmetic of `RowAlgebra`: the row potential `RowAlgebra.value`, its values at the
   two ends, and the window computation `RowAlgebra.slot_sum`;
 * the slot-value scripts of `SlotScriptKernel`: compatibility from the row ends
@@ -27,10 +31,9 @@ Reused verbatim (datum-free or datum-level):
   refinement equation), `PendantDivisorTransport.push`, `SubdivisionGraph.Spec` scripts and
   `pushDiv_prin_pullScript` of `Utilities.Subdivision.CoreExpansion`.
 
-Twinned in the helper module `CTTransport` (they index by rows): §2 `sourcePotential`,
-`edgeSlope`, `sourcePotential_rise`, `fibre_sub_eq`; §3 `sum_fibre_sub`, `sum_edges_eq_sum_rows` (the surviving occurrences grouped
-by **marked** rows, `mem_orderedRow_iff`); §4 the row data `rowStart`, `rowLen`, `rowSlope`;
-§5 the realization of the row vertices (`realize_rowVertex`, from
+Twinned in the helper module `CTTransport` (they index by rows): §1 `RiseCompatible`,
+`sourcePotential`, `edgeSlope`; the row data `rowStart`, `rowLen`, `rowSlope` and the walk
+`rowVertex_isWalk`; §5 the realization of the row vertices (`realize_rowVertex`, from
 `TypedImage.realize_address` and `realize_branch` at the two ends — the mark end included, since
 a mark is a marked branch vertex); §6 the slot values `slotValue` on
 `D.bigSpec (small.scale k)`, their compatibility `compat` at both ends of every slot, and

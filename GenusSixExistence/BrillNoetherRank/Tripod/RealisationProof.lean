@@ -57,9 +57,10 @@ the two agree (`placedG_interior`).
     move or merge).
   * `loopDouble_reach` — the member half: the row over a loop `double` has an interior address
     strictly inside the chain (`loopRow_interior`, the argument of
-    `PencilTransportProducer.doubleRowInterior_of_loopDoubles` on the G-rows, with the jump
-    `RowAlgebra.exists_single_long` and the label potential `labelPot` constant on the fibres
-    of the expansion), realised in `gReach` (`address_mem_gReach`).
+    `PencilTransportProducer.doubleRowInterior_of_loopDoubles` on the G-rows: the jump
+    `RowAlgebra.exists_single_long`, the separating potential `RowWalkKernel.not_single_long`,
+    and the label potential `labelPot` constant on the fibres of the expansion), realised in
+    `gReach` (`address_mem_gReach`).
 * **The slid fibres** (`exists_slidPencil`, §7.4 and §8.2), from the slid fibres
   `slidFibre x = slidBase x + Σ_j markCoeff x j · markChip j` (`s_j·1[x ∈ H_j]` chips at the
   marks, read through the leg edge `germ` and `TreeMetricPotential.cutValue`):
@@ -989,44 +990,21 @@ theorem loopRow_interior (hScale : memberScale mem = k) (e : Fin (15 + 1 + 1 + 1
     (PencilTransportProducer.rowStart_succ mem hClosed (Fin.castAdd 3 e))
     (PencilTransportProducer.rowStart_zero mem hClosed (Fin.castAdd 3 e)) hFull hLenPos hInt
   -- the separating potential
-  set t := ((RowWalk.orderedRow mem.fullDim.pathEnds
-    (mem.ident.row.symm (Fin.castAdd 3 e)))[i0]).1.1 with ht
-  let s : mem.target.edges → ℤ := fun t' ↦ if t' = t then 1 else 0
-  let P : mem.target.V → ℤ := TreeMetricPotential.integrate
-    (fun t' ↦ s t' * ((RowRealizedPosition.memberRealization mem hClosed).targetLength t' : ℤ))
-  have hRise : PencilTransportProducer.RiseCompatible mem hClosed s P := fun t' ↦
-    TreeMetricPotential.integrate_rise mem.fullDim.targetConnected mem.fullDim.targetGenus _ t'
   have hFib : M.expansion.fib (M.expansion.bigCore.tail e) =
       M.expansion.fib (M.expansion.bigCore.head e) := by
     obtain ⟨h1, -, h3⟩ := (ExpansionData.compatible_of_conditions M.conditions e).2.2 j₁ j₂ hk2
     rw [h1, h3]
     exact hLoop
+  refine RowWalkKernel.not_single_long _ (PencilTransportProducer.rowVertex_isWalk mem _)
+    mem.fullDim.targetConnected mem.fullDim.targetGenus i0 hOthers
+    (lt_of_lt_of_eq hLenPos hL0.symm) fun s P hRise ↦ ?_
   have hCP := labelPot_eq_of_fib_eq mem hClosed hScale s P hRise hFib
-  have hPsi : PencilTransportProducer.sourcePotential mem P
-        (RowPosition.rowVertex mem.fullDim (mem.ident.row.symm (Fin.castAdd 3 e))
-          (RowWalk.orderedRow mem.fullDim.pathEnds (mem.ident.row.symm (Fin.castAdd 3 e))).length) =
-      PencilTransportProducer.sourcePotential mem P
-        (RowPosition.rowVertex mem.fullDim (mem.ident.row.symm (Fin.castAdd 3 e)) 0) := by
-    unfold labelPot at hCP
-    rcases row_ends mem e with ⟨h1, h2⟩ | ⟨h1, h2⟩
-    · rw [h1, h2] at hCP
-      exact hCP.symm
-    · rw [h1, h2] at hCP
-      exact hCP
-  have hTel := PencilTransportProducer.sum_rowSlope_mul_rowLen mem hClosed s P hRise
-    (Fin.castAdd 3 e)
-  rw [hPsi, sub_self, Finset.sum_eq_single i0 (fun i _ hi ↦ by rw [hOthers i hi]; simp)
-    (by simp), hL0] at hTel
-  have hSlope : PencilTransportProducer.rowSlope mem s (Fin.castAdd 3 e) i0 ≠ 0 := by
-    have hidx := GluingDatum.sourceEdgeIndex_pos mem.data
-      (RowWalk.orderedRow mem.fullDim.pathEnds (mem.ident.row.symm (Fin.castAdd 3 e)))[i0]
-    have hs : s t = 1 := ite_eq_left rfl
-    unfold PencilTransportProducer.rowSlope PencilTransportProducer.edgeSlope
-    rw [← ht, hs]
-    split_ifs <;> omega
-  rcases mul_eq_zero.mp hTel with h | h
-  · exact hSlope h
-  · exact absurd h (by exact_mod_cast hLenPos.ne')
+  unfold labelPot at hCP
+  rcases row_ends mem e with ⟨h1, h2⟩ | ⟨h1, h2⟩
+  · rw [h1, h2] at hCP
+    exact hCP.symm
+  · rw [h1, h2] at hCP
+    exact hCP
 
 /-- **An interior address of a G-row is a point of `G` over a target vertex**, realised on
 `M.small.scale k` at the chain vertex of its own oriented offset. -/

@@ -173,6 +173,7 @@ public import DraismaVargasCount.RowSlotOrientation
 public import DraismaVargasCount.RowTransitionPosition
 public import DraismaVargasCount.RowVertexEnumeration
 public import DraismaVargasCount.RowWalk
+public import DraismaVargasCount.RowWalkKernel
 public import DraismaVargasCount.SegmentWalls
 public import DraismaVargasCount.SharpRowDenominator
 public import DraismaVargasCount.SheetLayerCensus

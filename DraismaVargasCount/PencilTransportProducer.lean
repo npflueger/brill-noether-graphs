@@ -2,6 +2,7 @@ module
 
 public import DraismaVargasCount.CorePencilCoverProducer
 public import DraismaVargasCount.RowAlgebra
+public import DraismaVargasCount.RowWalkKernel
 public import DraismaVargasCount.SlotScriptKernel
 public import DraismaVargasCount.TreeMetricPotential
 
@@ -58,7 +59,7 @@ target potential whose rises are integral multiples of the realized lengths
 If no interior row vertex lay strictly inside the chain, one occurrence would carry the
 whole length and all others length zero (`RowAlgebra.exists_single_long`); the potential
 rising only along that occurrence's target edge (`TreeMetricPotential.integrate`) would then
-differ at the two ends.
+differ at the two ends (`RowWalkKernel.not_single_long`).
 
 ## What is proved
 
@@ -66,8 +67,10 @@ differ at the two ends.
 under this namespace); §2 `RiseCompatible`, `chipSlope`, `chipPotential`,
 `chip_riseCompatible`, `sourcePotential`, `edgeSlope`, `sourcePotential_rise`, `fibre_sub_eq`;
 §3 `sum_fibre_sub`, `sum_edges_eq_sum_rows`; §4 row data (`rowStart`, `rowLen`, `rowSlope`,
-`rowValue` and their lemmas; `rowValue` is `RowAlgebra.value` of the row, `rowValue_eq`, and
-its arithmetic is `RowAlgebra`'s); §5 the realization (`pushDivisor_sub_eq`,
+`rowValue`, the walk `rowVertex_isWalk`, and their lemmas; `rowValue` is `RowAlgebra.value` of
+the row, `rowValue_eq`). The lemmas of §2–§4 are those of `RowWalkKernel` (for `member.data`,
+`memberRealization` and the member's rows) and `RowAlgebra`; §5 the realization
+(`pushDivisor_sub_eq`,
 `realization_dangling`, `kindVertex_zero_eq`, `kindVertex_length_eq`,
 `realization_branch_end`, `offsetVal_eq`, `realization_rowVertex`); §6 the script
 (`slotPos`, `slotValue`, `corePotential`, `script`, `compat`, `corePotential_contracted`,
@@ -161,18 +164,8 @@ theorem sourcePotential_rise (hRise : RiseCompatible member hClosed s P)
     sourcePotential member P (member.data.sourceEnds edge).2 -
         sourcePotential member P (member.data.sourceEnds edge).1 =
       edgeSlope member s edge *
-        ((memberRealization member hClosed).sourceLength edge : ℤ) := by
-  have h := hRise edge.1.1
-  have hDil := (memberRealization member hClosed).dilation_length edge
-  have hDilZ : ((member.data.sourceEdgeIndex edge : ℕ) : ℤ) *
-      ((memberRealization member hClosed).sourceLength edge : ℤ) =
-      ((memberRealization member hClosed).targetLength edge.1.1 : ℤ) := by
-    exact_mod_cast hDil
-  unfold sourcePotential edgeSlope
-  change P (edge.1.1 : member.target.V × member.target.V).2 -
-    P (edge.1.1 : member.target.V × member.target.V).1 = _
-  rw [h, ← hDilZ]
-  ring
+        ((memberRealization member hClosed).sourceLength edge : ℤ) :=
+  RowWalkKernel.sourcePotential_rise hRise edge
 
 /-- **The fibre difference is the pulled-back incidence.**  At every source
 vertex the fibre over `anchor` minus the fibre over `root` is the signed sum of
@@ -188,35 +181,9 @@ theorem fibre_sub_eq (root anchor : member.target.V) (raw : member.data.SourceVe
         ((if (member.data.sourceEnds edge).1 = raw then edgeSlope member (chipSlope member root anchor) edge
             else 0) -
           (if (member.data.sourceEnds edge).2 = raw then edgeSlope member (chipSlope member root anchor) edge
-            else 0)) := by
-  have h := member.data.sourceEdgeIncidence_eq_localDegree_mul_targetEdgeIncidence
-    (chipSlope member root anchor) raw
-  have hInc := TreeMetricPotential.chipSlope_incidence member.data
-    member.fullDim.targetConnected member.fullDim.targetGenus root anchor raw.1.1
-  unfold sourceEdgeIncidence at h
-  change _ = ((member.data.vertexPartition raw.1.1).blockCard raw.1.2 : ℤ) *
-    targetEdgeIncidence (chipSlope member root anchor) raw.1.1 at h
-  unfold chipSlope at h
-  rw [hInc] at h
-  have hL : ∑ edge : member.data.SourceEdge,
-      ((if (member.data.sourceEnds edge).1 = raw then edgeSlope member (chipSlope member root anchor) edge
-          else 0) -
-        (if (member.data.sourceEnds edge).2 = raw then edgeSlope member (chipSlope member root anchor) edge
-          else 0)) =
-      ∑ edge : member.data.SourceEdge,
-        ((if (member.data.sourceEnds edge).1 = raw then
-            (member.data.sourceEdgeIndex edge : ℤ) *
-              TreeMetricPotential.chipSlope member.data member.fullDim.targetConnected
-                member.fullDim.targetGenus root anchor edge.1.1 else 0) +
-          (if (member.data.sourceEnds edge).2 = raw then
-            (member.data.sourceEdgeIndex edge : ℤ) *
-              -TreeMetricPotential.chipSlope member.data member.fullDim.targetConnected
-                member.fullDim.targetGenus root anchor edge.1.1 else 0)) := by
-    refine Finset.sum_congr rfl fun edge _ ↦ ?_
-    unfold edgeSlope chipSlope
-    split_ifs <;> ring
-  rw [hL, h]
-  split_ifs <;> ring
+            else 0)) :=
+  RowWalkKernel.fibre_sub_eq member.data member.fullDim.targetConnected
+    member.fullDim.targetGenus root anchor raw
 
 end Source
 
@@ -242,44 +209,9 @@ theorem sum_fibre_sub {X : Type*} [DecidableEq X] (ρ : member.data.SourceVertex
       else 0) =
       ∑ edge : member.data.SourceEdge, edgeSlope member (chipSlope member root anchor) edge *
         ((if ρ (member.data.sourceEnds edge).1 = b then 1 else 0) -
-          (if ρ (member.data.sourceEnds edge).2 = b then 1 else 0)) := by
-  classical
-  have hStep : ∀ raw : member.data.SourceVertex,
-      (if ρ raw = b then
-        ((if raw.1.1 = anchor then
-            ((member.data.vertexPartition raw.1.1).blockCard raw.1.2 : ℤ) else 0) -
-          (if raw.1.1 = root then
-            ((member.data.vertexPartition raw.1.1).blockCard raw.1.2 : ℤ) else 0))
-      else 0) =
-        ∑ edge : member.data.SourceEdge,
-          (if ρ raw = b then
-            ((if (member.data.sourceEnds edge).1 = raw then
-                edgeSlope member (chipSlope member root anchor) edge else 0) -
-              (if (member.data.sourceEnds edge).2 = raw then
-                edgeSlope member (chipSlope member root anchor) edge else 0)) else 0) := by
-    intro raw
-    by_cases hb : ρ raw = b
-    · simp only [ite_eq_left hb]
-      exact fibre_sub_eq member root anchor raw
-    · simp only [ite_eq_right hb, Finset.sum_const_zero]
-  rw [Finset.sum_congr rfl fun raw _ ↦ hStep raw, Finset.sum_comm]
-  refine Finset.sum_congr rfl fun edge _ ↦ ?_
-  have hSplit : ∀ raw : member.data.SourceVertex,
-      (if ρ raw = b then
-        ((if (member.data.sourceEnds edge).1 = raw then
-            edgeSlope member (chipSlope member root anchor) edge else 0) -
-          (if (member.data.sourceEnds edge).2 = raw then
-            edgeSlope member (chipSlope member root anchor) edge else 0)) else 0) =
-        (if (member.data.sourceEnds edge).1 = raw then
-          (if ρ raw = b then edgeSlope member (chipSlope member root anchor) edge else 0) else 0) -
-        (if (member.data.sourceEnds edge).2 = raw then
-          (if ρ raw = b then edgeSlope member (chipSlope member root anchor) edge else 0) else 0) := by
-    intro raw
-    split_ifs <;> ring
-  rw [Finset.sum_congr rfl fun raw _ ↦ hSplit raw, Finset.sum_sub_distrib,
-    Finset.sum_ite_eq, Finset.sum_ite_eq]
-  simp only [Finset.mem_univ, ite_true]
-  split_ifs <;> ring
+          (if ρ (member.data.sourceEnds edge).2 = b then 1 else 0)) :=
+  RowWalkKernel.sum_fibre_sub member.data member.fullDim.targetConnected
+    member.fullDim.targetGenus root anchor ρ b
 
 end Push
 
@@ -296,37 +228,16 @@ theorem sum_edges_eq_sum_rows (g : member.data.SourceEdge → ℤ)
     (∑ edge : member.data.SourceEdge, g edge) =
       ∑ e : Fin p, ∑ i : Fin (orderedRow member.fullDim.pathEnds
           (member.ident.row.symm e)).length,
-        g (orderedRow member.fullDim.pathEnds (member.ident.row.symm e))[i] := by
-  classical
-  -- Step 1: each surviving edge lies on exactly one stable row.
-  have hOne : ∀ edge : member.data.SourceEdge,
-      g edge = ∑ path : StablePath member.data,
-        if OnRow member.data path edge then g edge else 0 := by
-    intro edge
-    by_cases hD : IsDangling member.data edge
-    · rw [hDangling edge hD]
-      simp
-    · rw [Finset.sum_eq_single (NonDanglingEdge.stablePath (⟨edge, hD⟩ : NonDanglingEdge member.data))]
-      · rw [ite_eq_left ⟨hD, rfl⟩]
-      · intro path _ hne
-        rw [ite_eq_right]
-        rintro ⟨hS, hPath⟩
-        exact hne hPath.symm
-      · simp
-  rw [Finset.sum_congr rfl fun edge _ ↦ hOne edge, Finset.sum_comm]
-  rw [← (member.ident.row.symm).sum_comp]
-  refine Finset.sum_congr rfl fun e _ ↦ ?_
-  have hFilter : (∑ edge : member.data.SourceEdge,
-      if OnRow member.data (member.ident.row.symm e) edge then g edge else 0) =
-      ∑ edge ∈ (orderedRow member.fullDim.pathEnds (member.ident.row.symm e)).toFinset,
-        g edge := by
-    rw [← Finset.sum_filter]
-    refine Finset.sum_congr ?_ fun _ _ ↦ rfl
-    ext edge
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and, List.mem_toFinset]
-    exact (mem_orderedRow_iff member.fullDim.pathEnds _ edge).symm
-  rw [hFilter, List.sum_toFinset _ (orderedRow_nodup member.fullDim.pathEnds _)]
-  exact (Fin.sum_univ_fun_getElem _ g).symm
+        g (orderedRow member.fullDim.pathEnds (member.ident.row.symm e))[i] :=
+  RowWalkKernel.sum_edges_eq_sum_rows member.data
+    (fun e ↦ orderedRow member.fullDim.pathEnds (member.ident.row.symm e))
+    (fun _ ↦ orderedRow_nodup member.fullDim.pathEnds _)
+    (fun edge hD ↦ ⟨member.ident.row (NonDanglingEdge.stablePath ⟨edge, hD⟩),
+      (mem_orderedRow_iff member.fullDim.pathEnds _ edge).mpr
+        ⟨hD, (Equiv.symm_apply_apply _ _).symm⟩,
+      fun e he ↦ by
+        obtain ⟨_, hP⟩ := (mem_orderedRow_iff member.fullDim.pathEnds _ edge).mp he
+        rw [hP, Equiv.apply_symm_apply]⟩) g hDangling
 
 end Rows
 
@@ -381,6 +292,12 @@ theorem rowStart_add_rowLen_le (e : Fin p)
   rw [← rowStart_succ]
   exact rowStart_le_full member hClosed e _
 
+/-- The row vertices walk along the ordered row. -/
+theorem rowVertex_isWalk (e : Fin p) :
+    RowWalkKernel.IsWalk (orderedRow member.fullDim.pathEnds (member.ident.row.symm e))
+      (rowVertex member.fullDim (member.ident.row.symm e)) := fun _ h ↦
+  ⟨RowPosition.rowVertex_incident member.fullDim _ h, OrientedTraversal.walkVertex_succ _ _ h⟩
+
 /-- The two ends of the `i`-th occurrence are the `i`-th and `(i+1)`-st row
 vertices, and `rowSlope` reads the edge slope in that order: for any function
 `f` on source vertices, the signed differences agree. -/
@@ -394,28 +311,8 @@ theorem rowSlope_mul_sub (e : Fin p)
         (f (member.data.sourceEnds
             (orderedRow member.fullDim.pathEnds (member.ident.row.symm e))[i]).1 -
           f (member.data.sourceEnds
-            (orderedRow member.fullDim.pathEnds (member.ident.row.symm e))[i]).2) := by
-  have hSucc : rowVertex member.fullDim (member.ident.row.symm e) (i.val + 1) =
-      otherEnd member.data (orderedRow member.fullDim.pathEnds (member.ident.row.symm e))[i]
-        (rowVertex member.fullDim (member.ident.row.symm e) i) :=
-    OrientedTraversal.walkVertex_succ _ _ i.isLt
-  have hInc := RowPosition.rowVertex_incident member.fullDim (member.ident.row.symm e) i.isLt
-  unfold rowSlope
-  rw [hSucc]
-  unfold otherEnd
-  by_cases h : (member.data.sourceEnds
-      (orderedRow member.fullDim.pathEnds (member.ident.row.symm e))[i]).1 =
-      rowVertex member.fullDim (member.ident.row.symm e) i
-  · rw [ite_eq_left h, ite_eq_left h, h]
-  · rw [ite_eq_right h, ite_eq_right h]
-    have h2 : (member.data.sourceEnds
-        (orderedRow member.fullDim.pathEnds (member.ident.row.symm e))[i]).2 =
-        rowVertex member.fullDim (member.ident.row.symm e) i := by
-      rcases hInc with h1 | h1
-      · exact absurd h1 h
-      · exact h1
-    rw [h2]
-    ring
+            (orderedRow member.fullDim.pathEnds (member.ident.row.symm e))[i]).2) :=
+  RowWalkKernel.slope_mul_sub (rowVertex_isWalk member e) s i f
 
 /-- Along one occurrence the pulled-back potential rises by the row slope times
 the realized length. -/
@@ -425,30 +322,8 @@ theorem rowSlope_mul_rowLen (hRise : RiseCompatible member hClosed s P) (e : Fin
       sourcePotential member P
           (rowVertex member.fullDim (member.ident.row.symm e) (i.val + 1)) -
         sourcePotential member P
-          (rowVertex member.fullDim (member.ident.row.symm e) i) := by
-  have hSucc : rowVertex member.fullDim (member.ident.row.symm e) (i.val + 1) =
-      otherEnd member.data (orderedRow member.fullDim.pathEnds (member.ident.row.symm e))[i]
-        (rowVertex member.fullDim (member.ident.row.symm e) i) :=
-    OrientedTraversal.walkVertex_succ _ _ i.isLt
-  have hInc := RowPosition.rowVertex_incident member.fullDim (member.ident.row.symm e) i.isLt
-  have hRise := sourcePotential_rise member hClosed s P hRise
-    (orderedRow member.fullDim.pathEnds (member.ident.row.symm e))[i]
-  unfold rowSlope rowLen
-  rw [hSucc]
-  unfold otherEnd
-  by_cases h : (member.data.sourceEnds
-      (orderedRow member.fullDim.pathEnds (member.ident.row.symm e))[i]).1 =
-      rowVertex member.fullDim (member.ident.row.symm e) i
-  · rw [ite_eq_left h, ite_eq_left h, ← h, hRise]
-  · rw [ite_eq_right h, ite_eq_right h]
-    have h2 : (member.data.sourceEnds
-        (orderedRow member.fullDim.pathEnds (member.ident.row.symm e))[i]).2 =
-        rowVertex member.fullDim (member.ident.row.symm e) i := by
-      rcases hInc with h1 | h1
-      · exact absurd h1 h
-      · exact h1
-    rw [← h2]
-    linarith
+          (rowVertex member.fullDim (member.ident.row.symm e) i) :=
+  RowWalkKernel.slope_mul_len _ (rowVertex_isWalk member e) hRise i
 
 /-- The potential telescopes along the whole row. -/
 theorem sum_rowSlope_mul_rowLen (hRise : RiseCompatible member hClosed s P) (e : Fin p) :
@@ -458,14 +333,8 @@ theorem sum_rowSlope_mul_rowLen (hRise : RiseCompatible member hClosed s P) (e :
           (rowVertex member.fullDim (member.ident.row.symm e)
             (orderedRow member.fullDim.pathEnds (member.ident.row.symm e)).length) -
         sourcePotential member P
-          (rowVertex member.fullDim (member.ident.row.symm e) 0) := by
-  rw [Finset.sum_congr rfl fun i _ ↦ rowSlope_mul_rowLen member hClosed s P hRise e i]
-  exact Finset.sum_range_sub (fun j ↦ sourcePotential member P
-    (rowVertex member.fullDim (member.ident.row.symm e) j)) _ ▸
-      (Fin.sum_univ_eq_sum_range (fun j ↦ sourcePotential member P
-        (rowVertex member.fullDim (member.ident.row.symm e) (j + 1)) -
-        sourcePotential member P
-          (rowVertex member.fullDim (member.ident.row.symm e) j)) _)
+          (rowVertex member.fullDim (member.ident.row.symm e) 0) :=
+  RowWalkKernel.sum_slope_mul_len _ (rowVertex_isWalk member e) hRise
 
 /-- The occurrence lengths add up to the full prefix. -/
 theorem sum_rowLen (e : Fin p) :
@@ -1001,16 +870,13 @@ theorem doubleRowInterior_of_loopDoubles (hCond : D.Conditions small.core)
   obtain ⟨i0, hL0, hOthers⟩ := RowAlgebra.exists_single_long (rowStart_succ member hClosed e)
     (rowStart_zero member hClosed e) hFull hLenPos hInt
   -- the separating potential
-  set t := ((orderedRow member.fullDim.pathEnds (member.ident.row.symm e))[i0]).1.1 with ht
-  let s : member.target.edges → ℤ := fun t' ↦ if t' = t then 1 else 0
-  let P : member.target.V → ℤ := TreeMetricPotential.integrate
-    (fun t' ↦ s t' * ((memberRealization member hClosed).targetLength t' : ℤ))
-  have hRise : RiseCompatible member hClosed s P := fun t' ↦
-    TreeMetricPotential.integrate_rise member.fullDim.targetConnected member.fullDim.targetGenus _ t'
   have hFib : D.fib (D.bigCore.tail e) = D.fib (D.bigCore.head e) := by
     obtain ⟨h1, -, h3⟩ := (ExpansionData.compatible_of_conditions hCond e).2.2 j₁ j₂ hk2
     rw [h1, h3]
     exact hLoop e j₁ j₂ hk2
+  refine RowWalkKernel.not_single_long _ (rowVertex_isWalk member e)
+    member.fullDim.targetConnected member.fullDim.targetGenus i0 hOthers
+    (lt_of_lt_of_eq hLenPos hL0.symm) fun s P hRise ↦ ?_
   have hCP := corePotential_eq_of_fib_eq D small hN hL k hk member hClosed hScale s P hRise hCond
     hFib
   have hC := compat D small hN hL k hk member hClosed hScale s P hRise
@@ -1018,33 +884,16 @@ theorem doubleRowInterior_of_loopDoubles (hCond : D.Conditions small.core)
       slotValue D small hN hL k hk member hClosed s P e
         ((D.bigSpec (small.scale k hk) hN hL).length e) :=
     (hC.tail e).trans (hCP.trans (hC.head e).symm)
-  have hPsi : sourcePotential member P
-        (rowVertex member.fullDim (member.ident.row.symm e)
-          (orderedRow member.fullDim.pathEnds (member.ident.row.symm e)).length) =
-      sourcePotential member P (rowVertex member.fullDim (member.ident.row.symm e) 0) := by
-    unfold slotValue slotPos at hEq
-    cases hr : DegeneratePlacement.reverse member e
-    · simp only [hr, Bool.false_eq_true, ite_false, Nat.cast_zero] at hEq
-      rw [rowValue_of_nonpos _ _ _ _ _ le_rfl,
-        rowValue_of_ge _ _ _ _ hRise _ (by rw [hFull])] at hEq
-      exact hEq.symm
-    · simp only [hr, ite_true, Nat.cast_zero, sub_zero, sub_self] at hEq
-      rw [rowValue_of_ge _ _ _ _ hRise _ (by rw [hFull]),
-        rowValue_of_nonpos _ _ _ _ _ le_rfl] at hEq
-      exact hEq
-  have hTel := sum_rowSlope_mul_rowLen member hClosed s P hRise e
-  rw [hPsi, sub_self, Finset.sum_eq_single i0 (fun i _ hi ↦ by rw [hOthers i hi]; simp)
-    (by simp), hL0] at hTel
-  have hSlope : rowSlope member s e i0 ≠ 0 := by
-    have hidx := GluingDatum.sourceEdgeIndex_pos member.data
-      (orderedRow member.fullDim.pathEnds (member.ident.row.symm e))[i0]
-    have hs : s t = 1 := ite_eq_left rfl
-    unfold rowSlope edgeSlope
-    rw [← ht, hs]
-    split_ifs <;> omega
-  rcases mul_eq_zero.mp hTel with h | h
-  · exact hSlope h
-  · exact absurd h (by exact_mod_cast hLenPos.ne')
+  unfold slotValue slotPos at hEq
+  cases hr : DegeneratePlacement.reverse member e
+  · simp only [hr, Bool.false_eq_true, ite_false, Nat.cast_zero] at hEq
+    rw [rowValue_of_nonpos _ _ _ _ _ le_rfl,
+      rowValue_of_ge _ _ _ _ hRise _ (by rw [hFull])] at hEq
+    exact hEq.symm
+  · simp only [hr, ite_true, Nat.cast_zero, sub_zero, sub_self] at hEq
+    rw [rowValue_of_ge _ _ _ _ hRise _ (by rw [hFull]),
+      rowValue_of_nonpos _ _ _ _ _ le_rfl] at hEq
+    exact hEq
 
 include hScale in
 /-- **`ForestContractionRank` for loop-double data**:

@@ -133,51 +133,31 @@ theorem loopDouble_interior (hCond : D.Conditions small.core) {e : Fin Q} {j₁ 
       (CTTransport.rowStart_succ (degenerateLength D small) κ hClosed e)
       (CTTransport.rowStart_zero (degenerateLength D small) κ hClosed e) hFull hLenPos hInt
     -- the separating potential, rising only along the target edge of the long occurrence
-    set t := ((orderedRow κ.fullDim.pathEnds (rowOf κ e))[i0]).1.1 with ht
-    let s : κ.target.edges → ℤ := fun t' ↦ if t' = t then 1 else 0
-    let P : κ.target.V → ℤ := TreeMetricPotential.integrate
-      (fun t' ↦ s t' *
-        ((realization (degenerateLength D small) κ hClosed).targetLength t' : ℤ))
-    have hRise : CTTransport.RiseCompatible (degenerateLength D small) κ hClosed s P := fun t' ↦
-      TreeMetricPotential.integrate_rise κ.fullDim.targetConnected κ.fullDim.targetGenus _ t'
     have hFib : D.fib (D.bigCore.tail e) = D.fib (D.bigCore.head e) := by
       rw [hTail, hHead]
       exact hloop
+    refine RowWalkKernel.not_single_long _ (CTTransport.rowVertex_isWalk κ e)
+      κ.fullDim.targetConnected κ.fullDim.targetGenus i0 hOthers
+      (lt_of_lt_of_eq hLenPos hL0.symm) fun s P hRise ↦ ?_
     have hCP := SlotScriptKernel.eq_of_fib_eq D small _ hCond
       (CTTransport.corePotential_contracted D small hN hL k hk κ hClosed hScale s P hRise) hFib
     have hC := CTTransport.compat D small hN hL k hk κ hClosed hScale s P hRise
     have hEq : CTTransport.slotValue D small hN hL k hk κ hClosed s P e 0 =
         CTTransport.slotValue D small hN hL k hk κ hClosed s P e (BL e) :=
       (hC.tail e).trans (hCP.trans (hC.head e).symm)
-    have hPsi : CTTransport.sourcePotential κ P
-          (rowVertex κ.fullDim.pathEnds (rowOf κ e)
-            LEN) =
-        CTTransport.sourcePotential κ P (rowVertex κ.fullDim.pathEnds (rowOf κ e) 0) := by
-      have hGe := @RowAlgebra.value_of_ge _ _ _ _ _
-        (CTTransport.rowStart_succ (degenerateLength D small) κ hClosed e) _
-        (CTTransport.sum_rowSlope_mul_rowLen (degenerateLength D small) κ hClosed s P hRise e)
-      unfold CTTransport.slotValue RowAlgebra.orient at hEq
-      cases hr : reverse κ e
-      · simp only [hr, Bool.false_eq_true, ite_false, Nat.cast_zero] at hEq
-        rw [RowAlgebra.value_of_nonpos _ _ _ _ le_rfl, hGe (by rw [hFull])] at hEq
-        exact hEq.symm
-      · simp only [hr, ite_true, Nat.cast_zero, sub_zero, sub_self] at hEq
-        rw [hGe (by rw [hFull]), RowAlgebra.value_of_nonpos _ _ _ _ le_rfl] at hEq
-        exact hEq
-    have hTel :=
-      CTTransport.sum_rowSlope_mul_rowLen (degenerateLength D small) κ hClosed s P hRise e
-    rw [hPsi, sub_self, Finset.sum_eq_single i0 (fun i _ hi ↦ by rw [hOthers i hi]; simp)
-      (by simp), hL0] at hTel
-    have hSlope : CTTransport.rowSlope κ s e i0 ≠ 0 := by
-      have hidx := GluingDatum.sourceEdgeIndex_pos κ.data
-        (orderedRow κ.fullDim.pathEnds (rowOf κ e))[i0]
-      have hs : s t = 1 := ite_eq_left rfl
-      unfold CTTransport.rowSlope CTTransport.edgeSlope
-      rw [← ht, hs]
-      split_ifs <;> omega
-    rcases mul_eq_zero.mp hTel with h | h
-    · exact hSlope h
-    · exact absurd h (by exact_mod_cast hLenPos.ne')
+    have hGe := @RowAlgebra.value_of_ge _
+      (CTTransport.sourcePotential κ P (rowVertex κ.fullDim.pathEnds (rowOf κ e) 0))
+      (CTTransport.rowSlope κ s e) _ _
+      (CTTransport.rowStart_succ (degenerateLength D small) κ hClosed e) _
+      (RowWalkKernel.sum_slope_mul_len _ (CTTransport.rowVertex_isWalk κ e) hRise)
+    unfold CTTransport.slotValue RowAlgebra.orient at hEq
+    cases hr : reverse κ e
+    · simp only [hr, Bool.false_eq_true, ite_false, Nat.cast_zero] at hEq
+      rw [RowAlgebra.value_of_nonpos _ _ _ _ le_rfl, hGe (by rw [hFull])] at hEq
+      exact hEq.symm
+    · simp only [hr, ite_true, Nat.cast_zero, sub_zero, sub_self] at hEq
+      rw [hGe (by rw [hFull]), RowAlgebra.value_of_nonpos _ _ _ _ le_rfl] at hEq
+      exact hEq
   -- Step 2: that row vertex is reached by the fibre over its own target vertex.
   obtain ⟨j, hj0, hjl, h1, h2⟩ := hEx
   set address : InteriorAddress κ.fullDim := ⟨rowOf κ e, ⟨j - 1, by omega⟩⟩ with hAddress

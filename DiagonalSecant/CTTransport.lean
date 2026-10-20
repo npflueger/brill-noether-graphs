@@ -11,9 +11,12 @@ public import DraismaVargasCount.PencilTransportProducer
 This is the argument of `PencilTransportProducer` §2–§7, with the `FibreMember` replaced by a
 typed frame `κ` and the unmarked rows by the marked rows of `TypedRows`. Everything datum-level
 or datum-free is reused: `TreeMetricPotential`, the refinement equation
-`sourceEdgeIncidence_eq_localDegree_mul_targetEdgeIncidence`, the row arithmetic of
-`RowAlgebra` (the row potential `RowAlgebra.value`, its ends, and the window computation
-`RowAlgebra.slot_sum`), `kindVertex_zero_eq`, `kindVertex_length_eq`, and the slot-value
+`sourceEdgeIncidence_eq_localDegree_mul_targetEdgeIncidence` through `RowWalkKernel` (the
+fibre difference `RowWalkKernel.sum_fibre_sub`, the row decomposition
+`RowWalkKernel.sum_edges_eq_sum_rows` over the marked rows, the telescoping along a row and the
+separating potential `RowWalkKernel.not_single_long`, for the walk `rowVertex_isWalk`), the row
+arithmetic of `RowAlgebra` (the row potential `RowAlgebra.value`, its ends, and the window
+computation `RowAlgebra.slot_sum`), `kindVertex_zero_eq`, `kindVertex_length_eq`, and the slot-value
 scripts of `SlotScriptKernel` (compatibility from the row ends, descent through the contraction,
 the pushed Laplacian slot by slot against `hit`, and `SlotScriptKernel.linear_equiv_of_slots`).
 
@@ -72,7 +75,7 @@ theorem chip_riseCompatible (root anchor : κ.target.V) :
   fun t ↦ TreeMetricPotential.chipPotential_rise κ.data κ.fullDim.targetConnected
     κ.fullDim.targetGenus (realization y κ hClosed).targetLength root anchor t
 
-/-! ## 1b.  The source side: the fibre difference is a pulled-back incidence -/
+/-! ## 1b.  The pulled-back potential -/
 
 section Source
 
@@ -86,155 +89,9 @@ length (`PencilTransportProducer.edgeSlope`). -/
 def edgeSlope (edge : κ.data.SourceEdge) : ℤ :=
   s edge.1.1 * (κ.data.sourceEdgeIndex edge : ℤ)
 
-/-- Along a source edge the pulled-back potential rises by the edge slope times the realized
-source length: the dilation equation (`PencilTransportProducer.sourcePotential_rise`). -/
-theorem sourcePotential_rise (hRise : RiseCompatible y κ hClosed s P)
-    (edge : κ.data.SourceEdge) :
-    sourcePotential κ P (κ.data.sourceEnds edge).2 -
-        sourcePotential κ P (κ.data.sourceEnds edge).1 =
-      edgeSlope κ s edge *
-        ((realization y κ hClosed).sourceLength edge : ℤ) := by
-  have h := hRise edge.1.1
-  have hDil := (realization y κ hClosed).dilation_length edge
-  have hDilZ : ((κ.data.sourceEdgeIndex edge : ℕ) : ℤ) *
-      ((realization y κ hClosed).sourceLength edge : ℤ) =
-      ((realization y κ hClosed).targetLength edge.1.1 : ℤ) := by
-    exact_mod_cast hDil
-  unfold sourcePotential edgeSlope
-  change P (edge.1.1 : κ.target.V × κ.target.V).2 -
-    P (edge.1.1 : κ.target.V × κ.target.V).1 = _
-  rw [h, ← hDilZ]
-  ring
-
-/-- **The fibre difference is the pulled-back incidence** (`PencilTransportProducer.fibre_sub_eq`):
-the sheet-partition refinement equation against the tree slope with incidence `anchor − root`. -/
-theorem fibre_sub_eq (root anchor : κ.target.V) (raw : κ.data.SourceVertex) :
-    fibre κ anchor raw - fibre κ root raw =
-      ∑ edge : κ.data.SourceEdge,
-        ((if (κ.data.sourceEnds edge).1 = raw then
-            edgeSlope κ (chipSlope κ root anchor) edge else 0) -
-          (if (κ.data.sourceEnds edge).2 = raw then
-            edgeSlope κ (chipSlope κ root anchor) edge else 0)) := by
-  have h := κ.data.sourceEdgeIncidence_eq_localDegree_mul_targetEdgeIncidence
-    (chipSlope κ root anchor) raw
-  have hInc := TreeMetricPotential.chipSlope_incidence κ.data
-    κ.fullDim.targetConnected κ.fullDim.targetGenus root anchor raw.1.1
-  unfold sourceEdgeIncidence at h
-  change _ = ((κ.data.vertexPartition raw.1.1).blockCard raw.1.2 : ℤ) *
-    targetEdgeIncidence (chipSlope κ root anchor) raw.1.1 at h
-  unfold chipSlope at h
-  rw [hInc] at h
-  have hL : ∑ edge : κ.data.SourceEdge,
-      ((if (κ.data.sourceEnds edge).1 = raw then
-          edgeSlope κ (chipSlope κ root anchor) edge else 0) -
-        (if (κ.data.sourceEnds edge).2 = raw then
-          edgeSlope κ (chipSlope κ root anchor) edge else 0)) =
-      ∑ edge : κ.data.SourceEdge,
-        ((if (κ.data.sourceEnds edge).1 = raw then
-            (κ.data.sourceEdgeIndex edge : ℤ) *
-              TreeMetricPotential.chipSlope κ.data κ.fullDim.targetConnected
-                κ.fullDim.targetGenus root anchor edge.1.1 else 0) +
-          (if (κ.data.sourceEnds edge).2 = raw then
-            (κ.data.sourceEdgeIndex edge : ℤ) *
-              -TreeMetricPotential.chipSlope κ.data κ.fullDim.targetConnected
-                κ.fullDim.targetGenus root anchor edge.1.1 else 0)) := by
-    refine Finset.sum_congr rfl fun edge _ ↦ ?_
-    unfold edgeSlope chipSlope
-    split_ifs <;> ring
-  rw [hL, h]
-  unfold fibre
-  split_ifs <;> ring
-
-/-- **The pushed fibre difference, edge by edge**, along any map out of the source
-(`PencilTransportProducer.sum_fibre_sub`). -/
-theorem sum_fibre_sub (root anchor : κ.target.V) {X : Type*} [DecidableEq X]
-    (ρ : κ.data.SourceVertex → X) (b : X) :
-    (∑ raw : κ.data.SourceVertex,
-      if ρ raw = b then fibre κ anchor raw - fibre κ root raw else 0) =
-      ∑ edge : κ.data.SourceEdge, edgeSlope κ (chipSlope κ root anchor) edge *
-        ((if ρ (κ.data.sourceEnds edge).1 = b then 1 else 0) -
-          (if ρ (κ.data.sourceEnds edge).2 = b then 1 else 0)) := by
-  classical
-  have hStep : ∀ raw : κ.data.SourceVertex,
-      (if ρ raw = b then fibre κ anchor raw - fibre κ root raw else 0) =
-        ∑ edge : κ.data.SourceEdge,
-          (if ρ raw = b then
-            ((if (κ.data.sourceEnds edge).1 = raw then
-                edgeSlope κ (chipSlope κ root anchor) edge else 0) -
-              (if (κ.data.sourceEnds edge).2 = raw then
-                edgeSlope κ (chipSlope κ root anchor) edge else 0)) else 0) := by
-    intro raw
-    by_cases hb : ρ raw = b
-    · simp only [ite_eq_left hb]
-      exact fibre_sub_eq κ root anchor raw
-    · simp only [ite_eq_right hb, Finset.sum_const_zero]
-  rw [Finset.sum_congr rfl fun raw _ ↦ hStep raw, Finset.sum_comm]
-  refine Finset.sum_congr rfl fun edge _ ↦ ?_
-  have hSplit : ∀ raw : κ.data.SourceVertex,
-      (if ρ raw = b then
-        ((if (κ.data.sourceEnds edge).1 = raw then
-            edgeSlope κ (chipSlope κ root anchor) edge else 0) -
-          (if (κ.data.sourceEnds edge).2 = raw then
-            edgeSlope κ (chipSlope κ root anchor) edge else 0)) else 0) =
-        (if (κ.data.sourceEnds edge).1 = raw then
-          (if ρ raw = b then edgeSlope κ (chipSlope κ root anchor) edge else 0) else 0) -
-        (if (κ.data.sourceEnds edge).2 = raw then
-          (if ρ raw = b then edgeSlope κ (chipSlope κ root anchor) edge else 0) else 0) := by
-    intro raw
-    split_ifs <;> ring
-  rw [Finset.sum_congr rfl fun raw _ ↦ hSplit raw, Finset.sum_sub_distrib,
-    Finset.sum_ite_eq, Finset.sum_ite_eq]
-  simp only [Finset.mem_univ, ite_true]
-  split_ifs <;> ring
-
 end Source
 
-/-! ## 1c.  The row decomposition, by marked rows -/
-
-section Rows
-
-/-- **The row decomposition** (`PencilTransportProducer.sum_edges_eq_sum_rows`, marked): a
-function on source edges vanishing on the dangling ones sums to the sum, over the core slots, of
-its values along the frame's ordered **marked** rows. -/
-theorem sum_edges_eq_sum_rows (g : κ.data.SourceEdge → ℤ)
-    (hDangling : ∀ edge, IsDangling κ.data edge → g edge = 0) :
-    (∑ edge : κ.data.SourceEdge, g edge) =
-      ∑ e : Fin Q, ∑ i : Fin (orderedRow κ.fullDim.pathEnds (rowOf κ e)).length,
-        g (orderedRow κ.fullDim.pathEnds (rowOf κ e))[i] := by
-  classical
-  have hOne : ∀ edge : κ.data.SourceEdge,
-      g edge = ∑ e : Fin Q,
-        if OnRow (markSet κ.markSource) (rowOf κ e) edge then g edge else 0 := by
-    intro edge
-    by_cases hD : IsDangling κ.data edge
-    · rw [hDangling edge hD]
-      simp
-    · rw [Finset.sum_eq_single
-        (κ.ident.row
-          (markedRow (markSet κ.markSource) (⟨edge, hD⟩ : NonDanglingEdge κ.data)))]
-      · rw [ite_eq_left ⟨hD, by rw [rowOf, Equiv.symm_apply_apply]⟩]
-      · intro e _ hne
-        rw [ite_eq_right]
-        rintro ⟨hS, hPath⟩
-        apply hne
-        rw [hPath, rowOf, Equiv.apply_symm_apply]
-      · simp
-  rw [Finset.sum_congr rfl fun edge _ ↦ hOne edge, Finset.sum_comm]
-  refine Finset.sum_congr rfl fun e _ ↦ ?_
-  have hFilter : (∑ edge : κ.data.SourceEdge,
-      if OnRow (markSet κ.markSource) (rowOf κ e) edge then g edge else 0) =
-      ∑ edge ∈ (orderedRow κ.fullDim.pathEnds (rowOf κ e)).toFinset, g edge := by
-    rw [← Finset.sum_filter]
-    refine Finset.sum_congr ?_ fun _ _ ↦ rfl
-    ext edge
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and, List.mem_toFinset]
-    exact (mem_orderedRow_iff κ.fullDim.pathEnds _ edge).symm
-  rw [hFilter, List.sum_toFinset _ (orderedRow_nodup κ.fullDim.pathEnds _)]
-  exact (Fin.sum_univ_fun_getElem _ g).symm
-
-end Rows
-
-/-! ## 1d.  One row: offsets, slopes, and the row potential -/
+/-! ## 1c.  One row: offsets and slopes -/
 
 section RowDefs
 
@@ -268,8 +125,6 @@ end RowSlopeDef
 
 section RowData
 
-variable (s : κ.target.edges → ℤ) (P : κ.target.V → ℤ)
-
 theorem rowStart_succ (e : Fin Q)
     (i : Fin (orderedRow κ.fullDim.pathEnds (rowOf κ e)).length) :
     rowStart y κ hClosed e (i.val + 1) =
@@ -291,86 +146,13 @@ theorem rowStart_add_rowLen_le (e : Fin Q)
   rw [← rowStart_succ]
   exact rowStart_le_full y κ hClosed e _
 
-/-- `rowSlope` reads the edge slope in the walk order
-(`PencilTransportProducer.rowSlope_mul_sub`). -/
-theorem rowSlope_mul_sub (e : Fin Q)
-    (i : Fin (orderedRow κ.fullDim.pathEnds (rowOf κ e)).length)
-    (f : κ.data.SourceVertex → ℤ) :
-    rowSlope κ s e i *
-        (f (rowVertex κ.fullDim.pathEnds (rowOf κ e) i) -
-          f (rowVertex κ.fullDim.pathEnds (rowOf κ e) (i.val + 1))) =
-      edgeSlope κ s (orderedRow κ.fullDim.pathEnds (rowOf κ e))[i] *
-        (f (κ.data.sourceEnds (orderedRow κ.fullDim.pathEnds (rowOf κ e))[i]).1 -
-          f (κ.data.sourceEnds (orderedRow κ.fullDim.pathEnds (rowOf κ e))[i]).2) := by
-  have hSucc : rowVertex κ.fullDim.pathEnds (rowOf κ e) (i.val + 1) =
-      otherEnd κ.data (orderedRow κ.fullDim.pathEnds (rowOf κ e))[i]
-        (rowVertex κ.fullDim.pathEnds (rowOf κ e) i) :=
-    rowVertex_succ κ.fullDim.pathEnds (rowOf κ e) i.isLt
-  have hInc : Incident κ.data (orderedRow κ.fullDim.pathEnds (rowOf κ e))[i]
-      (rowVertex κ.fullDim.pathEnds (rowOf κ e) i) :=
-    rowVertex_incident κ.fullDim.pathEnds (rowOf κ e) i.isLt
-  unfold rowSlope
-  rw [hSucc]
-  unfold otherEnd
-  by_cases h : (κ.data.sourceEnds (orderedRow κ.fullDim.pathEnds (rowOf κ e))[i]).1 =
-      rowVertex κ.fullDim.pathEnds (rowOf κ e) i
-  · rw [ite_eq_left h, ite_eq_left h, h]
-  · rw [ite_eq_right h, ite_eq_right h]
-    have h2 : (κ.data.sourceEnds (orderedRow κ.fullDim.pathEnds (rowOf κ e))[i]).2 =
-        rowVertex κ.fullDim.pathEnds (rowOf κ e) i := by
-      rcases hInc with h1 | h1
-      · exact absurd h1 h
-      · exact h1
-    rw [h2]
-    ring
-
-/-- Along one occurrence the pulled-back potential rises by the row slope times the realized
-length. -/
-theorem rowSlope_mul_rowLen (hRise : RiseCompatible y κ hClosed s P) (e : Fin Q)
-    (i : Fin (orderedRow κ.fullDim.pathEnds (rowOf κ e)).length) :
-    rowSlope κ s e i * (rowLen y κ hClosed e i : ℤ) =
-      sourcePotential κ P (rowVertex κ.fullDim.pathEnds (rowOf κ e) (i.val + 1)) -
-        sourcePotential κ P (rowVertex κ.fullDim.pathEnds (rowOf κ e) i) := by
-  have hSucc : rowVertex κ.fullDim.pathEnds (rowOf κ e) (i.val + 1) =
-      otherEnd κ.data (orderedRow κ.fullDim.pathEnds (rowOf κ e))[i]
-        (rowVertex κ.fullDim.pathEnds (rowOf κ e) i) :=
-    rowVertex_succ κ.fullDim.pathEnds (rowOf κ e) i.isLt
-  have hInc : Incident κ.data (orderedRow κ.fullDim.pathEnds (rowOf κ e))[i]
-      (rowVertex κ.fullDim.pathEnds (rowOf κ e) i) :=
-    rowVertex_incident κ.fullDim.pathEnds (rowOf κ e) i.isLt
-  have hRise := sourcePotential_rise y κ hClosed s P hRise
-    (orderedRow κ.fullDim.pathEnds (rowOf κ e))[i]
-  unfold rowSlope rowLen
-  rw [hSucc]
-  unfold otherEnd
-  by_cases h : (κ.data.sourceEnds (orderedRow κ.fullDim.pathEnds (rowOf κ e))[i]).1 =
-      rowVertex κ.fullDim.pathEnds (rowOf κ e) i
-  · rw [ite_eq_left h, ite_eq_left h, ← h, hRise]
-  · rw [ite_eq_right h, ite_eq_right h]
-    have h2 : (κ.data.sourceEnds (orderedRow κ.fullDim.pathEnds (rowOf κ e))[i]).2 =
-        rowVertex κ.fullDim.pathEnds (rowOf κ e) i := by
-      rcases hInc with h1 | h1
-      · exact absurd h1 h
-      · exact h1
-    rw [← h2]
-    linarith
-
-/-- The potential telescopes along the whole row. -/
-theorem sum_rowSlope_mul_rowLen (hRise : RiseCompatible y κ hClosed s P) (e : Fin Q) :
-    (∑ i : Fin (orderedRow κ.fullDim.pathEnds (rowOf κ e)).length,
-      rowSlope κ s e i * (rowLen y κ hClosed e i : ℤ)) =
-      sourcePotential κ P (rowVertex κ.fullDim.pathEnds (rowOf κ e)
-          (orderedRow κ.fullDim.pathEnds (rowOf κ e)).length) -
-        sourcePotential κ P (rowVertex κ.fullDim.pathEnds (rowOf κ e) 0) := by
-  rw [Finset.sum_congr rfl fun i _ ↦ rowSlope_mul_rowLen y κ hClosed s P hRise e i]
-  exact Finset.sum_range_sub (fun j ↦ sourcePotential κ P
-    (rowVertex κ.fullDim.pathEnds (rowOf κ e) j)) _ ▸
-      (Fin.sum_univ_eq_sum_range (fun j ↦ sourcePotential κ P
-        (rowVertex κ.fullDim.pathEnds (rowOf κ e) (j + 1)) -
-        sourcePotential κ P (rowVertex κ.fullDim.pathEnds (rowOf κ e) j)) _)
+/-- The row vertices walk along the marked row. -/
+theorem rowVertex_isWalk (e : Fin Q) :
+    RowWalkKernel.IsWalk (orderedRow κ.fullDim.pathEnds (rowOf κ e))
+      (rowVertex κ.fullDim.pathEnds (rowOf κ e)) := fun _ h ↦
+  ⟨rowVertex_incident κ.fullDim.pathEnds _ h, rowVertex_succ κ.fullDim.pathEnds _ h⟩
 
 end RowData
-
 
 end Generic
 
@@ -395,11 +177,13 @@ theorem pushed_sub_eq (root anchor : κ.target.V) (b : (small.scale k hk).Vertex
           (if realize D small hN hL k hk κ hClosed hScale (κ.data.sourceEnds edge).2 = b
             then 1 else 0)) := by
   classical
-  rw [pushed_apply, pushed_apply, ← Finset.sum_sub_distrib,
-    ← sum_fibre_sub κ root anchor (realize D small hN hL k hk κ hClosed hScale) b]
-  refine Finset.sum_congr rfl fun raw _ ↦ ?_
+  rw [pushed_apply, pushed_apply, ← Finset.sum_sub_distrib]
+  refine (Finset.sum_congr rfl fun raw _ ↦ ?_).trans (RowWalkKernel.sum_fibre_sub κ.data
+    κ.fullDim.targetConnected κ.fullDim.targetGenus root anchor
+    (realize D small hN hL k hk κ hClosed hScale) b)
   by_cases hb : realize D small hN hL k hk κ hClosed hScale raw = b
   · rw [ite_eq_left hb, ite_eq_left hb, ite_eq_left hb]
+    rfl
   · rw [ite_eq_right hb, ite_eq_right hb, ite_eq_right hb]
     ring
 
@@ -557,8 +341,9 @@ theorem compat (hRise : RiseCompatible (degenerateLength D small) κ hClosed s P
   · rw [RowAlgebra.value_of_nonpos _ _ _ _ hpos, ← (reverse_endpoints κ hL e).1,
       corePotential_ident]
     rfl
-  · rw [RowAlgebra.value_of_ge _ _ (rowStart_succ (degenerateLength D small) κ hClosed e)
-      (sum_rowSlope_mul_rowLen (degenerateLength D small) κ hClosed s P hRise e)
+  · rw [RowAlgebra.value_of_ge (sourcePotential κ P (rowVertex κ.fullDim.pathEnds (rowOf κ e) 0))
+      (rowSlope κ s e) (rowStart_succ (degenerateLength D small) κ hClosed e)
+      (RowWalkKernel.sum_slope_mul_len _ (rowVertex_isWalk κ e) hRise)
       (by have := hFull e; omega), ← (reverse_endpoints κ hL e).2, corePotential_ident]
     rfl
 
@@ -618,7 +403,16 @@ theorem pushed_sub_eq_rows (hCond : D.Conditions small.core) (b : (small.scale k
               (OV e (i.val + 1))) := by
   classical
   rw [pushed_sub_eq]
-  rw [sum_edges_eq_sum_rows κ (fun edge ↦ edgeSlope κ (chipSlope κ root anchor) edge *
+  rw [RowWalkKernel.sum_edges_eq_sum_rows κ.data
+      (fun e ↦ orderedRow κ.fullDim.pathEnds (rowOf κ e))
+      (fun _ ↦ orderedRow_nodup κ.fullDim.pathEnds _)
+      (fun edge hD ↦ ⟨κ.ident.row (markedRow (markSet κ.markSource) ⟨edge, hD⟩),
+        (mem_orderedRow_iff κ.fullDim.pathEnds _ edge).mpr
+          ⟨hD, by rw [rowOf, Equiv.symm_apply_apply]⟩,
+        fun e he ↦ by
+          obtain ⟨_, hP⟩ := (mem_orderedRow_iff κ.fullDim.pathEnds _ edge).mp he
+          rw [hP, rowOf, Equiv.apply_symm_apply]⟩)
+      (fun edge ↦ edgeSlope κ (chipSlope κ root anchor) edge *
       ((if realize D small hN hL k hk κ hClosed hScale (κ.data.sourceEnds edge).1 = b
           then 1 else 0) -
         (if realize D small hN hL k hk κ hClosed hScale (κ.data.sourceEnds edge).2 = b
@@ -627,11 +421,12 @@ theorem pushed_sub_eq_rows (hCond : D.Conditions small.core) (b : (small.scale k
       rw [realize_dangling D small hN hL k hk κ hClosed hScale hD]
       ring)]
   refine Finset.sum_congr rfl fun e _ ↦ Finset.sum_congr rfl fun i _ ↦ ?_
-  rw [← rowSlope_mul_sub κ (chipSlope κ root anchor) e i (fun v ↦
-    if realize D small hN hL k hk κ hClosed hScale v = b then 1 else 0)]
+  refine (RowWalkKernel.slope_mul_sub (rowVertex_isWalk κ e) (chipSlope κ root anchor) i
+    (fun v ↦ if realize D small hN hL k hk κ hClosed hScale v = b then 1 else 0)).symm.trans ?_
   unfold PencilTransportProducer.hit
   rw [realize_rowVertex D small hN hL k hk κ hClosed hScale hCond e i (le_of_lt i.isLt),
     realize_rowVertex D small hN hL k hk κ hClosed hScale hCond e (i.val + 1) i.isLt]
+  rfl
 
 include hScale in
 /-- **(T), typed.** Any two pushed fibres of a closed typed frame are linearly equivalent on the
