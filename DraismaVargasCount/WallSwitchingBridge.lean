@@ -81,7 +81,8 @@ This file builds that bridge.
 * `transport_of_finite_walls_bounded`, `schedule_transport_bounded` -- the
   bounded restatement of the schedule.  The induction never leaves `[0, 1]`, so
   the link binder may be restricted to `0 ≤ a` and `b ≤ 1` at no cost to
-  `transport_source_target`.
+  `transport_source_target`.  `schedule_transport_bounded_of_equivalence` is the
+  same for any equivalence relation on requests that is constant between walls.
 * `countLink_source_target_of_even_stars` -- **the in-cone parity at one
   schedule, end to end**: positive endpoints, a general finish and a
   codimension-one segment reduce the whole segment's link to per-star parity at
@@ -766,6 +767,36 @@ theorem transport_of_finite_walls_bounded (W : Finset ℚ) (P : ℚ → Prop) (l
         Finset.card_lt_card ⟨hsub, fun hcon ↦ hnotin (hcon ht₀F)⟩
       omega
 
+/-- **The schedule transport over any link, with the link binder bounded.**  `R` is an
+equivalence relation on the requests over one core that holds between the requests at any
+two parameters of the schedule with no wall between them.  The schedule's own induction never
+leaves `[0, 1]`, so a link supplied only for `0 ≤ a` and `b ≤ 1` carries `R` from the
+schedule's start to its finish.  `schedule_transport_bounded` is the case of
+`CountTransportLink.CountLink`; the integer count of `DraismaVargasCount.IntegerCount` is the
+other. -/
+theorem schedule_transport_bounded_of_equivalence {R : (Fin p → ℚ) → (Fin p → ℚ) → Prop}
+    (hR : Equivalence R) (S : CountSchedule.Schedule core degree)
+    (hconst : ∀ a b : ℚ, (∀ t ∈ S.walls, ¬ (min a b ≤ t ∧ t ≤ max a b)) →
+      R (S.request a) (S.request b))
+    (link : ∀ a t b : ℚ, 0 ≤ a → a < t → t < b → b ≤ 1 →
+      CountSchedule.IsWall core degree S.source S.target t →
+      (∀ u, CountSchedule.IsWall core degree S.source S.target u → a ≤ u → u ≤ b → u = t) →
+      R (S.request a) (S.request b))
+    (hgen : ∀ (k : Frame core degree) (col : Fin p), k.coordsAt S.target col ≠ 0) :
+    R S.source S.target := by
+  classical
+  have hiff : ∀ {a b : ℚ}, R (S.request a) (S.request b) →
+      (R S.source (S.request a) ↔ R S.source (S.request b)) :=
+    fun h ↦ ⟨(hR.trans · h), (hR.trans · (hR.symm h))⟩
+  have h := transport_of_finite_walls_bounded S.walls (fun t ↦ R S.source (S.request t)) 0 1
+    (fun u v huv hno ↦ hiff (hconst u v (by rwa [min_eq_left huv, max_eq_right huv])))
+    (fun u t v hlo hut htv hv1 htW hOnly ↦ hiff (link u t v hlo hut htv hv1
+      (S.mem_walls.mp htW) fun w hw h1 h2 ↦ hOnly w (S.mem_walls.mpr hw) h1 h2))
+    (fun h ↦ (S.one_notMem_walls hgen) h)
+    _ 0 le_rfl S.zero_notMem_walls zero_le_one (le_refl _)
+  have h1 := h.mp (by rw [S.request_zero]; exact hR.refl _)
+  rwa [S.request_one] at h1
+
 /-- **The schedule transport, with the link binder bounded.**  The
 schedule's own induction never leaves `[0, 1]`, so a link supplied only for
 `0 ≤ a` and `b ≤ 1` carries the count from the schedule's start to its finish.
@@ -777,23 +808,12 @@ theorem schedule_transport_bounded (S : CountSchedule.Schedule core degree)
       (∀ u, CountSchedule.IsWall core degree S.source S.target u → a ≤ u → u ≤ b → u = t) →
       CountTransportLink.CountLink degree core (S.request a) core (S.request b))
     (hgen : ∀ (k : Frame core degree) (col : Fin p), k.coordsAt S.target col ≠ 0) :
-    CountTransportLink.CountLink degree core S.source core S.target := by
-  classical
-  have h := transport_of_finite_walls_bounded S.walls
-    (fun t ↦ Odd (GeometricFibre.openOddCount core (S.request t) degree)) 0 1
-    (by
-      intro u v huv hno
-      have hmin : min u v = u := min_eq_left huv
-      have hmax : max u v = v := max_eq_right huv
-      rw [S.openOddCount_eq_of_no_wall_between (a := u) (b := v)
-        (by rw [hmin, hmax]; exact hno)])
-    (by
-      intro u t v hlo hut htv hv1 htW hOnly
-      exact link u t v hlo hut htv hv1 (S.mem_walls.mp htW)
-        fun w hw h1 h2 ↦ hOnly w (S.mem_walls.mpr hw) h1 h2)
-    (fun h ↦ (S.one_notMem_walls hgen) h)
-    _ 0 le_rfl S.zero_notMem_walls zero_le_one (le_refl _)
-  rwa [S.request_zero, S.request_one] at h
+    CountTransportLink.CountLink degree core S.source core S.target :=
+  schedule_transport_bounded_of_equivalence
+    ⟨CountTransportLink.countLink_refl degree core, CountTransportLink.countLink_symm,
+      CountTransportLink.countLink_trans⟩ S
+    (fun _ _ h ↦ CountTransportLink.countLink_of_openOddCount_eq
+      (S.openOddCount_eq_of_no_wall_between h)) link hgen
 
 /-- **The in-cone parity, assembled.**  Over a schedule whose
 two endpoints are positive, whose finish is general, and whose segment is

@@ -70,11 +70,17 @@ below is `CountSchedule.C34 2` verbatim.
   requests: a general positive request keeping one coordinate negative, a simple start
   keeping it positive, and the opposite signs forced at the two ends of a segment whose
   midpoint zeroes a coordinate.
+* `IsSiteLink`, `InConeSupply`, `TypeChangeSupply`, `IsSiteLink.link_of_positiveGeneral`,
+  `IsSiteLink.exists_chain_positive`, `IsSiteLink.link_of_cubic` -- the in-cone half through
+  the hub and the chain of `StepSupplyReduction` with positivity carried, **for any link of
+  sites**: an equivalence relation that holds on a wall-free stretch of a schedule and across
+  a relabelling.  The parity link is one (`isSiteLink_countLink`), and so is the integer link
+  of `DraismaVargasCount.IntegerCount`.
 * `countLink_of_positiveGeneral`, `odd_indep_of_positiveGeneral` -- the in-cone
-  half, through the hub.
+  half, through the hub, for the parity link.
 * `step_positiveGeneral`, `exists_siteChain_positive`,
   `odd_of_positiveGeneral`, `odd_of_base_positive`, `c34_of_base_positive` --
-  the chain of `StepSupplyReduction`, with positivity carried.
+  the chain, for the parity link.
 * `c34_genusSix_simple` -- **`CountSchedule.C34 2` itself**, from
   `InConeSupplySimple`, `TypeChangeSupplyPositive`, the genus bound and one
   ballot classification at one positive general request over the caterpillar.
@@ -354,7 +360,114 @@ theorem opposite_signs_of_mid_zero (k : Frame core degree) (col : Fin p)
   · right; constructor <;> linarith
   · left; constructor <;> linarith
 
-/-! ## 3.  The in-cone half, through the hub -/
+/-! ## 3.  The chain over any link of sites
+
+The in-cone half through the hub and the chain of Whitehead moves use three things of the
+link: that it is an equivalence relation, that it holds between two requests of a schedule
+with no wall between them, and that it holds across a relabelling of the core.  `IsSiteLink`
+names them, and the propagation is proved here once for any such link.  The parity link
+`CountTransportLink.CountLink` is one (`isSiteLink_countLink`), and §§4--6 read it off; the
+integer link `IntegerCount.IntLink` of `DraismaVargasCount.IntegerCount` is the other. -/
+
+/-- **A link of sites** over cores with `n` vertices and `p` slots, at one degree. -/
+structure IsSiteLink (degree : ℕ)
+    (L : Core n p → (Fin p → ℚ) → Core n p → (Fin p → ℚ) → Prop) : Prop where
+  refl (core : Core n p) (y : Fin p → ℚ) : L core y core y
+  symm {c c' : Core n p} {y y' : Fin p → ℚ} : L c y c' y' → L c' y' c y
+  trans {c c' c'' : Core n p} {y y' y'' : Fin p → ℚ} :
+    L c y c' y' → L c' y' c'' y'' → L c y c'' y''
+  of_no_wall {core : Core n p} (S : CountSchedule.Schedule core degree) {a b : ℚ} :
+    (∀ t ∈ S.walls, ¬ (min a b ≤ t ∧ t ≤ max a b)) → L core (S.request a) core (S.request b)
+  relabel {c c' : Core n p} (d : Relabel c c') {y y' : Fin p → ℚ} :
+    (∀ e, y' (d.slot e) = y e) → L c y c' y'
+
+/-- `InConeSupplySimple` for any link: crossing a simple isolated wall on a segment of
+strictly positive requests over one core is a link. -/
+def InConeSupply (degree : ℕ)
+    (L : Core n p → (Fin p → ℚ) → Core n p → (Fin p → ℚ) → Prop) : Prop :=
+  ∀ (core : Core n p) (S : CountSchedule.Schedule core degree) (a t b : ℚ),
+    (∀ i, 0 < S.source i) → (∀ i, 0 < S.target i) →
+    0 ≤ a → a < t → t < b → b ≤ 1 →
+    CountSchedule.IsWall core degree S.source S.target t →
+    (∀ u, CountSchedule.IsWall core degree S.source S.target u → a ≤ u → u ≤ b → u = t) →
+    WallSwitchingBridge.SimpleAt core degree S.source S.target t →
+      L core (S.request a) core (S.request b)
+
+/-- `TypeChangeSupplyPositive` for any link: across every Whitehead step there are two
+positive general requests, one over each core, joined by a link. -/
+def TypeChangeSupply (degree : ℕ)
+    (L : Core n p → (Fin p → ℚ) → Core n p → (Fin p → ℚ) → Prop) : Prop :=
+  ∀ c c' : CubicCore n p, Step c c' →
+    ∃ y y' : Fin p → ℚ, PositiveGeneral c.core degree y ∧ PositiveGeneral c'.core degree y' ∧
+      L c.core y c'.core y'
+
+namespace IsSiteLink
+
+variable {L : Core n p → (Fin p → ℚ) → Core n p → (Fin p → ℚ) → Prop}
+  (hL : IsSiteLink degree L)
+include hL
+
+/-- **The in-cone half.**  Two positive general requests over one core are linked -- not
+along the segment between them, which need not be codimension one, but through a hub chosen
+after both are known (`exists_simple_hub`). -/
+theorem link_of_positiveGeneral (h : InConeSupply degree L) (core : Core n p)
+    {y₀ y₁ : Fin p → ℚ} (h₀ : PositiveGeneral core degree y₀)
+    (h₁ : PositiveGeneral core degree y₁) :
+    L core y₀ core y₁ := by
+  obtain ⟨z, hzpos, hzgen, hs₀, hs₁⟩ :=
+    exists_simple_hub core degree y₀ y₁ h₀.2 h₁.2 (fun _ ↦ 1) fun _ ↦ one_pos
+  have link : ∀ {y : Fin p → ℚ}, PositiveGeneral core degree y →
+      (∀ t, WallSwitchingBridge.SimpleAt core degree z y t) → L core z core y :=
+    fun hy hs ↦ WallSwitchingBridge.schedule_transport_bounded_of_equivalence
+      ⟨hL.refl core, hL.symm, hL.trans⟩ ⟨z, _, hzgen⟩ (fun _ _ ↦ hL.of_no_wall _)
+      (fun a t b hlo hat htb hb1 hw hiso ↦
+        h core ⟨z, _, hzgen⟩ a t b hzpos hy.1 hlo hat htb hb1 hw hiso (hs t)) hy.2
+  exact hL.trans (hL.symm (link h₀ hs₀)) (link h₁ hs₁)
+
+/-- A chain of Whitehead steps, carrying positivity. -/
+theorem exists_chain_positive (hcone : InConeSupply degree L)
+    (htype : TypeChangeSupply degree L) {c c' : CubicCore n p}
+    (h : Relation.ReflTransGen Step c c') {y : Fin p → ℚ}
+    (hy : PositiveGeneral c.core degree y) :
+    ∃ y' : Fin p → ℚ, PositiveGeneral c'.core degree y' ∧ L c.core y c'.core y' := by
+  induction h with
+  | refl => exact ⟨y, hy, hL.refl _ _⟩
+  | tail _ hstep ih =>
+      obtain ⟨u, hu, hchain⟩ := ih
+      obtain ⟨z, v, hz, hv, hlink⟩ := htype _ _ hstep
+      exact ⟨v, hv, hL.trans hchain <| hL.trans (hL.link_of_positiveGeneral hcone _ hu hz) hlink⟩
+
+/-- **Any two positive general sites over cubic cores are linked**, given the two supplies
+and the genus bound.  The terminal core isomorphism of `CoreOfDarts.exists_chain` is removed
+by the relabelling field of the link. -/
+theorem link_of_cubic (hcone : InConeSupply degree L) (htype : TypeChangeSupply degree L)
+    (hGenus : 2 ≤ p + 1 - n) (c c' : CubicCore n p) (y y' : Fin p → ℚ)
+    (hy : PositiveGeneral c.core degree y) (hy' : PositiveGeneral c'.core degree y') :
+    L c.core y c'.core y' := by
+  obtain ⟨c'', hchain, ⟨i⟩⟩ := CoreOfDarts.exists_chain c c' hGenus
+  obtain ⟨z, hz, hlink⟩ := hL.exists_chain_positive hcone htype hchain hy
+  obtain ⟨d, -⟩ : ∃ d : Relabel c''.core c'.core, d = CoreRelabel.Relabel.ofCoreIso i :=
+    ⟨_, rfl⟩
+  have hzw : ∀ e, (fun e ↦ z (d.slot.symm e)) (d.slot e) = z e :=
+    fun e ↦ congrArg z (d.slot.symm_apply_apply e)
+  exact hL.trans hlink <| hL.trans (hL.relabel d hzw) <| hL.link_of_positiveGeneral hcone
+    c'.core ⟨fun _ ↦ hz.1 _, StepSupplyReduction.generalRequest_relabel d hzw hz.2⟩ hy'
+
+end IsSiteLink
+
+/-- **The parity link is a link of sites.** -/
+theorem isSiteLink_countLink :
+    IsSiteLink degree (CountTransportLink.CountLink degree (n := n) (p := p) (n' := n) (p' := p))
+    where
+  refl := CountTransportLink.countLink_refl degree
+  symm := CountTransportLink.countLink_symm
+  trans := CountTransportLink.countLink_trans
+  of_no_wall S _ _ h :=
+    CountTransportLink.countLink_of_openOddCount_eq (S.openOddCount_eq_of_no_wall_between h)
+  relabel d _ _ hy :=
+    CountTransportLink.countLink_of_openOddCount_eq (CoreRelabel.openOddCount_relabel d hy degree)
+
+/-! ## 4.  The in-cone half, through the hub -/
 
 /-- **The in-cone half, from the restated hypothesis.**  Two positive general
 requests over one core are linked -- not along the segment between them, which
@@ -362,18 +475,8 @@ need not be codimension one, but through a hub chosen after both are known. -/
 theorem countLink_of_positiveGeneral (h : InConeSupplySimple degree n p) (core : Core n p)
     {y₀ y₁ : Fin p → ℚ} (h₀ : PositiveGeneral core degree y₀)
     (h₁ : PositiveGeneral core degree y₁) :
-    CountTransportLink.CountLink degree core y₀ core y₁ := by
-  obtain ⟨z, hzpos, hzgen, hs₀, hs₁⟩ :=
-    exists_simple_hub core degree y₀ y₁ h₀.2 h₁.2 (fun _ ↦ 1) fun _ ↦ one_pos
-  have link₀ : CountTransportLink.CountLink degree core z core y₀ :=
-    WallSwitchingBridge.schedule_transport_bounded ⟨z, y₀, hzgen⟩
-      (fun a t b hlo hat htb hb1 hw hiso ↦
-        h core ⟨z, y₀, hzgen⟩ a t b hzpos h₀.1 hlo hat htb hb1 hw hiso (hs₀ t)) h₀.2
-  have link₁ : CountTransportLink.CountLink degree core z core y₁ :=
-    WallSwitchingBridge.schedule_transport_bounded ⟨z, y₁, hzgen⟩
-      (fun a t b hlo hat htb hb1 hw hiso ↦
-        h core ⟨z, y₁, hzgen⟩ a t b hzpos h₁.1 hlo hat htb hb1 hw hiso (hs₁ t)) h₁.2
-  exact CountTransportLink.countLink_trans (CountTransportLink.countLink_symm link₀) link₁
+    CountTransportLink.CountLink degree core y₀ core y₁ :=
+  isSiteLink_countLink.link_of_positiveGeneral h core h₀ h₁
 
 /-- **The parity of the count over a fixed core does not depend on which positive
 general request is asked for.** -/
@@ -384,16 +487,14 @@ theorem odd_indep_of_positiveGeneral (h : InConeSupplySimple degree n p) (core :
     Odd (GeometricFibre.openOddCount core y₁ degree) :=
   (countLink_of_positiveGeneral h core h₀ h₁).mp hodd
 
-/-! ## 4.  The chain, carrying positivity -/
+/-! ## 5.  The chain, carrying positivity -/
 
 theorem step_positiveGeneral (hcone : InConeSupplySimple degree n p)
     (htype : TypeChangeSupplyPositive degree n p) {c c' : CubicCore n p} (hstep : Step c c')
     {y : Fin p → ℚ} (hy : PositiveGeneral c.core degree y) :
     ∃ y' : Fin p → ℚ, PositiveGeneral c'.core degree y' ∧
-      CountTransportLink.CountLink degree c.core y c'.core y' := by
-  obtain ⟨z, y', hz, hy', hlink⟩ := htype c c' hstep
-  exact ⟨y', hy', CountTransportLink.countLink_trans
-    (countLink_of_positiveGeneral hcone c.core hy hz) hlink⟩
+      CountTransportLink.CountLink degree c.core y c'.core y' :=
+  isSiteLink_countLink.exists_chain_positive hcone htype (.single hstep) hy
 
 theorem exists_siteChain_positive (hcone : InConeSupplySimple degree n p)
     (htype : TypeChangeSupplyPositive degree n p) {c c' : CubicCore n p}
@@ -401,15 +502,11 @@ theorem exists_siteChain_positive (hcone : InConeSupplySimple degree n p)
     (hy : PositiveGeneral c.core degree y) :
     ∃ y' : Fin p → ℚ, PositiveGeneral c'.core degree y' ∧
       Relation.ReflTransGen (CountSchedule.Site.Link (degree := degree))
-        (CoreChainSites.siteOf degree c y) (CoreChainSites.siteOf degree c' y') := by
-  induction h with
-  | refl => exact ⟨y, hy, Relation.ReflTransGen.refl⟩
-  | tail _ hstep ih =>
-      obtain ⟨u, hu, hchain⟩ := ih
-      obtain ⟨v, hv, hlink⟩ := step_positiveGeneral hcone htype hstep hu
-      exact ⟨v, hv, hchain.tail hlink⟩
+        (CoreChainSites.siteOf degree c y) (CoreChainSites.siteOf degree c' y') :=
+  let ⟨y', hy', hlink⟩ := isSiteLink_countLink.exists_chain_positive hcone htype h hy
+  ⟨y', hy', .single hlink⟩
 
-/-! ## 5.  The headline -/
+/-! ## 6.  The headline -/
 
 /-- **Oddness at every positive general request over every core of a chain**, from the two
 hypotheses. -/
@@ -418,26 +515,8 @@ theorem odd_of_positiveGeneral (hcone : InConeSupplySimple degree n p)
     (c c' : CubicCore n p) (y y' : Fin p → ℚ)
     (hy : PositiveGeneral c.core degree y) (hy' : PositiveGeneral c'.core degree y')
     (hodd : Odd (GeometricFibre.openOddCount c.core y degree)) :
-    Odd (GeometricFibre.openOddCount c'.core y' degree) := by
-  obtain ⟨c'', hchain, ⟨i⟩⟩ := CoreOfDarts.exists_chain c c' hGenus
-  obtain ⟨z, hz, hsite⟩ := exists_siteChain_positive hcone htype hchain hy
-  have hoddz : Odd (GeometricFibre.openOddCount c''.core z degree) :=
-    CountSchedule.Site.odd_of_reflTransGen hsite hodd
-  obtain ⟨d, -⟩ : ∃ d : Relabel c''.core c'.core, d = CoreRelabel.Relabel.ofCoreIso i :=
-    ⟨_, rfl⟩
-  obtain ⟨w, hwdef⟩ : ∃ w : Fin p → ℚ, w = fun e ↦ z (d.slot.symm e) := ⟨_, rfl⟩
-  have hzw : ∀ e, w (d.slot e) = z e := by
-    intro e
-    rw [hwdef]
-    exact congrArg z (d.slot.symm_apply_apply e)
-  have hoddw : Odd (GeometricFibre.openOddCount c'.core w degree) :=
-    CoreRelabel.openOddCount_relabel d hzw degree ▸ hoddz
-  have hwpos : ∀ e, 0 < w e := by
-    intro e
-    rw [hwdef]
-    exact hz.1 _
-  exact odd_indep_of_positiveGeneral hcone c'.core
-    ⟨hwpos, StepSupplyReduction.generalRequest_relabel d hzw hz.2⟩ hy' hoddw
+    Odd (GeometricFibre.openOddCount c'.core y' degree) :=
+  (isSiteLink_countLink.link_of_cubic hcone htype hGenus c c' y y' hy hy').mp hodd
 
 /-- **The same, from a single base case.** -/
 theorem odd_of_base_positive (hcone : InConeSupplySimple degree n p)
@@ -463,7 +542,7 @@ theorem c34_of_base_positive (hcone : InConeSupplySimple degree n p)
   odd_of_base_positive hcone htype hGenus base y₀ ⟨hy₀, hgen₀⟩ hodd
     ⟨core, hcubic, hconn⟩ y ⟨hpos, hy⟩
 
-/-! ## 6.  Genus six -/
+/-! ## 7.  Genus six -/
 
 /-- **`CountSchedule.C34 2` from the two hypotheses**, together with a ballot
 classification at one positive general request over the caterpillar, which gives the base
