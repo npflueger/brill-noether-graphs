@@ -129,44 +129,9 @@ theorem loopDouble_interior (hCond : D.Conditions small.core) {e : Fin Q} {j₁ 
       · exact Or.inl h0
       · exact Or.inr (le_antisymm hle (hNo j hj0 hjl (Nat.pos_of_ne_zero h0)))
     -- the first prefix to leave `0` jumps to the full length
-    have hEx1 : ∃ j, 1 ≤ RS e j :=
-      ⟨LEN, by omega⟩
-    have hJ : 1 ≤ RS e (Nat.find hEx1) := Nat.find_spec hEx1
-    have hJpos : 0 < Nat.find hEx1 := by
-      by_contra h
-      rw [show Nat.find hEx1 = 0 by omega, CTTransport.rowStart_zero] at hJ
-      omega
-    have hJle : Nat.find hEx1 ≤ LEN :=
-      Nat.find_min' hEx1 (by omega)
-    have hJm : RS e (Nat.find hEx1 - 1) = 0 := by
-      have := Nat.find_min hEx1 (show Nat.find hEx1 - 1 < Nat.find hEx1 by omega)
-      omega
-    have hJv : RS e (Nat.find hEx1) = BL e := by
-      rcases Nat.lt_or_ge (Nat.find hEx1) LEN
-        with h | h
-      · rcases hInt _ hJpos h with h' | h' <;> omega
-      · rw [show Nat.find hEx1 = LEN by omega,
-          hFull]
-    set i0 : Fin LEN :=
-      ⟨Nat.find hEx1 - 1, by omega⟩ with hi0
-    have hL0 : RL e i0 = BL e := by
-      have h' := CTTransport.rowStart_succ (degenerateLength D small) κ hClosed e i0
-      have h'' : RS e (Nat.find hEx1 - 1 + 1) =
-          RS e (Nat.find hEx1 - 1) +
-            RL e i0 := h'
-      rw [show Nat.find hEx1 - 1 + 1 = Nat.find hEx1 by omega] at h''
-      omega
-    have hOthers : ∀ i, i ≠ i0 → RL e i = 0 := by
-      intro i hi
-      have hSum := CTTransport.sum_rowLen (degenerateLength D small) κ hClosed e
-      rw [← Finset.add_sum_erase _ _ (Finset.mem_univ i0), hL0, hFull] at hSum
-      have hz : (∑ x ∈ Finset.univ.erase i0, (RL e x : ℤ)) = 0 := by
-        linarith
-      have hnn : ∀ x ∈ Finset.univ.erase i0, (0 : ℤ) ≤ RL e x :=
-        fun _ _ ↦ by positivity
-      have := (Finset.sum_eq_zero_iff_of_nonneg hnn).mp hz i
-        (Finset.mem_erase.mpr ⟨hi, Finset.mem_univ i⟩)
-      exact_mod_cast this
+    obtain ⟨i0, hL0, hOthers⟩ := RowAlgebra.exists_single_long
+      (CTTransport.rowStart_succ (degenerateLength D small) κ hClosed e)
+      (CTTransport.rowStart_zero (degenerateLength D small) κ hClosed e) hFull hLenPos hInt
     -- the separating potential, rising only along the target edge of the long occurrence
     set t := ((orderedRow κ.fullDim.pathEnds (rowOf κ e))[i0]).1.1 with ht
     let s : κ.target.edges → ℤ := fun t' ↦ if t' = t then 1 else 0
@@ -188,15 +153,16 @@ theorem loopDouble_interior (hCond : D.Conditions small.core) {e : Fin Q} {j₁ 
           (rowVertex κ.fullDim.pathEnds (rowOf κ e)
             LEN) =
         CTTransport.sourcePotential κ P (rowVertex κ.fullDim.pathEnds (rowOf κ e) 0) := by
-      unfold CTTransport.slotValue CTTransport.slotPos at hEq
+      have hGe := @RowAlgebra.value_of_ge _ _ _ _ _
+        (CTTransport.rowStart_succ (degenerateLength D small) κ hClosed e) _
+        (CTTransport.sum_rowSlope_mul_rowLen (degenerateLength D small) κ hClosed s P hRise e)
+      unfold CTTransport.slotValue RowAlgebra.orient at hEq
       cases hr : reverse κ e
       · simp only [hr, Bool.false_eq_true, ite_false, Nat.cast_zero] at hEq
-        rw [CTTransport.rowValue_of_nonpos _ _ _ _ _ _ le_rfl,
-          CTTransport.rowValue_of_ge _ _ _ _ _ hRise _ (by rw [hFull])] at hEq
+        rw [RowAlgebra.value_of_nonpos _ _ _ _ le_rfl, hGe (by rw [hFull])] at hEq
         exact hEq.symm
       · simp only [hr, ite_true, Nat.cast_zero, sub_zero, sub_self] at hEq
-        rw [CTTransport.rowValue_of_ge _ _ _ _ _ hRise _ (by rw [hFull]),
-          CTTransport.rowValue_of_nonpos _ _ _ _ _ _ le_rfl] at hEq
+        rw [hGe (by rw [hFull]), RowAlgebra.value_of_nonpos _ _ _ _ le_rfl] at hEq
         exact hEq
     have hTel :=
       CTTransport.sum_rowSlope_mul_rowLen (degenerateLength D small) κ hClosed s P hRise e

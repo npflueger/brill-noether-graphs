@@ -11,8 +11,9 @@ public import DraismaVargasCount.PencilTransportProducer
 This is `PencilTransportProducer` §2–§7, statement for statement, with the `FibreMember`
 replaced by a typed frame `κ` and the unmarked rows by the marked rows of `TypedRows`. Everything
 datum-level or datum-free is reused: `TreeMetricPotential`, the refinement equation
-`sourceEdgeIncidence_eq_localDegree_mul_targetEdgeIncidence`, `PencilTransportProducer.ramp`,
-`sum_window`, `kindVertex_zero_eq`, `kindVertex_length_eq`, `hit`, and the scripts of
+`sourceEdgeIncidence_eq_localDegree_mul_targetEdgeIncidence`, the row arithmetic of
+`RowAlgebra` (the row potential `RowAlgebra.value`, its ends, and the window computation
+`RowAlgebra.slot_sum`), `kindVertex_zero_eq`, `kindVertex_length_eq`, `hit`, and the scripts of
 `Utilities.Subdivision.CoreExpansion` (`slotValueScript`, `prin_eq_sum_slopes`,
 `pushDiv_prin_pullScript`).
 
@@ -368,59 +369,6 @@ theorem sum_rowSlope_mul_rowLen (hRise : RiseCompatible y κ hClosed s P) (e : F
         (rowVertex κ.fullDim.pathEnds (rowOf κ e) (j + 1)) -
         sourcePotential κ P (rowVertex κ.fullDim.pathEnds (rowOf κ e) j)) _)
 
-/-- The occurrence lengths add up to the full prefix. -/
-theorem sum_rowLen (e : Fin Q) :
-    (∑ i : Fin (orderedRow κ.fullDim.pathEnds (rowOf κ e)).length,
-      (rowLen y κ hClosed e i : ℤ)) =
-      rowStart y κ hClosed e (orderedRow κ.fullDim.pathEnds (rowOf κ e)).length := by
-  have h : ∀ i : Fin (orderedRow κ.fullDim.pathEnds (rowOf κ e)).length,
-      (rowLen y κ hClosed e i : ℤ) =
-        (rowStart y κ hClosed e (i.val + 1) : ℤ) -
-          (rowStart y κ hClosed e i : ℤ) := by
-    intro i
-    rw [rowStart_succ]
-    push_cast
-    ring
-  rw [Finset.sum_congr rfl fun i _ ↦ h i]
-  rw [Fin.sum_univ_eq_sum_range (fun j ↦ (rowStart y κ hClosed e (j + 1) : ℤ) -
-    (rowStart y κ hClosed e j : ℤ)),
-    Finset.sum_range_sub (fun j ↦ (rowStart y κ hClosed e j : ℤ)), rowStart_zero]
-  simp
-
-/-- **The row potential** at an integral position `pos` from the row's start. -/
-noncomputable def rowValue (e : Fin Q) (pos : ℤ) : ℤ :=
-  sourcePotential κ P (rowVertex κ.fullDim.pathEnds (rowOf κ e) 0) +
-    ∑ i : Fin (orderedRow κ.fullDim.pathEnds (rowOf κ e)).length,
-      rowSlope κ s e i *
-        PencilTransportProducer.ramp pos (rowStart y κ hClosed e i)
-          (rowLen y κ hClosed e i)
-
-theorem rowValue_of_nonpos (e : Fin Q) {pos : ℤ} (hpos : pos ≤ 0) :
-    rowValue y κ hClosed s P e pos =
-      sourcePotential κ P (rowVertex κ.fullDim.pathEnds (rowOf κ e) 0) := by
-  unfold rowValue
-  rw [Finset.sum_eq_zero, add_zero]
-  intro i _
-  have h0 : (0 : ℤ) ≤ rowStart y κ hClosed e i := by positivity
-  rw [PencilTransportProducer.ramp_of_le _ _ _ (by positivity) (by omega), mul_zero]
-
-theorem rowValue_of_ge (hRise : RiseCompatible y κ hClosed s P) (e : Fin Q) {pos : ℤ}
-    (hpos : (rowStart y κ hClosed e
-      (orderedRow κ.fullDim.pathEnds (rowOf κ e)).length : ℤ) ≤ pos) :
-    rowValue y κ hClosed s P e pos =
-      sourcePotential κ P (rowVertex κ.fullDim.pathEnds (rowOf κ e)
-        (orderedRow κ.fullDim.pathEnds (rowOf κ e)).length) := by
-  unfold rowValue
-  rw [Finset.sum_congr rfl fun i _ ↦ by
-    rw [PencilTransportProducer.ramp_of_ge _ _ _ (by positivity) (by
-      have := rowStart_add_rowLen_le y κ hClosed e i
-      have : ((rowStart y κ hClosed e i + rowLen y κ hClosed e i : ℕ) : ℤ) ≤ pos :=
-        le_trans (by exact_mod_cast this) hpos
-      push_cast at this
-      omega)]]
-  rw [sum_rowSlope_mul_rowLen y κ hClosed s P hRise]
-  ring
-
 end RowData
 
 
@@ -568,13 +516,13 @@ variable {n p : ℕ} (D : ExpansionData n p N Q) (small : Spec n p) (hN : 0 < N)
   (hScale : scale (degenerateLength D small) κ = k)
   (s : κ.target.edges → ℤ) (P : κ.target.V → ℤ)
 
-/-- The row position of the big-slot offset `o`, oriented by the row. -/
-noncomputable def slotPos (e : Fin Q) (o : ℕ) : ℤ :=
-  if reverse κ e then ((D.bigSpec (small.scale k hk) hN hL).length e : ℤ) - o else o
-
-/-- The script's value at offset `o` of big slot `e`. -/
+/-- The script's value at offset `o` of big slot `e`: the row potential (`RowAlgebra.value`) at
+the oriented position (`RowAlgebra.orient`). -/
 noncomputable def slotValue (e : Fin Q) (o : ℕ) : ℤ :=
-  rowValue (degenerateLength D small) κ hClosed s P e (slotPos D small hN hL k hk κ e o)
+  RowAlgebra.value (sourcePotential κ P (rowVertex κ.fullDim.pathEnds (rowOf κ e) 0))
+    (rowSlope κ s e) (rowStart (degenerateLength D small) κ hClosed e)
+    (rowLen (degenerateLength D small) κ hClosed e)
+    (RowAlgebra.orient (reverse κ e) ((D.bigSpec (small.scale k hk) hN hL).length e) o)
 
 /-- The script's value at a big core vertex: the pulled-back potential at the marked branch
 vertex carrying that label (a mark, or a trivalent vertex). -/
@@ -607,47 +555,32 @@ theorem compat (hRise : RiseCompatible (degenerateLength D small) κ hClosed s P
     (D.bigSpec (small.scale k hk) hN hL).SlotValueCompatible (corePotential D κ P)
       (slotValue D small hN hL k hk κ hClosed s P) := by
   have hFull := rowStart_full_le_length D small hN hL k hk κ hClosed hScale
+  have hGe := fun e ↦ @RowAlgebra.value_of_ge _ _ _ _ _
+    (rowStart_succ (degenerateLength D small) κ hClosed e) _
+    (sum_rowSlope_mul_rowLen (degenerateLength D small) κ hClosed s P hRise e)
   constructor
   · intro e
     change _ = corePotential D κ P (D.bigCore.tail e)
     have hEnds := reverse_endpoints κ hL e
-    unfold slotValue slotPos
+    unfold slotValue RowAlgebra.orient
     cases hr : reverse κ e
     · simp only [hr, Bool.false_eq_true, ite_false] at hEnds ⊢
-      rw [rowValue_of_nonpos _ _ _ _ _ _ (by simp), ← hEnds.1, corePotential_ident]
+      rw [RowAlgebra.value_of_nonpos _ _ _ _ (by simp), ← hEnds.1, corePotential_ident]
       rfl
     · simp only [hr, ite_true] at hEnds ⊢
-      rw [rowValue_of_ge _ _ _ _ _ hRise _ (by have := hFull e; omega), ← hEnds.2,
-        corePotential_ident]
+      rw [hGe e (by have := hFull e; omega), ← hEnds.2, corePotential_ident]
       rfl
   · intro e
     change _ = corePotential D κ P (D.bigCore.head e)
     have hEnds := reverse_endpoints κ hL e
-    unfold slotValue slotPos
+    unfold slotValue RowAlgebra.orient
     cases hr : reverse κ e
     · simp only [hr, Bool.false_eq_true, ite_false] at hEnds ⊢
-      rw [rowValue_of_ge _ _ _ _ _ hRise _ (by have := hFull e; omega), ← hEnds.2,
-        corePotential_ident]
+      rw [hGe e (by have := hFull e; omega), ← hEnds.2, corePotential_ident]
       rfl
     · simp only [hr, ite_true] at hEnds ⊢
-      rw [rowValue_of_nonpos _ _ _ _ _ _ (by simp), ← hEnds.1, corePotential_ident]
+      rw [RowAlgebra.value_of_nonpos _ _ _ _ (by simp), ← hEnds.1, corePotential_ident]
       rfl
-
-/-- On a contracted slot every occurrence has length zero, so the row potential is constant. -/
-theorem rowValue_contracted (e : Fin Q) (hc : D.kind e = SlotKind.contracted) (pos : ℤ) :
-    rowValue (degenerateLength D small) κ hClosed s P e pos =
-      sourcePotential κ P (rowVertex κ.fullDim.pathEnds (rowOf κ e) 0) := by
-  unfold rowValue
-  rw [Finset.sum_eq_zero, add_zero]
-  intro i _
-  have h := rowStart_add_rowLen_le (degenerateLength D small) κ hClosed e i
-  have h0 := rowStart_full_of_contracted D small κ hClosed e hc
-  have hLen : rowLen (degenerateLength D small) κ hClosed e i = 0 := by
-    rw [h0] at h
-    omega
-  rw [hLen, Nat.cast_zero]
-  unfold PencilTransportProducer.ramp
-  rw [min_eq_right (le_max_right _ _), mul_zero]
 
 include hN hL hk hScale in
 /-- The two ends of a contracted slot carry the same core potential. -/
@@ -660,10 +593,14 @@ theorem corePotential_contracted (hRise : RiseCompatible (degenerateLength D sma
   have h2 : corePotential D κ P (D.bigCore.head e) =
       slotValue D small hN hL k hk κ hClosed s P e
         ((D.bigSpec (small.scale k hk) hN hL).length e) := (hC.head e).symm
+  have h0 := rowStart_full_of_contracted D small κ hClosed e hc
+  have hLen : ∀ i, rowLen (degenerateLength D small) κ hClosed e i = 0 := fun i ↦ by
+    have h := rowStart_add_rowLen_le (degenerateLength D small) κ hClosed e i
+    rw [h0] at h
+    omega
   rw [h1, h2]
   unfold slotValue
-  rw [rowValue_contracted D small κ hClosed s P e hc,
-    rowValue_contracted D small κ hClosed s P e hc]
+  rw [RowAlgebra.value_of_len_zero _ _ _ _ hLen, RowAlgebra.value_of_len_zero _ _ _ _ hLen]
 
 include hN hL hk hScale in
 /-- The core potential is constant on every fibre of `D.fib`: the fibre is connected through
@@ -741,13 +678,6 @@ variable {n p : ℕ} (D : ExpansionData n p N Q) (small : Spec n p) (hN : 0 < N)
 section variables at the point of use). -/
 set_option hygiene false in
 local notation "BB" => D.bigSpec (small.scale k hk) hN hL
-set_option hygiene false in
-local notation "RS" => rowStart (degenerateLength D small) κ hClosed
-set_option hygiene false in
-local notation "RL" => rowLen (degenerateLength D small) κ hClosed
-set_option hygiene false in
-local notation "RV" => rowValue (degenerateLength D small) κ hClosed (chipSlope κ root anchor)
-  (chipPotential (degenerateLength D small) κ hClosed root anchor)
 set_option hygiene false in
 local notation "SV" => slotValue D small hN hL k hk κ hClosed (chipSlope κ root anchor)
   (chipPotential (degenerateLength D small) κ hClosed root anchor)
@@ -853,101 +783,6 @@ theorem pushDiv_prin_script (hCond : D.Conditions small.core) (b : (small.scale 
   split_ifs <;> ring
 
 include hScale in
-/-- **The window computation, one slot at a time** (`PencilTransportProducer.slot_sum`): each
-occurrence telescopes over its window (`sum_window`); reversal maps windows to windows. -/
-theorem slot_sum (e : Fin Q) (δ : ℕ → ℤ) :
-    (∑ o : Fin ((BB).length e),
-      (SV e (o.val + 1) -
-        SV e o.val) *
-      (δ o.val - δ (o.val + 1))) =
-      ∑ i : Fin (orderedRow κ.fullDim.pathEnds (rowOf κ e)).length,
-        RSl e i *
-          (δ (OV e i) -
-            δ (OV e (i.val + 1))) := by
-  have hFull := rowStart_full_le_length D small hN hL k hk κ hClosed hScale e
-  have hWin : ∀ i : Fin (orderedRow κ.fullDim.pathEnds (rowOf κ e)).length,
-      RS e i + RL e i ≤ (BB).length e :=
-    fun i ↦ (rowStart_add_rowLen_le (degenerateLength D small) κ hClosed e i).trans hFull
-  simp only [offsetVal_eq]
-  unfold slotValue slotPos
-  cases hr : reverse κ e
-  · simp only [Bool.false_eq_true, ite_false]
-    have hDiff : ∀ o : ℕ,
-        RV e ((o + 1 : ℕ) : ℤ) - RV e (o : ℤ) =
-          ∑ i : Fin (orderedRow κ.fullDim.pathEnds (rowOf κ e)).length,
-            RSl e i *
-              (if RS e i ≤ o ∧ o < RS e i + RL e i then (1 : ℤ) else 0) := by
-      intro o
-      unfold rowValue
-      rw [add_sub_add_left_eq_sub, ← Finset.sum_sub_distrib]
-      refine Finset.sum_congr rfl fun i _ ↦ ?_
-      rw [← mul_sub, show ((o + 1 : ℕ) : ℤ) = (o : ℤ) + 1 by push_cast; ring,
-        PencilTransportProducer.ramp_succ_sub _ _ _ (by positivity)]
-      split_ifs <;> omega
-    rw [Finset.sum_congr rfl fun o _ ↦ by rw [hDiff o.val]]
-    rw [Fin.sum_univ_eq_sum_range (fun o ↦ (∑ i : Fin (orderedRow κ.fullDim.pathEnds
-        (rowOf κ e)).length, RSl e i *
-          (if RS e i ≤ o ∧ o < RS e i + RL e i then (1 : ℤ) else 0)) * (δ o - δ (o + 1)))]
-    simp only [Finset.sum_mul]
-    rw [Finset.sum_comm]
-    refine Finset.sum_congr rfl fun i _ ↦ ?_
-    simp only [mul_assoc]
-    rw [← Finset.mul_sum, PencilTransportProducer.sum_window δ _ _ _ (hWin i)]
-    show _ = RSl e i * (δ (RS e i) - δ (RS e (i.val + 1)))
-    rw [rowStart_succ]
-  · simp only [ite_true]
-    have hDiff : ∀ o : ℕ, o < (BB).length e →
-        RV e (((BB).length e : ℤ) - ((o + 1 : ℕ) : ℤ)) -
-            RV e (((BB).length e : ℤ) - (o : ℤ)) =
-          ∑ i : Fin (orderedRow κ.fullDim.pathEnds (rowOf κ e)).length,
-            RSl e i *
-              -(if (BB).length e - RS e i - RL e i ≤ o ∧ o < (BB).length e - RS e i
-                then (1 : ℤ) else 0) := by
-      intro o ho
-      unfold rowValue
-      rw [add_sub_add_left_eq_sub, ← Finset.sum_sub_distrib]
-      refine Finset.sum_congr rfl fun i _ ↦ ?_
-      have hStep := PencilTransportProducer.ramp_succ_sub
-        (((BB).length e : ℤ) - ((o + 1 : ℕ) : ℤ)) (RS e i) (RL e i) (by positivity)
-      rw [show ((BB).length e : ℤ) - ((o + 1 : ℕ) : ℤ) + 1 =
-          ((BB).length e : ℤ) - (o : ℤ) by
-        push_cast; ring] at hStep
-      rw [← mul_sub, ← neg_sub, hStep]
-      have := hWin i
-      split_ifs <;> omega
-    rw [Finset.sum_congr rfl fun o _ ↦ by rw [hDiff o.val o.isLt]]
-    rw [Fin.sum_univ_eq_sum_range (fun o ↦ (∑ i : Fin (orderedRow κ.fullDim.pathEnds
-        (rowOf κ e)).length, RSl e i *
-          -(if (BB).length e - RS e i - RL e i ≤ o ∧ o < (BB).length e - RS e i
-            then (1 : ℤ) else 0)) * (δ o - δ (o + 1)))]
-    simp only [Finset.sum_mul]
-    rw [Finset.sum_comm]
-    refine Finset.sum_congr rfl fun i _ ↦ ?_
-    have hW := hWin i
-    have hEq : ∀ o ∈ Finset.range ((BB).length e),
-        RSl e i *
-            -(if (BB).length e - RS e i - RL e i ≤ o ∧ o < (BB).length e - RS e i
-              then (1 : ℤ) else 0) * (δ o - δ (o + 1)) =
-          -RSl e i *
-            ((if (BB).length e - RS e i - RL e i ≤ o ∧
-                o < (BB).length e - RS e i - RL e i + RL e i
-              then (1 : ℤ) else 0) * (δ o - δ (o + 1))) := by
-      intro o _
-      have hIff : (o < (BB).length e - RS e i) ↔
-          (o < (BB).length e - RS e i - RL e i + RL e i) := by omega
-      simp only [hIff]
-      ring
-    rw [Finset.sum_congr rfl hEq, ← Finset.mul_sum]
-    have hSum' := PencilTransportProducer.sum_window δ ((BB).length e)
-      ((BB).length e - RS e i - RL e i) (RL e i) (by omega)
-    rw [hSum']
-    show _ = RSl e i * (δ ((BB).length e - RS e i) - δ ((BB).length e - RS e (i.val + 1)))
-    rw [rowStart_succ,
-      show (BB).length e - RS e i - RL e i + RL e i = (BB).length e - RS e i by omega,
-      show (BB).length e - (RS e i + RL e i) = (BB).length e - RS e i - RL e i by omega]
-    ring
-
-include hScale in
 /-- **(T), typed.** Any two pushed fibres of a closed typed frame are linearly equivalent on the
 small subdivision: their difference is the Laplacian of the descended script
 (`PencilTransportProducer.linear_equiv_pushDivisor`). -/
@@ -968,9 +803,10 @@ theorem linear_equiv_pushed (hCond : D.Conditions small.core) :
   funext b
   rw [Pi.sub_apply, pushed_sub_eq_rows D small hN hL k hk κ hClosed hScale root anchor hCond b,
     pushDiv_prin_script D small hN hL k hk κ hClosed hScale root anchor hCond b]
-  exact Finset.sum_congr rfl fun e _ ↦
-    (slot_sum D small hN hL k hk κ hClosed hScale root anchor e
-      (HIT e b)).symm
+  exact Finset.sum_congr rfl fun e _ ↦ (RowAlgebra.slot_sum _ _
+    (rowStart_succ (degenerateLength D small) κ hClosed e) (reverse κ e) _
+    (fun i ↦ (rowStart_add_rowLen_le (degenerateLength D small) κ hClosed e i).trans
+      (rowStart_full_le_length D small hN hL k hk κ hClosed hScale e)) (HIT e b)).symm
 
 end Compare
 

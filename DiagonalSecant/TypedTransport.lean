@@ -16,7 +16,8 @@ closed typed frame over any two target vertices are linearly equivalent on `smal
 
 Reused verbatim (datum-free or datum-level):
 
-* `PencilTransportProducer.ramp` and its telescoping `sum_window` (§1);
+* the row arithmetic of `RowAlgebra`: the row potential `RowAlgebra.value`, its values at the
+  two ends, and the window computation `RowAlgebra.slot_sum`;
 * `TreeMetricPotential.chipSlope`/`chipPotential` (the integral tree slope of incidence
   `anchor − root` and its potential, integrated against the realized target lengths);
 * `GluingDatum.sourceEdgeIncidence_eq_localDegree_mul_targetEdgeIncidence` (the sheet-partition
@@ -25,14 +26,14 @@ Reused verbatim (datum-free or datum-level):
 
 Twinned in the helper module `CTTransport` (they index by rows): §2 `sourcePotential`,
 `edgeSlope`, `sourcePotential_rise`, `fibre_sub_eq`; §3 `sum_fibre_sub`, `sum_edges_eq_sum_rows` (the surviving occurrences grouped
-by **marked** rows, `mem_orderedRow_iff`); §4 the row data `rowStart`, `rowLen`, `rowSlope`,
-`rowValue`; §5 the realization of the row vertices (`realize_rowVertex`, from
+by **marked** rows, `mem_orderedRow_iff`); §4 the row data `rowStart`, `rowLen`, `rowSlope`;
+§5 the realization of the row vertices (`realize_rowVertex`, from
 `TypedImage.realize_address` and `realize_branch` at the two ends — the mark end included, since
 a mark is a marked branch vertex); §6 the script `script` on `D.bigSpec (small.scale k)`, its
 compatibility `compat` at both ends of every slot, constancy on contracted slots
 (`corePotential_contracted`) and hence on every fibre of the contraction
 (`script_eq_of_vertexMap_eq`, through the last clause of `ExpansionData.Conditions`), and
-`script_eq_pullScript`; §7 `pushDiv_prin_script`, `slot_sum`, `linear_equiv_pushed`. This
+`script_eq_pullScript`; §7 `pushDiv_prin_script`, `linear_equiv_pushed`. This
 module states the result as `pencilTransport`.
 
 ## The boundary term that is not there
