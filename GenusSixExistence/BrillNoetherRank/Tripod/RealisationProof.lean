@@ -57,16 +57,17 @@ the two agree (`placedG_interior`).
     move or merge).
   * `loopDouble_reach` — the member half: the row over a loop `double` has an interior address
     strictly inside the chain (`loopRow_interior`, the argument of
-    `PencilTransportProducer.doubleRowInterior_of_loopDoubles` on the G-rows, with the label
-    potential `labelPot` constant on the fibres of the expansion), realised in `gReach`
-    (`address_mem_gReach`).
+    `PencilTransportProducer.doubleRowInterior_of_loopDoubles` on the G-rows, with the jump
+    `RowAlgebra.exists_single_long` and the label potential `labelPot` constant on the fibres
+    of the expansion), realised in `gReach` (`address_mem_gReach`).
 * **The slid fibres** (`exists_slidPencil`, §7.4 and §8.2), from the slid fibres
   `slidFibre x = slidBase x + Σ_j markCoeff x j · markChip j` (`s_j·1[x ∈ H_j]` chips at the
   marks, read through the leg edge `germ` and `TreeMetricPotential.cutValue`):
   * `slidFibre_transport` — **any two slid fibres are linearly equivalent**, by the descended
     G-row script of the tree potential with incidence `anchor − root`. The small side
     (`slidBase_sub_eq_rows`, `gRealize_gRow`, `gRealize_legRow`), the big side (`gScript`,
-    `gCompat`, `gScript_eq_pullScript`, `gPushDiv_prin_script`, `gSlot_sum`) and the leg edges
+    `gCompat`, `gScript_eq_pullScript`, `gPushDiv_prin_script`, and `gSlot_sum`, the window
+    computation `RowAlgebra.slot_sum` on a G-row) and the leg edges
     at the marks (`legRow_sum`, `germ_unique`, `markCoeff_eq_germ`, `tree_flow_eq`,
     `germ_balance`) combine to this: it is the argument of `PencilTransportProducer` §5–§7 on
     the G-rows, plus the boundary term of Lemma 7.3.
@@ -992,52 +993,9 @@ theorem loopRow_interior (hScale : memberScale mem = k) (e : Fin (15 + 1 + 1 + 1
       rw [show j - 1 + 1 = j by omega, offsetVal_eq', ← hLenB]
       split_ifs <;> omega
   -- the first prefix to leave `0` jumps to the full length
-  have hEx : ∃ j, 1 ≤ PencilTransportProducer.rowStart mem hClosed (Fin.castAdd 3 e) j :=
-    ⟨(RowWalk.orderedRow mem.fullDim.pathEnds (mem.ident.row.symm (Fin.castAdd 3 e))).length,
-      by omega⟩
-  have hJ : 1 ≤ PencilTransportProducer.rowStart mem hClosed (Fin.castAdd 3 e) (Nat.find hEx) :=
-    Nat.find_spec hEx
-  have hJpos : 0 < Nat.find hEx := by
-    by_contra h
-    rw [show Nat.find hEx = 0 by omega, PencilTransportProducer.rowStart_zero] at hJ
-    omega
-  have hJle : Nat.find hEx ≤
-      (RowWalk.orderedRow mem.fullDim.pathEnds (mem.ident.row.symm (Fin.castAdd 3 e))).length :=
-    Nat.find_min' hEx (by omega)
-  have hJm : PencilTransportProducer.rowStart mem hClosed (Fin.castAdd 3 e) (Nat.find hEx - 1) =
-      0 := by
-    have := Nat.find_min hEx (show Nat.find hEx - 1 < Nat.find hEx by omega)
-    omega
-  have hJv : PencilTransportProducer.rowStart mem hClosed (Fin.castAdd 3 e) (Nat.find hEx) =
-      (tripodSpec M k hk).length (Fin.castAdd 3 e) := by
-    rcases Nat.lt_or_ge (Nat.find hEx)
-        (RowWalk.orderedRow mem.fullDim.pathEnds (mem.ident.row.symm (Fin.castAdd 3 e))).length
-      with h | h
-    · rcases hInt _ hJpos h with h' | h' <;> omega
-    · rw [show Nat.find hEx = (RowWalk.orderedRow mem.fullDim.pathEnds
-        (mem.ident.row.symm (Fin.castAdd 3 e))).length by omega, hFull]
-  set i0 : Fin (RowWalk.orderedRow mem.fullDim.pathEnds
-      (mem.ident.row.symm (Fin.castAdd 3 e))).length := ⟨Nat.find hEx - 1, by omega⟩ with hi0
-  have hL0 : PencilTransportProducer.rowLen mem hClosed (Fin.castAdd 3 e) i0 =
-      (tripodSpec M k hk).length (Fin.castAdd 3 e) := by
-    have h := PencilTransportProducer.rowStart_succ mem hClosed (Fin.castAdd 3 e) i0
-    have h' : PencilTransportProducer.rowStart mem hClosed (Fin.castAdd 3 e) (Nat.find hEx - 1 + 1) =
-        PencilTransportProducer.rowStart mem hClosed (Fin.castAdd 3 e) (Nat.find hEx - 1) +
-          PencilTransportProducer.rowLen mem hClosed (Fin.castAdd 3 e) i0 := h
-    rw [show Nat.find hEx - 1 + 1 = Nat.find hEx by omega] at h'
-    omega
-  have hOthers : ∀ i, i ≠ i0 → PencilTransportProducer.rowLen mem hClosed (Fin.castAdd 3 e) i = 0 := by
-    intro i hi
-    have hSum := PencilTransportProducer.sum_rowLen mem hClosed (Fin.castAdd 3 e)
-    rw [← Finset.add_sum_erase _ _ (Finset.mem_univ i0), hL0, hFull] at hSum
-    have hz : (∑ x ∈ Finset.univ.erase i0,
-        (PencilTransportProducer.rowLen mem hClosed (Fin.castAdd 3 e) x : ℤ)) = 0 := by linarith
-    have hnn : ∀ x ∈ Finset.univ.erase i0,
-        (0 : ℤ) ≤ PencilTransportProducer.rowLen mem hClosed (Fin.castAdd 3 e) x :=
-      fun _ _ ↦ by positivity
-    have := (Finset.sum_eq_zero_iff_of_nonneg hnn).mp hz i
-      (Finset.mem_erase.mpr ⟨hi, Finset.mem_univ i⟩)
-    exact_mod_cast this
+  obtain ⟨i0, hL0, hOthers⟩ := RowAlgebra.exists_single_long
+    (PencilTransportProducer.rowStart_succ mem hClosed (Fin.castAdd 3 e))
+    (PencilTransportProducer.rowStart_zero mem hClosed (Fin.castAdd 3 e)) hFull hLenPos hInt
   -- the separating potential
   set t := ((RowWalk.orderedRow mem.fullDim.pathEnds
     (mem.ident.row.symm (Fin.castAdd 3 e)))[i0]).1.1 with ht
@@ -1879,145 +1837,14 @@ theorem gSlot_sum (hScale : memberScale mem = k) (s : mem.target.edges → ℤ)
             δ (DegeneratePlacement.offsetVal (tripodSpec M k hk) (legRequest M) mem hClosed
               (Fin.castAdd 3 e) (i.val + 1))) := by
   have hFull := rowStart_full_le hk mem hClosed hScale e
-  have hWin : ∀ i : Fin (RowWalk.orderedRow mem.fullDim.pathEnds
-      (mem.ident.row.symm (Fin.castAdd 3 e))).length,
-      PencilTransportProducer.rowStart mem hClosed (Fin.castAdd 3 e) i +
-          PencilTransportProducer.rowLen mem hClosed (Fin.castAdd 3 e) i ≤
-        (bigSpecAt M k hk).length e :=
-    fun i ↦ (PencilTransportProducer.rowStart_add_rowLen_le mem hClosed (Fin.castAdd 3 e) i).trans
-      hFull
   simp only [offsetVal_eq', tripodLength_castAdd]
-  unfold gSlotValue gSlotPos
-  cases hr : DegeneratePlacement.reverse mem (Fin.castAdd 3 e)
-  · simp only [Bool.false_eq_true, ite_false]
-    have hDiff : ∀ o : ℕ,
-        PencilTransportProducer.rowValue mem hClosed s P (Fin.castAdd 3 e) ((o + 1 : ℕ) : ℤ) -
-            PencilTransportProducer.rowValue mem hClosed s P (Fin.castAdd 3 e) (o : ℤ) =
-          ∑ i : Fin (RowWalk.orderedRow mem.fullDim.pathEnds
-              (mem.ident.row.symm (Fin.castAdd 3 e))).length,
-            PencilTransportProducer.rowSlope mem s (Fin.castAdd 3 e) i *
-              (if PencilTransportProducer.rowStart mem hClosed (Fin.castAdd 3 e) i ≤ o ∧
-                  o < PencilTransportProducer.rowStart mem hClosed (Fin.castAdd 3 e) i +
-                    PencilTransportProducer.rowLen mem hClosed (Fin.castAdd 3 e) i
-                then (1 : ℤ) else 0) := by
-      intro o
-      unfold PencilTransportProducer.rowValue
-      rw [add_sub_add_left_eq_sub, ← Finset.sum_sub_distrib]
-      refine Finset.sum_congr rfl fun i _ ↦ ?_
-      rw [← mul_sub, show ((o + 1 : ℕ) : ℤ) = (o : ℤ) + 1 by push_cast; ring,
-        PencilTransportProducer.ramp_succ_sub _ _ _ (by positivity)]
-      split_ifs <;> omega
-    rw [Finset.sum_congr rfl fun o _ ↦ by rw [hDiff o.val]]
-    rw [Fin.sum_univ_eq_sum_range (fun o ↦ (∑ i : Fin (RowWalk.orderedRow mem.fullDim.pathEnds
-        (mem.ident.row.symm (Fin.castAdd 3 e))).length,
-        PencilTransportProducer.rowSlope mem s (Fin.castAdd 3 e) i *
-          (if PencilTransportProducer.rowStart mem hClosed (Fin.castAdd 3 e) i ≤ o ∧
-              o < PencilTransportProducer.rowStart mem hClosed (Fin.castAdd 3 e) i +
-                PencilTransportProducer.rowLen mem hClosed (Fin.castAdd 3 e) i
-            then (1 : ℤ) else 0)) * (δ o - δ (o + 1)))]
-    simp only [Finset.sum_mul]
-    rw [Finset.sum_comm]
-    refine Finset.sum_congr rfl fun i _ ↦ ?_
-    simp only [mul_assoc]
-    rw [← Finset.mul_sum, PencilTransportProducer.sum_window δ _ _ _ (hWin i)]
-    show _ = PencilTransportProducer.rowSlope mem s (Fin.castAdd 3 e) i *
-      (δ (PencilTransportProducer.rowStart mem hClosed (Fin.castAdd 3 e) i) -
-        δ (PencilTransportProducer.rowStart mem hClosed (Fin.castAdd 3 e) (i.val + 1)))
-    rw [PencilTransportProducer.rowStart_succ]
-  · simp only [ite_true]
-    have hDiff : ∀ o : ℕ, o < (bigSpecAt M k hk).length e →
-        PencilTransportProducer.rowValue mem hClosed s P (Fin.castAdd 3 e)
-            (((bigSpecAt M k hk).length e : ℤ) - ((o + 1 : ℕ) : ℤ)) -
-          PencilTransportProducer.rowValue mem hClosed s P (Fin.castAdd 3 e)
-            (((bigSpecAt M k hk).length e : ℤ) - (o : ℤ)) =
-          ∑ i : Fin (RowWalk.orderedRow mem.fullDim.pathEnds
-              (mem.ident.row.symm (Fin.castAdd 3 e))).length,
-            PencilTransportProducer.rowSlope mem s (Fin.castAdd 3 e) i *
-              -(if (bigSpecAt M k hk).length e -
-                    PencilTransportProducer.rowStart mem hClosed (Fin.castAdd 3 e) i -
-                    PencilTransportProducer.rowLen mem hClosed (Fin.castAdd 3 e) i ≤ o ∧
-                  o < (bigSpecAt M k hk).length e -
-                    PencilTransportProducer.rowStart mem hClosed (Fin.castAdd 3 e) i
-                then (1 : ℤ) else 0) := by
-      intro o ho
-      unfold PencilTransportProducer.rowValue
-      rw [add_sub_add_left_eq_sub, ← Finset.sum_sub_distrib]
-      refine Finset.sum_congr rfl fun i _ ↦ ?_
-      have hStep := PencilTransportProducer.ramp_succ_sub
-        (((bigSpecAt M k hk).length e : ℤ) - ((o + 1 : ℕ) : ℤ))
-        (PencilTransportProducer.rowStart mem hClosed (Fin.castAdd 3 e) i)
-        (PencilTransportProducer.rowLen mem hClosed (Fin.castAdd 3 e) i) (by positivity)
-      rw [show ((bigSpecAt M k hk).length e : ℤ) - ((o + 1 : ℕ) : ℤ) + 1 =
-        ((bigSpecAt M k hk).length e : ℤ) - (o : ℤ) by push_cast; ring] at hStep
-      rw [← mul_sub, ← neg_sub, hStep]
-      have := hWin i
-      split_ifs <;> omega
-    rw [Finset.sum_congr rfl fun o _ ↦ by rw [hDiff o.val o.isLt]]
-    rw [Fin.sum_univ_eq_sum_range (fun o ↦ (∑ i : Fin (RowWalk.orderedRow mem.fullDim.pathEnds
-        (mem.ident.row.symm (Fin.castAdd 3 e))).length,
-        PencilTransportProducer.rowSlope mem s (Fin.castAdd 3 e) i *
-          -(if (bigSpecAt M k hk).length e -
-                PencilTransportProducer.rowStart mem hClosed (Fin.castAdd 3 e) i -
-                PencilTransportProducer.rowLen mem hClosed (Fin.castAdd 3 e) i ≤ o ∧
-              o < (bigSpecAt M k hk).length e -
-                PencilTransportProducer.rowStart mem hClosed (Fin.castAdd 3 e) i
-            then (1 : ℤ) else 0)) * (δ o - δ (o + 1)))]
-    simp only [Finset.sum_mul]
-    rw [Finset.sum_comm]
-    refine Finset.sum_congr rfl fun i _ ↦ ?_
-    have hW := hWin i
-    have hEq : ∀ o ∈ Finset.range ((bigSpecAt M k hk).length e),
-        PencilTransportProducer.rowSlope mem s (Fin.castAdd 3 e) i *
-            -(if (bigSpecAt M k hk).length e -
-                  PencilTransportProducer.rowStart mem hClosed (Fin.castAdd 3 e) i -
-                  PencilTransportProducer.rowLen mem hClosed (Fin.castAdd 3 e) i ≤ o ∧
-                o < (bigSpecAt M k hk).length e -
-                  PencilTransportProducer.rowStart mem hClosed (Fin.castAdd 3 e) i
-              then (1 : ℤ) else 0) * (δ o - δ (o + 1)) =
-          -PencilTransportProducer.rowSlope mem s (Fin.castAdd 3 e) i *
-            ((if (bigSpecAt M k hk).length e -
-                  PencilTransportProducer.rowStart mem hClosed (Fin.castAdd 3 e) i -
-                  PencilTransportProducer.rowLen mem hClosed (Fin.castAdd 3 e) i ≤ o ∧
-                o < (bigSpecAt M k hk).length e -
-                  PencilTransportProducer.rowStart mem hClosed (Fin.castAdd 3 e) i -
-                  PencilTransportProducer.rowLen mem hClosed (Fin.castAdd 3 e) i +
-                    PencilTransportProducer.rowLen mem hClosed (Fin.castAdd 3 e) i
-              then (1 : ℤ) else 0) * (δ o - δ (o + 1))) := by
-      intro o _
-      have hIff : (o < (bigSpecAt M k hk).length e -
-          PencilTransportProducer.rowStart mem hClosed (Fin.castAdd 3 e) i) ↔
-          (o < (bigSpecAt M k hk).length e -
-            PencilTransportProducer.rowStart mem hClosed (Fin.castAdd 3 e) i -
-            PencilTransportProducer.rowLen mem hClosed (Fin.castAdd 3 e) i +
-              PencilTransportProducer.rowLen mem hClosed (Fin.castAdd 3 e) i) := by omega
-      simp only [hIff]
-      ring
-    rw [Finset.sum_congr rfl hEq, ← Finset.mul_sum]
-    have hSum' := PencilTransportProducer.sum_window δ ((bigSpecAt M k hk).length e)
-      ((bigSpecAt M k hk).length e -
-        PencilTransportProducer.rowStart mem hClosed (Fin.castAdd 3 e) i -
-        PencilTransportProducer.rowLen mem hClosed (Fin.castAdd 3 e) i)
-      (PencilTransportProducer.rowLen mem hClosed (Fin.castAdd 3 e) i) (by omega)
-    rw [hSum']
-    show _ = PencilTransportProducer.rowSlope mem s (Fin.castAdd 3 e) i *
-      (δ ((bigSpecAt M k hk).length e -
-          PencilTransportProducer.rowStart mem hClosed (Fin.castAdd 3 e) i) -
-        δ ((bigSpecAt M k hk).length e -
-          PencilTransportProducer.rowStart mem hClosed (Fin.castAdd 3 e) (i.val + 1)))
-    rw [PencilTransportProducer.rowStart_succ,
-      show (bigSpecAt M k hk).length e -
-        PencilTransportProducer.rowStart mem hClosed (Fin.castAdd 3 e) i -
-        PencilTransportProducer.rowLen mem hClosed (Fin.castAdd 3 e) i +
-          PencilTransportProducer.rowLen mem hClosed (Fin.castAdd 3 e) i =
-        (bigSpecAt M k hk).length e -
-          PencilTransportProducer.rowStart mem hClosed (Fin.castAdd 3 e) i by omega,
-      show (bigSpecAt M k hk).length e -
-        (PencilTransportProducer.rowStart mem hClosed (Fin.castAdd 3 e) i +
-          PencilTransportProducer.rowLen mem hClosed (Fin.castAdd 3 e) i) =
-        (bigSpecAt M k hk).length e -
-          PencilTransportProducer.rowStart mem hClosed (Fin.castAdd 3 e) i -
-          PencilTransportProducer.rowLen mem hClosed (Fin.castAdd 3 e) i by omega]
-    ring
+  exact RowAlgebra.slot_sum (PencilTransportProducer.sourcePotential mem P
+      (RowPosition.rowVertex mem.fullDim (mem.ident.row.symm (Fin.castAdd 3 e)) 0))
+    (PencilTransportProducer.rowSlope mem s (Fin.castAdd 3 e))
+    (PencilTransportProducer.rowStart_succ mem hClosed (Fin.castAdd 3 e))
+    (DegeneratePlacement.reverse mem (Fin.castAdd 3 e)) _
+    (fun i ↦ (PencilTransportProducer.rowStart_add_rowLen_le mem hClosed (Fin.castAdd 3 e)
+      i).trans hFull) δ
 
 /-! ### The leg edges at the marks
 
